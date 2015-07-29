@@ -1,0 +1,15 @@
+baseurl = "http://gingerbill.org"
+title = "gingerBill"
+languageCode = "en-gb"
+disqusShortname = "gingerbill"
+copyright = "Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved."
+MetaDataFormat = "toml"
+canonifyurls = true
+
+[taxonomies]
+	topic = "topics"
+	tag = "tags"
+	series = "series"
+
+[author]
+	name = "Ginger Bill"
