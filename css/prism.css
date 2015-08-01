@@ -2,26 +2,6 @@
  * Iridis Blue Neue Theme by gingerBill
  */
 
-pre
-code {
-	font-family: 'Droid Sans Mono', 'Ubuntu Mono', Consolas, Monaco, 'Andale Mono',  monospace;
-	direction: ltr;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	line-height: 1.5;
-
-	-moz-tab-size: 4;
-	  -o-tab-size: 4;
-	     tab-size: 4;
-
-	-webkit-hyphens: none;
-	   -moz-hyphens: none;
-	    -ms-hyphens: none;
-	        hyphens: none;
-}
-
 @media screen {
 	code,
 	pre {
