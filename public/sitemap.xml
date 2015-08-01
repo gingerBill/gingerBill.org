@@ -2,28 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://gingerbill.org/</loc>
-    <lastmod>2015-08-01T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2015-08-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://gingerbill.org/intro-to-c/preface/</loc>
+    <loc>http://localhost:1313/intro-to-c/a-sample-example/</loc>
+    <lastmod>2015-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/intro-to-c/preface/</loc>
     <lastmod>2015-08-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://gingerbill.org/post/third/</loc>
+    <loc>http://localhost:1313/post/third/</loc>
     <lastmod>2015-07-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://gingerbill.org/post/second/</loc>
+    <loc>http://localhost:1313/post/second/</loc>
     <lastmod>2015-07-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://gingerbill.org/post/first/</loc>
+    <loc>http://localhost:1313/post/first/</loc>
     <lastmod>2015-07-27T00:00:00+00:00</lastmod>
   </url>
   

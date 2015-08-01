@@ -5,7 +5,7 @@
 
 	{{ partial "meta.html" . }}
 
-	<base href="{{ .Site.BaseUrl }}">
+	<base href="{{ .Site.BaseURL }}">
 	<title>{{ .Site.Title }}</title>
 	<link rel="canonical" href="{{ .Permalink }}">
 	<link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
@@ -16,19 +16,27 @@
 {{ partial "subheader.html" . }}
 <section id="main">
 	<div>
-	{{ range first 10 .Data.Pages.ByDate.Reverse }}
-	<article class="post">
-		<header>
-			<h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-			<div class="post-meta">{{ .Date.Format "2 Jan 2 2006" }}</div>
-		</header>
-		{{ .Summary }}
-		<footer>
-			<a href="{{ .Permalink }}">
-				<span class="read-more">Read&nbsp;more&nbsp;→</span>
-			</a>
-		</footer>
-	</article>
+	<h1>Home</h1>
+	<section>
+		<ul>
+		{{ range $taxonomyname, $taxonomy := .Site.Taxonomies }}
+			<li><a href="/{{ $taxonomyname | urlize }}">{{ $taxonomyname }}</a>
+				<ul>
+					{{ range $key, $value := $taxonomy }}
+					<li> {{ $key }} </li>
+						<ul>
+						{{ range $value.Pages }}
+							<li><a href="{{ .Permalink}}"> {{ .LinkTitle }} </a> </li>
+						{{ end }}
+						</ul>
+					{{ end }}
+				</ul>
+			</li>
+		{{ end }}
+		</ul>
+	</section>
+	{{ range .Data.Pages }}
+		{{ .Render "summary" }}
 	{{ end }}
 	</div>
 </section>

@@ -1,0 +1,13 @@
+	<article class="post">
+		<header>
+			<h1 itemprop="name"><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
+
+			<p class="date">{{ .Date.Format "2 Jan 2 2006" }}</p>
+		</header>
+		{{ .Summary }}
+		<footer>
+			<a class="read-more" href="{{ .Permalink }}">
+				Read&nbsp;more&nbsp;→
+			</a>
+		</footer>
+	</article>

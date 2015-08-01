@@ -1,45 +1,46 @@
 {{ partial "header.html" . }}
 <body lang="en" itemscope itemtype="http://schema.org/Article">
 {{ partial "subheader.html" . }}
-{{ $baseUrl := .Site.BaseUrl }}
-
 <section id="main">
 	<article itemprop="articleBody" class="container">
 		<header>
 			<h1 itemprop="name" class="title">{{ .Title }}</h1>
-			<div class="date">{{ .Date.Format "2 Jan 2006" }}</div>
-		{{ if .Params.series }}
-			{{ range .Params.series }}
-			<h2 class="series">{{ . }}</h2>
-			{{ end }}
-		{{ end }}
-		{{ if .Params.topics }}
-			<div id="category-title">
-			&nbsp;&mdash;&nbsp;
-			</div>
-			<ul id="categories">
+			<p><a href="/{{ .Section }}">{{ .Section }}</a></p>
+
+			<p class="date">{{ .Date.Format "2 Jan 2006" }}</p>
+		</header>
+			{{ .Content }}
+	</article>
+</section>
+<aside id="meta">
+		<div id="author">
+			<p>Author: {{ .Site.Author.name }}</p>
+		</div>
+	{{ if .Params.topics }}
+		<div id="categories">
+			<h4>Categories:</h4>
+			<ul>
 			{{ range .Params.topics }}
 				<li><a href="/topics/{{ . | urlize }}/">{{ . }}</a></li>
 			{{ end }}
 			</ul>
-		{{ end }}
-			<ul id="tags">
+		</div>
+	{{ end }}
+	{{ if .Params.tags }}
+		<div id="tags">
+			<h4>Tags:</h4>
+			<ul>
 			{{ range .Params.tags }}
 				<li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
 			{{ end }}
 			</ul>
-		</header>
-			{{ .Content }}
-		<footer>
-		 	<!-- <div class="subscribe-bait">
-		 		<p>Enjoy this post?</p>
-		 		<a class="btn subscribe" href="/post/index.xml">Subscribe via RSS</a>
-		 		<iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" src="http://platform.twitter.com/widgets/follow_button.36a0bf81ff285eb6cad31df608651a2f.en.html#_=1438028183673&amp;dnt=true&amp;id=twitter-widget-0&amp;lang=en&amp;screen_name=TheGingerBill&amp;show_count=false&amp;show_screen_name=true&amp;size=l" class="twitter-follow-button twitter-follow-button" title="Twitter Follow Button" data-twttr-rendered="true" style="position: static; visibility: visible; width: 184px; height: 28px;"></iframe>
-		 	</div> -->
-		</footer>
-	</article>
-</section>
+		</div>
+	{{ end }}
+
+{{ partial "subscribe.html" . }}
 {{ partial "meta_single.html" . }}
 
-<!-- {{ partial "disqus.html" . }} -->
+</aside>
+
+{{ partial "disqus.html" . }}
 {{ partial "footer.html" . }}

@@ -1,2 +1,2 @@
-# gingerbill.org
-Source code for gingerbill.org
+# gingerBill.org
+Source code for gingerBill.org

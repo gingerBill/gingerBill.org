@@ -1,4 +1,4 @@
-baseurl = "http://gingerbill.org"
+baseurl = "http://www.gingerbill.org"
 title = "gingerBill"
 languageCode = "en-gb"
 disqusShortname = "gingerbill"
@@ -9,7 +9,16 @@ canonifyurls = true
 [taxonomies]
 	topic = "topics"
 	tag = "tags"
-	series = "series"
 
 [author]
 	name = "Ginger Bill"
+
+
+
+[params.introToC]
+	title = "Intro To C"
+
+[[params.introToC.chapter]]
+	name = "Getting Started"
+[[params.introToC.chapter]]
+	name = "Introducing C"

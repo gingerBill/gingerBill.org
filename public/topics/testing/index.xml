@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Testing on gingerBill</title>
-    <link>http://gingerbill.org/topics/testing/</link>
+    <link>http://localhost:1313/topics/testing/</link>
     <description>Recent content in Testing on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved.</copyright>
     <lastBuildDate>Tue, 28 Jul 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://gingerbill.org/topics/testing/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/topics/testing/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Second</title>
-      <link>http://gingerbill.org/post/second/</link>
+      <link>http://localhost:1313/post/second/</link>
       <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://gingerbill.org/post/second/</guid>
+      <guid>http://localhost:1313/post/second/</guid>
       <description>
 
 &lt;h1 id=&#34;second-post:9f7936f9b5c071ae81db818b80a44a0d&#34;&gt;Second Post&lt;/h1&gt;

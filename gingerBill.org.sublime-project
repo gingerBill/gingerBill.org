@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.zip",
+				"*.sublime-workspace",
+			],
+			"folder_exclude_patterns":
+			[
+				"bin",
+			],
+			"path": "."
+		}
+	]
+}

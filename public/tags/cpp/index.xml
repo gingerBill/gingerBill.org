@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cpp on gingerBill</title>
-    <link>http://gingerbill.org/tags/cpp/</link>
+    <link>http://localhost:1313/tags/cpp/</link>
     <description>Recent content in Cpp on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved.</copyright>
     <lastBuildDate>Wed, 29 Jul 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://gingerbill.org/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Third</title>
-      <link>http://gingerbill.org/post/third/</link>
+      <link>http://localhost:1313/post/third/</link>
       <pubDate>Wed, 29 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://gingerbill.org/post/third/</guid>
+      <guid>http://localhost:1313/post/third/</guid>
       <description>
 
 &lt;h1 id=&#34;third-post:1fe12548244a1733e38ed5b40fa959e0&#34;&gt;Third Post&lt;/h1&gt;
@@ -38,10 +38,10 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&g
     
     <item>
       <title>Second</title>
-      <link>http://gingerbill.org/post/second/</link>
+      <link>http://localhost:1313/post/second/</link>
       <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://gingerbill.org/post/second/</guid>
+      <guid>http://localhost:1313/post/second/</guid>
       <description>
 
 &lt;h1 id=&#34;second-post:9f7936f9b5c071ae81db818b80a44a0d&#34;&gt;Second Post&lt;/h1&gt;
@@ -66,10 +66,10 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&g
     
     <item>
       <title>First</title>
-      <link>http://gingerbill.org/post/first/</link>
+      <link>http://localhost:1313/post/first/</link>
       <pubDate>Mon, 27 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://gingerbill.org/post/first/</guid>
+      <guid>http://localhost:1313/post/first/</guid>
       <description>
 
 &lt;h1 id=&#34;first-post:e8fb9c67eba912c72729806db31eaa1b&#34;&gt;First Post&lt;/h1&gt;

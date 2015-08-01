@@ -1,6 +1,11 @@
 /*****************************************
  * Base Styles
  *****************************************/
+
+::selection {
+	background-color: #f90;
+}
+
 html {
 	font-size: 100%;
 }
@@ -9,38 +14,49 @@ body {
 	font-size: 1em;
 	line-height: 1.4;
 	font-weight: 300;
-	font-family: "Open Sans", sans-serif;
+	font-family: 'Questrial', sans-serif;
 	color: #333;
 	background-color: #faf3ef;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: #333;
-	font-family: "Open Sans", sans-serif;
+	font-family: 'Sanchez', sans-serif;
 	text-transform: capitalize;
-	font-weight: bold;
 }
 
-h1, h2 {
-	font-weight: bold;
+h1, h2, h3, p {
+	margin: 0;
+}
+
+h1 {
+	font-size: 2.6em;
+	font-weight: 700;
+	margin-bottom: 0.3em;
+}
+
+h2 {
+	font-size: 2.0em;
+	font-weight: 400;
+	line-height: 1.3;
+	margin-bottom: 0.4em;
+}
+
+h3 {
+	font-size: 1.6em;
+	font-weight: 400;
+	line-height: 1.3;
+	margin-bottom: 0.3em;
 }
 
 p {
-	margin-bottom: 1em;
+	font-size: 1.05em;
+	line-height: 1.5em;
+	margin-bottom: 1.5em;
 }
 
-section a, footer a {
-	color: #555;
-	text-decoration: none;
-
-	-webkit-transition: all 0.25s ease-in;
-	   -moz-transition: all 0.25s ease-in;
-	    -ms-transition: all 0.25s ease-in;
-	        transition: all 0.25s ease-in;
-}
-
-section a:hover, footer a:hover {
-	color: #333;
+p.date {
+	color: rgba(51, 51, 51, 0.4);
+	margin-bottom: 0.3em;
 }
 
 body > footer {
@@ -61,7 +77,8 @@ body > footer p {
 }
 
 a {
-	color: #555;
+	color: #333;
+	text-decoration: underline;
 	-webkit-transition: all 0.25s ease-in;
 	   -moz-transition: all 0.25s ease-in;
 	    -ms-transition: all 0.25s ease-in;
@@ -69,29 +86,69 @@ a {
 }
 
 a:hover {
-	color: #333;
-}
-
-aside h1 {
-	margin: 0 0 1em;
-}
-
-aside ul {
-	list-style: none outside none;
-}
-
-aside a {
-	text-decoration: none;
-	color: #888;
-	-webkit-transition: color 0.25s ease-in-out;
-	   -moz-transition: color 0.25s ease-in-out;
-	    -ms-transition: color 0.25s ease-in-out;
-	        transition: color 0.25s ease-in-out;
-}
-
-aside a:hover {
 	color: #f90;
 }
+
+pre, code {
+	font-family: 'Droid Sans Mono', 'Ubuntu Mono', Consolas, Monaco, 'Andale Mono',  monospace;
+	direction: ltr;
+	text-align: left;
+	word-spacing: normal;
+	word-break: normal;
+
+	-moz-tab-size: 4;
+	  -o-tab-size: 4;
+	     tab-size: 4;
+
+	-webkit-hyphens: none;
+	   -moz-hyphens: none;
+	    -ms-hyphens: none;
+	        hyphens: none;
+}
+
+pre code {
+	white-space: pre;
+}
+
+/* Code blocks */
+pre {
+	padding: 1em;
+	margin: .5em 0 2em;
+	overflow: auto;
+	border-radius: 4px;
+	font-size: 0.8em;
+}
+
+/* Inline code */
+:not(pre) > code {
+	padding: 0.1em 0.4em;
+	font-size: 0.8em;
+	border-radius: 4px;
+	margin: 0;
+	word-break: normal;
+}
+
+.video-player {
+	height: 0;
+	overflow: hidden;
+	padding-bottom: 56.25%; /* For ratio 16:9 */
+	position: relative;
+	border-radius: 4px;
+}
+
+.video-player embed,
+.video-player object,
+.video-player iframe {
+	position: absolute;
+
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+}
+
+
 
 /*****************************************
  * Site Styling
@@ -102,7 +159,9 @@ body > header:after, body > aside:after, body > footer:after {
 	clear: both;
 }
 
-
+h1.title {
+	font-size: 4em;
+}
 
 #header, #main, #meta {
 	margin: 0 1em;
@@ -133,7 +192,7 @@ body > header:after, body > aside:after, body > footer:after {
 	margin: 0 auto;
 	padding: 0 1em;
 
-	border-radius: 2px;
+	border-radius: 4px;
 	margin-bottom: 0.5em;
 }
 
@@ -141,7 +200,8 @@ body > header:after, body > aside:after, body > footer:after {
 	font-size: 2em;
 	margin: 0;
 	font-weight: 300!important;
-	vertical-align: middle;
+	font-family: 'Open Sans', sans-serif;
+	display: inline-block;
 }
 
 #header h1 a {
@@ -168,22 +228,22 @@ body > header:after, body > aside:after, body > footer:after {
 	top: 0.25em;
 }
 
-#nav {
+.nav {
 	display: inline-block;
 }
 
-#nav > ul {
+.nav > ul {
 	padding: 0;
 	display: inline;
 }
 
-#nav li {
+.nav li {
 	display: inline-block;
 	list-style: none outside none;
 	padding-bottom: 1em;
 }
 
-#nav a {
+.nav a {
 	display: block;
 	text-decoration: none;
 	width: 100%;
@@ -206,11 +266,11 @@ body > header:after, body > aside:after, body > footer:after {
 	font-size: 0.75em;
 }
 
-#list {
+.list {
 	list-style: none;
 }
 
-#list > li {
+.list > li {
 	vertical-align: top;
 	margin-bottom: 1em;
 	display: table;
@@ -218,11 +278,11 @@ body > header:after, body > aside:after, body > footer:after {
 	padding: 0;
 }
 
-#list > li > a {
+.list > li > a {
 	display: table-cell;
 	padding: 0 0.5em;
 }
-#list > li > .meta {
+.list > li > .meta {
 	display: table-cell;
 	text-align: right;
 	width: 25%;
@@ -239,7 +299,7 @@ body > header:after, body > aside:after, body > footer:after {
 
 #main, #meta, #comments {
 	border: 1px solid #d4c9c2;
-	border-radius: 2px;
+	border-radius: 4px;
 	margin-bottom: 0.5em;
 	padding: 1em 1.5em;
 	background-color: #fff;
@@ -254,13 +314,13 @@ body > header:after, body > aside:after, body > footer:after {
 	padding: 1em;
 }
 
-.post
+article.post
 {	position: relative;
 	word-wrap: break-word;
 	border-bottom: 1px solid #f4e9e2;
 }
 
-.post:after {
+article.post:after {
 	display: block;
 	content: "";
 	width: 7px;
@@ -271,38 +331,42 @@ body > header:after, body > aside:after, body > footer:after {
 	left: 50%;
 	margin-left: -5px;
 	background-color: #fff;
-	border-radius: 100%;
+	border-radius: 4px;
 	box-shadow: 0 0 0 5px #fff;
 }
 
-.post:last-child {
+article.post:last-child {
 	border-bottom: none;
 }
 
-.post:last-child:after {
+article.post:last-child:after {
 	display: none;
 }
 
-.post h2 {
+article.post h1 {
 	margin: 0;
 	font-size: 2.5em;
+	color: #f90;
 }
 
-.post-meta {
-	color: #333;
-	font-size: 0.8em;
-	margin: 0.5em 0;
+article.post h1 a {
+	color: #f90;
 }
 
-article > footer {
+article.post h2 {
+	font-size: 1.5em;
+}
+
+article.post > footer {
 	text-align: right;
 	line-height: 3em;
 }
 
-article > footer .read-more {
+article.post > footer .read-more {
 	font-weight: bold;
+	color: #f90;
+	text-decoration: none;
 }
-
 
 #prev, #next {
 	box-sizing: border-box;
@@ -316,30 +380,22 @@ article > footer .read-more {
  * Single Post
  *****************************************/
 
-h1#title {
-	margin: 0.125em 0;
-	font-size: 3.5em;
-	font-weight: 700!important;
-	line-height: 1.15em;
-	text-transform: capitalize;
-	text-align: left;
+#categories, #tags {
+	margin-bottom: 0.4em;
 }
 
-#meta h5 {
-	padding-bottom: 1em;
+#categories h4, #tags h4 {
+	display: inline;
+	margin-right: 0.3em;
 }
 
-#date, #category-title, #categories {
-	display: inline-block;
-}
-
-#categories {
+#categories ul, #tags ul {
 	padding: 0 1em 0 0;
 	list-style: none outside none;
+	display: inline;
 }
 
 #categories li {
-	font-weight: bold;
 	display: inline-block;
 }
 
@@ -351,18 +407,13 @@ h1#title {
 	content: "";
 }
 
-#tags {
-	margin: 0;
-	padding: 0;
-}
-
 #tags li {
 	margin: 0 0 0 0.3em;
 	padding: 0.3em 0.4em;
 
 	display: inline-block;
 
-	border-radius: 2px;
+	border-radius: 4px;
     border: 1px solid #ffb84c;
 	background-color: #ffd698;
 
@@ -382,6 +433,7 @@ h1#title {
 
 #tags li a {
 	color: #333;
+	text-decoration: none;
 }
 
 .subscribe-bait {
@@ -389,7 +441,7 @@ h1#title {
 	padding: 1em;
 
 	color: #964;
-    border-radius: 2px;
+    border-radius: 4px;
     border: 1px solid #ffb84c;
 	background-color: #ffd698;
 
@@ -418,7 +470,7 @@ h1#title {
 	border: 1px solid transparent;
 	white-space: nowrap;
 	padding: 0.4em 0.8em;
-	border-radius: 2px;
+	border-radius: 4px;
 }
 
 .btn.subscribe {
@@ -426,6 +478,14 @@ h1#title {
 	color: #fff;
 	background-color: #f90;
 }
+
+
+
+.chapter .section {
+	text-align: right;
+	margin-right: 1em;
+}
+
 
 
 /*****************************************
@@ -438,6 +498,9 @@ h1#title {
 /* Larger than phablet */
 @media (max-width: 750px) {
 	body {
+		font-size: 87.5%;
+	}
+	pre, code {
 		font-size: 87.5%;
 	}
 }

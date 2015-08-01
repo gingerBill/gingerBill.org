@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-GB" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<head>
+<!-- Basic Page Needs -->
+	<meta charset="utf-8" />
+
+	{{ partial "meta.html" . }}
+
+	<base href="{{ .Site.BaseURL }}" />
+	<title>Intro to C - gingerBill</title>
+	<link rel="canonical" href="{{ .Permalink }}" />
+	{{ if .RSSlink }}<link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Title }}" />{{ end }}
+
+	{{ partial "head_includes.html" . }}
+</head>
+<body lang="en">
+{{ partial "subheader.html" . }}
+<section id="main">
+	<h1 id="title">Intro To C</h1>
+	{{ $chapters := .Site.Params.introToC.chapter }}
+
+	<p>This is the in-progress of Intro To C. It was just converted to a new format so things might be missing or formatted wrong.</p>
+	<p>Email <a href="mailto:intro-to-c@gingerbill.org">intro-to-c@gingerbill.org</a> to report any problems.</p>
+
+	{{ range $index, $key := .Data.Pages.GroupByParam "chapter"}}
+	<h2>Chapter {{ .Key }} - {{ (index $chapters $index).name }}</h2>
+	<ul class="list chapter">
+	{{ range .Pages }}
+		<li>
+			<span><span class="section">{{ .Params.section }}</span><a class="title" href="{{ .Permalink }}">{{ .Title }}</a></span>
+			<p class="meta date">{{ .Date.Format "2 Jan 2006" }}</p>
+		</li>
+	{{ end }}
+	</ul>
+	{{ end }}
+</section>
+{{ partial "footer.html" . }}

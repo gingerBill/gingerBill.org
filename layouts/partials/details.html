@@ -1,22 +1,10 @@
-{{ $baseurl := .Site.BaseUrl }}
+{{ $baseurl := .Site.BaseURL }}
 	<div>
-		<section id="datecount">
-			<h4 id="date">{{ .Date.Format "2 Jan 2006" }}</h4>
-			<h5 id="wc">{{ .FuzzyWordCount }} Words</h5>
-			<h5 id="readtime">Read in about {{ .ReadingTime }} Min</h5>
-		</section>
-		<ul id="categories">
-			{{ range .Params.topics }}
-			<li><a href="{{ $baseurl }}/topics/{{ . | urlize }}">{{ . }}</a></li>
-			{{ end }}
-		</ul>
-		<ul id="tags">
-			{{ range .Params.tags }}
-			<li><a href="{{ $baseurl }}/tags/{{ . | urlize }}">#{{ . }}</a></li>
-			{{ end }}
-		</ul>
+		{{ range .Site.Params }}
+			{{ . }}
+		{{ end }}
 	</div>
-
+<!--
 	<div>
 		<section id="prev">
 			&nbsp;{{if .Prev}}<a class="previous" href="{{.Prev.Permalink}}"><i class="icon-arrow-left"></i>{{.Prev.Title}}</a><br>{{end}}
@@ -24,4 +12,4 @@
 		<section id="next">
 			&nbsp;{{if .Next}}<a class="next" href="{{.Next.Permalink}}">{{.Next.Title}}<i class="icon-arrow-right"></i></a>{{end}}
 		</section>
-	</div>
+	</div> -->

@@ -6,7 +6,6 @@ slug = "third"
 
 topics = ["Development"]
 tags = ["cpp", "programming"]
-series = ["Intro to C"]
 +++
 
 # Third Post
