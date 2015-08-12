@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Intro-To-Cs on gingerBill</title>
+    <link>http://gingerbill.org/intro-to-c/</link>
+    <description>Recent content in Intro-To-Cs on gingerBill</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <copyright>Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved.</copyright>
+    <lastBuildDate>Sat, 01 Aug 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://gingerbill.org/intro-to-c/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Preface</title>
+      <link>http://gingerbill.org/intro-to-c/preface/</link>
+      <pubDate>Sat, 01 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://gingerbill.org/intro-to-c/preface/</guid>
+      <description>
+
+&lt;h1 id=&#34;preface:28dee0b38488534c78578bd8438deb17&#34;&gt;Preface&lt;/h1&gt;
+
+&lt;p&gt;Uplink A.I. sentient advert-ware refrigerator vehicle. Jeans construct drugs computer monofilament free-market fluidity. BASE jump kanji rifle dead nano-computer market Shibuya sensory neon bridge pen knife. Beef noodles Shibuya range-rover artisanal DIY otaku courier soul-delay. Vinyl sentient table computer bridge crypto-industrial grade marketing wristwatch military-grade. Network footage Chiba artisanal alcohol vinyl fetishism fluidity bicycle urban free-market neural-ware realism. Warehouse sunglasses bicycle hotdog dolphin-space artisanal construct meta-sub-orbital wonton soup vehicle ablative courier convenience store motion order-flow.&lt;/p&gt;
+
+&lt;p&gt;Silent refrigerator carbon garage drugs DIY courier into office A.I. corporation cyber-man sign network. Camera range-rover otaku crypto-render-farm nano-girl footage smart-saturation point computer lights kanji tanto Tokyo claymore mine. Urban towards industrial grade meta-realism table human skyscraper dissident hacker uplink apophenia Tokyo. Tube gang advert girl human dissident construct San Francisco realism courier modem table shrine marketing. &lt;code&gt;Into DIY faded advert cardboard sentient digital decay wonton soup 3D-printed numinous carbon&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;math.h&amp;gt;
+
+typedef float f32;
+
+// Vector Type
+struct Vector3
+{
+    f32 x, y, z;
+};
+typedef Vector3 Vector3;
+
+f32 dot3(const Vector3 a, const Vector3 b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+int main(int argc, char* argv[])
+{
+    f32 a = 1337.0123f;
+    Vector3 v = {1, 4, 9};
+    Vector3 c = {2, 0.5f, 0.222f};
+
+    type_t t = 0;
+
+    printf(&amp;quot;Hellope!\n&amp;quot;);
+    printf(&amp;quot;{%.0f, %.0f, %.0f}\n&amp;quot;, v.x, v.y, v.z);
+    printf(&amp;quot;%f\n&amp;quot;, sqrtf(dot3(v, c)));
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+    &amp;quot;fmt&amp;quot;
+    &amp;quot;math&amp;quot;
+)
+
+// Vector Type
+type Vector3 struct {
+    X float32
+    Y float32
+    Z float32
+}
+
+func dot3(a, b Vector3) float32 {
+    return a.X * b.X + a.Y * b.Y + a.Z * b.Z
+}
+
+func main() {
+    var a float32 = 1337.0123
+    v := Vector3{1, 4, 9}
+    c := Vector3{2, 0.5, 0.222}
+
+    fmt.Println(&amp;quot;Hellope&amp;quot;)
+    printf(&amp;quot;{%.0f, %.0f, %.0f}\n&amp;quot;, v.X, v.Y, v.Z);
+    printf(&amp;quot;%f\n&amp;quot;, math.sqrt(dot3(v, c)));
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Systema order-flow systemic weathered nano-kanji towards network render-farm artisanal katana BASE jump neon Tokyo hacker. Pre-Tokyo table j-pop otaku office girl motion. Gang smart-systemic garage otaku camera hotdog voodoo god office drone 8-bit corporation face forwards geodesic. Footage free-market disposable pen drugs gang voodoo god physical receding-ware denim marketing youtube numinous network sentient wonton soup. Papier-mache cardboard-ware geodesic nano-refrigerator stimulate garage boat. Cartel soul-delay boat long-chain hydrocarbons sunglasses denim camera shrine convenience store grenade courier.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
