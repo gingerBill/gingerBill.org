@@ -12,13 +12,3 @@ canonifyurls = true
 
 [author]
 	name = "Ginger Bill"
-
-
-
-[params.introToC]
-	title = "Intro To C"
-
-[[params.introToC.chapter]]
-	name = "Getting Started"
-[[params.introToC.chapter]]
-	name = "Introducing C"

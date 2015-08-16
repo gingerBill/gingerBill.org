@@ -64,20 +64,12 @@
 <header id="header">
 <div>
 	<h1><a href="http://localhost:1313/" border="0" id="logo-link"><span class="ginger">ginger</span>Bill<sup class="tm">&trade;</sup></a></h1>
-	<nav class="nav">
-			<ul id="main-nav">
-			<li>
-				<a href="http://localhost:1313/"><span>home</span></a>
-			</li>
-			<li>
-				<a href="http://localhost:1313/post/"><span>blog</span></a>
-			</li>
-			<li>
-				<a href="http://localhost:1313/series/"><span>series</span></a>
-			</li>
-			<li>
-				<a href="http://localhost:1313/about/"><span>about</span></a>
-			</li>
+	<nav id="main-nav" onclick="navToggle(this)">
+			<ul>
+			<li><a href="http://localhost:1313/">home</a></li>
+			<li><a href="http://localhost:1313/about/">about</a></li>
+			<li><a href="http://localhost:1313/blog/">blog</a></li>
+			<li><a href="http://localhost:1313/projects/">projects</a></li>
 		</ul>
 
 	</nav>
@@ -90,13 +82,13 @@
 	
 			<article class="post">
 		<header>
-			<h1 itemprop="name"><a href="http://localhost:1313/post/second/">Second</a></h1>
+			<h1 itemprop="name"><a href="http://localhost:1313/blog/second/">Second</a></h1>
 
 			<p class="date">28 Jul 28 2015</p>
 		</header>
 		Second Post Second post, I&rsquo;m on a roll! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		<footer>
-			<a class="read-more" href="http://localhost:1313/post/second/">
+			<a class="read-more" href="http://localhost:1313/blog/second/">
 				Read&nbsp;more&nbsp;→
 			</a>
 		</footer>
@@ -114,6 +106,16 @@
 		</p>
 	</div>
 </footer>
+<script type="text/javascript">
+	function navToggle(div) {
+		var className = div.getAttribute('class');
+		if (className) {
+			div.className = "";
+		} else {
+			div.className = "open";
+		}
+	}
+</script>
 <script type="text/javascript">
 	document.write('<script src="http://'
 		+ (location.host || 'localhost').split(':')[0]

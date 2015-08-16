@@ -12,10 +12,10 @@
     
     <item>
       <title>Third</title>
-      <link>http://localhost:1313/post/third/</link>
+      <link>http://localhost:1313/blog/third/</link>
       <pubDate>Wed, 29 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/third/</guid>
+      <guid>http://localhost:1313/blog/third/</guid>
       <description>
 
 &lt;h1 id=&#34;third-post:1fe12548244a1733e38ed5b40fa959e0&#34;&gt;Third Post&lt;/h1&gt;
@@ -38,10 +38,10 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&g
     
     <item>
       <title>Second</title>
-      <link>http://localhost:1313/post/second/</link>
+      <link>http://localhost:1313/blog/second/</link>
       <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/second/</guid>
+      <guid>http://localhost:1313/blog/second/</guid>
       <description>
 
 &lt;h1 id=&#34;second-post:9f7936f9b5c071ae81db818b80a44a0d&#34;&gt;Second Post&lt;/h1&gt;
@@ -66,10 +66,10 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&g
     
     <item>
       <title>First</title>
-      <link>http://localhost:1313/post/first/</link>
+      <link>http://localhost:1313/blog/first/</link>
       <pubDate>Mon, 27 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/first/</guid>
+      <guid>http://localhost:1313/blog/first/</guid>
       <description>
 
 &lt;h1 id=&#34;first-post:e8fb9c67eba912c72729806db31eaa1b&#34;&gt;First Post&lt;/h1&gt;

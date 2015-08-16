@@ -2,10 +2,10 @@
 <body lang="en">
 {{ partial "subheader.html" . }}
 <section id="main">
-	<h1 id="title">Posts</h1>
+	<h1 id="title">Blog Posts</h1>
 	{{ range .Data.Pages.GroupByDate "2006" }}
 	<h2>{{ .Key }}</h2>
-	<ul id="list">
+	<ul class="list">
 			{{ range .Pages }}
 					{{ .Render "li"}}
 			{{ end }}

@@ -5,42 +5,30 @@
 	<article itemprop="articleBody" class="container">
 		<header>
 			<h1 itemprop="name" class="title">{{ .Title }}</h1>
-			<p><a href="/{{ .Section }}">{{ .Section }}</a></p>
+	{{ $sectionName := replace .Section  "-" " " }}
+	{{ $snu := urlize .Section }}
+
+	{{ if ne $sectionName "blog" }}
+			<h3 class="series">Series:&nbsp;<a href="/{{ $snu }}/">{{ $sectionName }}</a></h3>
+			{{ if .Params.chapter }}
+			{{ $chapter := .Params.chapter }}
+			{{ $section := .Params.section }}
+			<h3 class="chapter"><a href="/{{ $snu }}/#chapter-{{ $chapter }}">Chapter {{ $chapter }}</a>, Section {{ $section }}</h3>
+			{{ end }}
+			{{ if .Params.day }}
+			<h3 class="day">Day {{ .Params.chapter }}</h3>
+			{{ end }}
+	{{ end }}
+
+			{{ partial "section_nav.html" . }}
 
 			<p class="date">{{ .Date.Format "2 Jan 2006" }}</p>
 		</header>
 			{{ .Content }}
+
+			{{ partial "section_nav.html" . }}
 	</article>
 </section>
-<aside id="meta">
-		<div id="author">
-			<p>Author: {{ .Site.Author.name }}</p>
-		</div>
-	{{ if .Params.topics }}
-		<div id="categories">
-			<h4>Categories:</h4>
-			<ul>
-			{{ range .Params.topics }}
-				<li><a href="/topics/{{ . | urlize }}/">{{ . }}</a></li>
-			{{ end }}
-			</ul>
-		</div>
-	{{ end }}
-	{{ if .Params.tags }}
-		<div id="tags">
-			<h4>Tags:</h4>
-			<ul>
-			{{ range .Params.tags }}
-				<li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
-			{{ end }}
-			</ul>
-		</div>
-	{{ end }}
-
-{{ partial "subscribe.html" . }}
-{{ partial "meta_single.html" . }}
-
-</aside>
-
+{{ partial "post_meta.html" . }}
 {{ partial "disqus.html" . }}
 {{ partial "footer.html" . }}

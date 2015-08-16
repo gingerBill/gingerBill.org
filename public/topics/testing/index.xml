@@ -12,10 +12,10 @@
     
     <item>
       <title>Second</title>
-      <link>http://localhost:1313/post/second/</link>
+      <link>http://localhost:1313/blog/second/</link>
       <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/second/</guid>
+      <guid>http://localhost:1313/blog/second/</guid>
       <description>
 
 &lt;h1 id=&#34;second-post:9f7936f9b5c071ae81db818b80a44a0d&#34;&gt;Second Post&lt;/h1&gt;
