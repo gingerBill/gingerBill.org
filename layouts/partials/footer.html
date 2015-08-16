@@ -2,26 +2,28 @@
 	<div>
 		<p>
 			&copy; 2007 &ndash; 2015 <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Ginger Bill</span></span>
-			<br />
-			Powered by <a href="http://gohugo.io">Hugo</a>
 		</p>
 	</div>
 </footer>
-<script type="text/javascript">
-	function navToggle(div) {
-		var className = div.getAttribute('class');
-		if (className) {
-			div.className = "";
+<script type="text/javascript" async defer>
+	function navToggle() {
+		var mainNav = document.getElementById('main-nav');
+		var threeLines = document.getElementById('three-lines');
+
+		if (mainNav.getAttribute('class')) {
+			mainNav.className = "";
+			threeLines.innerHTML = "&#x2630;";
 		} else {
-			div.className = "open";
+			mainNav.className = "open";
+			threeLines.innerHTML = "&#x2715;";
 		}
 	}
 </script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	document.write('<script src="http://'
 		+ (location.host || 'localhost').split(':')[0]
 		+ ':1313/livereload.js?mindelay=10"></'
 		+ 'script>')
-</script>
+</script> -->
 </body>
 </html>

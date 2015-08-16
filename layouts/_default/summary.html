@@ -2,10 +2,12 @@
 		<header>
 			<h1 itemprop="name"><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
 
-			<p class="date">{{ .Date.Format "2 Jan 2 2006" }}</p>
+			<p class="date">{{ .Date.Format "2 Jan 2006" }} &middot; {{ .ReadingTime }} minute read
 		</header>
 		{{ .Summary }}
 		<footer>
+			<a class="comments" href="{{ .Permalink }}#comments">Comments</a>
+			</a>
 			<a class="read-more" href="{{ .Permalink }}">
 				Read&nbsp;more&nbsp;→
 			</a>

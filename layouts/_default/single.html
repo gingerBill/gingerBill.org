@@ -8,7 +8,7 @@
 	{{ $sectionName := replace .Section  "-" " " }}
 	{{ $snu := urlize .Section }}
 
-	{{ if ne $sectionName "blog" }}
+	{{ if ne $sectionName "post" }}
 			<h3 class="series">Series:&nbsp;<a href="/{{ $snu }}/">{{ $sectionName }}</a></h3>
 			{{ if .Params.chapter }}
 			{{ $chapter := .Params.chapter }}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Random on gingerBill</title>
+    <link>http://www.gingerbill.org/tags/random/</link>
+    <description>Recent content in Random on gingerBill</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <copyright>Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved.</copyright>
+    <lastBuildDate>Sun, 16 Aug 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://www.gingerbill.org/tags/random/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Welcome</title>
+      <link>http://www.gingerbill.org/post/welcome/</link>
+      <pubDate>Sun, 16 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.gingerbill.org/post/welcome/</guid>
+      <description>&lt;p&gt;I don&amp;rsquo;t know why, but I am now starting this blog.&lt;/p&gt;
+
+&lt;p&gt;I can now rant with the whole internet being able to see it!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -17,8 +17,10 @@
 <section id="main">
 	<div>
 	<h1>Home</h1>
-	{{ range .Data.Pages }}
+	{{ range first 10 .Data.Pages }}
+		{{ if gt .Date.Unix 0 }} <!-- Used to ignore non posts -->
 		{{ .Render "summary" }}
+		{{ end }}
 	{{ end }}
 	</div>
 </section>

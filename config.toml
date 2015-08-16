@@ -1,7 +1,7 @@
 baseurl = "http://www.gingerbill.org"
 title = "gingerBill"
 languageCode = "en-gb"
-disqusShortname = "gingerbill"
+disqusShortname = "gingerBill"
 copyright = "Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved."
 MetaDataFormat = "toml"
 canonifyurls = true

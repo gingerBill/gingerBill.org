@@ -1,0 +1,52 @@
+title = "Intro To C"
+
+chapters = [
+"Introduction",
+"Getting Started",
+	# Programming
+	# Compiling a Program
+	# Installing a Text Editor
+	# Installing a Compiler
+"Compiling and Running a Program",
+	# Compiling `Hello World`
+	# Understanding `Hello World`
+	# Displaying values
+	# Comments
+	# Homework
+"Variables",
+	# Data Types and Constants
+	# - ints, floats, _Bool/bool
+	# Arithmetic Expressions and Operators
+	# Combining Operations
+	# _Complex and _Imaginary
+	# Homework
+"Loops",
+	# `for` statement
+	# `while` statement
+	# `do` statement
+	# `break` and `continue`
+	# Homework
+"Statements: `if`, `else`, and `switch`",
+	# `if` statement
+	# `if-else` construct
+	# Nesting `if`
+	# `else if`
+	# `switch`
+	# Boolean variables
+	# Ternary/Conditional Operator
+	# Homework
+"Arrays",
+	# Defining an Array
+"Character Strings",
+"Functions",
+"Structures",
+"Pointers",
+"Bit Operations",
+"The C Preprocessor",
+"Large Programs",
+"Input and Output",
+"Memory",
+"Debugging on Windows",
+"Real Life Example",
+"Conclusion",
+]

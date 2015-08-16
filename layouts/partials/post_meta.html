@@ -1,0 +1,28 @@
+<aside id="meta">
+	<div id="author">
+		<p>Author: {{ .Site.Author.name }}</p>
+	</div>
+{{ if .Params.topics }}
+	<div id="categories">
+		<h4>Categories:</h4>
+		<ul>
+		{{ range .Params.topics }}
+			<li><a href="/topics/{{ . | urlize }}/">{{ . }}</a></li>
+		{{ end }}
+		</ul>
+	</div>
+{{ end }}
+{{ if .Params.tags }}
+	<div id="tags">
+		<h4>Tags:</h4>
+		<ul>
+		{{ range .Params.tags }}
+			<li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
+		{{ end }}
+		</ul>
+	</div>
+{{ end }}
+
+{{ partial "subscribe.html" . }}
+{{ partial "meta_single.html" . }}
+</aside>

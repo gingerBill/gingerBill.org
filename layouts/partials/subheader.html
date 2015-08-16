@@ -1,8 +1,14 @@
 <header id="header">
 <div>
 	<h1><a href="/" border="0" id="logo-link"><span class="ginger">ginger</span>Bill<sup class="tm">&trade;</sup></a></h1>
-	<nav id="main-nav" onclick="navToggle(this)">
-	{{ partial "nav.html" . }}
+	<div id="three-lines" onclick="navToggle();">&#x2630;</div>
+	<nav id="main-nav">
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/post/">Blog</a></li>
+			<li><a href="/projects/">Projects</a></li>
+			<li><a href="/about/">About</a></li>
+		</ul>
 	</nav>
 </div>
 </header>
