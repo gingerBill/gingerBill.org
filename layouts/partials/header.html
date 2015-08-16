@@ -4,12 +4,12 @@
 <!-- Basic Page Needs -->
 	<meta charset="utf-8" />
 
-	{{ partial "meta.html" . }}
+{{ partial "meta.html" . }}
 
 	<base href="{{ .Site.BaseURL }}" />
 	<title>{{ .Title }} &middot; gingerBill</title>
 	<link rel="canonical" href="{{ .Permalink }}" />
 	{{ if .RSSlink }}<link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Title }}" />{{ end }}
 
-	{{ partial "head_includes.html" . }}
+{{ partial "head_includes.html" . }}
 </head>
