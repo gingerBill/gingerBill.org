@@ -23,15 +23,6 @@
     </item>
     
     <item>
-      <title>Projects</title>
-      <link>http://www.gingerbill.org/projects/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.gingerbill.org/projects/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>About</title>
       <link>http://www.gingerbill.org/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -58,6 +49,15 @@
 &lt;li&gt;&lt;a href=&#34;http://www.sublimetext.com/&#34;&gt;Sublime Text 3&lt;/a&gt; - The best text editor I have used so far&lt;/li&gt;
 &lt;/ul&gt;
 </description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>http://www.gingerbill.org/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.gingerbill.org/projects/</guid>
+      <description></description>
     </item>
     
   </channel>

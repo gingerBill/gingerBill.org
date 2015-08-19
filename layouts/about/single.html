@@ -1,0 +1,10 @@
+{{ partial "header.html" . }}
+<body lang="en" itemscope itemtype="http://schema.org/Article">
+{{ partial "subheader.html" . }}
+<section id="main">
+	<div>
+	<h1>About <span class="site-name"><span class="ginger">ginger</span>Bill<sup class="tm">&trade;</sup></span></h1>
+	{{ .Content }}
+	</div>
+</section>
+{{ partial "footer.html" . }}
