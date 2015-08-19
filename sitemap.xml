@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>//www.gingerbill.org/</loc>
+    <loc>http://www.gingerbill.org/</loc>
     <lastmod>2015-08-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>//www.gingerbill.org/post/welcome/</loc>
+    <loc>http://www.gingerbill.org/post/welcome/</loc>
     <lastmod>2015-08-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>//www.gingerbill.org/projects/</loc>
+    <loc>http://www.gingerbill.org/projects/</loc>
   </url>
   
   <url>
-    <loc>//www.gingerbill.org/about/</loc>
+    <loc>http://www.gingerbill.org/about/</loc>
   </url>
   
 </urlset>
