@@ -3,8 +3,13 @@
   
   <url>
     <loc>http://www.gingerbill.org/</loc>
-    <lastmod>2015-08-16T00:00:00+00:00</lastmod>
+    <lastmod>2015-08-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.gingerbill.org/post/defer-in-c&#43;&#43;11/</loc>
+    <lastmod>2015-08-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -13,11 +18,11 @@
   </url>
   
   <url>
-    <loc>http://www.gingerbill.org/projects/</loc>
+    <loc>http://www.gingerbill.org/about/</loc>
   </url>
   
   <url>
-    <loc>http://www.gingerbill.org/about/</loc>
+    <loc>http://www.gingerbill.org/projects/</loc>
   </url>
   
 </urlset>

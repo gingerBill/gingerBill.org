@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gingerBill</title>
-    <link>http://www.gingerbill.org/</link>
-    <description>Recent content on gingerBill</description>
+    <title>Golang on gingerBill</title>
+    <link>http://www.gingerbill.org/tags/golang/</link>
+    <description>Recent content in Golang on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright (c) 2007 - 2015, Ginger Bill</copyright>
     <lastBuildDate>Wed, 19 Aug 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://www.gingerbill.org/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.gingerbill.org/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>A Defer Statement for C&#43;&#43;11</title>
@@ -157,56 +157,6 @@ void someFunc()
 
 &lt;p&gt;to return &lt;code&gt;Hello 0 1 2 3&lt;/code&gt;. However, it will return &lt;code&gt;0 1 2 3 Hello&lt;/code&gt;. I personally prefer the scope behaviour but that is just a matter of opinion.&lt;/p&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>Welcome</title>
-      <link>http://www.gingerbill.org/post/welcome/</link>
-      <pubDate>Sun, 16 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.gingerbill.org/post/welcome/</guid>
-      <description>&lt;p&gt;I don&amp;rsquo;t know why, but I am now starting this blog.&lt;/p&gt;
-
-&lt;p&gt;I can now rant with the whole internet being able to see it!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>http://www.gingerbill.org/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.gingerbill.org/about/</guid>
-      <description>
-
-&lt;p&gt;This website was created by Ginger Bill. It is mostly a compilation of the stuff I find interesting, personal projects, and other rubbish.&lt;/p&gt;
-
-&lt;h3 id=&#34;contact-information:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Contact information&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Twitter: &lt;a href=&#34;//twitter.com/TheGingerBill&#34;&gt;@TheGingerBill&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Email:   &lt;a href=&#34;mailto:bill@gingerbill.org&#34;&gt;bill@gingerbill.org&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;YouTube: &lt;a href=&#34;//youtube.com/GingerGames&#34;&gt;GingerGames&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;GitHub:  &lt;a href=&#34;//github.com/gingerBill&#34;&gt;gingerBill&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;some-of-the-things-that-i-used-to-create-this-website:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;Some of the things that I used to create this website&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt; is a static site generator written in &lt;a href=&#34;https://golang.org&#34;&gt;Go(lang)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; - Web Host&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.sublimetext.com/&#34;&gt;Sublime Text 3&lt;/a&gt; - The best text editor I have used so far&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Projects</title>
-      <link>http://www.gingerbill.org/projects/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.gingerbill.org/projects/</guid>
-      <description></description>
     </item>
     
   </channel>

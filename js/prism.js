@@ -600,7 +600,7 @@ if (Prism.languages.markup) {
 Prism.languages.c = Prism.languages.extend('clike', {
 	'keyword': /\b(asm|typeof|inline|break|case|const|continue|default|do|else|enum|extern|for|goto|if|register|return|sizeof|static|struct|switch|typedef|union|volatile|while)\b/,
 	'operator': /\-[>-]?|\+\+?|!=?|<<?=?|>>?=?|==?|&&?|\|?\||[~^%?*\/]/,
-	'type': /\b([a-zA-Z]\w+(_t))|([A-Z][a-zA-Z0-9_]*)+|(int|unsigned|signed|char|short|long|long long|float|double|u8|u16|u32|u64|s8|s16|s32|s64|f16|f32|f64)/
+	'type': /\b([a-zA-Z]\w+(_t))|(\b[A-Z]\w+\b)|(int|unsigned|signed|char|short|long|long long|float|double|_Bool|bool|void|u8|u16|u32|u64|s8|s16|s32|s64|f16|f32|f64|b8|b32)\b/
 });
 
 Prism.languages.insertBefore('c', 'string', {
