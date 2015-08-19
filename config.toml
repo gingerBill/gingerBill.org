@@ -1,4 +1,4 @@
-baseurl = "//www.gingerbill.org/"
+baseurl = "http://www.gingerbill.org/"
 title = "gingerBill"
 languageCode = "en-gb"
 disqusShortname = "gingerbill"

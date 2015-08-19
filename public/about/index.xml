@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Abouts on gingerBill</title>
-    <link>//www.gingerbill.org/about/</link>
+    <link>http://www.gingerbill.org/about/</link>
     <description>Recent content in Abouts on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <copyright>Copyright (c) 2007 - 2015, Ginger Bill; all rights reserved.</copyright>
-    <atom:link href="//www.gingerbill.org/about/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.gingerbill.org/about/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About</title>
-      <link>//www.gingerbill.org/about/</link>
+      <link>http://www.gingerbill.org/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>//www.gingerbill.org/about/</guid>
+      <guid>http://www.gingerbill.org/about/</guid>
       <description>
 
 &lt;p&gt;This website was created by Ginger Bill. It is mostly a compilation of the stuff I find interesting, personal projects, and other rubbish.&lt;/p&gt;
