@@ -42,7 +42,6 @@ load_level_from_file(const char* filename)
 				case 255: {
 					u16 portal_id = (color.g & 0xf0) / 16;
 					u16 connected_portal_id = (color.g & 0x0f);
-					printf("Portal %d -> %d\n", portal_id, connected_portal_id);
 					add_entity(level, create_portal({x, y, 0}, portal_id, connected_portal_id));
 				} break;
 				default:
@@ -156,7 +155,7 @@ create_boss(const Vector3& position)
 
 	e.position = position;
 
-	e.max_health = e.health = 70;
+	e.max_health = e.health = 60;
 	e.max_mana = e.mana = 70;
 
 	return e;

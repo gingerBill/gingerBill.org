@@ -6,6 +6,7 @@
 ////////////////////////////////
 #include <emscripten/emscripten.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 #include <functional> // Needed for `defer`
 #include <math.h>
 #include <stdint.h>

@@ -29,14 +29,18 @@ create_framebuffer(int width, int height)
 b32
 init(Game& game)
 {
-	// srand(time(nullptr));
-	srand(1337);
+	srand(time(nullptr));
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
 		sdl_error("SDL_Init");
 		return false;
 	}
 	printf("[SDL] Init\n");
+
+	if (Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
+		sdl_error("Mix_OpenAudio");
+		return false;
+	}
 
 	game.window = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
 	if (game.window == nullptr) {
@@ -51,20 +55,35 @@ init(Game& game)
 	game.player.fov   = 1.0f / (f32)game.display.height;
 	game.player.z     = 0.1f;
 	game.player.pitch = -0.1f;
+	game.player.yaw   = -TAU / 4;
 
 	game.player.max_health = game.player.health = 4.0f;
 	game.player.max_mana = game.player.mana = 20.0f;
 	printf("[Game] player Init\n");
 
-	art::floors    = load_bitmap_from_file("floors.png");
-	art::sprites   = load_bitmap_from_file("sprites.png");
-	art::particles = load_bitmap_from_file("particles.png");
+	art::title_screen = load_bitmap_from_file("title_screen.png");
+	art::floors       = load_bitmap_from_file("floors.png");
+	art::sprites      = load_bitmap_from_file("sprites.png");
+	art::particles    = load_bitmap_from_file("particles.png");
 	art::font = load_bitmap_from_file("font.png");
 	printf("[Game] Load Art\n");
+
+	sound::power_up = Mix_LoadWAV("Powerup.wav");
+	sound::hit0     = Mix_LoadWAV("Hit_Hurt0.wav");
+	sound::hit1     = Mix_LoadWAV("Hit_Hurt1.wav");
+	sound::fire     = Mix_LoadWAV("Fire.wav");
+	printf("[Game] Load Sounds\n");
+
+	music::main = Mix_LoadMUS("main_music.ogg");
+	printf("[Game] Load Music\n");
 
 	game.level001   = load_level_from_file("level001.png");
 	game.curr_level = &game.level001;
 	printf("[Game] Load Levels\n");
+
+	if (!Mix_PlayingMusic()) {
+		Mix_PlayMusic(music::main, -1);
+	}
 
 	game.player.x = game.curr_level->init_position.x;
 	game.player.y = game.curr_level->init_position.y;
@@ -96,6 +115,14 @@ create_smoke_particle(int tex, const Vector3& position)
 	p.life = 1.0f + (rand() % 8 - 4) / 64.0f;
 
 	return p;
+}
+
+void
+play_sound(Mix_Chunk* s, f32 volume)
+{
+	volume = clamp(volume, 0, 1);
+	// Mix_VolumeChunk(s, volume * MIX_MAX_VOLUME);
+	Mix_PlayChannel(-1, s, 0);
 }
 
 internal void
@@ -207,6 +234,10 @@ update_spells(Game& game, f32 dt)
 			player.mana -= mana_usage * dt;
 
 			player.spell_active = true;
+			if (random(0, 1) < 0.2) {
+				play_sound(sound::fire);
+			}
+
 		} else {
 			player.spell_active = false;
 		}
@@ -339,8 +370,6 @@ update_particles(Game& game, f32 dt)
 		} break;
 
 		case ENTITY_PORTAL: {
-			if (level.portal_cooldown <= 0)
-				break;
 			Vector3 pos = e.position;
 			pos.x += ((rand() & 15) / 32.0f) - 0.25f;
 			pos.y += ((rand() & 15) / 32.0f) - 0.25f;
@@ -389,6 +418,9 @@ update_entities(Game& game, Level& level, f32 dt)
 	level.portal_cooldown -= dt;
 	if (level.portal_cooldown < 0)
 		level.portal_cooldown = 0;
+	game.killed_a_prisoner_cooldown -= dt;
+	if (game.killed_a_prisoner_cooldown < 0)
+		game.killed_a_prisoner_cooldown = 0;
 
 	const Vector2 forwards = {sinf(game.player.yaw), cosf(game.player.yaw)};
 
@@ -432,7 +464,6 @@ update_entities(Game& game, Level& level, f32 dt)
 				}
 				f32 damage = random(3, 6) * dt;
 				game.player.health -= damage;
-
 			}
 
 		} break;
@@ -472,6 +503,12 @@ update_entities(Game& game, Level& level, f32 dt)
 					}
 					f32 damage = random(10, 15) * dt;
 					game.player.health -= damage;
+					if (random(0, 1) < 0.2) {
+						if (rand() & 1)
+							play_sound(sound::hit0);
+						else
+							play_sound(sound::hit1);
+					}
 				}
 			}
 
@@ -481,8 +518,9 @@ update_entities(Game& game, Level& level, f32 dt)
 
 		case ENTITY_PORTAL: {
 			if (distance < 0.5f && level.portal_cooldown <= 0) {
-				Entity portal = get_portal_entity(level, e.connected_portal_id);
+				Entity portal        = get_portal_entity(level, e.connected_portal_id);
 				game.player.position = portal.position;
+				play_sound(sound::fire); // TODO
 
 				level.portal_cooldown = 3.0f;
 			}
@@ -496,6 +534,7 @@ update_entities(Game& game, Level& level, f32 dt)
 				game.player.new_spell_cooldown = 3.0f;
 				game.player.max_health += 4;
 				game.player.max_mana += 4;
+				play_sound(sound::power_up);
 			}
 			e.position.z = 0.05f * sinf(game.curr_time / 600.0f);
 		} break;
@@ -505,6 +544,7 @@ update_entities(Game& game, Level& level, f32 dt)
 			if (distance < 0.5f) {
 				e.health = -1000; // KILL IT
 				game.player.health += 5;
+				play_sound(sound::power_up);
 			}
 		} break;
 
@@ -513,6 +553,7 @@ update_entities(Game& game, Level& level, f32 dt)
 			if (distance < 0.5f) {
 				e.health = -1000; // KILL IT
 				game.player.mana += 5;
+				play_sound(sound::power_up);
 			}
 		} break;
 
@@ -532,6 +573,8 @@ remove_dead_entities(Game& game, Level& level)
 				printf("Mage died\n");
 			if (e.type == ENTITY_BOSS)
 				game.has_finished = true;
+			if (e.type == ENTITY_PRISONER)
+				game.killed_a_prisoner_cooldown = 2.0f;
 			if (i != level.entity_count - 1)
 				level.entities[i] = level.entities[level.entity_count - 1];
 			level.entity_count--;
@@ -544,6 +587,10 @@ remove_dead_entities(Game& game, Level& level)
 void
 update_game(Game& game, f32 dt)
 {
+	if (!Mix_PlayingMusic()) {
+		Mix_PlayMusic(music::main, -1);
+	}
+
 	if (game.player.health <= 0)
 		game.has_finished = true;
 	if (game.has_finished)
@@ -728,126 +775,65 @@ render_spells(Game& game)
 #endif
 }
 
-void
-render_level(Game& game)
+internal int
+get_wall_tex(Tile_Type t, int offset)
 {
-	Level& level = *game.curr_level;
+	switch (t) {
+	case TILE_WALL:
+		return 0x20 + offset % 2;
+	case TILE_FALSE_WALL:
+		return 0x22;
+	case TILE_BOOKCASE:
+		return 0x30 + offset % 4;
+	case TILE_BARS:
+		return 0x40;
+	default:
+		return 0x20;
+	}
+}
 
-	render_floors(game, true);
-
+internal void
+render_walls(Game& game, Level& level)
+{
 	int radius   = 6;
 	int x_center = (int)game.player.x;
 	int y_center = (int)game.player.y;
 
 	for (int y = y_center - radius; y <= y_center + radius; y++) {
 		for (int x = x_center - radius; x <= x_center + radius; x++) {
-			Tile center = get_tile(level, x, y);
-			Tile east   = get_tile(level, x + 1, y);
-			Tile west   = get_tile(level, x - 1, y);
-			Tile north  = get_tile(level, x, y - 1);
-			Tile south  = get_tile(level, x, y + 1);
+			const Tile center = get_tile(level, x, y);
+			const Tile east   = get_tile(level, x + 1, y);
+			const Tile west   = get_tile(level, x - 1, y);
+			const Tile north  = get_tile(level, x, y - 1);
+			const Tile south  = get_tile(level, x, y + 1);
 
-			int tex = 0x20; // default
-			if (center.type == TILE_FLOOR) {
-				int offset = (((x + 1) * (y + 1)) + x * 7 + y * 6 - 7) & 15;
-				if (east.type != TILE_FLOOR) {
-					switch (east.type) {
-					case TILE_WALL:
-						tex = 0x20 + offset % 2;
-						break;
-					case TILE_FALSE_WALL:
-						tex = 0x22;
-						break;
-					case TILE_BOOKCASE:
-						tex = 0x30 + offset % 4;
-						break;
-					case TILE_BARS:
-						tex = 0x40;
-						break;
-					default:
-						break;
-					}
-					if (east.type == TILE_BARS)
-						render_wall(game, tex, {x + 1, y + 1}, {x + 1, y});
-					else
-						render_wall(game, tex, {x + 1, y + 1}, {x + 1, y});
-				}
-				if (west.type != TILE_FLOOR) {
-					switch (west.type) {
-					case TILE_WALL:
-						tex = 0x20 + offset % 2;
-						break;
-					case TILE_FALSE_WALL:
-						tex = 0x22;
-						break;
-					case TILE_BOOKCASE:
-						tex = 0x30 + offset % 4;
-						break;
-					case TILE_BARS:
-						tex = 0x40;
-						break;
-					default:
-						break;
-					}
+			if (center.type == TILE_FLOOR || center.type == TILE_FALSE_WALL) {
+				const int offset = (((x + 1) * (y + 1)) + x * 7 + y * 6 - 7) & 31;
+				if (east.type != TILE_FLOOR)
+					render_wall(game, get_wall_tex(east.type, offset), {x + 1, y + 1}, {x + 1, y});
 
-					if (west.type == TILE_BARS)
-						render_wall(game, tex, {x, y}, {x, y + 1});
-					else
-						render_wall(game, tex, {x, y}, {x, y + 1});
-				}
-				if (north.type != TILE_FLOOR) {
-					switch (north.type) {
-					case TILE_WALL:
-						tex = 0x20 + offset % 2;
-						break;
-					case TILE_FALSE_WALL:
-						tex = 0x22;
-						break;
-					case TILE_BOOKCASE:
-						tex = 0x30 + offset % 4;
-						break;
-					case TILE_BARS:
-						tex = 0x40;
-						break;
-					default:
-						break;
-					}
+				if (west.type != TILE_FLOOR)
+					render_wall(game, get_wall_tex(west.type, offset), {x, y}, {x, y + 1});
 
-					if (north.type == TILE_BARS)
-						render_wall(game, tex, {x + 1, y}, {x, y});
-					else
-						render_wall(game, tex, {x + 1, y}, {x, y});
-				}
-				if (south.type != TILE_FLOOR) {
-					switch (south.type) {
-					case TILE_WALL:
-						tex = 0x20 + offset % 2;
-						break;
-					case TILE_FALSE_WALL:
-						tex = 0x22;
-						break;
-					case TILE_BOOKCASE:
-						tex = 0x30 + offset % 4;
-						break;
-					case TILE_BARS:
-						tex = 0x40;
-						break;
-					default:
-						break;
-					}
+				if (north.type != TILE_FLOOR)
+					render_wall(game, get_wall_tex(north.type, offset), {x + 1, y}, {x, y});
 
-					if (south.type == TILE_BARS)
-						render_wall(game, tex, {x, y + 1}, {x + 1, y + 1});
-					else
-						render_wall(game, tex, {x, y + 1}, {x + 1, y + 1});
-				}
+				if (south.type != TILE_FLOOR)
+					render_wall(game, get_wall_tex(south.type, offset), {x, y + 1}, {x + 1, y + 1});
 			}
 		}
 	}
+}
+
+void
+render_level(Game& game)
+{
+	Level& level = *game.curr_level;
+
+	render_floors(game, true);
+	render_walls(game, level);
 
 	render_entities(game);
-
-	// render_sprite(game, art::sprites, 0x00, {1, 3, 0});
 
 	render_particles(game);
 }
@@ -893,6 +879,13 @@ render_ui(Game& game)
 
 	// render_ui_sprite(game.display, art::sprites, 0xf0,
 	//                  {0, 76}, {0, 2, 16, 14});
+
+	constexpr int TSD = 3000;
+
+	if (game.curr_time < TSD) {
+		render_ui_sprite(game.display, art::title_screen, {0, 0}, {0, 0, 160, 90});
+		return;
+	}
 
 	if (game.player.health <= 0) {
 		int xx0 = (game.display.width - (23 * CHAR_WIDTH)) / 2;
@@ -970,6 +963,33 @@ render_ui(Game& game)
 		render_text(game, spell_buffer, {xx, yy}, spell_color);
 	}
 
+	if (game.killed_a_prisoner_cooldown) {
+		int xx1 = (game.display.width - (12 * CHAR_WIDTH)) / 2;
+		render_text(game, "You monster!", {xx1, 19}, WHITE);
+	}
+
+	if (length(game.player.position.xy - game.curr_level->init_position) > 6)
+		return;
+
+	if (game.curr_time > TSD + 3000 && game.curr_time < TSD + 6000) {
+		int xx1 = (game.display.width - (15 * CHAR_WIDTH)) / 2;
+		render_text(game, "Want to escape?", {xx1, 19}, WHITE);
+	} else if (game.curr_time > TSD + 6000 && game.curr_time < TSD + 9000) {
+		int xx1 = (game.display.width - (24 * CHAR_WIDTH)) / 2;
+		render_text(game, "I've been digging a hole", {xx1, 19}, WHITE);
+	} else if (game.curr_time > TSD + 9000 && game.curr_time < TSD + 12000) {
+		int xx1 = (game.display.width - (18 * CHAR_WIDTH)) / 2;
+		render_text(game, "I'm too weak to go", {xx1, 19}, WHITE);
+	} else if (game.curr_time > TSD + 12000 && game.curr_time < TSD + 15000) {
+		int xx1 = (game.display.width - (24 * CHAR_WIDTH)) / 2;
+		render_text(game, "But I've placed a portal", {xx1, 19}, WHITE);
+	} else if (game.curr_time > TSD + 15000 && game.curr_time < TSD + 18000) {
+		int xx1 = (game.display.width - (25 * CHAR_WIDTH)) / 2;
+		render_text(game, "With the magic I had left", {xx1, 19}, WHITE);
+	} else if (game.curr_time > TSD + 18000 && game.curr_time < TSD + 21000) {
+		int xx1 = (game.display.width - (21 * CHAR_WIDTH)) / 2;
+		render_text(game, "Go kill the high mage", {xx1, 19}, WHITE);
+	}
 	// Hand
 	// render_ui_sprite(game.display, art::sprites, {120, 40}, {163, 200, 33, 56});
 }

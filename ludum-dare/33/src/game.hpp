@@ -108,6 +108,7 @@ struct Game {
 	u32 frame_count;
 	u32 fps;
 
+	f32 killed_a_prisoner_cooldown;
 
 	int particle_count;
 	Particle particles[MAX_PARTICLES];
@@ -115,11 +116,28 @@ struct Game {
 
 namespace art
 {
+Bitmap title_screen;
 Bitmap floors;
 Bitmap sprites;
 Bitmap particles;
 Bitmap font;
 } // namespace art
+
+namespace sound
+{
+Mix_Chunk* power_up = nullptr;
+Mix_Chunk* hit0 = nullptr;
+Mix_Chunk* hit1 = nullptr;
+Mix_Chunk* fire = nullptr;
+} // namespace sound
+
+namespace music
+{
+Mix_Music* main = nullptr;
+} // namespace music
+
+void
+play_sound(Mix_Chunk* sound, f32 volume = 1.0f);
 
 Framebuffer
 create_framebuffer(int width, int height);

@@ -20,7 +20,7 @@
 
 			background-color: #000;
 			border: 0;
-			margin: 1em auto 0;
+			margin: 0 auto;
 			padding: 0;
 		}
 
@@ -74,6 +74,12 @@
 			padding: 1em;
 		}
 
+		h1, h2, h3, h4, h5, h6 {
+			text-align: center;
+			color: #d2d7e0;
+		}
+
+
 		#story {
 			color: #d2d7e0;
 			margin: 1em auto;
@@ -91,11 +97,16 @@
 </head>
 <body lang="en">
 	<div class="canvas-container">
-		<canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+		<canvas id="canvas" oncontextmenu="event.preventDefault()">
+		</canvas>
 	</div>
 	<div class="buttons">
 		<input type="button" id="fullscreen" value="Fullscreen" onclick="Module.requestFullScreen(false, false);">
 	</div>
+	<h1>Tale of a Mad Mage</h1>
+	<h3>by gingerBill for Ludum Dare 33</h3>
+	<h4>Please wait. It may take a while to load. (~5 MB)</h4>
+
 	<div id="story">
 		<h2>Controls</h2>
 		<ul>
@@ -113,13 +124,14 @@
 	<textarea id="console" rows="16"></textarea>
 
 	<script type="text/javascript">
-		var canvas = document.getElementById("canvas");
+		var canvas = document.getElementById('canvas');
+		var statusElement = document.getElementById('status');
 
 		var Module = {
 			preRun: [],
 			postRun: [],
 			canvas: (function() {
-				var canvas = document.getElementById("canvas");
+				var canvas = document.getElementById('canvas');
 
 				return canvas;
 			})(),
@@ -130,12 +142,6 @@
 				return function(text) {
 					if (arguments.length > 1)
 						text = Array.prototype.slice.call(arguments).join(' ');
-
-					// These replacements are necessary if you render to raw HTML
-					// text = text.replace(/&/g, "&amp;");
-					// text = text.replace(/</g, "&lt;");
-					// text = text.replace(/>/g, "&gt;");
-					// text = text.replace('\n', '<br>', 'g');
 					element.value += text + "\r";
 					element.scrollTop = element.scrollHeight; // focus on bottom
 				};
@@ -145,7 +151,7 @@
 				if (arguments.length > 1)
 					text = Array.prototype.slice.call(arguments).join(' ');
 				console.log(text);
-			}
+			},
 		};
 	</script>
 	<script type="text/javascript" src="game.js" async defer></script>
