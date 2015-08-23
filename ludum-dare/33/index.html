@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Ludum Dare 33</title>
+	<style type="text/css">
+		html, body {
+			font-family: Arial, sans-serif;
+			/*background-color: #d2d7e0;*/
+			background-color: #000;
+			color: #2b303b;
+			margin: 0;
+			padding: 0;
+		}
+
+		.canvas-container {
+			width: 640px;
+			height: 360px;
+
+			background-color: #000;
+			border: 0;
+			margin: 1em auto 0;
+			padding: 0;
+		}
+
+		.buttons {
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		#canvas {
+			width: 640px;
+			height: 360px;
+
+			margin: 0;
+			padding: 0;
+			border: 0;
+
+			-ms-interpolation-mode: nearest-neighbor;   /* IE */
+			image-rendering: optimizeSpeed;             /* Older versions of FF */
+			image-rendering: -moz-crisp-edges;          /* FF 6.0+ */
+			image-rendering: -webkit-optimize-contrast; /* Safari */
+			image-rendering:   -o-crisp-edges;          /* OS X & Windows Opera */
+			image-rendering: pixelated;                 /* Awesome future-browsers */
+		}
+
+		input#fullscreen {
+			margin: 1em 0;
+			padding: 0.2em 0.3em;
+			border-radius: 3px;
+			border: 1px solid #2b303b;
+			background-color: #d2d7e0;
+			font-family: 'Consolas', 'Droid Sans Mono', 'Ubuntu Mono', monospace;
+			font-size: 0.8em;
+			font-weight: bold;
+		}
+
+		input#fullscreen:hover {
+			background-color: #c2c7d0;
+		}
+
+		input#fullscreen:active {
+			background-color: #a2a7b0;
+		}
+
+		#console {
+			font-family: 'Consolas', 'Droid Sans Mono', 'Ubuntu Mono', monospace;
+			background-color: #2b303b;
+			color: #d2d7e0;
+			width: 100%;
+			border: 0 none;
+			margin: 0;
+			padding: 1em;
+		}
+
+		#story {
+			color: #d2d7e0;
+			margin: 1em auto;
+			width: 600px;
+			text-align: center;
+		}
+
+		#story ul {
+			text-align: left;
+			list-style: none;
+			width: 200px;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body lang="en">
+	<div class="canvas-container">
+		<canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+	</div>
+	<div class="buttons">
+		<input type="button" id="fullscreen" value="Fullscreen" onclick="Module.requestFullScreen(false, false);">
+	</div>
+	<div id="story">
+		<h2>Controls</h2>
+		<ul>
+			<li>Move: [Up] &amp; [Down]</li>
+			<li>Turn: [Left] &amp; [Right]</li>
+			<li>Cast Spell: [Space]</li>
+			<li>Choose Spell: [1] [2] [3] [4]</li>
+		</ul>
+
+		<h2>Background</h2>
+		<p>You have been imprisoned for your monsterous crimes against magic-kind.</p>
+		<p>You must take revenge by killing the high mage.</p>
+	</div>
+
+	<textarea id="console" rows="16"></textarea>
+
+	<script type="text/javascript">
+		var canvas = document.getElementById("canvas");
+
+		var Module = {
+			preRun: [],
+			postRun: [],
+			canvas: (function() {
+				var canvas = document.getElementById("canvas");
+
+				return canvas;
+			})(),
+
+			print: (function() {
+				var element = document.getElementById('console');
+				element.value = '';
+				return function(text) {
+					if (arguments.length > 1)
+						text = Array.prototype.slice.call(arguments).join(' ');
+
+					// These replacements are necessary if you render to raw HTML
+					// text = text.replace(/&/g, "&amp;");
+					// text = text.replace(/</g, "&lt;");
+					// text = text.replace(/>/g, "&gt;");
+					// text = text.replace('\n', '<br>', 'g');
+					element.value += text + "\r";
+					element.scrollTop = element.scrollHeight; // focus on bottom
+				};
+			})(),
+
+			printErr: function(text) {
+				if (arguments.length > 1)
+					text = Array.prototype.slice.call(arguments).join(' ');
+				console.log(text);
+			}
+		};
+	</script>
+	<script type="text/javascript" src="game.js" async defer></script>
+</body>
+</html>
