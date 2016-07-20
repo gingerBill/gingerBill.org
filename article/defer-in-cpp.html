@@ -2,68 +2,53 @@
 <html>
 <head>
 <meta charset="utf-8">
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Defer in C++ - gingerBill</title>
-<meta name="description" content="Homepa">
+<meta name="description" content="One of my favourite things about Go is the `defer` statement. The `defer` statement pushes a function call onto a list; the list of saved calls in called when the function returns.">
+<link rel="canonical" href="//gingerbill.org/article/defer-in-cpp.html">
 
 <link rel="stylesheet" type="text/css" href="/css/normalize.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-<pre>
+<div class="wrapper">
 <h1><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
 
 <h2>A Defer Statement For C++11</h2>
+<h3><time datetime="2015-08-19" itemprop="datePublished">2015-08-19</time></h3>
 
-One of my favourite things about <a href="https://golang.org/">Go</a> is the `defer` statement. The `defer` statement pushes a function call onto a list; the list of saved calls in called when the function returns.
+<p>One of my favourite things about <a href="https://golang.org/">Go</a> is the `defer` statement. The `defer` statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
 
-Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href="http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.
+<p>Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href="http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.</p>
 
 <h2>C++11 Implementation</h2>
-<pre class="code" data-language="C++"><code>
-// This code requires C++11 features such as move semantics
-#include &lt;functional&gt;
-
-namespace Impl
-{
-template &lt;typename Func&gt;
-struct Defer
-{
-	Func func;
-	Defer(Func&amp;&amp; func)
-	: func(std::forward&lt;Func&gt;(func))
-	{
-	}
-
-	~Defer()
-	{
-		func();
-	}
+<pre class="code" data-language="C++">
+<code>template &lt;typename F&gt;
+struct privDefer {
+	F f;
+	privDefer(F f) : f(f) {}
+	~privDefer() { f(); }
 };
 
-template &lt;typename Func&gt;
-Defer&lt;Func&gt; deferFunc(Func&amp;&amp; func)
-{
-	return Defer&lt;Func&gt;(std::forward&lt;Func&gt;(func));
+template &lt;typename F&gt;
+privDefer&lt;F&gt; defer_func(F f) {
+	return privDefer&lt;F&gt;(f);
 }
 
 #define DEFER_1(x, y) x##y
 #define DEFER_2(x, y) DEFER_1(x, y)
-#define DEFER_3(x) DEFER_2(x, __COUNTER__)
-#define defer(code) auto DEFER_3(_defer_) = Impl::deferFunc([&amp;](){code;});
-
-} // namespace Impl
+#define DEFER_3(x)    DEFER_2(x, __COUNTER__)
+#define defer(code)   auto DEFER_3(_defer_) = defer_func([&amp;](){code;})
 </code></pre>
 
 <h2>Explanation</h2>
 
-One of the most common examples for this in Go is files.
+<p>One of the most common examples for this in Go is files.</p>
 
-<pre class="code" data-language="Go"><code>
-import "os"
+<pre class="code" data-language="Go">
+<code>import "os"
 
 func someFunc() {
 	file, err := os.Open("filename.ext", os.O_RDONLY, 0)
@@ -78,22 +63,18 @@ func someFunc() {
 }
 </code></pre>
 
-In C/C++, before every return, `fclose` must be called.
+<p>In C/C++, before every return, `fclose` must be called.</p>
 
-<pre class="code" data-language="C++"><code>
-void someFunc()
-{
-	FILE* file = fopen("filename.ext", "rb");
-	if (file == nullptr)
-	{
+<pre class="code" data-language="C++">
+<code>void some_func(void) {
+	FILE *file = fopen("filename.ext", "rb");
+	if (file == NULL) {
 		// handle error
 		return;
 	}
 
-	if (someTest)
-	{
+	if (someTest) {
 		// ...
-
 		fclose(file); // Have to explicitly close file
 		return;
 	}
@@ -103,26 +84,23 @@ void someFunc()
 }
 </code></pre>
 
-You may say that RAII in C++ solves this issue but this would require a class wrapper. `defer` allows for the same thing as RAII but without manually creating a wrapper type.
-
-Also, `defer` conceptually links the creation with the destruction without hiding it.
+<p>You may say that RAII in C++ <em>solves</em> this issue but this would require a class wrapper. `defer` allows for the same thing as RAII but without manually creating a wrapper type. Also, `defer` conceptually links the creation with the destruction without hiding it.</p>
 
 <h2>Examples In C++ Code</h2>
 
-<pre class="code" data-language="C++"><code>
-void someFunc()
-{
-	FILE* file = fopen("filename.ext", "rb");
-	if (file == nullptr)
+<pre class="code" data-language="C++">
+<code>void some_func(void) {
+	FILE *file = fopen("filename.ext", "rb");
+	if (file == NULL)
 		return;
-	defer(fclose(file));
+	defer (fclose(file));
 
-	u8* buffer = (u8*)allocate(64 * sizeof(u8));
-	if (buffer == nullptr)
+	u8 *buffer = (u8 *)allocate(64 * sizeof(u8));
+	if (buffer == NULL)
 		return; // fclose is called automatically
-	defer(deallocate(buffer));
+	defer (deallocate(buffer));
 
-	defer({
+	defer ({
 		printf("You can even defer ");
 		printf("an entire block too!");
 	});
@@ -131,33 +109,32 @@ void someFunc()
 }
 </code></pre>
 
-I use this regularly within code (especially in the Dunjun series). It is very useful when dealing with C code bases.
-
-There are numerous other implementations of this too and I have linked to these below.
+<p>I use this regularly within C++ code as it is very useful when dealing with C code bases.</p>
+<p>There are numerous other implementations of this too and I have linked to these below.</p>
 
 <h2>Other Implementations</h2>
 
- - <a href="http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a>
- - <a href="http://blog.korfuri.fr/post/go-defer-in-cpp/">Korfuri</a>
- - <a href="http://kri.gs/2013/01/20/defer-cpp/">Kristoffer Grönlund</a>
+<ul>
+<li><a href="http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a></li>
+<li><a href="http://kri.gs/2013/01/20/defer-cpp/"><strike>Kristoffer Grönlund</strike></a> (Page is missing)</li>
+</ul>
 
 <h2>Caveat</h2>
 
-Because the `defer` statement is called at the end of scope rather than function return, a Go programmer would example something like this:
+<p>Because the `defer` statement is called at the end of scope rather than function return, a Go programmer would example something like this:</p>
 
-<pre class="code" data-language="C++"><code>
-void anotherFunc()
-{
+<pre class="code" data-language="C++">
+<code>void another_func(void) {
 	for (int i = 0; i &lt; 4; i++)
-		defer(printf("%d ", i));
-	printf("Hello ");
+		defer (printf(" %d", i));
+	printf(" Hello");
 }
 </code></pre>
 
-to return `Hello 0 1 2 3`. However, it will return `0 1 2 3 Hello`. I personally prefer the scope behaviour but that is just a matter of opinion.
+<p>to return ` Hello 3 2 1 0`. However, it will return ` 0 1 2 3 Hello`. I personally prefer the scope behaviour but that is just a matter of opinion.</p>
 
-<div class="copyright">&copy; 2007-2015 Ginger Bill</div>
-</pre>
+<div class="copyright">&copy; 2007&ndash;2016 Ginger Bill</div>
+</div>
 <!-- I see you have found my analytics. So what?! -->
 <script type="text/javascript" src="//www.google-analytics.com/analytics.js" async></script>
 <script type="text/javascript">
