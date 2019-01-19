@@ -1,17 +1,17 @@
 ::-webkit-selection {
-  background-color: #f90;
+  background-color: #fd8000;
   color: #333;
   text-shadow: none;
 }
 
 ::-moz-selection {
-  background-color: #f90;
+  background-color: #fd8000;
   color: #333;
   text-shadow: none;
 }
 
 ::selection {
-  background-color: #f90;
+  background-color: #fd8000;
   color: #333;
   text-shadow: none;
 }
@@ -115,8 +115,9 @@ main p:not(:last-child) {
 }
 
 a {
-  color: #f90;
+  color: #fd8000;
   text-decoration: none;
+  font-weight: 500;
 }
 
 a:hover {
@@ -189,7 +190,7 @@ p code {
 
 
 .ginger {
-    color: #f90;
+    color: #fd8000;
 }
 
 .wrapper {

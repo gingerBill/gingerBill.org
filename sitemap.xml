@@ -34,13 +34,13 @@
   </url>
   
   <url>
-    <loc>/tags/c&#43;&#43;/</loc>
+    <loc>/categories/c&#43;&#43;/</loc>
     <lastmod>2015-08-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/c&#43;&#43;/</loc>
+    <loc>/tags/c&#43;&#43;/</loc>
     <lastmod>2015-08-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -58,13 +58,13 @@
   </url>
   
   <url>
-    <loc>/tags/odin/</loc>
+    <loc>/categories/odin/</loc>
     <lastmod>2018-09-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/odin/</loc>
+    <loc>/tags/odin/</loc>
     <lastmod>2018-09-05T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
