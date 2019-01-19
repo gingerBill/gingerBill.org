@@ -6,9 +6,37 @@
     <description>Recent content in Categories on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
+    <lastBuildDate>Wed, 19 Aug 2015 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>C&#43;&#43;</title>
+      <link>/categories/c&#43;&#43;/</link>
+      <pubDate>Wed, 19 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>odin</title>
+      <link>/categories/odin/</link>
+      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/odin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>programming language theory</title>
+      <link>/categories/programming-language-theory/</link>
+      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/programming-language-theory/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gingerBill</title>
-    <link>/</link>
-    <description>Recent content on gingerBill</description>
+    <title>odin on gingerBill</title>
+    <link>/categories/odin/</link>
+    <description>Recent content in odin on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <lastBuildDate>Wed, 05 Sep 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/odin/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -45,17 +45,6 @@ I&amp;rsquo;m considering what the &amp;ldquo;best&amp;rdquo; declaration syntax
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemma
 Designing this language has been difficult but fun. Two of the original goals of this language were simplicity and metaprogramming however, these together could be an oxymoron. But before I explain why, I first need to explain what I mean by &amp;ldquo;metaprogramming&amp;rdquo;.
 Metaprogramming is an &amp;ldquo;art&amp;rdquo; of writing programs to treats other programs as their data. This means that a program could generate, read, analyse, and transform code or even itself to achieve a certain solution.</description>
-    </item>
-    
-    <item>
-      <title>A Defer Statement For C&#43;&#43;11</title>
-      <link>/article/2015/08/19/defer-in-cpp/</link>
-      <pubDate>Wed, 19 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2015/08/19/defer-in-cpp/</guid>
-      <description>One of my favourite things about Go is the defer statement. The defer statement pushes a function call onto a list; the list of saved calls in called when the function returns.
-Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how D has scope(exit).
-C++11 Implementation template &amp;lt;typename F&amp;gt; struct privDefer { F f; privDefer(F f) : f(f) {} ~privDefer() { f(); } }; template &amp;lt;typename F&amp;gt; privDefer&amp;lt;F&amp;gt; defer_func(F f) { return privDefer&amp;lt;F&amp;gt;(f); } #define DEFER_1(x, y) x##y #define DEFER_2(x, y) DEFER_1(x, y) #define DEFER_3(x) DEFER_2(x, __COUNTER__) #define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;})  Explanation One of the most common examples for this in Go is files.</description>
     </item>
     
   </channel>

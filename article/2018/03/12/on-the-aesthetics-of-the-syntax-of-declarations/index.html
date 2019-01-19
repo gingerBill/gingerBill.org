@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>On the Aesthetics of the Syntax of Declarations - gingerBill</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <div class="wrapper">
+    <nav>
+    <h1><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/article/">Articles</a></li>
+      
+      <li><a href="/article/index.xml">Subscribe</a></li>
+      
+    </ul>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">On the Aesthetics of the Syntax of Declarations</span></h1>
+<h3 class="date">2018-03-12</h3>
+<h3 class="author">Ginger Bill</h3>
+</div>
+
+<main>
+
+
+<p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations">https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations</a></p>
+
+<p>n.b. This is a philosophical article and not a technical article. There are no correct answers to the questions that I will pose &ndash; only compromises.</p>
+
+<p>I&rsquo;m considering what the &ldquo;best&rdquo; declaration syntax would be. Historically, there have been two categories: which I will call qualifier-focused and type-focused.
+An example of qualifier-focused would be the Pascal family. An example of type-focused would be the C family. Odin, like Jai, have been experimenting with an name-focused declaration syntax. These categories place emphasis on different aspects of the declarations.</p>
+
+<ul>
+<li>Qualifier-focused places emphasis on the kind/qualifier of declaration (<code>var x = 123; const K = true;</code>)</li>
+<li>Type-focused places emphasis on the type of the declaration (<code>int x = 123; bool const K = true;</code>)</li>
+<li>Name-focused places emphasis on the name of the declarations and that the right hand side must be an expression (<code>x := 123; K :: true;</code>)</li>
+</ul>
+
+<p>Some languages have a hybrid approach to the syntax of declarations. Python uses a form of name-focused for general variable declaration but qualifier-focused for function, class, and import declarations. Most modern derivatives of the C family may use type-focused for most declarations but use qualifier-focused for import declarations.</p>
+
+<p>There are some issue regarding all three approaches.</p>
+
+<h2 id="qualifier-focused">Qualifier-Focused</h2>
+
+<ul>
+<li>Most forms of qualifier-focused require numerous keywords to specify the kind of declaration</li>
+<li>Qualifier-focused adds verbosity to the syntax due to the extra keywords</li>
+<li>Qualifier-focused declarations have a tendency to make you define all declarations at the top of a scope and/or group declarations together of the same kind together. This nudges the programmers to not intermingle declarations and assignments. Depending on the views of programmer, this can be viewed as a positive aspect.</li>
+</ul>
+
+<h2 id="type-focused">Type-Focused</h2>
+
+<ul>
+<li>Every declaration must be associated with a type and thus be part of the type system. This is one of the reasons why <code>void</code> is in C. If a function must specify the return type, the solution to this is to create a &ldquo;non-type&rdquo;, i.e. <code>void</code>. Having a <code>void</code> type does cause issues in the type system in general but I will not consider those in this article.</li>
+<li>In the case of C++ and others, type inference must be done through a form of qualifier-focused (e.g. <code>auto</code> or <code>var</code>)</li>
+</ul>
+
+<h2 id="name-focused">Name-Focused</h2>
+
+<ul>
+<li>Name-focused has three aspects to the declaration, the left hand side (lhs), the right hand side (rhs), and the middle part. The lhs aspect are the names of the entities to be declared whilst the rhs aspect of the declaration are forms of expressions. This means that all declarations must be a declaration of an expression. This does mean that all declarations must be assigned with a form of expression. The middle part denotes the type which could be optional.</li>
+<li>In a self-contained language, having only expression assigned declarations is not a problem. The difficulty comes from interfacing with foreign code, such as C, and having a consistent syntax. In C, there are two forms of function declarations: function prototypes and full functions with bodies. A function prototype is not a form of expression. A function with a body which can be thought of a named lambda function.</li>
+<li>An inconsistency with name-focused is with variable declarations without an assignment (<code>x: int;</code>). It is implied that the declaration has an implicit rhs expression, the zero/default value. It is also implied that the declaration must be a variable declaration (and not a constant declaration).</li>
+</ul>
+
+<h2 id="on-the-aesthetics-of-qualifier-focused">On the Aesthetics of Qualifier-Focused</h2>
+
+<p>I will be open, I have a minor bias towards qualifier-focused due to Pascal being one of my very first languages. So when I started creating Odin, the language that I am designing and making, I started with a very Pascal syntax (including <code>begin</code> and <code>end</code>) but when the language became &ldquo;public&rdquo;, the syntax changed to be closer to that of Jonathan Blow&rsquo;s language, Jai. I was intrigued by the idea of the name-focused syntax with its very elegant approach to type inference. However, I have had doubts about the syntax for quite a while. At one point, I struggled to find a solution to the issue of foreign procedures and foreign variables. Originally, I solved the issue for foreign procedures with replacing the procedure body with a <code>#foreign</code> tag. However, this approach cannot be applied to a foreign variable declaration and still be consistent. On an impulsive whim, I switched the entire declaration syntax to a Go-like qualifier-focused style for 2 weeks. (I have done this switch twice.) The solution to the foreign entities was to have a procedure lambda without a body by replacing the body with <code>---</code> and surrounding all foreign declarations in a <code>foreign</code> block. In Odin, a procedure without a body cannot be distinguished from a procedure type and thus there needed to be a way to specify a procedure literal/lambda without a body.</p>
+
+<pre><code class="language-odin">foreign my_lib {
+    some_var: i32;
+    amazing_foo :: proc &quot;c&quot; (a, b: i32, c: f32) -&gt; rawptr ---;
+}
+</code></pre>
+
+<p>There are two reasons for this conflict that I have between qualifier-focused and name-focused. The first is that name-focused is elegant and terse to write compared to qualifier-focused. The second is the &ldquo;ugliness&rdquo; of qualifier-focused with conjunction with other forms of statements.</p>
+
+<p>Qualifier-focused looks &ldquo;ugly&rdquo; when it is combined with control statements:</p>
+
+<pre><code>for var x = 0; x &lt; 10; x += 1 {
+}
+</code></pre>
+
+<p>The two keywords together in the <code>for var</code> block looks &ldquo;dense and wrong&rdquo; to me and makes reading the construct much more difficult. However, placing an open parenthesis in between the keywords reduces some of this &ldquo;density&rdquo;:</p>
+
+<pre><code>for (var x = 0; x &lt; 10; x += 1) {
+}
+</code></pre>
+
+<p>It does look slightly better but it is still &ldquo;dense&rdquo;. These parentheses make it less &ldquo;ugly&rdquo; for some reason and it&rsquo;s not self apparent as to why the separation between the two words by punctuation improves matters.</p>
+
+<p>This is probably a reason as to why Go uses the <code>:=</code> operator, especially in this case:</p>
+
+<pre><code>for x := 0; x &lt; 10; x += 1 {
+}
+for idx, val := range array {
+}
+</code></pre>
+
+<p><code>:=</code> is a pragmatic solution to this aesthetic problem with the qualifier-focused <code>var</code>. However, this is not to say that the <code>:=</code> operator is great. In Go, it has extra semantics to make Go feel more like a &ldquo;dynamic language&rdquo; (variables will be shadowed with <code>:=</code>). Even if you had both <code>var</code> and <code>:=</code>, and that they did the exact same thing, it does beg the question: why have two things that do exactly the same thing?</p>
+
+<p>I have been researching the topic of syntax in language design for a long time now. It&rsquo;s been an interesting topic and I think I should actually write most of my findings. I hope this condensed explanation of the issues with regards to declaration syntax has aided others as to my predicament.</p>
+
+</main>
+
+  <footer>
+  
+  &copy; 2007&ndash;2019 Ginger Bill
+  
+  </footer>
+  </div>
+  </body>
+  <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</html>
+
