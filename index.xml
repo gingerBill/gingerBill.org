@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gingerBill</title>
+    <link>/</link>
+    <description>Recent content on gingerBill</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/</guid>
+      <description>Contact Info   Email:bill [at] gingerbill [dot] org Twitter:@TheGingerBill  GitHub:github.com/gingerBill YouTube:youtube.com/GingerGames   Public Projects    Odin: Programming Language
+2016–now   An open source systems programming language designed for the modern computer and programmer
+ Odin is fast, concise, readable, and pragmatic. It is designed with the intent of replacing C with the following goals:
+  simplicity high performance built for modern systems joy of programming   Video demonstrations:Odin Demos      gb Libraries</description>
+    </item>
+    
+  </channel>
+</rss>
