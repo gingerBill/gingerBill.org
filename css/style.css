@@ -1,137 +1,200 @@
 ::-webkit-selection {
-	background-color: #f90;
-	color: #333;
-	text-shadow: none;
+  background-color: #f90;
+  color: #333;
+  text-shadow: none;
 }
 
 ::-moz-selection {
-	background-color: #f90;
-	color: #333;
-	text-shadow: none;
+  background-color: #f90;
+  color: #333;
+  text-shadow: none;
 }
 
 ::selection {
-	background-color: #f90;
-	color: #333;
-	text-shadow: none;
+  background-color: #f90;
+  color: #333;
+  text-shadow: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
 html {
-	font-size: 100%;
+  font-size: 100%;
+  width: 100%;
 }
 
 body {
-	font-family: Courier, monospace;
-	font-size: 0.8em;
-	line-height: 1.4;
-	color: #333;
-	background-color: #fdfdfd;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  font-weight: 400;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
 }
 
-body > pre {
-	margin: 0 auto;
+/* header and footer areas */
+.menu {
+  margin: 0;
+  padding: 0;
+}
+.menu li {
+  list-style-type: none;
+  display: inline;
+}
+.menu li:not(:first-child):before {
+  padding: 0.5em;
+  content: " | ";
 }
 
-pre, code {
-	font-size: 1em;
-	font-family: Courier, monospace;
-	tab-size: 4;
-	word-break: normal;
-	word-spacing: normal;
-	text-align: left;
-	direction: ltr;
-	position: relative;
+.article-meta {
+  margin: -1em 0 1em 0;
+}
+.menu, .article-meta, footer {
+  text-align: left;
+}
+.title {
 }
 
-pre {
-	width: 56em;
-	white-space: pre-wrap;
-
-	margin: 0.5em 0 0 0;
-	padding: 0 1em 0;
-	border-radius: 2px;
+.article-meta h3 {
+  font-size: 1em;
+  margin: 0.25em 0;
+  color: #666;
 }
 
-pre.code {
-	width: 54em;
-	white-space: pre;
 
-	padding: 0 1em 1em;
-
-	color: #333;
-	background-color: #f7f7f7;
-
-	position: relative;
-	border: 1px solid #ccc;
+footer {
+  margin: 1em 0 0;
+  padding: 1em 0 0;
+  text-align: center;
+  color: #ccc;
 }
 
-pre.code > code {
-	overflow-x: auto;
+hr {
+  color: #ccc;
 }
 
-pre.code[data-language]::before {
-	content: attr(data-language);
-
-	color: #333;
-	background-color: #fdfdfd;
-
-	display: inline-block;
-	position: absolute;
-	top: 0;
-	right: 0;
-
-	padding: 0.1em 0.75em;
-
-	border-left: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	border-radius: 0 0 0 4px;
-
-	text-shadow: none;
+img, iframe, video {
+  max-width: 100%;
+}
+main {
+  hyphens: auto;
+}
+blockquote {
+  background: #f9f9f9;
+  border-left: 5px solid #ccc;
+  padding: 3px 1em 3px;
 }
 
-a {
-	color: #f90;
-	text-decoration: none;
-}
 
-a:hover {
-	text-decoration: underline;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-size: 1em;
-	font-weight: bold;
-	line-height: 1;
-
-	color: #333;
-
-	margin: 0 0 -1rem;
-	padding: 0;
-}
-
-h1 a {
-	color: #333;
+h1, h2, h3 {
+  line-height: 1.2;
+  margin: 1em 0 0.5em;
 }
 
 h1 {
-	font-size: 1.5em;
-	font-weight: 300;
-
-	margin-top: 1rem;
+  font-weight: 400;
+  font-size: 2em;
 }
 
-h2 {
-	font-size: 1.25em;
+h2, h3 {
+  font-weight: 500;
 }
 
-.copyright {
-	margin: 1em 0 0;
-	padding: 1em 0 0;
 
-	text-align: center;
-	border-top: 1px solid #ccc;
+a {
+  color: #f90;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1 a {
+  color: #333;
+}
+
+ul {
+  margin-left: 1.5em;
+}
+
+ul.articles {
+  margin-left: 0em;
+}
+ul.articles li {
+  list-style-type: none;
+  margin-bottom: 0.5em;
+}
+ul.articles .date {
+  color: #666;
+}
+
+
+
+h3 > time {
+  color: #666;
+}
+
+nav + h1 {
+  margin-top: 0.5em;
+}
+
+
+pre, code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 1em;
+  line-height: 1.3;
+  tab-size: 4;
+  word-break: normal;
+  word-spacing: pre;
+  text-align: left;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  overflow: auto;
+  direction: ltr;
+  position: relative;
+}
+
+pre {
+  margin: 1em 0;
+  padding: 0 1em;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 0.5em 1em;
+  color: #333;
+  background-color: #f7f7f7;
+  position: relative;
 }
 
 .ginger {
-	color: #f90;
+    color: #f90;
+}
+
+.wrapper {
+  display: block;
+  padding: 0 1em 1em;
+  max-width: 60em;
+  margin: 0 auto;
+}
+
+
+.gbt2 {
+  margin: 0 0 0.5em;
+  padding: 0;
+}
+
+.gbt2 tr {
+  line-height: 1.1;
+  vertical-align: top;
+}
+
+.gbt2 tr td:first-child {
+  text-align: right;
+  padding-right: 0.75em;
 }
