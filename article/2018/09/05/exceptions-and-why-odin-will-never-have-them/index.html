@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="en-gb">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Exceptions - And Why Odin Will Never Have Them - gingerBill</title>
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
-
-  <body>
-    <div class="wrapper">
-    <nav>
-    <h1><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-    <ul class="menu">
-      
-      <li><a href="/">Home</a></li>
-      
-      <li><a href="/article/">Articles</a></li>
-      
-      <li><a href="/article/index.xml">Subscribe</a></li>
-      
-    </ul>
-    </nav>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exceptions - And Why Odin Will Never Have Them - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="wrapper">
+<nav>
+  <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+  <ul class="menu">
+    
+    <li><a href="/">Home</a></li>
+    <li><a href="/article/">Articles</a></li>
+    <li><a href="/article/index.xml">Subscribe</a></li>
+  </ul>
+</nav>
 
 <div class="article-meta">
 <h1><span class="title">Exceptions - And Why Odin Will Never Have Them</span></h1>
-<h3 class="date">2018-09-05</h3>
-<h3 class="author">Ginger Bill</h3>
+<p class="date">2018-09-05</p>
+<p class="author">Ginger Bill</p>
 </div>
-
 <main>
 <p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
 
@@ -40,15 +36,11 @@
 
 <p><br></p>
 
-<p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.</p>
-
-<p>Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.</p>
-
-<p>You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it&rsquo;s structural control flow.</p>
-
-<p>Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage.</p>
-
-<p>I do hate how most languages handle &ldquo;errors&rdquo;. Treat errors like any other piece of code. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
+<p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
+Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
+You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it&rsquo;s structural control flow.
+Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage.
+I do hate how most languages handle &ldquo;errors&rdquo;. Treat errors like any other piece of code. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
 
 <hr />
 
@@ -147,14 +139,11 @@ except SomeError as e:
 <p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
 
 </main>
-
-  <footer>
-  
-  &copy; 2007&ndash;2019 Ginger Bill
-  
-  </footer>
-  </div>
-  </body>
-  <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<footer>
+&copy; 2007&ndash;2019 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </html>
 

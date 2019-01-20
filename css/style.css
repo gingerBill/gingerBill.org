@@ -46,10 +46,12 @@ body {
 .menu li {
   list-style-type: none;
   display: inline;
+  color: #ccc;
 }
 .menu li:not(:first-child):before {
   padding: 0.5em;
   content: " | ";
+  color: #ccc;
 }
 
 .article-meta {
@@ -105,10 +107,18 @@ h1 {
   font-size: 2em;
 }
 
+h1#logo a:hover {
+  text-decoration: none;
+}
+
 h2, h3 {
   font-weight: 500;
 }
 
+main p {
+  text-align: justify;
+  text-justify: inter-word;
+}
 
 main p:not(:last-child) {
   margin: 0 0 1em;
@@ -204,6 +214,7 @@ p code {
 .gbt2 {
   margin: 0 0 0.5em;
   padding: 0;
+  text-align: justify;
 }
 
 .gbt2 tr {

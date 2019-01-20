@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gingerBill</title>
+    <title>Home on gingerBill</title>
     <link>/</link>
-    <description>Recent content on gingerBill</description>
+    <description>Recent content in Home on gingerBill</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <lastBuildDate>Wed, 05 Sep 2018 00:00:00 +0000</lastBuildDate>
@@ -20,9 +20,7 @@
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
  https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  
-There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
-Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
-You can the exact same semantics as a try except block by using a switch in statement.</description>
+There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement.</description>
     </item>
     
     <item>
