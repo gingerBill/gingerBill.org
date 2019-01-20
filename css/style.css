@@ -189,7 +189,7 @@ pre {
   position: relative;
 }
 
-p code {
+p code, li code {
   line-height: 1;
   border: 1px solid #ccc;
   border-radius: 2px;
