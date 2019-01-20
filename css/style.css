@@ -124,6 +124,10 @@ main p:not(:last-child) {
   margin: 0 0 1em;
 }
 
+main ul {
+  margin-bottom: 1em;
+}
+
 a {
   color: #fd8000;
   text-decoration: none;
