@@ -9,22 +9,27 @@
 </head>
 <body>
 <div class="wrapper">
-<nav>
-  <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-  <ul class="menu">
-    
-    <li><a href="/">Home</a></li>
-    <li><a href="/article/">Articles</a></li>
-    <li><a href="/article/index.xml">Subscribe</a></li>
-  </ul>
-</nav>
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
 
-<div class="article-meta">
-<h1><span class="title">A Defer Statement For C++11</span></h1>
-<p class="date">2015-08-19</p>
-<p class="author">Ginger Bill</p>
-</div>
 <main>
+<article class="article-meta">
+<header>
+	<h1><span class="title">A Defer Statement For C++11</span></h1>
+	<p class="info">
+	<span class="date">2015-08-19</span>
+	<span class="author">Ginger Bill</span>
+	</p>
+</header>
 
 
 <p>One of my favourite things about <a href="https://golang.org/">Go</a> is the <code>defer</code> statement. The <code>defer</code> statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
@@ -138,6 +143,7 @@ func someFunc() {
 
 <p>to return <code>Hello 3 2 1 0</code>. However, it will return <code>0 1 2 3 Hello</code>. I personally prefer the scope behaviour but that is just a matter of opinion.</p>
 
+</article>
 </main>
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill

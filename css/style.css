@@ -69,6 +69,10 @@ body {
   color: #666;
 }
 
+.article-meta .info {
+  margin-bottom: 1em;
+}
+
 
 footer {
   margin: 1em 0 0;
@@ -202,6 +206,27 @@ p code, li code {
   background-color: #f7f7f7;
 }
 
+article table {
+  border: 1px solid #c6cbd1;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 1em;
+}
+article table tr {
+  border-top: 1px solid #c6cbd1;
+  box-sizing: border-box;
+}
+article table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+article table td, article table th {
+  border: 1px solid #dfe2e5;
+  padding: 0.4em 0.85em;
+}
+
+.footnotes ol li {
+  margin-bottom: 0.5em;
+}
 
 .ginger {
     color: #fd8000;

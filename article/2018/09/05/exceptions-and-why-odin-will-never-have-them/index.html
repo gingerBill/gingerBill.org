@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Exceptions - And Why Odin Will Never Have Them - gingerBill</title>
+  <title>Exceptions --- And Why Odin Will Never Have Them - gingerBill</title>
   <link rel="stylesheet" href="/css/normalize.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 <div class="wrapper">
-<nav>
-  <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-  <ul class="menu">
-    
-    <li><a href="/">Home</a></li>
-    <li><a href="/article/">Articles</a></li>
-    <li><a href="/article/index.xml">Subscribe</a></li>
-  </ul>
-</nav>
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
 
-<div class="article-meta">
-<h1><span class="title">Exceptions - And Why Odin Will Never Have Them</span></h1>
-<p class="date">2018-09-05</p>
-<p class="author">Ginger Bill</p>
-</div>
 <main>
+<article class="article-meta">
+<header>
+	<h1><span class="title">Exceptions &mdash; And Why Odin Will Never Have Them</span></h1>
+	<p class="info">
+	<span class="date">2018-09-05</span>
+	<span class="author">Ginger Bill</span>
+	</p>
+</header>
 <p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
 
 <p>Original Comments:</p>
@@ -33,8 +38,6 @@
 <li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701</a></li>
 <li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626</a></li>
 </ul>
-
-<p><br></p>
 
 <p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
 Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
@@ -138,6 +141,7 @@ except SomeError as e:
 
 <p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
 
+</article>
 </main>
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill

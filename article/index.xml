@@ -4,23 +4,31 @@
     <title>Articles on gingerBill</title>
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
-    <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Wed, 05 Sep 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 Feb 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Exceptions - And Why Odin Will Never Have Them</title>
+      <title>Memory Allocation Strategies - Part 1</title>
+      <link>/article/2019/02/01/memory-allocation-strategies-001/</link>
+      <pubDate>Fri, 01 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2019/02/01/memory-allocation-strategies-001/</guid>
+      <description>Memory allocation seems to be something many people struggle with it. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.
+Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack.</description>
+    </item>
+    
+    <item>
+      <title>Exceptions --- And Why Odin Will Never Have Them</title>
       <link>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</link>
       <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</guid>
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
- https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  
-There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement.</description>
+ https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
     </item>
     
     <item>

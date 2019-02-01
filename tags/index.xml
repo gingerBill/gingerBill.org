@@ -4,11 +4,10 @@
     <title>Tags on gingerBill</title>
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
-    <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <lastBuildDate>Wed, 19 Aug 2015 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -17,6 +16,15 @@
       <pubDate>Wed, 19 Aug 2015 00:00:00 +0000</pubDate>
       
       <guid>/tags/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memory allocation theory odin</title>
+      <link>/tags/memory-allocation-theory-odin/</link>
+      <pubDate>Fri, 01 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/memory-allocation-theory-odin/</guid>
       <description></description>
     </item>
     

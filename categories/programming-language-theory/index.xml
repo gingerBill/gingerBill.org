@@ -4,23 +4,21 @@
     <title>programming language theory on gingerBill</title>
     <link>/categories/programming-language-theory/</link>
     <description>Recent content in programming language theory on gingerBill</description>
-    <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
     <lastBuildDate>Wed, 05 Sep 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/programming-language-theory/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/categories/programming-language-theory/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Exceptions - And Why Odin Will Never Have Them</title>
+      <title>Exceptions --- And Why Odin Will Never Have Them</title>
       <link>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</link>
       <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</guid>
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
- https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  
-There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement.</description>
+ https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
     </item>
     
     <item>
