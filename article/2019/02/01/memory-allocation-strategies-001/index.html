@@ -32,7 +32,7 @@
 </header>
 
 
-<p>Memory allocation seems to be something many people struggle with it. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
+<p>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
 
 <p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory<sup class="footnote-ref" id="fnref:stack-pointer"><a href="#fn:stack-pointer">1</a></sup> and that the heap is magical in nature.</p>
 
@@ -96,7 +96,7 @@ Memory within these generations usually get allocated and freed at the same time
 <ul>
 <li><p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p></li>
 
-<li><p><strong>Transient Allocation</strong>: Memory that is cycle-based lifetime. This memory only persists for the &ldquo;cycle&rdquo; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p></li>
+<li><p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &ldquo;cycle&rdquo; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p></li>
 
 <li><p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p></li>
 </ul>
@@ -109,9 +109,9 @@ Memory within these generations usually get allocated and freed at the same time
 
 <h1 id="the-compiler-s-knowledge-of-the-program">The Compiler&rsquo;s Knowledge of the Program</h1>
 
-<p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) to know when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
+<p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
 
-<p>My person issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems<sup class="footnote-ref" id="fnref:ownership-systems"><a href="#fn:ownership-systems">5</a></sup>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily the linked.</p>
+<p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems<sup class="footnote-ref" id="fnref:ownership-systems"><a href="#fn:ownership-systems">5</a></sup>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
 
 <h1 id="coming-next">Coming Next</h1>
 
@@ -131,7 +131,7 @@ Memory within these generations usually get allocated and freed at the same time
 <hr />
 
 <ol>
-<li id="fn:stack-pointer">Most architectures do have a dedicated stack register but that is added because it is used quite frequently and practically made sense.
+<li id="fn:stack-pointer">Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.
  <a class="footnote-return" href="#fnref:stack-pointer"><sup>[return]</sup></a></li>
 <li id="fn:fourth-aspect">Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern.
  <a class="footnote-return" href="#fnref:fourth-aspect"><sup>[return]</sup></a></li>
