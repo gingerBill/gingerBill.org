@@ -226,6 +226,7 @@ article table td, article table th {
 }
 
 .footnotes ol li {
+  margin-left: 1.0em;
   margin-bottom: 0.5em;
 }
 
