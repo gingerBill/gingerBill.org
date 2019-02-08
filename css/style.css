@@ -129,6 +129,11 @@ h2, h3 {
 main p {
   text-align: justify;
   text-justify: inter-word;
+  word-wrap: inter-word;
+  overflow-wrap: inter-word;
+  -webkit-hyphens: auto;
+     -moz-hyphens: auto;
+          hyphens: auto;
 }
 
 main p:not(:last-child) {
