@@ -5,10 +5,19 @@
     <link>/</link>
     <description>Recent content in Home on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Fri, 01 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 08 Feb 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Allocation Strategies - Part 2</title>
+      <link>/article/2019/02/08/memory-allocation-strategies-002/</link>
+      <pubDate>Fri, 08 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2019/02/08/memory-allocation-strategies-002/</guid>
+      <description>Linear Allocation The first memory allocation strategy that I will cover is the also one of the simplest ones: linear allocation. As the name suggests, memory is allocated linearly. Throughout this series, I will be using to concept of an allocator as a means to allocate this memory. An linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a Arena.</description>
+    </item>
     
     <item>
       <title>Memory Allocation Strategies - Part 1</title>

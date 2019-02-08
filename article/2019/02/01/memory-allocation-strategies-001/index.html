@@ -27,7 +27,6 @@
 	<h1><span class="title">Memory Allocation Strategies - Part 1</span></h1>
 	<p class="info">
 	<span class="date">2019-02-01</span>
-	<span class="author">Ginger Bill</span>
 	</p>
 </header>
 
@@ -39,7 +38,7 @@
 <p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
 
 <p><center>
-<img src="/images/virtual_memory.png" alt="Virtual Memory" />
+<img src="/images/memory-allocation-strategies/virtual_memory.png" alt="Virtual Memory" />
 </center></p>
 
 <h1 id="thinking-about-allocation">Thinking About Allocation</h1>
