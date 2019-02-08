@@ -60,7 +60,11 @@ body {
 .menu, .article-meta, footer {
   text-align: left;
 }
-.title {
+
+
+.article-meta h2 {
+  margin-top: 0;
+  font-weight: 400;
 }
 
 .article-meta h3 {
@@ -70,10 +74,12 @@ body {
 }
 
 .article-meta .info {
-  margin-left: 1em;
-  margin-bottom: 1em;
+  margin: 1em 0 1em 0;
 }
 
+.article-meta .info .series {
+  font-weight: 600;
+}
 
 footer {
   margin: 1em 0 0;
@@ -160,6 +166,11 @@ ul.articles li {
 }
 ul.articles .date {
   color: #666;
+}
+
+ul.sub-articles li {
+  list-style-type: disc;
+  margin-bottom: 0;
 }
 
 

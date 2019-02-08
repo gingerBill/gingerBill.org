@@ -24,16 +24,22 @@
 <main>
 <article class="article-meta">
 <header>
-	<h1><span class="title">Memory Allocation Strategies - Part 2</span></h1>
-	<p class="info">
-	<span class="date">2019-02-08</span>
-	</p>
+	<h1>Memory Allocation Strategies - Part 2</h1>
+	 <h2>Linear/Arena Allocators</h2>
+	<div class="info">
+		<p><span class="series">Series:</span>
+			<a href="/series/memory-allocation-strategies">Memory Allocation Strategies</a>
+		</p>
+		<p>
+		<span class="date">2019-02-08</span>
+		</p>
+	</div>
 </header>
 
 
 <h1 id="linear-allocation">Linear Allocation</h1>
 
-<p>The first memory allocation strategy that I will cover is the also one of the simplest ones: linear allocation. As the name suggests,  memory is allocated linearly. Throughout this series, I will be using to concept of an <em>allocator</em> as a means to allocate this memory. An linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a <em>Arena</em>.</p>
+<p>The first memory allocation strategy that I will cover is the also one of the simplest ones: linear allocation. As the name suggests,  memory is allocated linearly. Throughout this series, I will be using to concept of an <em>allocator</em> as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a <em>Arena</em>.</p>
 
 <h2 id="basic-logic">Basic Logic</h2>
 
