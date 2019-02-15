@@ -5,10 +5,20 @@
     <link>/series/memory-allocation-strategies/</link>
     <description>Recent content in Memory Allocation Strategies on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Fri, 08 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 15 Feb 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/series/memory-allocation-strategies/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Allocation Strategies - Part 3</title>
+      <link>/article/2019/02/15/memory-allocation-strategies-003/</link>
+      <pubDate>Fri, 15 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2019/02/15/memory-allocation-strategies-003/</guid>
+      <description>Stack-Like (LIFO) Allocation In the previous article, we looked at the linear/arena allocator, which is the simplest of all memory allocators. In this article, I will cover the fixed-sized stack-like allocator. Throughout this article, I will refer to this allocator as a stack allocator.
+Note: A stack-like allocator means that the allocator acts like a data structure following the last-in, first-out (LIFO) principle. This has nothing to do with the stack or the stack frame.</description>
+    </item>
     
     <item>
       <title>Memory Allocation Strategies - Part 2</title>

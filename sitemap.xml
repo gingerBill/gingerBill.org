@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/article/2019/02/15/memory-allocation-strategies-003/</loc>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/article/2019/02/08/memory-allocation-strategies-002/</loc>
     <lastmod>2019-02-08T00:00:00+00:00</lastmod>
   </url>
@@ -34,7 +39,7 @@
   
   <url>
     <loc>/article/</loc>
-    <lastmod>2019-02-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -51,18 +56,18 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2019-02-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/series/memory-allocation-strategies/</loc>
-    <lastmod>2019-02-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/series/</loc>
-    <lastmod>2019-02-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -74,7 +79,7 @@
   
   <url>
     <loc>/tags/memory-allocation-theory-odin-c/</loc>
-    <lastmod>2019-02-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-02-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
