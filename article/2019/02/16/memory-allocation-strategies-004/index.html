@@ -45,7 +45,7 @@
 
 <p>Pool allocators are extremely useful when you need to allocate chunks of memory of the same size which need are created and destroy dynamically, especially in a random order. Pools also have the benefit that arenas and stacks have in that they provide very little fragmentation and allocate/free in constant time <em><strong>O(1)</strong></em>.</p>
 
-<p>Pool allocators are usually used to allocate <em>groups</em> of things at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
+<p>Pool allocators are usually used to allocate <em>groups</em> of &ldquo;things&rdquo; at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
 
 <h1 id="basic-logic">Basic Logic</h1>
 
@@ -222,7 +222,7 @@ void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
 
 <h1 id="conclusion">Conclusion</h1>
 
-<p>The pool allocator is a very useful allocator for when you need to allocator thinks in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
+<p>The pool allocator is a very useful allocator for when you need to allocator &ldquo;things&rdquo; in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
 
 <p>In this next article(s), I will discuss virtual memory and allocationg of physical pages from the OS.</p>
 <div class="footnotes">
