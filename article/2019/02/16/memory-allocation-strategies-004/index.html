@@ -59,7 +59,7 @@
 
 <h2 id="free-lists">Free Lists</h2>
 
-<p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored inplace as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
+<p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
 
 <p><center>
 <img src="/images/memory-allocation-strategies/pool_allocator_list.svg" alt="Pool Allocator List" />
@@ -68,7 +68,7 @@
 <p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk<sup class="footnote-ref" id="fnref:free-chunk"><a href="#fn:free-chunk">2</a></sup>.</p>
 
 <p><center>
-<img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg" alt="Pool Allocator List Inplace" />
+<img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg" alt="Pool Allocator List In-Place" />
 </center></p>
 
 <h2 id="allocate-and-free">Allocate and Free</h2>
