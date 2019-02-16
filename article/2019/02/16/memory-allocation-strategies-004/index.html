@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memory Allocation Strategies - Part 4 - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Memory Allocation Strategies - Part 4</h1>
+	 <h2>Pool Allocators</h2>
+	<div class="info">
+		<p><span class="series">Series:</span>
+			<a href="/series/memory-allocation-strategies">Memory Allocation Strategies</a>
+		</p>
+		<p>
+		<span class="date">2019-02-16</span>
+		</p>
+	</div>
+</header>
+
+
+<h1 id="pool-based-allocation">Pool-Based Allocation</h1>
+
+<p>In the previous article, we looked at the <a href="/article/2019/02/15/memory-allocation-strategies-003/">stack allocator</a>, which was the natural evolution of the <a href="/article/2019/02/08/memory-allocation-strategies-002/">linear/arena allocator</a>. In this article, I will cover the fixed-sized <em>pool allocator</em>.</p>
+
+<p>A pool allocator is a bit different from the previous allocation strategies that I have covered. A pool splits the supplied backing buffer into <em>chunks</em> of equal size and keeps track of which of the chunks are free. When an allocation is wanted, a free chunk is given. When a chunk is wanted to be freed, it adds that chunk to the list of free chunks.</p>
+
+<p>Pool allocators are extremely useful when you need to allocate chunks of memory of the same size which need are created and destroy dynamically, especially in a random order. Pools also have the benefit that arenas and stacks have in that they provide very little fragmentation and allocate/free in constant time <em><strong>O(1)</strong></em>.</p>
+
+<p>Pool allocators are usually used to allocate <em>groups</em> of things at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
+
+<h1 id="basic-logic">Basic Logic</h1>
+
+<p>A pool allocator takes a backing buffer and divides that buffer into pools/slots/bins/chunks<sup class="footnote-ref" id="fnref:terms"><a href="#fn:terms">1</a></sup> of all the same size.</p>
+
+<p><center>
+<img src="/images/memory-allocation-strategies/pool_allocator.svg" alt="Pool Allocator Layout" />
+</center></p>
+
+<p>The question is how are these allocations and frees determined? And how do they provide very little fragmentation with allocations that can be made in any order?</p>
+
+<h2 id="free-lists">Free Lists</h2>
+
+<p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored inplace as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
+
+<p><center>
+<img src="/images/memory-allocation-strategies/pool_allocator_list.svg" alt="Pool Allocator List" />
+</center></p>
+
+<p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk<sup class="footnote-ref" id="fnref:free-chunk"><a href="#fn:free-chunk">2</a></sup>.</p>
+
+<p><center>
+<img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg" alt="Pool Allocator List Inplace" />
+</center></p>
+
+<h2 id="allocate-and-free">Allocate and Free</h2>
+
+<p>To allocate a chunk, just pop off the head (first element) from the free list. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+
+<p><center>
+<img src="/images/memory-allocation-strategies/pool_allocator_alloc.svg" alt="Pool Allocator Alloc" />
+</center></p>
+
+<p><strong>Note</strong>: The free list does not need to be ordered as its order is determined by how chunks are allocated and freed.</p>
+
+<p><center>
+<img src="/images/memory-allocation-strategies/pool_allocator_alloc_unordered.svg" alt="Pool Allocator Alloc Unordered" />
+</center></p>
+
+<p>To free a chunk, just push the freed chunk as the head of the free list. In Big-O notation, the freeing of this memory has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+
+<h1 id="implementation">Implementation</h1>
+
+<p>The pool allocator requires less code than the arena and stack allocator as there is no logic required for different sized/aligned allocations and resize allocations. The complete pool allocator will have the following procedures:</p>
+
+<ul>
+<li><code>pool_init</code> initialize the pool with a pre-allocated memory buffer</li>
+<li><code>pool_alloc</code> pops off the head from the free list</li>
+<li><code>pool_free</code> pushes on the freed chunk as the head of the free list</li>
+<li><code>pool_free_all</code> pushes every chunk in the pool onto the free list</li>
+</ul>
+
+<h2 id="data-structures">Data Structures</h2>
+
+<p>The pool data structure contains a backing buffer, the size of each chunk, and the head to the free list.</p>
+
+<pre><code class="language-c">typedef struct Pool Pool;
+struct Pool {
+    unsigned char *buf;
+    size_t buf_len;
+    size_t chunk_size;
+
+    Pool_Free_Node *head; // Free List Head
+};
+</code></pre>
+
+<p>Each node in the free list just contains a pointer to the next free chunk, which could be <code>NULL</code> if it is the <em>tail</em> (last element).</p>
+
+<pre><code class="language-c">typedef struct Pool_Free_Node Pool_Free_Node;
+struct Pool_Free_Node {
+    Pool_Free_Node *next;
+};
+</code></pre>
+
+<h2 id="init">Init</h2>
+
+<p>Initializing a pool is pretty simple however, because each chunk has the same size and alignment, this logic can be done now rather than later.</p>
+
+<pre><code class="language-c">void pool_free_all(Pool *p); // This procedure will be covered later in this article
+
+void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
+               size_t chunk_size, size_t chunk_alignment) {
+    // Align backing buffer to the specified chunk alignment
+    uintptr_t initial_start = (uintptr_t)backing_buffer;
+    uintptr_t start = align_forward_uintptr(initial_start, (uintptr_t)chunk_alignment);
+    backing_buffer_length -= (size_t)(start-initial_start);
+
+    // Align chunk size up to the required chunk_alignment
+    chunk_size = align_forward_size(chunk_size, chunk_alignment);
+
+    // Assert that the parameters passed are valid
+    assert(chunk_size &gt;= sizeof(Pool_Free_Node) &amp;&amp;
+           &quot;Chunk size is too small&quot;);
+    assert(backing_buffer_length &gt;= chunk_size &amp;&amp;
+           &quot;Backing buffer length is smaller than the chunk size&quot;);
+
+    // Store the adjusted parameters
+    p-&gt;buf = (unsigned char *)backing_buffer;
+    p-&gt;buf_len = backing_buffer_length;
+    p-&gt;chunk_size = chunk_size;
+    p-&gt;head = NULL; // Free List Head
+
+    // Set up the free list for free chunks
+    pool_free_all(p);
+}
+</code></pre>
+
+<h2 id="alloc">Alloc</h2>
+
+<p>The <code>pool_alloc</code> procedure is a lot simpler than other allocators as each chunk has the same size and alignment and thus these parameters do not need to be passed to the procedure. The latest free chunk from the free list is popped off and is then used as the new allocation.</p>
+
+<pre><code class="language-c">void *pool_alloc(Pool *p) {
+    // Get latest free node
+    Pool_Free_Node *node = p-&gt;head;
+
+    if (node == NULL) {
+        assert(0 &amp;&amp; &quot;Pool allocator has no free memory&quot;);
+        return NULL;
+    }
+
+    // Pop free node
+    p-&gt;head = p-&gt;head-&gt;next;
+
+    // Zero memory by default
+    return memset(node, 0, p-&gt;chunk_size);
+}
+</code></pre>
+
+<h2 id="free">Free</h2>
+
+<p>Freeing an allocation is pretty much the opposite of an allocation. The chunk to be freed is pushed onto the free list.</p>
+
+<pre><code class="language-c">void pool_free(Pool *p, void *ptr) {
+    Pool_Free_Node *node;
+
+    void *start = p-&gt;buf;
+    void *end = &amp;p-&gt;buf[p-&gt;buf_len];
+
+    if (ptr == NULL) {
+        // Ignore NULL pointers
+        return;
+    }
+
+    if (!(start &lt;= ptr &amp;&amp; ptr &lt; end)) {
+        assert(0 &amp;&amp; &quot;Memory is out of bounds of the buffer in this pool&quot;);
+        return;
+    }
+
+    // Push free node
+    node = (Pool_Free_Node *)ptr;
+    node-&gt;next = p-&gt;head;
+    p-&gt;head = node;
+}
+</code></pre>
+
+<h2 id="free-all">Free All</h2>
+
+<p>Freeing all the memory is equivalent of pushing all the chunks onto the free list.</p>
+
+<pre><code class="language-c">void pool_free_all(Pool *p) {
+    size_t chunk_count = p-&gt;buf_len / p-&gt;chunk_size;
+    size_t i;
+
+    // Set all chunks to be free
+    for (i = 0; i &lt; chunk_count; i++) {
+        void *ptr = &amp;p-&gt;buf[i * p-&gt;chunk_size];
+        Pool_Free_Node *node = (Pool_Free_Node *)ptr;
+        // Push free node onto thte free list
+        node-&gt;next = p-&gt;head;
+        p-&gt;head = node;
+    }
+}
+</code></pre>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>The pool allocator is a very useful allocator for when you need to allocator thinks in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
+
+<p>In this next article(s), I will discuss virtual memory and allocationg of physical pages from the OS.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:terms">What&rsquo;s in a name? That which we call a rose. By any other name would smell as sweet. <a href="https://www.owleyes.org/text/romeo-and-juliet/read/act-ii-scene-ii">Romeo and Juliet (II, ii, 1-2)</a>
+ <a class="footnote-return" href="#fnref:terms"><sup>[return]</sup></a></li>
+<li id="fn:free-chunk">If there is not an available free chunk, it will point to nothing (<code>NULL</code>).
+ <a class="footnote-return" href="#fnref:free-chunk"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+</article>
+</main>
+<footer>
+&copy; 2007&ndash;2019 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</html>
+
