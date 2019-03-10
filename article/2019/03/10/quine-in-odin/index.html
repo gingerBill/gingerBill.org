@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tags - gingerBill</title>
+  <title>A Quine in Odin - gingerBill</title>
   <link rel="stylesheet" href="/css/normalize.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -21,26 +21,41 @@
   </nav>
 </header>
 
-<h1>Tags</h1>
-<ul class="terms">
-  
-  <li>
-    <a href="/tags/c&#43;&#43;">C&#43;&#43;</a>
-    (1)
-  </li>
-  <li>
-    <a href="/tags/memory-allocation-theory-odin-c">memory allocation theory odin c</a>
-    (4)
-  </li>
-  <li>
-    <a href="/tags/odin">odin</a>
-    (3)
-  </li>
-  <li>
-    <a href="/tags/odin-quine">odin quine</a>
-    (1)
-  </li>
-</ul>
+<main>
+<article class="article-meta">
+<header>
+	<h1>A Quine in Odin</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2019-03-10</span>
+		</p>
+	</div>
+</header>
+<p>A <a href="https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in Odin:</p>
+
+<pre><code class="language-odin">package quine
+
+import &quot;core:fmt&quot;
+
+main :: proc() {
+    fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+}
+
+s := `package quine
+
+import &quot;core:fmt&quot;
+
+main :: proc() {
+    fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+}
+
+s := `;
+</code></pre>
+
+</article>
+</main>
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill
 </footer>
