@@ -114,6 +114,11 @@ main :: proc() {
 
 <ul class="articles">
   
+  <li>
+    <a href="/odin/spec/">The Odin Programming Language Specification</a>
+	
+    <p class="date">0001-01-01</p>
+  </li>
 </ul>
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill
@@ -121,5 +126,20 @@ main :: proc() {
 </div>
 </body>
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
 </html>
 

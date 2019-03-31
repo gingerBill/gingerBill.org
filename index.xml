@@ -103,5 +103,18 @@ Imitating this is C++ is impossible. Instead of calling when the function calls,
 C++11 Implementation template &amp;lt;typename F&amp;gt; struct privDefer { F f; privDefer(F f) : f(f) {} ~privDefer() { f(); } }; template &amp;lt;typename F&amp;gt; privDefer&amp;lt;F&amp;gt; defer_func(F f) { return privDefer&amp;lt;F&amp;gt;(f); } #define DEFER_1(x, y) x##y #define DEFER_2(x, y) DEFER_1(x, y) #define DEFER_3(x) DEFER_2(x, __COUNTER__) #define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;})  Explanation One of the most common examples for this in Go is files.</description>
     </item>
     
+    <item>
+      <title>The Odin Programming Language Specification</title>
+      <link>/odin/spec/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/odin/spec/</guid>
+      <description>Warning: This is a work in progress and is subject to change.
+Introduction This is a reference manual for the Odin programming language.
+Odin is a general-purpose language designed for systems programming. It is a strongly typed language with manual memory managment. Programs are constructed from packages.
+Notation The syntax is specified using Extended Backus-Naur Form (EBNF):
+Production = production_name &amp;quot;=&amp;quot; [ Expression ] &amp;quot;.&amp;quot; . Expression = Alternative { &amp;quot;|&amp;quot; Alternative } .</description>
+    </item>
+    
   </channel>
 </rss>

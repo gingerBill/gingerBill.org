@@ -68,9 +68,9 @@ body {
 }
 
 .article-meta h3 {
-  font-size: 1em;
+  /*font-size: 1.1em;*/
   margin: 0.25em 0;
-  color: #666;
+  color: #444;
 }
 
 .article-meta .info {
@@ -140,7 +140,7 @@ main p:not(:last-child) {
   margin: 0 0 1em;
 }
 
-main ul {
+main ul, main ol {
   margin-bottom: 1em;
 }
 
@@ -158,7 +158,16 @@ h1 a {
   color: #333;
 }
 
-ul {
+
+.article-meta h1 a, .article-meta h2 a, .article-meta h3 a {
+  color: #333;
+}
+.article-meta h1 a:hover, .article-meta h2 a:hover, .article-meta h3 a:hover {
+  color: #fd8000;
+}
+
+
+ul, ol {
   margin-left: 1.5em;
 }
 
