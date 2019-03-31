@@ -98,7 +98,21 @@
 <li><a href="#attributes">Attributes</a></li>
 <li><a href="#expressions">Expressions</a>
 <ul>
-<li><a href="#operators">Operators</a>
+<li><a href="#operands">Operands</a></li>
+<li><a href="#qualified-identifiers">Qualified identifiers</a></li>
+<li><a href="#composite-literals">Composite literals</a></li>
+<li><a href="#procedure-literals">Procedure literals</a></li>
+<li><a href="#selectors">Selectors</a>
+<ul>
+<li><a href="#implicit-selector">Implicit selector</a></li>
+</ul></li>
+<li><a href="#index-expressions">Index expressions</a></li>
+<li><a href="#slice-expressions">Slice expressions</a></li>
+<li><a href="#type-assertions">Type assertions</a></li>
+<li><a href="#calls">Calls</a></li>
+<li><a href="#passing-argument-to-variadic-parameters">Passing argument to variadic parameters</a></li>
+<li><a href="#operators">Operators</a></li>
+<li><a href="#operators-1">Operators</a>
 <ul>
 <li><a href="#operator-precedence">Operator precedence</a></li>
 </ul></li>
@@ -106,6 +120,14 @@
 <ul>
 <li><a href="#integer-operators">Integer operators:</a></li>
 </ul></li>
+<li><a href="#logical-operators">Logical operators</a></li>
+<li><a href="#address-operators">Address operators</a></li>
+<li><a href="#conversion">Conversion</a>
+<ul>
+<li><a href="#transmute">Transmute</a></li>
+</ul></li>
+<li><a href="#constant-expressions">Constant expressions</a></li>
+<li><a href="#order-of-evaluation">Order of evaluation</a></li>
 </ul></li>
 <li><a href="#statements">Statements</a>
 <ul>
@@ -179,8 +201,8 @@ Repetition  = &quot;{&quot; Expression &quot;}&quot; .
 
 <p>Each code point is distinct; there is case sensitivity.</p>
 
-<p>Implementation restriction: A compile must disallow the NUL character (U+0000) in the source text.
-Implementation restriction: A compile may ignore a UTF-8-encoded byte order mark (U+FEFF) if it is the first Unicode code point in the source text. A byte order mark must be disallowed anywhere else in the source text.</p>
+<p>Implementation restriction: A compile <em>must</em> disallow the NUL character (U+0000) in the source text.
+Implementation restriction: A compile <em>may</em> ignore a UTF-8-encoded byte order mark (U+FEFF) if it is the first Unicode code point in the source text. A byte order mark <em>must</em> be disallowed anywhere else in the source text.</p>
 
 <h3 id="characters">Characters</h3>
 
@@ -616,7 +638,31 @@ Procedures:
 
 <h2 id="expressions">Expressions</h2>
 
+<h3 id="operands">Operands</h3>
+
+<h3 id="qualified-identifiers">Qualified identifiers</h3>
+
+<h3 id="composite-literals">Composite literals</h3>
+
+<h3 id="procedure-literals">Procedure literals</h3>
+
+<h3 id="selectors">Selectors</h3>
+
+<h4 id="implicit-selector">Implicit selector</h4>
+
+<h3 id="index-expressions">Index expressions</h3>
+
+<h3 id="slice-expressions">Slice expressions</h3>
+
+<h3 id="type-assertions">Type assertions</h3>
+
+<h3 id="calls">Calls</h3>
+
+<h3 id="passing-argument-to-variadic-parameters">Passing argument to variadic parameters</h3>
+
 <h3 id="operators">Operators</h3>
+
+<h3 id="operators-1">Operators</h3>
 
 <h4 id="operator-precedence">Operator precedence</h4>
 
@@ -665,6 +711,27 @@ Procedures:
 </code></pre>
 
 <p>with <code>x / y</code> truncated towards zero (&rdquo;<a href="https://wikipedia.org/wiki/Modulo_operation">truncated division</a>&rdquo;).</p>
+
+<h3 id="logical-operators">Logical operators</h3>
+
+<h3 id="address-operators">Address operators</h3>
+
+<h3 id="conversion">Conversion</h3>
+
+<p>A conversion changes the type of an expression to the type specified by the conversion. A conversion may appear literally in the source, or it may be implied by the context in which an expression appears.</p>
+
+<p>An <em>explicit</em> conversion is an expression of the form <code>T(x)</code> or <code>cast(T)x</code> where <code>T</code> is a type and <code>x</code> is an expression that can be converted to type <code>T</code>.</p>
+
+<pre><code>Conversion = CallConversion | CastConversion .
+CallConversion = Type &quot;(&quot; Expression [ &quot;, &quot;] &quot;)&quot; .
+CastConversion = &quot;cast&quot; &quot;(&quot; Type &quot;)&quot; Expression .
+</code></pre>
+
+<h4 id="transmute">Transmute</h4>
+
+<h3 id="constant-expressions">Constant expressions</h3>
+
+<h3 id="order-of-evaluation">Order of evaluation</h3>
 
 <h2 id="statements">Statements</h2>
 
