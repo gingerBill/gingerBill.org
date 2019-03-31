@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Odin Programming Language - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+
+
+
+<p><center>
+<a href="//http://odin-lang.org">
+<div style="width: 20em"><img alt="Odin Programming Language" src="/images/odin/logo-slim.png"></div>
+</a>
+</center></p>
+
+<h1 id="the-odin-programming-language">The Odin Programming Language</h1>
+
+<p>The Odin programming language is fast, concise, readable, pragmatic and open sourced. It is designed with the intent of replacing C with the following goals:</p>
+
+<ul>
+<li>simplicity</li>
+<li>high performance</li>
+<li>built for modern systems</li>
+<li>joy of programming</li>
+</ul>
+
+<p><br></p>
+
+<p>Website: <a href="https://odin.handmade.network/">https://odin.handmade.network/</a><br>
+GitHub:  <a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a></p>
+
+<h2 id="documentation">Documentation</h2>
+
+<ul>
+<li><a href="https://odin.handmade.network/wiki/3329-odin_tutorial">Tutorial</a></li>
+<li><a href="https://github.com/odin-lang/Odin/wiki/Frequently-Asked-Questions-(FAQ)">Frequently Asked Questions</a></li>
+</ul>
+
+<h2 id="user-libraries">User Libraries</h2>
+
+<ul>
+<li><a href="https://github.com/odin-lang/odin-libs">Odin Libs</a></li>
+</ul>
+
+<h2 id="example">Example</h2>
+
+<pre><code class="language-odin">package main
+
+import &quot;core:fmt&quot;
+
+main :: proc() {
+    program := &quot;+ + * 😃 - /&quot;;
+    accumulator := 0;
+
+    for token in program {
+        switch token {
+        case '+': accumulator += 1;
+        case '-': accumulator -= 1;
+        case '*': accumulator *= 2;
+        case '/': accumulator /= 2;
+        case '😃': accumulator *= accumulator;
+        case: // Ignore everything else
+        }
+    }
+
+    fmt.printf(&quot;The program \&quot;%s\&quot; calculates the value %d\n&quot;,
+               program, accumulator);
+}
+</code></pre>
+
+<h2 id="demonstrations">Demonstrations</h2>
+
+<ul>
+<li>First Talk &amp; Demo
+
+<ul>
+<li><a href="https://youtu.be/TMCkT-uASaE?t=338">Talk</a></li>
+<li><a href="https://youtu.be/TMCkT-uASaE?t=1800">Demo</a></li>
+<li><a href="https://youtu.be/TMCkT-uASaE?t=5749">Q&amp;A</a></li>
+</ul></li>
+<li><a href="https://www.youtube.com/watch?v=n1wemZfcbXM">Composition &amp; Refactorability</a></li>
+<li><a href="https://www.youtube.com/watch?v=UFq8rhWhx4s">Introspection, Modules, and Record Layout</a></li>
+<li><a href="https://www.youtube.com/watch?v=f_LGVOAMb78">push_allocator &amp; Minimal Dependency Building</a></li>
+<li><a href="https://www.youtube.com/watch?v=OzeOekzyZK8">when, for &amp; procedure overloading</a></li>
+<li><a href="https://www.youtube.com/watch?v=CkHVwT1Qk-g">Context Types, Unexported Entities, Labelled Branches</a></li>
+<li><a href="https://www.youtube.com/watch?v=NlTutcLyF64">Bit Fields, i128 &amp; u128, Syntax Changes</a></li>
+<li><a href="https://www.youtube.com/watch?v=-XQZE6S6zUU">Default and Named Arguments; Explicit Parametric Polymorphism</a></li>
+<li><a href="https://www.youtube.com/watch?v=ar0vFMoMtrI">Loadsachanges</a></li>
+<li><a href="https://youtu.be/b8bJbjiXZrQ">Packages, Bit Sets, cstring</a>
+
+<ul>
+<li><a href="https://youtu.be/5jmxyIfyyTk">Q&amp;A</a></li>
+</ul></li>
+</ul>
+
+<ul class="articles">
+  
+</ul>
+<footer>
+&copy; 2007&ndash;2019 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</html>
+
