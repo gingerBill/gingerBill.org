@@ -15,11 +15,10 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/odin/spec/</guid>
-      <description>Warning: This is a work in progress and is subject to change.
-Introduction This is a reference manual for the Odin programming language.
+      <description>Introduction This is a reference manual for the Odin programming language.
 Odin is a general-purpose language designed for systems programming. It is a strongly typed language with manual memory managment. Programs are constructed from packages.
 Notation The syntax is specified using Extended Backus-Naur Form (EBNF):
-Production = production_name &amp;quot;=&amp;quot; [ Expression ] &amp;quot;.&amp;quot; . Expression = Alternative { &amp;quot;|&amp;quot; Alternative } .</description>
+Production = production_name &amp;quot;=&amp;quot; [ Expression ] &amp;quot;.&amp;quot; . Expression = Alternative { &amp;quot;|&amp;quot; Alternative } . Alternative = Term { Term } . Term = production_name | token [ &amp;quot;…&amp;quot; token ] | Group | Option | Repetition .</description>
     </item>
     
   </channel>

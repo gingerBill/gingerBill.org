@@ -26,18 +26,125 @@
 <header>
 	<h1>The Odin Programming Language Specification</h1>
 	
-	<div class="info">
-		
-		<p>
-		
-		</p>
-	</div>
 </header>
+<b>Warning:</b> This is a work in progress and is subject to change.<hr>
 
+<aside>
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#notation">Notation</a></li>
+<li><a href="#source-code-representation">Source code representation</a>
+<ul>
+<li><a href="#characters">Characters</a></li>
+<li><a href="#letters-and-digits">Letters and digits</a></li>
+</ul></li>
+<li><a href="#lexical-elements">Lexical elements</a>
+<ul>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#tokens">Tokens</a></li>
+<li><a href="#semicolons">Semicolons</a></li>
+<li><a href="#identifiers">Identifiers</a></li>
+<li><a href="#keywords">Keywords</a></li>
+<li><a href="#operators-and-punctuation">Operators and punctuation</a></li>
+<li><a href="#integer-literals">Integer literals</a></li>
+<li><a href="#floating-point-literals">Floating-point literals</a></li>
+<li><a href="#imaginary-literals">Imaginary literals</a></li>
+<li><a href="#rune-literals">Rune literals</a></li>
+<li><a href="#string-literals">String literals</a></li>
+</ul></li>
+<li><a href="#constants">Constants</a></li>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#types">Types</a>
+<ul>
+<li><a href="#boolean-types">Boolean types</a></li>
+<li><a href="#numeric-types">Numeric types</a></li>
+<li><a href="#string-types">String types</a></li>
+<li><a href="#array-types">Array types</a></li>
+<li><a href="#slice-types">Slice types</a></li>
+<li><a href="#dynamic-array-types">Dynamic array types</a></li>
+<li><a href="#struct-types">Struct types</a></li>
+<li><a href="#union-types">Union types</a></li>
+<li><a href="#pointer-types">Pointer types</a></li>
+<li><a href="#procedure-types">Procedure types</a></li>
+<li><a href="#map-types">Map types</a></li>
+<li><a href="#enum-types">Enum types</a></li>
+<li><a href="#bit-set-types">Bit set types</a></li>
+<li><a href="#bit-field-types">Bit field types</a></li>
+<li><a href="#opaque-types">Opaque types</a></li>
+<li><a href="#helper-types">Helper types</a></li>
+<li><a href="#any-type">Any type</a></li>
+<li><a href="#typeid">Typeid</a></li>
+<li><a href="#other">Other</a>
+<ul>
+<li><a href="#simd-types">SIMD types</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#properties-of-types-and-values">Properties of types and values</a>
+<ul>
+<li><a href="#type-identity">Type identity</a></li>
+<li><a href="#assignability">Assignability</a></li>
+<li><a href="#representability">Representability</a></li>
+</ul></li>
+<li><a href="#blocks">Blocks</a></li>
+<li><a href="#declarations-and-scope">Declarations and scope</a>
+<ul>
+<li><a href="#label-scopes">Label scopes</a></li>
+<li><a href="#blank-identifier">Blank identifier</a></li>
+<li><a href="#predeclared-identifiers">Predeclared identifiers</a></li>
+</ul></li>
+<li><a href="#attributes">Attributes</a></li>
+<li><a href="#expressions">Expressions</a>
+<ul>
+<li><a href="#operators">Operators</a>
+<ul>
+<li><a href="#operator-precedence">Operator precedence</a></li>
+</ul></li>
+<li><a href="#arithmetic-operators">Arithmetic operators</a>
+<ul>
+<li><a href="#integer-operators">Integer operators:</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#statements">Statements</a>
+<ul>
+<li><a href="#labelled-statements">Labelled statements</a></li>
+<li><a href="#expression-statements">Expression statements</a></li>
+<li><a href="#assignments">Assignments</a></li>
+<li><a href="#if-statements">If statements</a></li>
+<li><a href="#switch-statements">Switch statements</a></li>
+<li><a href="#for-statements">For statements</a></li>
+<li><a href="#return-statements">Return statements</a></li>
+<li><a href="#break-statements">Break statements</a></li>
+<li><a href="#continue-statements">Continue statements</a></li>
+<li><a href="#fallthrough-statements">Fallthrough statements</a></li>
+<li><a href="#defer-statements">Defer statements</a></li>
+</ul></li>
+<li><a href="#built-in-procedures">Built-in procedures</a>
+<ul>
+<li><a href="#length-and-capacity">Length and capacity</a></li>
+<li><a href="#manipulating-complex-numbers">Manipulating complex numbers</a></li>
+<li><a href="#numeric-bounds">Numeric bounds</a></li>
+<li><a href="#directive-based">Directive based</a></li>
+<li><a href="#other-1">Other</a></li>
+</ul></li>
+<li><a href="#packages">Packages</a>
+<ul>
+<li><a href="#source-file-organization">Source file organization</a></li>
+<li><a href="#package-clause">Package clause</a></li>
+<li><a href="#import-declaration">Import declaration</a></li>
+</ul></li>
+<li><a href="#foreign-system">Foreign system</a></li>
+<li><a href="#implicit-context-system">Implicit context system</a></li>
+<li><a href="#parametric-polymorphism">Parametric polymorphism</a></li>
+<li><a href="#initialization-and-execution">Initialization and execution</a></li>
+<li><a href="#system-considerations">System considerations</a></li>
+</ul></li>
+</ul>
+</nav>
+</aside>
 
-<p><strong>Warning:</strong> This is a work in progress and is subject to change.</p>
-
-<hr />
 
 <h2 id="introduction">Introduction</h2>
 
@@ -505,6 +612,8 @@ Procedures:
 
 </code></pre>
 
+<h2 id="attributes">Attributes</h2>
+
 <h2 id="expressions">Expressions</h2>
 
 <h3 id="operators">Operators</h3>
@@ -530,7 +639,7 @@ Procedures:
 
 <h3 id="arithmetic-operators">Arithmetic operators</h3>
 
-<pre><code>+    sum                    integers, floats, complex values, strings
+<pre><code>+    sum                    integers, floats, complex values, constant strings values
 -    difference             integers, floats, complex values
 *    product                integers, floats, complex values
 /    quotient               integers, floats, complex values
@@ -546,6 +655,8 @@ Procedures:
 &gt;&gt;   right shift            integer &gt;&gt; unsigned integer
 </code></pre>
 
+<p>Arithmetic operators also work on fixed-length arrays of numeric types.</p>
+
 <h4 id="integer-operators">Integer operators:</h4>
 
 <p>For two integer values <code>x</code> and <code>y</code>, the integer quotient <code>q = x / y</code> and remainder <code>r = x % y</code> satisfy the following relationships:</p>
@@ -557,9 +668,49 @@ Procedures:
 
 <h2 id="statements">Statements</h2>
 
+<h3 id="labelled-statements">Labelled statements</h3>
+
+<h3 id="expression-statements">Expression statements</h3>
+
+<h3 id="assignments">Assignments</h3>
+
+<h3 id="if-statements">If statements</h3>
+
+<h3 id="switch-statements">Switch statements</h3>
+
+<h3 id="for-statements">For statements</h3>
+
+<h3 id="return-statements">Return statements</h3>
+
+<h3 id="break-statements">Break statements</h3>
+
+<h3 id="continue-statements">Continue statements</h3>
+
+<h3 id="fallthrough-statements">Fallthrough statements</h3>
+
+<h3 id="defer-statements">Defer statements</h3>
+
 <h2 id="built-in-procedures">Built-in procedures</h2>
 
+<h3 id="length-and-capacity">Length and capacity</h3>
+
+<h3 id="manipulating-complex-numbers">Manipulating complex numbers</h3>
+
+<h3 id="numeric-bounds">Numeric bounds</h3>
+
+<h3 id="directive-based">Directive based</h3>
+
+<h3 id="other-1">Other</h3>
+
 <h2 id="packages">Packages</h2>
+
+<h3 id="source-file-organization">Source file organization</h3>
+
+<h3 id="package-clause">Package clause</h3>
+
+<h3 id="import-declaration">Import declaration</h3>
+
+<h2 id="foreign-system">Foreign system</h2>
 
 <h2 id="implicit-context-system">Implicit context system</h2>
 

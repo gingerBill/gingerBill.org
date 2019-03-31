@@ -187,6 +187,25 @@ ul.sub-articles li {
   margin-bottom: 0;
 }
 
+nav#TableOfContents ul {
+  list-style-type: none !important;
+  margin-bottom: 0;
+}
+nav#TableOfContents > ul {
+  margin-left: 0;
+  margin-bottom: 2em;
+}
+
+nav#TableOfContents > ul > li > ul {
+  -webkit-column-count: 2;
+     -moz-column-count: 2;
+          column-count: 2;
+}
+
+nav#TableOfContents > ul > li > ul {
+  margin-left: 0;
+}
+
 
 
 h3 > time {
