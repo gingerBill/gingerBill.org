@@ -110,7 +110,7 @@ C++11 Implementation template &amp;lt;typename F&amp;gt; struct privDefer { F f;
       
       <guid>/odin/spec/</guid>
       <description>Introduction This is a reference manual for the Odin programming language.
-Odin is a general-purpose language designed for systems programming. It is a strongly typed language with manual memory managment. Programs are constructed from packages.
+Odin is a general-purpose language designed for systems programming. It is a strongly typed language with manual memory management. Programs are constructed from packages.
 Notation The syntax is specified using Extended Backus-Naur Form (EBNF):
 Production = production_name &amp;quot;=&amp;quot; [ Expression ] &amp;quot;.&amp;quot; . Expression = Alternative { &amp;quot;|&amp;quot; Alternative } . Alternative = Term { Term } . Term = production_name | token [ &amp;quot;…&amp;quot; token ] | Group | Option | Repetition .</description>
     </item>
