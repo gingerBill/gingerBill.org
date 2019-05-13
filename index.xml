@@ -5,10 +5,20 @@
     <link>/</link>
     <description>Recent content in Home on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sun, 10 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 May 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A Reply to _The Road to Zig 1.0_</title>
+      <link>/article/2019/05/13/a-reply-to-the-road-to-zig/</link>
+      <pubDate>Mon, 13 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
+      <description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
+ Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them.</description>
+    </item>
     
     <item>
       <title>A Quine in Odin</title>

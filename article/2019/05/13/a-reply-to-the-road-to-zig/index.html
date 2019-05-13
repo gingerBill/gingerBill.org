@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Reply to _The Road to Zig 1.0_ - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140084303-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140084303-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>A Reply to <em>The Road to Zig 1.0</em></h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2019-05-13</span>
+		</p>
+	</div>
+</header>
+
+
+<p>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:</p>
+
+<ul>
+<li><a href="https://www.gingerbill.org/odin/">Odin</a><sup class="footnote-ref" id="fnref:odin-lang-creator"><a href="#fn:odin-lang-creator">1</a></sup></li>
+<li><a href="http://scopes.rocks">Scopes</a></li>
+<li><a href="https://ziglang.org/">Zig</a></li>
+</ul>
+
+<p>They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</p>
+
+<p>Which brings to me to the latest talk by <a href="https://twitter.com/andy_kelley">Andrew Kelly</a> about his programming language, <a href="https://ziglang.org/">Zig</a>, titled <em><a href="https://chariotsolutions.com/screencast/philly-ete-2019-andrew-kelley-the-road-to-zig-1-0/">The Road to Zig 1.0</a></em>. In this talk, Andrew presents the Zig programming language as a programming language for maintaining robust reusable software with a tour of the unique features of that Zig has. I recommend watching the talk before reading this article to make your own decision about it.</p>
+
+<p><div class="youtube">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Gv2I7qTux7g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br></p>
+
+<h2 id="opening">Opening</h2>
+
+<p>The talk opens with the <a href="https://www.xkcd.com/2030/">xkcd comic 2030</a> regarding the fragility and terrifying nature of software compared to engineering disciplines; with Andrew commenting that &ldquo;we can do better than this&rdquo;. I agree with this basic premise however, I do not agree with Andrew&rsquo;s philosophical approach to aid this issue, and in general the entire philosophy behind Zig. Andrew&rsquo;s two key points to improving the problem are:</p>
+
+<ul>
+<li>Write quality software (compared to writing crappy software)</li>
+<li>Promote code reuse (compared to preventing code reuse)</li>
+</ul>
+
+<p>From experience of programming and the current programming culture, the second should be rephrased to &ldquo;promote reuse of quality code&rdquo; as with the rise of package managers and library repositories, code is being reused quite a lot, even if that code is not at all robust. This crappy code reuse as resulted in many of the infamous dependency hells<sup class="footnote-ref" id="fnref:left-pad"><a href="#fn:left-pad">2</a></sup>.</p>
+
+<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming<sup class="footnote-ref" id="fnref:handmade-manifesto"><a href="#fn:handmade-manifesto">3</a></sup>. Humans are flawed beings and are incentive focused. Unless we have an incentive to do something, we are very unlikely to do it.</p>
+
+<p>Andrew then precedes to talk about many of the things which will prevent software from being widely used:</p>
+
+<ul>
+<li>Garbage collection</li>
+<li>Automatic heap allocation (which may cause the system to run out of memory)</li>
+<li>If you code is slower than C, it will be rewritten in C</li>
+<li>A lack of C ABI will mean it is not usable by most languages</li>
+<li>Complicated build systems from source</li>
+</ul>
+
+<p>These points are only mildly related to producing <em>quality software</em> and closer to concerns about performance, ease of use, safety, and compatibility. I appreciate the caveats do not fit on the slide but many of these points do seem to be a completely different issue to the what question of <em>quality software</em>.</p>
+
+<ul>
+<li>Garbage collection (and automatic memory management in general) has its uses in certain problem domains and in those domains, it does not reduce the quality of that software.</li>
+<li>Automatic heap allocation is more of a problem with the language (and third party code) doing things behind the back of the developer which may have performance implications. I have never had a program cause a system to run out of memory in real software (other than artificial stress tests). If you are working in a low-memory environment, you should be extremely aware of its limitations and plan accordingly<sup class="footnote-ref" id="fnref:lack-of-memory"><a href="#fn:lack-of-memory">4</a></sup>.</li>
+<li>A piece of software doesn&rsquo;t need to be as fast as C to be quality software. If the performance is within a certain margin and/or the performance of your code has little overhead for the problem-at-hand (e.g. a one-off task), then the clarity of the code is much more important than its performance. This is why Python is so popular in the scientific community as prototyping/glue language, with the actual heavy-lifting done by C/FORTRAN bindings to the highly optimized code.</li>
+<li>A lack of C ABI is an issue if you need your software to interface with other software but as I said, this has nothing to do with quality software itself rather compatibility with other software<sup class="footnote-ref" id="fnref:c-abi-aid-pl"><a href="#fn:c-abi-aid-pl">5</a></sup>.</li>
+<li>Complicated build systems is mostly a cultural issue where people are either told to use a certain approach or learn about &ldquo;best practices&rdquo;.</li>
+</ul>
+
+<h2 id="condition-compilation">Condition Compilation</h2>
+
+<p>After this, Andrew talks about a lot of the issues in C which can cause friction and problems, and how Zig addresses them. Many are simple problems which have been solved by many languages before and after C, and many are core library issues and have nothing to do with the language itself. One of the issues that Andrew covers is conditional compilation and the compile-time system in Zig is used in conjunction with branch/if statements to produce compile-time evaluated clauses. The issue I have with this approach is that run-time evaluated if statements and compile-time evaluated if statements use the exact same syntax:</p>
+
+<pre><code class="language-zig">if builtin.os == .windows {
+    var FT: FILETIME = undefined;
+    GetSystemTimeAsFileTime(&amp;ft);
+    // ...
+} else if builtin.os == .linux {
+    var tms: timespec = undefined;
+    clock_gettime(CLOCK_REALTIME, &amp;tms);
+} else {
+    @compileError(&quot;unknown how to get the time&quot;);
+}
+</code></pre>
+
+<p>A huge issue with this approach is that it is not clear that these clauses will be evaluated at compile-time nor that they will actually produce a scope or not. Odin solves this issue by using a separate keyword, <code>when</code>, to denote a compile-time branching statement:</p>
+
+<pre><code class="language-odin">when ODIN_OS == &quot;windows&quot; {
+    // ...
+} else when ODIN_OS == &quot;linux&quot; {
+    // ...
+} else {
+    // ...
+}
+</code></pre>
+
+<p>This <code>when</code> statement is clearer to read and because it is denoted different, it is clear that it has different semantics to an <code>if</code> statement. A <code>when</code> statement in Odin does not produce a new scope for each clause, and only the clause that is true at compile-time will be semantically checked (all clauses are syntactically checked, unlike an <code>#if 0</code> block in C), whilst in an <code>if</code> statement, all clauses are semantically checked.</p>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p>My biggest issue with the design of the Zig language, which is demonstrated in this talk, is that &ldquo;error values&rdquo; are built into the language itself. In a <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">previous article</a>, I discuss the issues with exceptions, error handling, and error propagation. Zig&rsquo;s <em>error</em> types have a similar syntax to exceptions but they do not share the same internals as exceptions in that they are handled as part of the return values rather than through unwinding the stack (or some similar mechanism). Andrew comments that people are lazy (which they are) and will do whatever the default way is, so why not at least get them to handle things &ldquo;correctly?&rdquo; and &ldquo;make handling errors fun&rdquo;.</p>
+
+<p>Firstly, error handling should not be fun&mdash;it should be painless. It&rsquo;s akin to saying paying taxes should be fun. It will never be fun, but you can remove a lot of the drudge work from it. Secondly, as I previously wrote, my issue with exception-based/exception-like errors is not the syntax but how they encourage error propagation. This encouragement promotes a culture of pass the error up the stack for &ldquo;someone else&rdquo; to handle the error. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don’t pass them up the stack. <em>You make your mess; you clean it.</em></p>
+
+<p>Error propagation is fine within a library/package/module but you ought not to be encouraging propagation <em>across</em> library boundaries. There are so many issues I have seen in real life, which lead to <em>crappy software</em>, where errors are just left for &ldquo;someone else&rdquo; to handle. Error propagation also has the the tendency to remove information about the type of error as it is reduced to a &ldquo;simpler&rdquo; error type up the stack. If you are designing a language to aid in producing <em>quality software</em>, don&rsquo;t add a core feature to the language which encourages sloppy habits.</p>
+
+<p>Odin&rsquo;s approach to error handling is to treat errors as nothing special. Error cases are handled like any other piece of code. In conjunction with Odin&rsquo;s multiple return values, enumerations, unions, and many other features, this means the user can return extra information, including <em>error values</em>, alongside the normal return values if wanted and handle them accordingly.</p>
+
+<h2 id="clean-up-code">Clean-up Code</h2>
+
+<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++&rsquo;s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type<sup class="footnote-ref" id="fnref:previous-defer"><a href="#fn:previous-defer">6</a></sup>. Zig extends the <code>defer</code> to work with the error system with <code>errdefer</code>, which is a nice and natural extension of this system and is coherent with the rest of the language&rsquo;s design.</p>
+
+<h2 id="error-sets">Error Sets</h2>
+
+<p>Errors sets are an interesting concept that extend the error system in Zig. I would personally like to see this feature extended to enumerations too as it seems like a natural extension to the concept of a value set<sup class="footnote-ref" id="fnref:set-union"><a href="#fn:set-union">7</a></sup>. However, it might be better to have a specialized error type than a specialization of a previous error type even if it increases code use (this is of course depends on the situation).</p>
+
+<h2 id="build-system">Build System</h2>
+
+<p>The Zig build system is the language itself. It extends the compile-time execution system to call a &ldquo;build&rdquo; function to set up the build requirements. Having the same language be the build-language is very useful and a natural extension of the compile-time execution system. The compile-time execution system itself is already a huge requirement for the language which does complicate things but if that is accepted and desired, this feature is less of an issue.</p>
+
+<p>In Odin, &ldquo;foreign&rdquo; code is handled by the <code>foreign</code> system. Foreign code that is imported is associated with its dependencies, this means that only the dependencies that are used are built against. Coupled with Odin&rsquo;s package system, it helps encapsulate the foreign code along with the Odin code. Odin does not directly import C header file, like Zig, but I found that in practice, you rarely want to use the raw bindings to the C code.</p>
+
+<pre><code class="language-odin">// This is a code snippet of Odin code which binds to the GLFW 3 library which was originally in C
+package glfw
+
+// These dependences only get built against if they are used
+when ODIN_OS == &quot;linux&quot;   do foreign import glfw &quot;system:glfw&quot;;
+when ODIN_OS == &quot;windows&quot; do foreign import glfw &quot;glfw3dll.lib&quot;;
+
+...
+
+@(default_calling_convention=&quot;c&quot;)
+foreign glfw {
+    @(link_name=&quot;glfwInit&quot;) Init :: proc() -&gt; b32 ---
+    @(link_name=&quot;glfwTerminate&quot;) Terminate :: proc() ---
+    glfwGetVersion :: proc(major, minor, rev: ^i32) ---
+
+    ...
+}
+
+
+// A wrapper to better reflect Odin's semantics
+GetVersion :: proc() -&gt; (major, minor, rev: i32) {
+    glfwGetVersion(&amp;major, &amp;minor, &amp;rev);
+    return major, minor, rev;
+}
+</code></pre>
+
+<p>From what I know of, how Zig is currently designed, its build system does not allow for this minimal dependency tracking that Odin offers.</p>
+
+<h2 id="designed-around-llvm">Designed Around LLVM</h2>
+
+<p>The Zig language is heavily designed around the LLVM ecosystem as a result, relies upon many of its features. I personally see this as vice rather than a virtue. Even though LLVM supports numerous target platforms, it does mean that any issue LLVM has, your language will have it too. Odin uses LLVM as its current backend, but there is work to replace it with a custom backend, and I have personally experienced a huge number of bugs and design flaws which cannot be avoided without removing LLVM itself. LLVM was built to optimize C and C++ and as a result, it is heavily designed around many of the &ldquo;quirks&rdquo; of C. LLVM is a huge dependency which I would rather not have to deal with.</p>
+
+<p>I will not talk about LLVM any more as it requires another entirely separate article if I was to go into it further.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Andrew sets out by striving to aid in the production of <em>quality software</em> but does not really address why <em>crappy software</em> is produced in the first place. Many of the features in Zig itself encourage what I see to be poor and lazy practice, especially the error system. Zig is a well designed language but I disagree with many of the design decisions and the fundamental philosophy behind it. I hope Andrew is successful and is continually able to make a living off from Zig as this is a wonderful project.</p>
+
+<p>If you like the sound of it and want to find out more, please check it out at <a href="https://ziglang.org/">https://ziglang.org/</a>.</p>
+
+<h2 id="p-s-why-odin">P.S. Why Odin?</h2>
+
+<p>Throughout this article, I have been discussing Zig and its issues. Why do I recommend Odin over Zig?</p>
+
+<p>Odin is not trying to solve the problem of <em>quality software</em> as that is fundamentally a cultural problem. The Odin programming language is fast, concise, readable, pragmatic, and open sourced. It is designed with the intent of replacing C with the following goals:</p>
+
+<ul>
+<li>simplicity</li>
+<li>high performance</li>
+<li>built for modern systems</li>
+<li>joy of programming</li>
+</ul>
+
+<p>I wanted a language that solved many of the issues I had with programming. I wanted the specification of the language to be 100% knowable by a mere mortal. There are probably less than a dozen people in the world that know all of the C++ specification <em>and</em> understand it. Rust is starting to approach that complexity even though it is a new language. Swift already has a lot of baggage as its evolved past from Objective-C and the NeXTstep ecosystem.</p>
+
+<p>At the turn of 2016, I gave myself a New Year&rsquo;s Resolution to start any new personal programming project in pure C to see what I really needed from a language. It turned out that I needed very little to be very productive. The friction from having to remember many of the features in C++ and other languages reduced my productivity a lot more than I realised. From using pure C for a few months, I noticed that there were features that I wanted to add to C to increase my productivity and reducing errors. These features included <code>defer</code> and tagged-unions. I started creating a metaprogramming tool to augment my C code so I could add these new features. I quickly began to realise that what I wanted was a new language as this this endeavour was a dead-end.</p>
+
+<p>The project started one evening in late July 2016 when I was annoyed with programming in C++ (not a new project). During this annoyance, I was also a little drunk. The language began as a Pascal clone (with begin and end and more) but changed quite quickly to become something else.</p>
+
+<p>Odin borrows heavily from (in order of philosophy and impact): Pascal, C, Go, Oberon. <a href="https://en.wikipedia.org/wiki/Niklaus_Wirth">Niklaus Wirth</a> and <a href="https://en.wikipedia.org/wiki/Rob_Pike">Rob Pike</a> have been the programming language design idols throughout this project. Simplicity was always a deriving force in the design, but as I found very early on, simplicity is complex.</p>
+
+<p>The design underwent a lot of revisions and experiments in the very early stages as I did not know what was optimal for increasing my productivity. I knew the basic concepts of what I wanted but that was it. Concepts such as the package system took nearly a year to flesh-out and design as it took a while to discover what were the actual problems with certain approaches.</p>
+
+<p>At the end of the day, I am a pragmatic man and I do not see the need for type-theory purity if it increases friction in the language.</p>
+
+<p>If you like the sound of it and want to find out more, please check it out at <a href="https://www.odin-lang.org/">https://www.odin-lang.org/</a> and <a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a>.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:odin-lang-creator">For those who do not know, I am the creator of the <a href="https://www.gingerbill.org/odin/">Odin programming language</a>.
+ <a class="footnote-return" href="#fnref:odin-lang-creator"><sup>[return]</sup></a></li>
+<li id="fn:left-pad">See the Left-Pad Package causing severe issues across many other piece of code, <a href="https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages">https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages</a>.
+ <a class="footnote-return" href="#fnref:left-pad"><sup>[return]</sup></a></li>
+<li id="fn:handmade-manifesto">For a possible way to improve the culture, please see the <a href="https://handmade.network/manifesto">Handmade.Network</a>
+ <a class="footnote-return" href="#fnref:handmade-manifesto"><sup>[return]</sup></a></li>
+<li id="fn:lack-of-memory">I have discussed this issue before with Andrew and I really do not see this as much of an issue as he does. If you are a desktop machine and run out of memory, don&rsquo;t try to recover from the panic, quit the program or even shut-down the computer. As for other machinery, plan accordingly!
+ <a class="footnote-return" href="#fnref:lack-of-memory"><sup>[return]</sup></a></li>
+<li id="fn:c-abi-aid-pl">And aiding your programming language with interfacing with foreign code and help it get more widely adopted.
+ <a class="footnote-return" href="#fnref:c-abi-aid-pl"><sup>[return]</sup></a></li>
+<li id="fn:previous-defer">I talk about the <code>defer</code> statement in a previous <a href="/article/2015/08/19/defer-in-cpp/">article</a>.
+ <a class="footnote-return" href="#fnref:previous-defer"><sup>[return]</sup></a></li>
+<li id="fn:set-union">It might be incorrect to call it a set as they can only be one of the values in the set of possible values. A union, sum-type, or something similar may be a better name for the concept.
+ <a class="footnote-return" href="#fnref:set-union"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+</article>
+</main>
+<footer>
+&copy; 2007&ndash;2019 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+</script>
+</html>
+
