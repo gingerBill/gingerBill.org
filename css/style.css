@@ -301,3 +301,20 @@ article table td, article table th {
   text-align: right;
   padding-right: 0.75em;
 }
+
+
+.youtube {
+  margin: 0 auto !important;
+  text-align: center;
+  position: relative;
+  width: 75%;
+  height: 0;
+  padding-bottom: 42.1875%;
+}
+.youtube iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
