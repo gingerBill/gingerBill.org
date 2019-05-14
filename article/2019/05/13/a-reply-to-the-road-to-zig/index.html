@@ -146,35 +146,7 @@
 
 <p>Update: It appears that the build system is not part of the compile-time system whatsoever. It appears to be apart of the core library than a feature of the language itself. This could be easily replicate this in any language however it having it part of the core library itself, this means that there is a <em>standard</em> approach to use which nudges it towards being the <em>default</em> approach.</p>
 
-<p>In Odin, &ldquo;foreign&rdquo; code is handled by the <code>foreign</code> system. Foreign code that is imported is associated with its dependencies, this means that only the dependencies that are used are built against. Coupled with Odin&rsquo;s package system, it helps encapsulate the foreign code along with the Odin code. Odin does not directly import C header file, like Zig, but I found that in practice, you rarely want to use the raw bindings to the C code.</p>
-
-<pre><code class="language-odin">// This is a code snippet of Odin code which binds to the GLFW 3 library which was originally in C
-package glfw
-
-// These dependences only get built against if they are used
-when ODIN_OS == &quot;linux&quot;   do foreign import glfw &quot;system:glfw&quot;;
-when ODIN_OS == &quot;windows&quot; do foreign import glfw &quot;glfw3dll.lib&quot;;
-
-...
-
-@(default_calling_convention=&quot;c&quot;)
-foreign glfw {
-    @(link_name=&quot;glfwInit&quot;) Init :: proc() -&gt; b32 ---
-    @(link_name=&quot;glfwTerminate&quot;) Terminate :: proc() ---
-    glfwGetVersion :: proc(major, minor, rev: ^i32) ---
-
-    ...
-}
-
-
-// A wrapper to better reflect Odin's semantics
-GetVersion :: proc() -&gt; (major, minor, rev: i32) {
-    glfwGetVersion(&amp;major, &amp;minor, &amp;rev);
-    return major, minor, rev;
-}
-</code></pre>
-
-<p>From what I know of, how Zig is currently designed, its build system does not allow for this minimal dependency tracking that Odin offers.</p>
+<p>In Odin, &ldquo;foreign&rdquo; code is handled by the <code>foreign</code> system. Foreign code that is imported is associated with its dependencies, this means that only the dependencies that are used are built against. Coupled with Odin&rsquo;s package system, it helps encapsulate the foreign code along with the Odin code. Odin does not directly import C header file, like Zig, but I found that in practice, you rarely want to use the raw bindings to the C code. From what I know of, how Zig is currently designed, its build system does not allow for this minimal dependency tracking that Odin offers.</p>
 
 <h2 id="designed-around-llvm">Designed Around LLVM</h2>
 
