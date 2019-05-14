@@ -53,7 +53,7 @@
 
 <p>They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</p>
 
-<p>Which brings to me to the latest talk by <a href="https://twitter.com/andy_kelley">Andrew Kelly</a> about his programming language, <a href="https://ziglang.org/">Zig</a>, titled <em><a href="https://chariotsolutions.com/screencast/philly-ete-2019-andrew-kelley-the-road-to-zig-1-0/">The Road to Zig 1.0</a></em>. In this talk, Andrew presents the Zig programming language as a programming language for maintaining robust reusable software with a tour of the unique features of that Zig has. I recommend watching the talk before reading this article to make your own decision about it.</p>
+<p>Which brings to me to the latest talk by <a href="https://twitter.com/andy_kelley">Andrew Kelley</a> about his programming language, <a href="https://ziglang.org/">Zig</a>, titled <em><a href="https://chariotsolutions.com/screencast/philly-ete-2019-andrew-kelley-the-road-to-zig-1-0/">The Road to Zig 1.0</a></em>. In this talk, Andrew presents the Zig programming language as a programming language for maintaining robust reusable software with a tour of the unique features of that Zig has. I recommend watching the talk before reading this article to make your own decision about it.</p>
 
 <p><div class="youtube">
     <iframe width="560" height="315" src="https://www.youtube.com/embed/Gv2I7qTux7g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -71,7 +71,7 @@
 
 <p>From experience of programming and the current programming culture, the second should be rephrased to &ldquo;promote reuse of quality code&rdquo; as with the rise of package managers and library repositories, code is being reused quite a lot, even if that code is not at all robust. This crappy code reuse as resulted in many of the infamous dependency hells<sup class="footnote-ref" id="fnref:left-pad"><a href="#fn:left-pad">2</a></sup>.</p>
 
-<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming<sup class="footnote-ref" id="fnref:handmade-manifesto"><a href="#fn:handmade-manifesto">3</a></sup>. Humans are flawed beings and are incentive focused. Unless we have an incentive to do something, we are very unlikely to do it.</p>
+<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming<sup class="footnote-ref" id="fnref:handmade-manifesto"><a href="#fn:handmade-manifesto">3</a></sup>. Humans are flawed beings and are incentive focused. Unless we have an incentive to do something, we are very unlikely to do it. There are many languages that are striving for robustness in the code, such as Rust and Ada, but the ensure robustness and quality, a robust and quality culture will be required to enforce it.</p>
 
 <p>Andrew then precedes to talk about many of the things which will prevent software from being widely used:</p>
 
@@ -97,11 +97,11 @@
 
 <p>After this, Andrew talks about a lot of the issues in C which can cause friction and problems, and how Zig addresses them. Many are simple problems which have been solved by many languages before and after C, and many are core library issues and have nothing to do with the language itself. One of the issues that Andrew covers is conditional compilation and the compile-time system in Zig is used in conjunction with branch/if statements to produce compile-time evaluated clauses. The issue I have with this approach is that run-time evaluated if statements and compile-time evaluated if statements use the exact same syntax:</p>
 
-<pre><code class="language-zig">if builtin.os == .windows {
+<pre><code class="language-zig">if (builtin.os == .windows) {
     var FT: FILETIME = undefined;
     GetSystemTimeAsFileTime(&amp;ft);
     // ...
-} else if builtin.os == .linux {
+} else if (builtin.os == .linux) {
     var tms: timespec = undefined;
     clock_gettime(CLOCK_REALTIME, &amp;tms);
 } else {
@@ -142,7 +142,9 @@
 
 <h2 id="build-system">Build System</h2>
 
-<p>The Zig build system is the language itself. It extends the compile-time execution system to call a &ldquo;build&rdquo; function to set up the build requirements. Having the same language be the build-language is very useful and a natural extension of the compile-time execution system. The compile-time execution system itself is already a huge requirement for the language which does complicate things but if that is accepted and desired, this feature is less of an issue.</p>
+<p>The Zig build system is the language itself. <del>It extends the compile-time execution system to call a &ldquo;build&rdquo; function to set up the build requirements. Having the same language be the build-language is very useful and a natural extension of the compile-time execution system. The compile-time execution system itself is already a huge requirement for the language which does complicate things but if that is accepted and desired, this feature is less of an issue.</del></p>
+
+<p>Update: It appears that the build system is not part of the compile-time system whatsoever. It appears to be apart of the core library than a feature of the language itself. This could be easily replicate this in any language however it having it part of the core library itself, this means that there is a <em>standard</em> approach to use which nudges it towards being the <em>default</em> approach.</p>
 
 <p>In Odin, &ldquo;foreign&rdquo; code is handled by the <code>foreign</code> system. Foreign code that is imported is associated with its dependencies, this means that only the dependencies that are used are built against. Coupled with Odin&rsquo;s package system, it helps encapsulate the foreign code along with the Odin code. Odin does not directly import C header file, like Zig, but I found that in practice, you rarely want to use the raw bindings to the C code.</p>
 
