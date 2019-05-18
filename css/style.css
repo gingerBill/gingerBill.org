@@ -251,6 +251,14 @@ p code, li code {
   background-color: #f7f7f7;
 }
 
+.pre-wrap {
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space:   -o-pre-wrap;  /* Opera 7 */
+  white-space:     -pre-wrap;  /* Opera 4-6 */
+  white-space:      pre-wrap;  /* css-3 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
 article table {
   border: 1px solid #c6cbd1;
   border-collapse: collapse;

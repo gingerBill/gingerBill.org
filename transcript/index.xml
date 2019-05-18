@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Transcripts on gingerBill</title>
+    <link>/transcript/</link>
+    <description>Recent content in Transcripts on gingerBill</description>
+    <language>en-gb</language>
+    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/transcript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Discussion Regarding the Design of Imports in Odin</title>
+      <link>/transcript/odin-import-design-discussion/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/transcript/odin-import-design-discussion/</guid>
+      <description>This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
+[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34; [18:42] lipid: renaming the folder solves the issue [18:43] gingerBill: @lipid Just rename the package name, it can be anything.</description>
+    </item>
+    
+  </channel>
+</rss>
