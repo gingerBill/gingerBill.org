@@ -36,8 +36,27 @@
 
 <p><center>
 <a href="//odin-lang.org">
-<div style="width: 20em"><img alt="Odin Programming Language" src="/images/odin/logo-slim.png"></div>
-</a>
+    <div style="width: 20em"><img alt="Odin Programming Language" src="/images/odin/logo-slim.png"></div>
+</a></p>
+
+<p><p>A fast, concise, readable, pragmatic and open sourced programming language.</p>
+<br>
+<p>
+    <a class="github-button" href="https://github.com/odin-lang" aria-label="Follow @odin-lang on GitHub">Follow @odin-lang</a>
+    <a class="github-button" href="https://github.com/odin-lang/Odin" data-size="small" aria-label="Star odin-lang/Odin on GitHub">Star</a>
+    <a class="github-button" href="https://github.com/odin-lang/Odin/subscription" aria-label="Watch odin-lang/Odin on GitHub">Watch</a>
+</p>
+<p>
+    <a href="https://github.com/odin-lang/odin/releases/latest">
+        <img src="https://img.shields.io/github/release/odin-lang/odin.svg">
+    </a>
+    <a href="https://github.com/odin-lang/odin/releases/latest">
+        <img src="https://img.shields.io/badge/platforms-Windows%20|%20Linux%20|%20macOS-green.svg">
+    </a>
+    <a href="https://github.com/odin-lang/odin/blob/master/LICENSE">
+        <img src="https://img.shields.io/github/license/odin-lang/odin.svg">
+    </a>
+</p>
 </center></p>
 
 <h1 id="the-odin-programming-language">The Odin Programming Language</h1>
@@ -53,13 +72,20 @@
 
 <p><br></p>
 
-<p>Website: <a href="https://odin.handmade.network/">https://odin.handmade.network/</a><br>
-GitHub:  <a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a></p>
+<table>
+<tbody>
+<tr><td>Website:</td><td><a href="https://odin-lang.org">https://odin-lang.org</a></td></tr>
+<tr><td>GitHub:</td> <td><a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a></td></tr>
+<tr><td>Discord:</td><td><a href="https://discord.gg/nYRGAma>">Discord Server</a></td></tr>
+</tbody>
+</table>
+
+<p></table></p>
 
 <h2 id="documentation">Documentation</h2>
 
 <ul>
-<li><a href="https://odin.handmade.network/wiki/3329-odin_tutorial">Tutorial</a></li>
+<li><a href="/odin/docs/">Documentation</a></li>
 <li><a href="https://github.com/odin-lang/Odin/wiki/Frequently-Asked-Questions-(FAQ)">Frequently Asked Questions</a></li>
 <li><a href="/odin/spec/">Work-in-Progress Language Specification</a></li>
 </ul>
@@ -121,6 +147,8 @@ main :: proc() {
 </ul></li>
 </ul>
 
+<script async defer src="/js/github-buttons.js"></script>
+
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill
 </footer>
@@ -140,6 +168,43 @@ main :: proc() {
         heading.appendChild(a);
       }
     });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
   })();
 </script>
 </html>

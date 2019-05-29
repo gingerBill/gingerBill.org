@@ -160,11 +160,6 @@
 <ul class="articles">
   
   <li>
-    <a href="/transcript/odin-import-design-discussion/">A Discussion Regarding the Design of Imports in Odin</a>
-	
-    <p class="date">2019-05-18</p>
-  </li>
-  <li>
     <a href="/article/2019/05/13/a-reply-to-the-road-to-zig/">A Reply to <em>The Road to Zig 1.0</em></a>
 	
     <p class="date">2019-05-13</p>
@@ -214,11 +209,6 @@
 	
     <p class="date">2015-08-19</p>
   </li>
-  <li>
-    <a href="/odin/spec/">The Odin Programming Language Specification</a>
-	
-    <p class="date">0001-01-01</p>
-  </li>
 </ul>
 <footer>
 &copy; 2007&ndash;2019 Ginger Bill
@@ -239,6 +229,43 @@
         heading.appendChild(a);
       }
     });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
   })();
 </script>
 </html>

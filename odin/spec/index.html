@@ -310,7 +310,7 @@ break        continue    else        if             map       package      switc
 -     |     -=     |=     ||     &lt;     &lt;=    [    ]    @    &lt;-
 *     ~     *=     ~=     &amp;&amp;=    &gt;     &gt;=    {    }    $    =&gt;
 /     &lt;&lt;    /=     &lt;&lt;=    ||=    =     ..    ,    ;    ?    ---
-%     &gt;&gt;    %=     &gt;&gt;=           !           .    :
+%     &gt;&gt;    %=     &gt;&gt;=           !     ..&lt;   .    :
 %%    &amp;~    %%=    &amp;~=
 </code></pre>
 
@@ -955,6 +955,43 @@ complex128                                     16
         heading.appendChild(a);
       }
     });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
   })();
 </script>
 </html>
