@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on gingerBill</title>
@@ -121,29 +120,6 @@ Metaprogramming is an &amp;ldquo;art&amp;rdquo; of writing programs to treats ot
       <description>One of my favourite things about Go is the defer statement. The defer statement pushes a function call onto a list; the list of saved calls in called when the function returns.
 Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how D has scope(exit).
 C++11 Implementation template &amp;lt;typename F&amp;gt; struct privDefer { F f; privDefer(F f) : f(f) {} ~privDefer() { f(); } }; template &amp;lt;typename F&amp;gt; privDefer&amp;lt;F&amp;gt; defer_func(F f) { return privDefer&amp;lt;F&amp;gt;(f); } #define DEFER_1(x, y) x##y #define DEFER_2(x, y) DEFER_1(x, y) #define DEFER_3(x) DEFER_2(x, __COUNTER__) #define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;})  Explanation One of the most common examples for this in Go is files.</description>
-    </item>
-    
-    <item>
-      <title>Odin Documentation</title>
-      <link>/odin/docs/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/odin/docs/</guid>
-      <description>Introduction This article is a basic tutorial for the programming language Odin. This tutorial assumes a basic knowledge of programming concepts such as variables, statements, and types. It is recommend to read the Getting started with Odin guide.
-Hellope! To begin this tour, let us start with a modified version of the famous &amp;ldquo;hello world&amp;rdquo; program:
-package main import &amp;quot;core:fmt&amp;quot; main :: proc() { fmt.println(&amp;quot;Hellope!&amp;quot;); }  Save this code to the file &amp;ldquo;hellope.</description>
-    </item>
-    
-    <item>
-      <title>The Odin Programming Language Specification</title>
-      <link>/odin/spec/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/odin/spec/</guid>
-      <description>Introduction This is a reference manual for the Odin programming language.
-Odin is a general-purpose language designed for systems programming. It is a strongly typed language with manual memory management. Programs are constructed from packages.
-Notation The syntax is specified using Extended Backus-Naur Form (EBNF):
-Production = production_name &amp;quot;=&amp;quot; [ Expression ] &amp;quot;.&amp;quot; . Expression = Alternative { &amp;quot;|&amp;quot; Alternative } . Alternative = Term { Term } . Term = production_name | token [ &amp;quot;…&amp;quot; token ] | Group | Option | Repetition .</description>
     </item>
     
   </channel>

@@ -8,7 +8,8 @@
 Imitating this is C&#43;&#43; is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C&#43;&#43;. This is similar to how D has scope(exit).
 C&#43;&#43;11 Implementation template &lt;typename F&gt; struct privDefer { F f; privDefer(F f) : f(f) {} ~privDefer() { f(); } }; template &lt;typename F&gt; privDefer&lt;F&gt; defer_func(F f) { return privDefer&lt;F&gt;(f); } #define DEFER_1(x, y) x##y #define DEFER_2(x, y) DEFER_1(x, y) #define DEFER_3(x) DEFER_2(x, __COUNTER__) #define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;](){code;})  Explanation One of the most common examples for this in Go is files." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2015/08/19/defer-in-cpp/" /><meta property="article:published_time" content="2015-08-19T00:00:00&#43;00:00"/>
+<meta property="og:url" content="/article/2015/08/19/defer-in-cpp/" />
+<meta property="article:published_time" content="2015-08-19T00:00:00&#43;00:00"/>
 <meta property="article:modified_time" content="2015-08-19T00:00:00&#43;00:00"/>
 
   <meta name="twitter:card" content="summary"/>
