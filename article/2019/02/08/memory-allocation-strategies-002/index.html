@@ -7,8 +7,8 @@
 <meta property="og:description" content="Linear/Arena Allocators" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/article/2019/02/08/memory-allocation-strategies-002/" />
-<meta property="article:published_time" content="2019-02-08T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-02-08T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-02-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-08T00:00:00+00:00" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -68,33 +68,17 @@
 		</p>
 	</div>
 </header>
-
-
 <h1 id="linear-allocation">Linear Allocation</h1>
-
 <p>The first memory allocation strategy that I will cover is also one of the simplest ones: linear allocation. As the name suggests,  memory is allocated linearly. Throughout this series, I will be using the concept of an <em>allocator</em> as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a <em>Arena</em>.</p>
-
 <h2 id="basic-logic">Basic Logic</h2>
-
-<p>The arena&rsquo;s logic only requires an offset (or pointer) to state the end of the last allocation<sup class="footnote-ref" id="fnref:other-data"><a href="#fn:other-data">1</a></sup>.
-<center>
-<img src="/images/memory-allocation-strategies/linear_allocator.svg" alt="Linear Allocator Layout" />
-</center></p>
-
+<p>The arena&rsquo;s logic only requires an offset (or pointer) to state the end of the last allocation<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<!-- raw HTML omitted -->
 <p>To allocate some memory from the arena, it is as simple as moving the offset (or pointer) forward. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
-
-<p><center>
-<img src="/images/memory-allocation-strategies/linear_allocator_alloc.svg" alt="Linear Allocator Alloc" />
-</center></p>
-
+<!-- raw HTML omitted -->
 <p>Due to being the simplest allocator possible, the arena allocator does not allow the user to free certain blocks of memory. The memory is usually freed all at once.</p>
-
 <h2 id="basic-implementation">Basic Implementation</h2>
-
 <p><strong>Note:</strong> The following code examples will be in written in C.</p>
-
 <p>The simplest arena allocator <em>could</em> look like this:</p>
-
 <pre><code class="language-c">static unsigned char *arena_buffer;
 static size_t arena_buffer_length;
 static size_t arena_offset;
@@ -112,38 +96,27 @@ void *arena_alloc(size_t size) {
 	return NULL;
 }
 </code></pre>
-
 <p>As you may be able to tell, this is as simple as it gets. There are two issues with this basic approach:</p>
-
 <ul>
 <li>You cannot reuse this procedure for different arenas</li>
 <li>The pointer returned may not be aligned correctly for the data you need</li>
 </ul>
-
 <p>The first issue can be easily solved by coupling that global data into a structure and passing that to the procedure <code>arena_alloc</code>. As for the second issue, this requires understanding about the basic issues of <em>unaligned memory</em>.</p>
-
 <h1 id="memory-alignment">Memory Alignment</h1>
-
 <p>Modern computer architectures will always read memory at its &ldquo;word size&rdquo; (4 bytes on a 32 bit machine, 8 bytes on a 64 bit machine). If you have an unaligned memory access (on a processor that allows for that), the processor will have to read multiple &ldquo;words&rdquo;. This means that an unaligned memory access <em>may</em> be much slower than an aligned memory access.
 I will not write too much about memory alignment in this series. If you would like to learn more, I recommend the following articles:</p>
-
 <ul>
 <li><a href="https://www.ibm.com/developerworks/library/pa-dalign/">IBM - Data alignment: Straighten up and fly right</a></li>
 <li><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">Gallery of Processor Cache Effects</a></li>
 <li><a href="http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html">x86 Protected Mode Basics</a></li>
 </ul>
-
 <h2 id="aligning-a-memory-address">Aligning a Memory Address</h2>
-
 <p>On virtually all architectures, the amount of bytes that something must be aligned by must be a power of two (1, 2, 4, 8, 16, etc). This means we should create procedure to assert that the alignment is a power of two:</p>
-
 <pre><code class="language-c">bool is_power_of_two(uintptr_t x) {
 	return (x &amp; (x-1)) == 0;
 }
 </code></pre>
-
 <p>To align a memory address to the specified alignment is simple modulo arithmetic. You are looking to find how many bytes forward you need to go in order for the memory address is a multiple of the specified alignment.</p>
-
 <pre><code class="language-c">uintptr_t align_forward(uintptr_t ptr, size_t align) {
 	uintptr_t p, a, modulo;
 
@@ -162,9 +135,7 @@ I will not write too much about memory alignment in this series. If you would li
 	return p;
 }
 </code></pre>
-
 <p>Now that we know how to align memory, that means we can update our original <code>arena_alloc</code> to support alignment properly and store the arena data within a structure.</p>
-
 <pre><code class="language-c">typedef struct Arena Arena;
 struct Arena {
 	unsigned char *buf;
@@ -202,11 +173,8 @@ void *arena_alloc(Arena *a, size_t size) {
 	return arena_alloc_align(a, size, DEFAULT_ALIGNMENT);
 }
 </code></pre>
-
 <h1 id="implementing-the-rest">Implementing the Rest</h1>
-
 <p>The arena allocator is usable for basic things now but it is missing a few features that would make it practical for everyday use. The complete arena allocator will have the following procedures:</p>
-
 <ul>
 <li><code>arena_init</code> initialize the arena with a pre-allocated memory buffer</li>
 <li><code>arena_alloc</code> simply increments an offset to indicate the current buffer offset</li>
@@ -214,11 +182,8 @@ void *arena_alloc(Arena *a, size_t size) {
 <li><code>arena_resize</code> first checks to see if the allocation being resized was the previously performed allocation and if so, the same pointer will be returned and the buffer offset is changed. Otherwise, <code>arena_alloc</code> will be called instead.</li>
 <li><code>arena_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero.</li>
 </ul>
-
 <h2 id="init">Init</h2>
-
 <p>The <code>arena_init</code> procedure just initializes the parameters for the given arena.</p>
-
 <pre><code class="language-c">void arena_init(Arena *a, void *backing_buffer, size_t backing_buffer_length) {
 	a-&gt;buf = (unsigned char *)backing_buffer;
 	a-&gt;buf_len = backing_buffer_length;
@@ -226,20 +191,14 @@ void *arena_alloc(Arena *a, size_t size) {
 	a-&gt;prev_offset = 0;
 }
 </code></pre>
-
 <h2 id="free">Free</h2>
-
 <p>As I previously stated, <code>arena_free</code> does absolutely nothing. It exists purely for completeness.</p>
-
 <pre><code class="language-c">void arena_free(Arena *a, void *ptr) {
 	// Do nothing
 }
 </code></pre>
-
 <h2 id="resize">Resize</h2>
-
 <p>Resizing an allocation is sometimes useful in an arena. To reduce waste of memory, it is useful to track the <code>prev_offset</code> and if the <code>old_memory</code> passed in equals the offset provided, just resize that memory block.</p>
-
 <pre><code class="language-c">void *arena_resize_align(Arena *a, void *old_memory, size_t old_size, size_t new_size, size_t align) {
 	unsigned char *old_mem = (unsigned char *)old_memory;
 
@@ -275,43 +234,29 @@ void *arena_resize(Arena *a, void *old_memory, size_t old_size, size_t new_size)
 	return arena_resize_align(a, old_memory, old_size, new_size, DEFAULT_ALIGNMENT);
 }
 </code></pre>
-
 <h2 id="free-all">Free All</h2>
-
 <p>Finally, <code>arena_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero. This is very useful for when you want to reset on a per cycle/frame basis.</p>
-
 <pre><code class="language-c">void arena_free_all(Arena *a) {
 	a-&gt;curr_offset = 0;
 	a-&gt;prev_offset = 0;
 }
 </code></pre>
-
 <h1 id="using-the-allocator">Using the Allocator</h1>
-
 <p>To use the allocator, you need to provide some backing memory. A simple approach is to provide an array:</p>
-
 <pre><code class="language-c">unsigned char backing_buffer[256];
 Arena a = {0};
 arena_init(&amp;a, backing_buffer, 256);
 </code></pre>
-
 <p>Another approach is to use <code>malloc</code>:</p>
-
 <pre><code class="language-c">void *backing_buffer = malloc(256);
 Arena a = {0};
 arena_init(&amp;a, backing_buffer, 256);
 </code></pre>
-
 <h1 id="conclusion">Conclusion</h1>
-
 <p>You have now implemented your very first custom allocator! The full source code is <a href="/code/memory-allocation-strategies/part002.c">available here</a>.</p>
-
 <p>In the next article, I will be talking about the basic evolution of the <em>arena allocator</em> in to a <a href="/article/2019/02/15/memory-allocation-strategies-003/"><em>stack allocator</em></a>.</p>
-
 <h1 id="extra-features">Extra Features</h1>
-
 <p>One extra feature you could add is a temporary arena memory <em>savepoint</em>. This is extremely useful for when you just want to use some memory in an arena for a very short period and then reset to the previously saved point.</p>
-
 <pre><code class="language-c">typedef struct Temp_Arena_Memory Temp_Arena_Memory;
 struct Temp_Arena_Memory {
 	Arena *arena;
@@ -332,20 +277,19 @@ void temp_arena_memory_end(Temp_Arena_Memory temp) {
 	temp.arena-&gt;curr_offset = temp.curr_offset;
 }
 </code></pre>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:other-data">Other data may stored such as the offset of the beginning of the previous allocation or allocation count.
- <a class="footnote-return" href="#fnref:other-data"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Other data may stored such as the offset of the beginning of the previous allocation or allocation count. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </article>
 </main>
 <footer>
-&copy; 2007&ndash;2019 Ginger Bill
+© 2007–2019 Ginger Bill
 </footer>
 </div>
 </body>

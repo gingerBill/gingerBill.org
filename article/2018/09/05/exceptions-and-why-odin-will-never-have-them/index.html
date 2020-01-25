@@ -9,8 +9,8 @@ Original Comments:
  https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/" />
-<meta property="article:published_time" content="2018-09-05T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2018-09-05T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2018-09-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-05T00:00:00+00:00" />
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Exceptions --- And Why Odin Will Never Have Them"/>
@@ -70,47 +70,37 @@ Original Comments:
 	</div>
 </header>
 <p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
-
 <p>Original Comments:</p>
-
 <ul>
 <li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701</a></li>
 <li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626</a></li>
 </ul>
-
 <p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
 Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
 You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it&rsquo;s structural control flow.
 Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage.
 I do hate how most languages handle &ldquo;errors&rdquo;. Treat errors like any other piece of code. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
-
-<hr />
-
+<hr>
 <p>To expand on what I mean by this statement:</p>
-
 <blockquote>
 <p>You can the exact same semantics as a try except block by using a switch in statement.</p>
 </blockquote>
-
 <p>Python:</p>
-
 <pre><code class="language-python">try:
-    x = foo()
+	x = foo()
 except ValueError as e:
-    pass # Handle error
+	pass # Handle error
 except BarError as e:
-    pass # Handle error
+	pass # Handle error
 except (BazError, PlopError) as e:
-    pass # Handle errors
+	pass # Handle errors
 </code></pre>
-
 <p>Odin:</p>
-
 <pre><code class="language-odin">Error :: union {
-    ValueError,
-    BarError,
-    BazError,
-    PlopError,
+	ValueError,
+	BarError,
+	BazError,
+	PlopError,
 }
 
 foo :: proc() -&gt; (Value_Type, Error) { ... }
@@ -118,72 +108,56 @@ foo :: proc() -&gt; (Value_Type, Error) { ... }
 x, err := foo();
 switch e in err {
 case ValueError:
-    // Handle error
+	// Handle error
 case BarError:
-    // Handle error
+	// Handle error
 case BazError, PlopError:
-    // Handle errors
+	// Handle errors
 }
 </code></pre>
-
 <p>The semantics are very similar in this case however the control flow is completely different. In the exceptions case (shown with Python), you enclose a block of code and catch any exceptions that have been raised. In the return value case (shown with Odin), you test the return value explicitly from the call.
-Exceptions require unwinding the stack; this is much slower when an exception happens compared to the fixed small cost of a return value.</p>
-
+Exceptions require unwinding the stack; this can be slower[^slower] when an exception happens compared to the fixed small cost of a return value.</p>
+<p>[^slower] Theoretically exceptions can be just as fast a return statement because that&rsquo;s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</p>
 <p>In both cases, a &ldquo;catch all&rdquo; is possible:</p>
-
 <p>Python:</p>
-
 <pre><code class="language-python">try:
-    x = foo()
+	x = foo()
 except Exception:
-    pass # An error has happened
+	pass # An error has happened
 </code></pre>
-
 <p>Odin:</p>
-
 <pre><code class="language-odin">x, err := foo();
 if err != nil {
-    // An error has happened
+	// An error has happened
 }
 </code></pre>
-
 <p>One &ldquo;advantage&rdquo; many people like with exceptions is the ability to catch any error from a block of code:</p>
-
 <pre><code class="language-python">try:
-    x = foo()
-    y = bar(x)
-    z = baz(y)
+	x = foo()
+	y = bar(x)
+	z = baz(y)
 except SomeError as e:
-    pass
+	pass
 </code></pre>
-
 <p>I personally see this as a huge vice, rather than a virtue. From reading the code, you cannot know where the error comes from. Return values are explicit about this and you know exactly what and where has caused the error.</p>
-
 <p>One of the consequences of exceptions is that errors can be raised anywhere and caught anywhere. This means that the culture of pass the error up the stack for &ldquo;someone else&rdquo; to handle. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
-
 <p>Go&rsquo;s built-in <code>error</code> type has the exact same tendency of people return errors up the stack:</p>
-
 <pre><code class="language-go">if err != nil {
-    return nil, err
+	return nil, err
 }
 </code></pre>
-
 <p>From what I have read, most people&rsquo;s complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
-
-<hr />
-
+<hr>
 <p>I hope this has cleared up a lot of the questions regarding Odin&rsquo;s take on error handling. I think error handling ought to be treated like any other piece of code.</p>
-
 <blockquote>
 <p>With many rules, there will be unexpected emergent behaviour.</p>
 </blockquote>
-
 <p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
 
 </article>
 </main>
 <footer>
-&copy; 2007&ndash;2019 Ginger Bill
+© 2007–2019 Ginger Bill
 </footer>
 </div>
 </body>

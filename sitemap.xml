@@ -1,6 +1,36 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/article/2020/01/25/a-reply-to-lets-stop-copying-c/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/article/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/c/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/odin/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-01-25T00:00:00+00:00</lastmod>
+  </url>
   
   <url>
     <loc>/transcript/odin-import-design-discussion/</loc>
@@ -8,26 +38,8 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2019-05-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-05-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/transcript/</loc>
     <lastmod>2019-05-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/odin/</loc>
-    <lastmod>2019-05-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -36,15 +48,8 @@
   </url>
   
   <url>
-    <loc>/article/</loc>
-    <lastmod>2019-05-13T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/zig/</loc>
     <lastmod>2019-05-13T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -55,13 +60,11 @@
   <url>
     <loc>/tags/odin-quine/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>/series/memory-allocation-strategies/</loc>
     <lastmod>2019-02-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -70,15 +73,13 @@
   </url>
   
   <url>
-    <loc>/series/</loc>
+    <loc>/tags/memory-allocation-theory-odin-c/</loc>
     <lastmod>2019-02-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/memory-allocation-theory-odin-c/</loc>
+    <loc>/series/</loc>
     <lastmod>2019-02-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -119,7 +120,6 @@
   <url>
     <loc>/tags/c&#43;&#43;/</loc>
     <lastmod>2015-08-19T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -129,7 +129,6 @@
   
   <url>
     <loc>/category/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>

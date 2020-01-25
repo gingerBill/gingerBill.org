@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="" />
+<meta property="og:description" content="title: A Reply to Let&rsquo;s stop copying C slug: a-reply-to-lets-stop-copying-c author: Ginger Bill date: &lsquo;2020-01-25&rsquo; categories:
+ programming language theory programming languages tags: c odin   I read the article Let&rsquo;s stop copying C about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&rsquo;s mistakes." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/1/01/01/" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="title: A Reply to Let&rsquo;s stop copying C slug: a-reply-to-lets-stop-copying-c author: Ginger Bill date: &lsquo;2020-01-25&rsquo; categories:
+ programming language theory programming languages tags: c odin   I read the article Let&rsquo;s stop copying C about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&rsquo;s mistakes."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title> - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140084303-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140084303-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1></h1>
+	
+	<div class="info">
+		
+		<p>
+		
+		</p>
+	</div>
+</header>
+<p>title: A Reply to <em>Let&rsquo;s stop copying C</em>
+slug: a-reply-to-lets-stop-copying-c
+author: Ginger Bill
+date: &lsquo;2020-01-25&rsquo;
+categories:</p>
+<ul>
+<li>programming language theory</li>
+<li>programming languages
+tags:</li>
+<li>c</li>
+<li>odin</li>
+</ul>
+<hr>
+<p>I read the article <a href="https://eev.ee/blog/2016/12/01/lets-stop-copying-c/">Let&rsquo;s stop copying C</a> about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&rsquo;s mistakes.</p>
+<p>I recommend reading the original article first before reading this one as I will be commenting directly on the subsections of the article.</p>
+<p>A lot of my comments will be with regards to systems-level programming languages and not programming languages in general, and I will be referring back to my language Odin as a contrast with C.</p>
+<h2 id="textual-inclusion">Textual inclusion</h2>
+<p>Back in the day when C was made, it is perfectly understandable why <code>#include</code> was used over different approaches. C was designed to be able to be implemented with a single-pass compiler<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. However, since the advent of more modern computers, this approach is not needed and a proper library/module/package system is a better solution to the problem. C++ approach with <code>namespace</code>s is not a solution and more of a hack.</p>
+<p>One huge annoyance with C is the issue of namespace collisions. The general approach to solve this is to make the interface to your library prefixed with something e.g. <code>lib_</code>. However, this does not guarantee that namespace collisions don&rsquo;t happen, and it means that you have to write these extra prefixes when you just want to write the code as normal without having to worry about all of this. From a usability standpoint, when you &ldquo;import&rdquo; a library, you want to be able to have those imported entities belong to its own scope which can be named with an <em>import name</em>.</p>
+<p>The main categories of how I think most languages handle libraries in this fashion are the following:</p>
+<ul>
+<li>Python (file is the library scope)
+<ul>
+<li><code>import foo</code></li>
+<li><code>from foo import bar</code></li>
+<li><code>from foo import *</code></li>
+</ul>
+</li>
+<li>Modula/Odin/Go (directory is the library scope)
+<ul>
+<li><code>import &quot;foo&quot;</code></li>
+<li><code>import bar &quot;foo&quot;</code></li>
+</ul>
+</li>
+</ul>
+<p>After a lot of experimentation, I decided to settle for something like Modula for Odin as it was the best compromise in practice. I originally wanted to support single-file libraries but found that I could not get them to work with multiple-file libraries in a nice way.</p>
+<p>There is a use case for textual inclusion and that is embedding data within the program itself. This is one of the reasons why I have the built-in procedure <code>#load</code> in Odin. This procedure takes a constant string as a file path and returns a slice of bytes of the data of that file. It&rsquo;s not exactly textual inclusion but it does solve some of the problems that many use <code>#include</code> for in C.</p>
+<h2 id="optional-block-delimiters">Optional block delimiters</h2>
+<p>In Odin, there are no optional block delimiters but if you want to do a single statement, you have to explicitly state it (as a good compromise).</p>
+<pre><code class="language-odin">if condition {
+	thing();
+}
+
+if condition do thing();
+</code></pre>
+<h2 id="bitwise-operator-precedence">Bitwise operator precedence</h2>
+<p>C&rsquo;s operator precedence for bitwise operations is bad. I fixed this in Odin so that they feel a lot better.</p>
+<h2 id="negative-modulo">Negative modulo</h2>
+<p>In different languages, the operator <code>%</code> is usually implemented as either dividend modulo or divisor modulo operations.  In Odin, I added the <code>%%</code> operator to solve this issue. Where <code>%</code> is dividend and <code>%%</code> is divisor. For unsigned integers, <code>%</code> and <code>%%</code> are identical, but the difference comes when using signed integers.</p>
+<p><code>%%</code> is equivalent to the following using <code>%</code>:</p>
+<pre><code>a %% b == ((a % b) + a) % b
+</code></pre>
+<p>See the following for more information: <a href="https://wikipedia.org/wiki/Modulo_operation">https://wikipedia.org/wiki/Modulo_operation</a></p>
+<h2 id="leading-zero-for-octal">Leading zero for octal</h2>
+<p>I agree C&rsquo;s octal notation has many issues, and this has its routes back when bytes were not always a multiple of 8 bits. This is why Odin uses <code>0o777</code> to denote a number as octal; it is more consistent with other numeric bases too: <code>0b</code> for binary, <code>0o</code> for octal, <code>0d</code> for explicit decimal, <code>0z</code> for dozenal, <code>0x</code> for hexadecimal.</p>
+<h2 id="no-power-operator">No power operator</h2>
+<p>For a systems level programming language, having a &ldquo;power&rdquo; operator is not a good idea. Having an explicit <code>pow</code> procedure is a lot clearer as to what is happening for two reasons:</p>
+<ul>
+<li>It is not cheap operation and is rarely a single instruction on the hardware</li>
+<li>There are different approaches to handling <code>pow</code>, so favouring one over the other is a little weird</li>
+</ul>
+<h2 id="c-style-for-loops">C-style for loops</h2>
+<p>I agree that 90% of the time you just want a <code>for in</code> style loop. However C-style for loops do have their uses and getting rid of them entirely is not a great idea.</p>
+<p>If you would like to see Odin&rsquo;s approach to loops, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#for-statement">https://odin-lang.org/docs/overview/#for-statement</a>.</p>
+<h2 id="switch-with-default-fallthrough">Switch with default fallthrough</h2>
+<p>I personally use <code>switch</code> statement as the equivalent of a jump-table and/or if-else chain. For this reason, I usually want each case to have a <code>break</code> at the end and for each case to be a separate scope to. This is why in Odin I added an explicit <code>fallthrough</code> statement and made each case its own scope.</p>
+<p>I also extended the <code>switch</code> statement to properly understand:
+* <code>enum</code> types
+* discriminated <code>union</code>s
+* <code>any</code> type
+* Ranges
+* Multiple cases</p>
+<p>If you would like to see Odin&rsquo;s approach to switch statements, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#switch-statement">https://odin-lang.org/docs/overview/#switch-statement</a>.</p>
+<h2 id="type-first">Type first</h2>
+<p>C&rsquo;s &ldquo;type first&rdquo; was a weird design decision. It was meant to expression that the type declaration is the same as how it is used. For this reason, C has given use some of the most &ldquo;wonderful&rdquo; declarations:</p>
+<pre><code class="language-c">int *x[3]; // array 3 of pointer to int
+int (*x)[3]; // pointer to array 3 of int
+
+_Atomic unsigned long long int const volatile *restrict foo[]; // Yeah...
+</code></pre>
+<p>And not to mention that type qualifiers can be in different places and still mean the same thing:</p>
+<pre><code class="language-c">int const x;
+const int x;
+
+const int *y;
+int const *y;
+</code></pre>
+<p>C&rsquo;s approach also requires a symbol table whilst parsing to disambiguate between types declarations and an expression e.g.:</p>
+<pre><code>foo * bar; // Is this an expression or a declaration? You need to check the symbol table to find out
+</code></pre>
+<p>This is why for Odin, I went for a more Pascal-style approach to types, which is a lot easier to read, parse, and comprehend.</p>
+<pre><code class="language-odin">x: [3]^int; // array 3 of pointer to int
+y: ^[3]int; // pointer to array 3 of int
+</code></pre>
+<p>Instead of following C&rsquo;s approach of &ldquo;declarations match usage&rdquo;, Odin&rsquo;s approach is &ldquo;types on the left, usage on the right&rdquo;.</p>
+<pre><code class="language-odin">x: [3]int;  // type on the LHS
+x[1] = 123; // usage on the RHS
+
+y: ^int = ...;
+y^ = 123;
+
+z: [6]^int = ...;
+z[3]^ = 123;
+</code></pre>
+<p>Coupled with Odin&rsquo;s very strong and orthogonal type system, things just work as expected and are easy to comprehend for mere mortals like myself.</p>
+<h2 id="weak-typing">Weak typing</h2>
+<p>C&rsquo;s implicit numeric conversions and <em>array demotion to pointer</em> conversion are a source of many bugs causes by sloppiness. C++ tried to fix this a bit but still its type system is quite weak in some regards.</p>
+<pre><code class="language-c">typedef int My_Int;
+
+int x = 123;
+My_Int y = x; // this is allowed as `My_Int` is just an alias of `int`
+</code></pre>
+<p>Odin&rsquo;s strong type is one of its extremely huge advantages. More errors are caught earlier because of this, and it allows you to do a lot more.</p>
+<pre><code class="language-odin">Int_Alias :: int;          // alias of int
+My_Int    :: distinct int; // distinct type from int but keeps its properties
+
+#assert(Int_Alias == int);
+#assert(My_Int != int);
+
+x: int = 123;
+y: Int_Alias = x; // fine
+
+z: My_Int = x; // error, an explicit cast is required
+</code></pre>
+<h2 id="integer-division">Integer division</h2>
+<p>I disagree with this conclusion here. I guess dimensional analysis is baked into me as I don&rsquo;t usually want an expression to change the types based on the operator. If I have two integers of the same type and use an operator on them, I expect the result to be of the same type, not a new one.</p>
+<pre><code class="language-odin">z := x / y;
+#assert(type_of(x) == type_of(y));
+#assert(type_of(z) == type_of(y));
+</code></pre>
+<h2 id="bytestrings">Bytestrings</h2>
+<p>Strings are funny things because human languages are complicated things. With Odin I went with what I think is the best compromise: strings are internally byte slices with the assumption that they have UTF-8 encoding.</p>
+<p>I am not a fan of UTF-32 strings due to their size. UTF-16 should die out but Windows still uses them pervasively.</p>
+<p>C&rsquo;s null-terminated strings made sense back in the day but not any more. Storing the length with the pointer to the data is personally my preferred approach, as this allows for substrings very easily.</p>
+<p>Along with the <code>string</code> type in Odin, Odin does support <code>cstring</code> to aid with the <code>foreign</code> system with interfacing with languages like C that have null-terminates strings.</p>
+<h2 id="increment-and-decrement">Increment and decrement</h2>
+<p><code>++</code> and <code>--</code> are both a blessing and a curse. In C, they are an expression which allows for things like <code>*ptr++</code> and <code>array[index++]</code> to be done. However, in a language that does not require these &ldquo;hacks&rdquo;, these operators are quite useless. This is why Odin only has <code>+=</code> and <code>-=</code> now.</p>
+<h2 id="heading"><code>!</code></h2>
+<p>This is mainly an aesthetic thing and I personally don&rsquo;t care either way. I chose <code>!</code>, <code>&amp;&amp;</code>, and <code>||</code> for Odin as I was trying to make an alternative to C. However, I could have easily gone down the keyword approach like Python with <code>not</code>, <code>and</code>, and <code>or</code>.</p>
+<h2 id="single-return-and-out-parameters">Single return and out parameters</h2>
+<p>Multiple results are a godsend to use in Odin. They allow for numerous things where passing pointers were originally needed. In Odin, if a pointer is passed now, it is usually implies an &ldquo;in-out&rdquo; parameter, coupled with the Odin&rsquo;s calling convention allowing certain parameters to be passed by pointer implicitly to improve performance (equivalent to an implicit <code>T const &amp;</code> in C++).</p>
+<p>Multiple results allow for named results which allows for a form of auto-documentation.</p>
+<p>If you would like to see Odin&rsquo;s approach to multiple results, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#multiple-results">https://odin-lang.org/docs/overview/#multiple-results</a>.</p>
+<h2 id="silent-errors">Silent errors</h2>
+<p>As many know, I am not a fan of exception-style error handling, which I expressed in my <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">article on exceptions</a>.</p>
+<h2 id="nulls">Nulls</h2>
+<p>I think the notion that &ldquo;null&rdquo; is a billion dollar mistake is well overblown. <code>NULL</code>/<code>nil</code> is just one of many invalid memory addresses, and in practice most of invalid memory address are not <code>NULL</code>. I have found that nil pointers are usually very easy to find and fix, especially since most platforms reserve the first page of (virtual) memory to check for these errors. In theory, <code>NULL</code> is still a perfectly valid memory address it is just that we have decided on the convention that <code>NULL</code> is useful for marking a pointer as unset.</p>
+<p>Many languages now have support for maybe/option types or nullable types (monads), however I am still not a huge fan of them in practice as I rarely require them in systems-level programming. I know very well this is a &ldquo;controversial&rdquo; opinion, but systems-level programming languages deal with memory all the time and can easily get into &ldquo;unsafe&rdquo; states <strong>unpurpose</strong>. Restricting this can actually make things like custom allocators very difficult to implement.</p>
+<h2 id="assignment-as-expression">Assignment as expression</h2>
+<p>I completely agree that assignment as an expression is a bad idea.</p>
+<h2 id="no-hyphens-in-identifiers">No hyphens in identifiers</h2>
+<p>I think using possible operators in identifiers is just waiting for trouble, even if it &ldquo;looks pretty&rdquo;.</p>
+<h2 id="braces-and-semicolons">Braces and semicolons</h2>
+<p>This is mainly an aesthetic thing with huge consequences. Braces and semicolons serve purposes. Braces denote a new block and semicolons terminate a statement. If you want to remove semicolons from a language, you will either need to enforce a brace style (like Go) or have sensitive whitespace through something like Python&rsquo;s offside rule.</p>
+<p>For Odin, I wanted braces but I did not want to enforce a code style on the use at the language level, which means that it requires semicolons.</p>
+<h2 id="blaming-the-programmer">Blaming the programmer</h2>
+<p>A lot of the issues in C come from C&rsquo;s poor and lacking type system. I am not against &ldquo;blaming the programmer&rdquo; for a systems-level programming language because you are meant to be able to shoot your foot off if you so do wish, however I do think providing extra structure to the type system to not require the user having to do any of this is a very good idea.</p>
+<h2 id="conclusion">Conclusion</h2>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The preprocessor is technically a separate language on top of C, and single-pass too. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2019 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

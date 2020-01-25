@@ -1,0 +1,23 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>c on gingerBill</title>
+    <link>/tags/c/</link>
+    <description>Recent content in c on gingerBill</description>
+    <language>en-gb</language>
+    <lastBuildDate>Sat, 25 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Reply to _Let&#39;s stop copying C_</title>
+      <link>/article/2020/01/25/a-reply-to-lets-stop-copying-c/</link>
+      <pubDate>Sat, 25 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2020/01/25/a-reply-to-lets-stop-copying-c/</guid>
+      <description>I read the article Let&amp;rsquo;s stop copying C about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&amp;rsquo;s mistakes.
+I recommend reading the original article first before reading this one as I will be commenting directly on the subsections of the article.</description>
+    </item>
+    
+  </channel>
+</rss>

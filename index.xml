@@ -4,122 +4,36 @@
     <link>/</link>
     <description>Recent content in Home on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 25 Jan 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>A Discussion Regarding the Design of Imports in Odin</title>
-      <link>/transcript/odin-import-design-discussion/</link>
+      <title>Articles</title>
+      <link>/article/</link>
+      <pubDate>Sat, 25 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/article/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Transcripts</title>
+      <link>/transcript/</link>
       <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/transcript/odin-import-design-discussion/</guid>
-      <description>This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
-[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34; [18:42] lipid: renaming the folder solves the issue [18:43] gingerBill: @lipid Just rename the package name, it can be anything.</description>
+      <guid>/transcript/</guid>
+      <description></description>
     </item>
     
     <item>
-      <title>A Reply to _The Road to Zig 1.0_</title>
-      <link>/article/2019/05/13/a-reply-to-the-road-to-zig/</link>
-      <pubDate>Mon, 13 May 2019 00:00:00 +0000</pubDate>
+      <title></title>
+      <link>/odin/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
-      <description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
- Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them.</description>
-    </item>
-    
-    <item>
-      <title>A Quine in Odin</title>
-      <link>/article/2019/03/10/quine-in-odin/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2019/03/10/quine-in-odin/</guid>
-      <description>A Quine in Odin:
-package quine import &amp;quot;core:fmt&amp;quot; main :: proc() { fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60); } s := `package quine import &amp;quot;core:fmt&amp;quot; main :: proc() { fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60); } s := `;  </description>
-    </item>
-    
-    <item>
-      <title>Memory Allocation Strategies - Part 4</title>
-      <link>/article/2019/02/16/memory-allocation-strategies-004/</link>
-      <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2019/02/16/memory-allocation-strategies-004/</guid>
-      <description>Pool-Based Allocation In the previous article, we looked at the stack allocator, which was the natural evolution of the linear/arena allocator. In this article, I will cover the fixed-sized pool allocator.
-A pool allocator is a bit different from the previous allocation strategies that I have covered. A pool splits the supplied backing buffer into chunks of equal size and keeps track of which of the chunks are free. When an allocation is wanted, a free chunk is given.</description>
-    </item>
-    
-    <item>
-      <title>Memory Allocation Strategies - Part 3</title>
-      <link>/article/2019/02/15/memory-allocation-strategies-003/</link>
-      <pubDate>Fri, 15 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2019/02/15/memory-allocation-strategies-003/</guid>
-      <description>Stack-Like (LIFO) Allocation In the previous article, we looked at the linear/arena allocator, which is the simplest of all memory allocators. In this article, I will cover the fixed-sized stack-like allocator. Throughout this article, I will refer to this allocator as a stack allocator.
-Note: A stack-like allocator means that the allocator acts like a data structure following the last-in, first-out (LIFO) principle. This has nothing to do with the stack or the stack frame.</description>
-    </item>
-    
-    <item>
-      <title>Memory Allocation Strategies - Part 2</title>
-      <link>/article/2019/02/08/memory-allocation-strategies-002/</link>
-      <pubDate>Fri, 08 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2019/02/08/memory-allocation-strategies-002/</guid>
-      <description>Linear Allocation The first memory allocation strategy that I will cover is also one of the simplest ones: linear allocation. As the name suggests, memory is allocated linearly. Throughout this series, I will be using the concept of an allocator as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a Arena.</description>
-    </item>
-    
-    <item>
-      <title>Memory Allocation Strategies - Part 1</title>
-      <link>/article/2019/02/01/memory-allocation-strategies-001/</link>
-      <pubDate>Fri, 01 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2019/02/01/memory-allocation-strategies-001/</guid>
-      <description>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.
-Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack.</description>
-    </item>
-    
-    <item>
-      <title>Exceptions --- And Why Odin Will Never Have Them</title>
-      <link>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</link>
-      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
-Original Comments:
- https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
-    </item>
-    
-    <item>
-      <title>On the Aesthetics of the Syntax of Declarations</title>
-      <link>/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</link>
-      <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations
-n.b. This is a philosophical article and not a technical article. There are no correct answers to the questions that I will pose &amp;ndash; only compromises.
-I&amp;rsquo;m considering what the &amp;ldquo;best&amp;rdquo; declaration syntax would be. Historically, there have been two categories: which I will call qualifier-focused and type-focused. An example of qualifier-focused would be the Pascal family. An example of type-focused would be the C family.</description>
-    </item>
-    
-    <item>
-      <title>The Metaprogramming Dilemma</title>
-      <link>/article/2016/12/01/the-metaprogramming-dilemma/</link>
-      <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2016/12/01/the-metaprogramming-dilemma/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemma
-Designing this language has been difficult but fun. Two of the original goals of this language were simplicity and metaprogramming however, these together could be an oxymoron. But before I explain why, I first need to explain what I mean by &amp;ldquo;metaprogramming&amp;rdquo;.
-Metaprogramming is an &amp;ldquo;art&amp;rdquo; of writing programs to treats other programs as their data. This means that a program could generate, read, analyse, and transform code or even itself to achieve a certain solution.</description>
-    </item>
-    
-    <item>
-      <title>A Defer Statement For C&#43;&#43;11</title>
-      <link>/article/2015/08/19/defer-in-cpp/</link>
-      <pubDate>Wed, 19 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2015/08/19/defer-in-cpp/</guid>
-      <description>One of my favourite things about Go is the defer statement. The defer statement pushes a function call onto a list; the list of saved calls in called when the function returns.
-Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how D has scope(exit).
-C++11 Implementation template &amp;lt;typename F&amp;gt; struct privDefer { F f; privDefer(F f) : f(f) {} ~privDefer() { f(); } }; template &amp;lt;typename F&amp;gt; privDefer&amp;lt;F&amp;gt; defer_func(F f) { return privDefer&amp;lt;F&amp;gt;(f); } #define DEFER_1(x, y) x##y #define DEFER_2(x, y) DEFER_1(x, y) #define DEFER_3(x) DEFER_2(x, __COUNTER__) #define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;})  Explanation One of the most common examples for this in Go is files.</description>
+      <guid>/odin/</guid>
+      <description></description>
     </item>
     
   </channel>

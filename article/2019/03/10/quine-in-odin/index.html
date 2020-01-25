@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="A Quine in Odin" />
 <meta property="og:description" content="A Quine in Odin:
-package quine import &quot;core:fmt&quot; main :: proc() { fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60); } s := `package quine import &quot;core:fmt&quot; main :: proc() { fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60); } s := `;  " />
+package quineimport &quot;core:fmt&quot;main :: proc() {fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);}s := `package quineimport &quot;core:fmt&quot;main :: proc() {fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);}s := `; " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/article/2019/03/10/quine-in-odin/" />
-<meta property="article:published_time" content="2019-03-10T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-03-10T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-03-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-10T00:00:00+00:00" />
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A Quine in Odin"/>
 <meta name="twitter:description" content="A Quine in Odin:
-package quine import &quot;core:fmt&quot; main :: proc() { fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60); } s := `package quine import &quot;core:fmt&quot; main :: proc() { fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60); } s := `;  "/>
+package quineimport &quot;core:fmt&quot;main :: proc() {fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);}s := `package quineimport &quot;core:fmt&quot;main :: proc() {fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);}s := `; "/>
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -68,13 +68,12 @@ package quine import &quot;core:fmt&quot; main :: proc() { fmt.printf(&quot;%s%c
 	</div>
 </header>
 <p>A <a href="https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in <a href="/odin">Odin</a>:</p>
-
 <pre><code class="language-odin">package quine
 
 import &quot;core:fmt&quot;
 
 main :: proc() {
-    fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
 }
 
 s := `package quine
@@ -82,7 +81,7 @@ s := `package quine
 import &quot;core:fmt&quot;
 
 main :: proc() {
-    fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
 }
 
 s := `;
@@ -91,7 +90,7 @@ s := `;
 </article>
 </main>
 <footer>
-&copy; 2007&ndash;2019 Ginger Bill
+© 2007–2019 Ginger Bill
 </footer>
 </div>
 </body>

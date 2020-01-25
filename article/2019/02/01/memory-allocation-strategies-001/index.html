@@ -7,8 +7,8 @@
 <meta property="og:description" content="Thinking About Memory and Allocation" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/article/2019/02/01/memory-allocation-strategies-001/" />
-<meta property="article:published_time" content="2019-02-01T00:00:00&#43;00:00"/>
-<meta property="article:modified_time" content="2019-02-01T00:00:00&#43;00:00"/>
+<meta property="article:published_time" content="2019-02-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-01T00:00:00+00:00" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -68,30 +68,18 @@
 		</p>
 	</div>
 </header>
-
-
 <p>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
-
-<p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory<sup class="footnote-ref" id="fnref:stack-pointer"><a href="#fn:stack-pointer">1</a></sup> and that the heap is magical in nature.</p>
-
+<p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and that the heap is magical in nature.</p>
 <p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
-
-<p><center>
-<img src="/images/memory-allocation-strategies/virtual_memory.svg" alt="Virtual Memory" />
-</center></p>
-
+<!-- raw HTML omitted -->
 <h1 id="thinking-about-allocation">Thinking About Allocation</h1>
-
-<p>When it comes to allocation, there are three main aspects to think about<sup class="footnote-ref" id="fnref:fourth-aspect"><a href="#fn:fourth-aspect">2</a></sup>:</p>
-
+<p>When it comes to allocation, there are three main aspects to think about<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>:</p>
 <ul>
 <li>The size of the allocation</li>
 <li>The lifetime of that memory</li>
 <li>The usage of that memory</li>
 </ul>
-
 <p>I usually imagine the first two aspects in the following table, for most problem domains, where the percentages signify what proportion of allocations fall into that category:</p>
-
 <table>
 <thead>
 <tr>
@@ -100,14 +88,12 @@
 <th align="center">Size Unknown</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td align="right"><strong>Lifetime Known</strong></td>
 <td align="center">95%</td>
 <td align="center">~4%</td>
 </tr>
-
 <tr>
 <td align="right"><strong>Lifetime Unknown</strong></td>
 <td align="center">~1%</td>
@@ -115,46 +101,32 @@
 </tr>
 </tbody>
 </table>
-
 <p>In the top-left category (Size Known + Lifetime Known), this is the area in which I will be covering the most in this series. Most of the time, you do know the size of the allocation, or the upper bounds at least, and the lifetime of the allocation in question.</p>
-
 <p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to &ldquo;resize/realloc&rdquo; the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
-
 <p>In the bottom-left category (Size Known + Lifetime Unknown), this is the area in which you may not know how long that memory needs to be around but you do know how much memory is needed. In this case, you could say that the &ldquo;ownership&rdquo; of that memory across multiple systems is ill-defined. A common solution for this domain of problems is reference counting or ownership semantics.</p>
-
-<p>In the bottom-right category (Size Unknown + Lifetime Unknown), this is the area in which you have literally no idea how much memory you need nor how long it will be needed for. In practice, this is quite rare and you <em>ought</em> to try and avoid these situations when possible. However, the general solution for this domain of problems is garbage collection<sup class="footnote-ref" id="fnref:garbage-collection"><a href="#fn:garbage-collection">3</a></sup>.</p>
-
+<p>In the bottom-right category (Size Unknown + Lifetime Unknown), this is the area in which you have literally no idea how much memory you need nor how long it will be needed for. In practice, this is quite rare and you <em>ought</em> to try and avoid these situations when possible. However, the general solution for this domain of problems is garbage collection<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
 <p>Please note that in domain specific areas, these percentages will be completely different. For instance, a web server that may be handling an unknown amount of requests may require a form of garbage collection if the memory is limited or it may be cheaper to just buy more memory.</p>
-
 <h1 id="generations-of-lifetimes">Generations of Lifetimes</h1>
-
-<p>For the common category, the general approach that I take is to think about memory lifetimes in terms of generations. An <em>allocation generation</em> is a way to organize memory lifetimes into a hierarchical structure<sup class="footnote-ref" id="fnref:generation-cut-and-dry"><a href="#fn:generation-cut-and-dry">4</a></sup>.
-Memory within these generations usually get allocated and freed at the same time (born, live, and die together).</p>
-
+<p>For the common category, the general approach that I take is to think about memory lifetimes in terms of generations. An <em>allocation generation</em> is a way to organize memory lifetimes into a hierarchical structure<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
 <ul>
-<li><p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p></li>
-
-<li><p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &ldquo;cycle&rdquo; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p></li>
-
-<li><p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p></li>
+<li>
+<p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p>
+</li>
+<li>
+<p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &ldquo;cycle&rdquo; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p>
+</li>
+<li>
+<p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p>
+</li>
 </ul>
-
 <h2 id="memory-hierarchies">Memory Hierarchies</h2>
-
 <p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory &mdash; the human brain can only hold so much.</p>
-
 <p>The same localist thought process can be applied to the memory-space/size of which I will be discussing in later articles in this series.</p>
-
-<h1 id="the-compiler-s-knowledge-of-the-program">The Compiler&rsquo;s Knowledge of the Program</h1>
-
+<h1 id="the-compilers-knowledge-of-the-program">The Compiler&rsquo;s Knowledge of the Program</h1>
 <p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
-
-<p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems<sup class="footnote-ref" id="fnref:ownership-systems"><a href="#fn:ownership-systems">5</a></sup>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
-
+<p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
 <h1 id="coming-next">Coming Next</h1>
-
 <p>In this series, I will discuss the different kinds of memory models and allocation strategies that can be used. These are the topics that will be covered:</p>
-
 <ul>
 <li>Sequential (Contiguous) Allocations</li>
 <li>Virtual Memory</li>
@@ -164,28 +136,32 @@ Memory within these generations usually get allocated and freed at the same time
 <li>Automatic Lifetime Allocations</li>
 <li>Allocation Grouping and Mental Models</li>
 </ul>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:stack-pointer">Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.
- <a class="footnote-return" href="#fnref:stack-pointer"><sup>[return]</sup></a></li>
-<li id="fn:fourth-aspect">Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern.
- <a class="footnote-return" href="#fnref:fourth-aspect"><sup>[return]</sup></a></li>
-<li id="fn:garbage-collection">Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.
- <a class="footnote-return" href="#fnref:garbage-collection"><sup>[return]</sup></a></li>
-<li id="fn:generation-cut-and-dry">These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).
- <a class="footnote-return" href="#fnref:generation-cut-and-dry"><sup>[return]</sup></a></li>
-<li id="fn:ownership-systems">I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>.
- <a class="footnote-return" href="#fnref:ownership-systems"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).
+Memory within these generations usually get allocated and freed at the same time (born, live, and die together). <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p>I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </article>
 </main>
 <footer>
-&copy; 2007&ndash;2019 Ginger Bill
+© 2007–2019 Ginger Bill
 </footer>
 </div>
 </body>
