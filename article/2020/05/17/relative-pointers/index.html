@@ -211,7 +211,7 @@ struct Relative_Pointer {
 #assert(size_of(Node) == 2);
 </code></pre>
 <h2 id="summary">Summary</h2>
-<p>Relative pointers allow for a lot more flexibility compared to &ldquo;traditional&rdquo; pointers, and a godsend with regards to serialization. They do have many advantages and disadvantages of &ldquo;traditional&rdquo; pointers, and the programmer must be absolutely aware of them before using them. Relative pointers can be easily serialized making them ideal for file formats, and relative pointers can be as small as they need to be rather than taking up the same size of a regular pointer (e.g. on 64-bit platforms, a pointer is 64 bits which might be a lot more than the user requires for a specific problem).</p>
+<p>Relative pointers allow for a lot more flexibility compared to &ldquo;traditional&rdquo; pointers, and a godsend with regards to serialization. They do have many advantages and disadvantages compared to &ldquo;traditional&rdquo; pointers, and the programmer must be absolutely aware of them before using them. Relative pointers can be easily serialized making them ideal for file formats, and relative pointers can be as small as they need to be rather than taking up the same size of a regular pointer (e.g. on 64-bit platforms, a pointer is 64 bits which might be a lot more than the user requires for a specific problem).</p>
 <h2 id="relevant-videos">Relevant Videos</h2>
 <h3 id="sergiy-migdalskiy---performance-optimization-simd-and-cache-at-26-minutes">Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)</h3>
 <div class="youtube">
