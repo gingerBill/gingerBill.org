@@ -71,7 +71,9 @@
 <p>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
 <p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and that the heap is magical in nature.</p>
 <p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
-<!-- raw HTML omitted -->
+<center>
+![Virtual Memory](/images/memory-allocation-strategies/virtual_memory.svg)
+</center>
 <h1 id="thinking-about-allocation">Thinking About Allocation</h1>
 <p>When it comes to allocation, there are three main aspects to think about<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>:</p>
 <ul>
@@ -161,7 +163,7 @@ Memory within these generations usually get allocated and freed at the same time
 </article>
 </main>
 <footer>
-© 2007–2019 Ginger Bill
+© 2007–2020 Ginger Bill
 </footer>
 </div>
 </body>

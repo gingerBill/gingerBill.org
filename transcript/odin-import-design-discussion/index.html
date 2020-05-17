@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="A Discussion Regarding the Design of Imports in Odin" />
-<meta property="og:description" content="This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server." />
+<meta property="og:description" content="This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
+[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34;[18:42] lipid: renaming the folder solves the issue[18:43] gingerBill: @lipid Just rename the package name, it can be anything." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/transcript/odin-import-design-discussion/" />
 <meta property="article:published_time" content="2019-05-18T00:00:00+00:00" />
@@ -12,7 +13,8 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A Discussion Regarding the Design of Imports in Odin"/>
-<meta name="twitter:description" content="This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server."/>
+<meta name="twitter:description" content="This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
+[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34;[18:42] lipid: renaming the folder solves the issue[18:43] gingerBill: @lipid Just rename the package name, it can be anything."/>
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -66,13 +68,339 @@
 	</div>
 </header>
 <p>This is an partially edited transcript from 2019-05-18 on the <a href="https://Handmade.Network">Handmade.Network</a> Discord server.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre class="pre-wrap"><code>[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is "lipid_math", not "math", but it gives me Redeclaration of 'math' in this scope on that line"
+[18:42] lipid: renaming the folder solves the issue
+[18:43] gingerBill: @lipid Just rename the package name, it can be anything.
+[18:43] gingerBill: The directory name is what you "import"
+[18:43] gingerBill: Think of the package name as a unique identifier
+[18:43] lipid: I figured the package name; was what names the package.
+[18:45] gingerBill: @lipid No. This may be a confusing thing but the reason you have to type package foo at the top is mainly to solve the problem of consistent link name for entities. The other alternatives are not a good idea in my opinion and come with compromises I do not like.
+[18:49] mv: @gingerBill having the path name be the import name is really confusing
+[18:49] gingerBill: @mv It wasn't that way for a little while.
+[18:49] mv: except it isn't always, so there's a fallback, which makes it super confusing
+[18:50] gingerBill: I just cannot find a good way around it.
+[18:50] mv: it's really bad
+[18:50] gingerBill: I know it's bad.
+[18:50] gingerBill: If you can think of a better rule, please do.
+[18:50] mv: why not just make the package name the import name?
+[18:50] mv: what's the downsides to that?
+[18:50] gingerBill: It was that way.
+[18:50] gingerBill: And I think it was you that even complained about that.
+[18:50] mv: the user can, and should be able to, keep the package wherever they want
+[18:50] mv: i don't think i've complained about that
+[18:51] gingerBill: The problem here is that package foo is there to solve the problem of consistent link names. That is all.
+[18:51] mv: i would bet you 99% of users would assume it's the package name that's the import name. you'll have tons of bugs from user error that might as well be a design error
+[18:51] gingerBill: I would bet the other way around.
+[18:52] gingerBill: I bet most users will look at the import path and think "okay, my package is called this, I expected the import name to be the same as the directory I am importing".
+[18:52] gingerBill: And I changed it because I did have a lot of "complaints"/"confusions" over that rule.
+[18:52] gingerBill: It's one of the main problems with this approach.
+[18:52] mv: I think that's a massive fallacy. the program/code shuoldn't be beholden to externalities like that imo
+[18:53] gingerBill: One way around it is to remove package foo entirely but then you require absolutely paths from an absolute root directory e.g. GOPATH
+[18:53] gingerBill: I'm not sure what you mean by "shouldn't" in this case.
+[18:53] mv: i think the package foo thing is really nice
+[18:54] gingerBill: Changing the rules is quite easy to do and experimentation is what we need.
+[18:54] gingerBill: But I think the difference is here is that you and I are making packages all the time but most people will just use one.
+[18:54] mv: can you mix packages in the same folder?
+[18:55] gingerBill: No.
+[18:55] mv: then it seems superfluous, unless  you give it some other meaning (i.e. the import name)
+[18:55] gingerBill: As I said, the entire reason that package foo exists is to solve consistent linking names without the requirement of an absolute root directory.
+[18:56] mv: i don't  get what that means
+[18:56] lipid: So can't the compiler just take the folder name and use it for whatever purpose it would have used package foo?
+[18:56] gingerBill:
+	package foo
+
+	my_proc :: proc() {}
+
+	////////////////////
+
+	package bar
+
+	my_proc :: proc() {}
+
+In the assembly, it would mean that the top procedure would be foo.my_proc and the bottom procedure would be bar.my_proc
+[18:57] mv: yeah
+[18:57] mv: which makes sense?
+[18:57] gingerBill: Yes. But it's not obvious that that is the best solution.
+[18:57] mv: I think I should be able to have multiple folders that has the same package name and swap one for the other in my program. the import name should not have to change
+[18:57] gingerBill: Exactly.
+[18:57] mv: if the folder name is the import name, this can't be
+[18:57] gingerBill: Not true.
+[18:58] gingerBill:
+import baz1 "shared:foo/bar/baz" // package foo_baz
+import baz2 "shared:fuz/bup/baz" // package what_the
+[18:58] lipid: ^ that gives the error i described..
+[18:59] gingerBill: @lipid The package name does not have to match the directory name.
+[18:59] lipid: it would be baz redeclared at line 2
+[18:59] gingerBill: Correct
+18:59] mv: i mean, i'm fine with being able to rename the import name. that doesn't take away anything from anything
+[18:59] gingerBill: I know.
+[19:00] gingerBill: I understand what you are talking about.
+[19:00] mv: i might be dense, but i still don't see the downside of just having the package name be the import name. it removes the other issues :S
+[19:00] gingerBill: It's just that I changed the behaviour from what you preferred because so many people intuitively thought it was the new way.
+[19:00] gingerBill: What other issues?
+[19:00] mv: it's confusing
+[19:00] gingerBill: I know it's confusing.
+[19:00] gingerBill: But I don't want the equivalent of GOPATH
+[19:01] mv: it's not the first time i've seen this: https://discordapp.com/channels/239737791225790464/308329320017952769/579363557897142285
+[19:01] mv: why do you need the GOPATH approach?
+[19:01] gingerBill: So there are two problems here which are both mixing together.
+[19:01] gingerBill: Let's separate them to make both clear.
+[19:03] gingerBill: Problems:
+* The ability to have consistent linkage names for entities that do not rely on an absolute root directory to generate the prefix for the entity from the path
+* The default import name of a package when imported
+[19:03] gingerBill: The first is best solved with this package foo thing at the top of the file.
+[19:03] gingerBill: It's not perfect but it works.
+[19:03] gingerBill: foo acts a unique identifier for that package.
+[19:03] gingerBill: The problem is, is that means it that no other package can have that name.
+[19:04] mv: which is fine?
+[19:04] gingerBill: Yes. I think it is a good compromise.
+[19:04] gingerBill: But this then leads to the second question.
+[19:04] gingerBill: Does this package foo have any relation to the default import name of a package when imported?
+[19:04] gingerBill: If it does have a relation, what is that relation?
+[19:05] gingerBill: And if not, what would be the default import name?
+[19:05] gingerBill: One solution is to enforce custom names and use a syntax like this:
+foo :: import "core:my_lib";
+[19:06] gingerBill: But the problem with this approach is that I don't actually want people to import packages anywhere but the file scope (reasons for this is a little complicated and a completely different discussion for another day)
+[19:06] mv: it's inconsistent syntax, so that's not too good I think :stuck_out_tongue:
+[19:06] gingerBill: And many languages assumes a default import name already, so why try to fight that learnt instinct when it does give you anything?
+[19:07] gingerBill: I know it's inconsistent but the entire import system is inconsistent, especially the foreign system.
+[19:07] gingerBill: So it's a compromise I will have to live with.
+[19:08] mv:
+import "foo-bar"
+
+now you're in trouble
+[19:08] gingerBill: Exactly. And in this case now the package foo name is chosen.
+[19:08] gingerBill: But...
+[19:08] gingerBill: That was the decisions I made in like 30 seconds.
+[19:09] gingerBill: It might be better to say "you cannot make a package name from this path, give it one explicitly"
+[19:09] lipid: wait, what? it falls back on the foo if the filename is not usable?
+[19:09] gingerBill: But this case does come up:
+import "gl-v3" // gl
+[19:09] gingerBill: @lipid Currently yes. This is NOT fixed in design.
+[19:09] gingerBill: Minor rules like this need some experimentation to know what feels correct.
+[19:09] mv: i haven't been convinced of any downsides of package foo deciding the import name yet :P
+other than not being able to use the same package name twice, which doesn't seem to be a bit issue. if it is you could rename it explicitly
+[19:10] lipid: wew lad
+[19:10] gingerBill: @mv But do you keep your directory name the same as the package name?
+[19:10] gingerBill: If so, that's why there is no problem.
+[19:10] mv: the directory name could/should be anything
+[19:10] gingerBill: It should be anything.
+[19:10] gingerBill: That's my point.
+[19:10] mv: it's just a container
+[19:10] mv: it can't be anything, because not everything is a valid identifier
+[19:11] gingerBill: But a directory can be named anything, even non-identifiers.
+[19:11] gingerBill: And it might make perfect sense to call it that
+[19:11] mv: yes
+[19:11] gingerBill: My issue is not what you are focusing on.
+[19:12] gingerBill: My issue is with regards to people reading the code who are not that well aware of the works of the code.
+[19:12] gingerBill: And in many cases, not everyone is going to read what the package that has been imported uses as the import name.
+[19:12] gingerBill: In those cases, people will just read the import path and assume that's the import name.
+[19:12] gingerBill: And for so many languages, this is what people have been trained to assume.
+[19:13] mv: there's also the issue of documentation for my libraries. I don't want my documentation code be invalid if someone names their directory something random or something that makes sense to them
+[19:13] gingerBill: Welcome to the rabbit hole of package design and why it took me over a year to get even this far with them
+[19:14] gingerBill: It's not as simple think it is.
+[19:14] mv: requiring an explicit import name might be better
+[19:15] mv: then there's no issue with my docs, if they're self-contained
+[19:15] gingerBill: It might be.
+[19:16] gingerBill: And might solve a bunch of problems too.
+[19:16] mv: yeah
+[19:16] gingerBill: But
+[19:16] gingerBill: I dunno.
+[19:16] gingerBill: For me:
+	import "shared:platform"
+	import "shared:gl"
+	import "shared:math"
+	import "shared:gfx"
+	import "shared:ui"
+
+	import "core:fmt"
+	import "core:mem"
+	import "core:os"
+	import "core:sync"
+
+
+I know exactly what is going to be added.
+[19:17] gingerBill: When I read this, I assume that the import name will reflect the directory because so many other languages do that.
+[19:18] gingerBill: Go does closer to what you, Morten, expect but it solves the consistent linking name with having GOPATH and generating the prefix from that import path.
+[19:18] gingerBill: In Go, there are no relative imports (kind of)
+[19:18] gingerBill: Everything is absolute.
+[19:19] gingerBill: Other languages such as Python just abstract the directory structure and treat it like a selector expression:
+import foo.bar.baz as baz
+from foo.bar import baz
+[19:20] gingerBill: But then Python suffers from the issue of "where does foo live?"
+[19:20] gingerBill: And this is why most Python projects require a virtual environment.
+[19:20] gingerBill: I really really should write all this down.
+[19:20] Mr_47: You just did
+[19:20] gingerBill: As it's not at all obvious why I would design it the way I did.
+[19:20] mv: thinking about it a bit
+	my main issue with the directory name as the import name is then:
+	 - that there are invalid directory names that can't work as import names, and
+	 - users should be able to pick any directory name
+
+	my main issue with the package name is then:
+	 - it's not clear what the package name is from the code importing it
+	 - sub-packages can't share the same link name?
+
+all of these would be sorted with explicit names then I think?
+
+The issue in your example here is that you make assumptions on the user's behalf
+[19:21] gingerBill: I do. But users make assumptions too.
+[19:21] mv: indeed
+[19:22] mv: i think this argument is quite weak due to requiring a fallback when there's invalid names :stuck_out_tongue:
+[19:22] gingerBill: I think the fallback is a bad idea too.
+[19:23] mv: to me the fallback isn't the weakness. it's that there are invalid  cases that is the weakness
+[19:23] gingerBill: If I am using the directory path, just fail if it cannot determine one.
+[19:23] mv: that's better, but not very nice
+[19:24] mv: the collection does the equivalent of GOPATH doesn't it?
+[19:25] gingerBill: Kind of.
+[19:26] gingerBill: But you are not required to even have a collection other than the core one.
+[19:26] gingerBill: All of the non-core packages could just be imported relatively.
+[19:26] gingerBill: Which is what I want.
+[19:26] mv: I think that's fine
+[19:26] ThisDrunkDane: I would just require explicit import name
+[19:27] gingerBill: So maybe the best solution at the moment is to prevent the fallback to package foo as the default import name and just tell the use to use an explicit one.
+[19:27] gingerBill: @ThisDrunkDane I don't think explicit it a good idea.
+[19:27] mv: it's a bit of redundancy
+[19:27] ThisDrunkDane: I think its fine
+[19:28] mv: yeah, getting rid of the fallback is probably fine
+then if you also have all the odin files in the folder be the same package that's fine by me :stuck_out_tongue:
+[19:28] gingerBill: If it's explicit, it just begs the question of why not import like a normal value declaration?
+ui :: #import("shared:ui");
+[19:28] mv: it's an unusual use of the syntax isn't it
+[19:29] gingerBill: Current code:
+	String import_name = path_to_entity_name(id->import_name.string, id->fullpath, false);
+	// String import_name = id->import_name.string;
+	if (import_name.len == 0 || import_name == "_") {
+	    import_name = scope->pkg->name;
+	}
+	if (is_blank_ident(import_name)) {
+	    if (id->is_using) {
+	        // TODO(bill): Should this be a warning?
+	    } else {
+	        error(token, "Import name, %.*s, cannot be use as an import name as it is not a valid identifier", LIT(id->import_name.string));
+	    }
+	} else {
+	    GB_ASSERT(id->import_name.pos.line != 0);
+	    id->import_name.string = import_name;
+	    Entity *e = alloc_entity_import_name(parent_scope, id->import_name, t_invalid,
+	                                         id->fullpath, id->import_name.string,
+	                                         scope);
+
+	    add_entity(ctx->checker, parent_scope, nullptr, e);
+	    if (id->is_using) {
+	        add_entity_use(ctx, nullptr, e);
+	    }
+	}
+[19:29] gingerBill: Note I just have to remove two lines.
+[19:29] gingerBill: @mv Which one?
+[19:29] mv: there's no constant - variable duality
+[19:30] gingerBill: I'm still confused :stuck_out_tongue:
+[19:30] gingerBill: What is the "unusual" bit referring to exactly?
+[19:31] mv: it's sort of consistent with the rest
+[19:31] mv: :: for (compile time) constants, := for (runtime) variables
+[19:31] gingerBill: It is a little more consistent but as I said previously, it does beg another question: "why limit imports to the file scope?---if the syntax allows for it."
+[19:32] mv: simplicity?
+[19:33] gingerBill: Not a good enough reasons, sadly.
+[19:33] gingerBill: I allow procedures and types and other constants to be nested within a procedure.
+[19:33] gingerBill: Why not imports too?
+[19:33] mv: wouldn't it complicate things significantly?
+[19:33] mv: backend wise
+[19:33] gingerBill: Hell yes.
+[19:34] gingerBill: It complicates things extremely.
+[19:34] mv: so "not worth it"
+[19:34] gingerBill: But to the user, they have no idea why that would be the case.
+[19:34] gingerBill: If the syntax looks different, the user will intuitively understand that the semantics are different.
+[19:34] gingerBill: And don't forget that the foreign system exists too.
+[19:35] gingerBill: And,
+	foreign import kernel32 "system:Kernel32.lib"
+
+	foreign kernel32 {
+	    ...
+	}
+[19:35] gingerBill: Is really weird syntax but it makes sense because it's not anything like the normal value declarations.
+[19:36] gingerBill: If the semantics are different, make the syntax different.
+[19:36] mv: indeed
+[19:36] gingerBill: Does this make more sense now as to why I settled on import "foo" for the syntax?
+[19:36] gingerBill: It's not an accident.
+[19:37] mv: not really. I agree on the latest remark: different semantics, different syntax
+[19:37] gingerBill: import does have quite different of semantics. There are things you might not be realising about it.
+[19:37] gingerBill: One is "which scope does the import name live in?"
+[19:37] mv: i'm not against the current way of importing :stuck_out_tongue:
+[19:38] gingerBill: (I know, I am just explaining all this as I might copy and save this elsewhere)
+[19:38] gingerBill: One thing I wanted to do was to make people think locally; especially regarding imports.
+[19:39] gingerBill: Python is a notorious example of people import entities directly rather than import the library/scope that contains the entity.
+[19:39] gingerBill: And as a result, people import things that were subsequently imported.
+[19:39] gingerBill: And then it's just a huge mess when you are trying to read things.
+[19:39] gingerBill: This is why I don't like people doing using import as it makes things harder to read.
+[19:40] gingerBill: That is why import creates an import name, as it encourages the user to use the import name rather than have those entities implicitly added to the file's/package's scope.
+[19:41] gingerBill: If you want that, explicitly do it e.g.
+	import "shared:math"
+
+	Vector2 :: math.Vector2;
+	Vector3 :: math.Vector3;
+	Rect :: math.Rect;
+[19:41] gingerBill: This is what I do and it makes it very clear what I am "importing" explicitly.
+[19:41] gingerBill: Python does do the:
+from x import y, z, w
+[19:42] gingerBill: But from what I said previously, it does cause a huge range of problems that I see in Python code all the time.
+[19:42] gingerBill: Also, Python code does mean that someone has to organize the code and explicitly state what is exported for that package in the case of __init__.py et al.
+[19:43] gingerBill: Python's approach to libraries has too micromanaging going on.
+[19:43] gingerBill: (I also apologizing for using the terms package and library interchangeably even though they are technically slightly separate concepts)
+[19:43] ThisDrunkDane: Force explitic with import "shared:foo" as bananas
+[19:43] gingerBill: (And sorry for the brain dump, I am going to just write this up)
+[19:44] gingerBill: @ThisDrunkDane You're gonna hate my next question. Why not use as for casting?
+[19:44] mv: I quite dislike from in python
+[19:44] ThisDrunkDane: @gingerBill Cause we tried it before
+[19:44] gingerBill: @ThisDrunkDane I had as before, and I removed it for so many reasons.
+[19:45] gingerBill: :stuck_out_tongue:
+[19:45] ThisDrunkDane: @gingerBill Yes for casting, but importing isn't casting
+[19:45] gingerBill: @ThisDrunkDane But why have a separate syntax for just that reason?
+[19:46] ThisDrunkDane: Because using as for casting was horrible?
+[19:46] gingerBill: `((123 as i32) + 43) as f32` is not nice to write.
+	`f32(i32(123) + 43)` is so much nicer and clearer and more consistent.
+[19:46] gingerBill: @ThisDrunkDane It was horrible but why add a keyword for just that minor concept?
+[19:46] gingerBill: It is also backwards to every other declaration.
+[19:47] gingerBill:
+	name : type : expr;
+	import path as name
+[19:48] ThisDrunkDane: then just do foo :: import "test" and be over with it, I seriously don't see why it's such a problem
+[19:49] gingerBill: @ThisDrunkDane please read why I said that's not an option
+[19:49] ThisDrunkDane: I did
+[19:49] ThisDrunkDane: And I don't agree
+[19:49] gingerBill: I'm BDFL remember :stuck_out_tongue:
+[19:50] mv:
+	#import("foo:bar", baz)
+[19:50] gingerBill: How is that any different?
+[19:50] ThisDrunkDane: And that doesn't stop me from saying I don't see why it's such a problem :stuck_out_tongue:
+[19:50] mv: it isn't
+[19:50] mv: import and foreign import are quite lonely aren't they
+[19:51] mv: sort of a one trick pony
+[19:51] gingerBill: I don't mind having them be differentiated
+[19:51] gingerBill: They are different in virtually every other language
+[19:51] gingerBill: There might be a reason for this.
+[19:51] mv: they're semantically different
+[19:52] gingerBill: Exactly!
+[19:52] gingerBill: So I think just changing the import name rules is the only important question
+[19:52] mv:
+	#foreign("foo:bar", baz)
+[19:53] mv: what about link
+[19:55] gingerBill: What about foreign blocks?
+[19:55] mv: tough one
+[19:56] mv: what about import foreign
+[19:56] mv: instead of foreign import
+[19:57] mv: what about having the library name in the foreign block?¨
+[19:58] mv:
+	foreign foo "foo.lib" {
+	    ...
+	}
+[19:59] gingerBill: I did consider that but having a name means you can abstract platforms much easier
+[19:59] mv: true
+</code></pre>
 
 </article>
 </main>
 <footer>
-© 2007–2019 Ginger Bill
+© 2007–2020 Ginger Bill
 </footer>
 </div>
 </body>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Relative Pointers" />
+<meta property="og:description" content="Absolute Pointers Pointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2020/05/17/relative-pointers/" />
+<meta property="article:published_time" content="2020-05-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-17T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Relative Pointers"/>
+<meta name="twitter:description" content="Absolute Pointers Pointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Relative Pointers - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140084303-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140084303-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Relative Pointers</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2020-05-17</span>
+		</p>
+	</div>
+</header>
+<h2 id="absolute-pointers">Absolute Pointers</h2>
+<p>Pointers are a value type in programming languages that store a memory address. A pointer <em>references</em> a location in memory, and obtaining the value stored at this location in memory is known as <em>dereferencing</em> a pointer.
+Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</p>
+<p>When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call this form of pointer an <em>absolute</em> pointer. On most modern machines with virtualized memory, this is rarely the case any more, and for good reasons<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. In the case of virtualized memory spaces, these pointers do not refer to a physical memory address but rather an alias to a physical memory address, in which usually the operating system handles on a per page basis<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. In a sense, these pointers that belong to virtualized memory spaces can be classed as a form of <em>relative</em> pointer.</p>
+<p>At the end of the day, a pointer can be treated/encoded as if it was an integer of some form. Knowing this fact is extremely useful, not just with pointer arithmetic in C/C++, but also relative pointers.</p>
+<h2 id="varieties-of-relative-pointers">Varieties of Relative Pointers</h2>
+<p>In general, there are four forms of relative pointers:</p>
+<ul>
+<li>Virtual memory pointers&mdash;relative to the virtualized memory space</li>
+<li>Global-based pointers&mdash;relative to a global variable</li>
+<li>Offset pointers&mdash;relative to an explicitly defined base, such as the beginning of a file</li>
+<li>Self-Relative/Auto-Relative pointers&mdash;relative to its own memory address</li>
+</ul>
+<h2 id="global-based-pointers">Global-Based Pointers</h2>
+<p>MSVC supports and non-official extension to C and C++ which it calls <a href="https://docs.microsoft.com/en-us/cpp/cpp/based-pointers-cpp"><em>based pointers</em></a> which allows the user to declare pointers based on pointers. They can be declared using the <code>__based</code> keyword.</p>
+<pre><code class="language-c">void *global_buffer;
+
+struct Linked_List {
+	struct Linked_List __based(global_buffer) *next;
+	void __based(global_buffer) *data;
+};
+</code></pre>
+<p>The size of a based pointer is still the same size as a regular pointer, but now the value it points to <em>relative</em> to that value.</p>
+<p>This form of relative pointers is useful but because it is based on a globally defined variable, it muddles the type system by coupling it with values which means it cannot be applied as generally. Based pointers can also be replicated in C++ through the use of templates and operator overloading, it also has the advantage of allowing the size of the user defined based pointer to be a different size to a regular pointer:</p>
+<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+struct Based_Pointer {
+	static void *base = ...;
+	Integer_Base offset;
+
+	Elem *operator-&gt;() {
+		return offset ? (Elem *)((char *)base + offset) : nullptr;
+	}
+
+	Elem &amp;operator*() {
+		return *this-&gt;(operator-&gt;)();
+	}
+
+	void operator=(Elem *ptr) {
+		offset = ptr ? (Integer_Base)((char *)base - (char *)ptr) : 0;
+	}
+};
+</code></pre>
+<h2 id="offset-pointers">Offset Pointers</h2>
+<p>Another approach which is very similar to based pointers but the base is not explicitly defined by the type itself, which I will refer to as <em>offset pointers</em>. I use this approach a lot when designing file formats, which has the base being the start of the file. I originally learnt about this trick from reading the Quake source code for the MD2/MD3/MD4 file formats which used this trick a lot, especially for <em>relative arrays</em>.</p>
+<p>This shows one of the main advantages of relative pointers: serializeability. This means that the data structure can be <code>memcpy</code>'d and still be valid.</p>
+<p>Offset pointers can also be replicated in C++ through the use of templates. Similar to the previous user-defined based pointers above, the size of the underlying integer can be any size. One of the cool tricks here is that the data structure&rsquo;s fields do not contain any type information about what data type it pointers but rather that data type is encoded in the constant parameters of the templated data structure.</p>
+<pre><code class="language-c">template &lt;typename T&gt;
+struct Offset_Pointer {
+	uint32_t offset;
+};
+
+template &lt;typename T&gt;
+T *get_ptr(void *base, Offset_Pointer&lt;T&gt; ptr) {
+	return (T *)((char *)base  + ptr.offset);
+}
+
+template &lt;typename T&gt;
+struct Offset_Array {
+	uint32_t offset;
+	uint32_t length;
+};
+
+template &lt;typename T&gt;
+T *get_array(void *base, Offset_Array&lt;T&gt; array, uint32_t *length) {
+	if (length) *length = array.length;
+	return (T *)((char *)base  + array.offset);
+}
+</code></pre>
+<p>The same form of data structure can be implemented in Odin too:</p>
+<pre><code class="language-odin">Offset_Pointer :: struct(T: typeid) {
+	offset: u32,
+}
+
+get_ptr :: proc(base: rawptr, ptr: $P/Offset_Pointer($T)) -&gt; ^T {
+	return (^T)(uintptr(base) + uintptr(ptr.offset));
+}
+
+
+Offset_Array :: struct(T: typeid) {
+	offset: u32,
+	length: u32,
+}
+
+get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
+	ptr := (^T)(uintptr(base) + uintptr(ptr.offset));
+	return mem.slice_ptr(ptr, int(array.length));
+}
+</code></pre>
+<p>In the above cases, the <code>offset</code> represents the number of bytes away from the <em>base</em>. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems.</p>
+<h2 id="self-relative-pointers">Self-Relative Pointers</h2>
+<p>The last approach is to define the base to be the memory address of the offset itself.</p>
+<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow&rsquo;s programming language<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
+<p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>'d and still be (mostly) valid.</p>
+<p>One issue with self-relative pointers is that for the value itself to be valid, it must be in an addressable memory space (i.e. must be an l-value and not in a register). If a language containing such a concept wanted to ensure the validity of such a data type, any other data type that contains it would also have to be addressable to. This adds a form of virality to the type system, adding a new concept of addressability to the type system directly. However, even if this was enforced, there are cases when a self-relative pointer in non-addressable memory could be perfectly valid. For this reason.</p>
+<p>Another issue is that smaller base integer types for the internal offset value means that they can only be valid over a smaller range than regular pointers.</p>
+<p>Relative pointers can be implemented in C++ with the use of templates and operator overloading<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>:</p>
+<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+struct Relative_Pointer {
+	Integer_Base offset;
+
+	Elem *operator-&gt;() {
+		return offset ? (Elem *)((char *)base + offset) : nullptr;
+	}
+
+	Elem &amp;operator*() {
+		return *this-&gt;(operator-&gt;)();
+	}
+
+	void operator=(Elem *ptr) {
+		offset = ptr ? (Integer_Base)((char *)base - (char *)&amp;offset) : 0;
+	}
+};
+</code></pre>
+<p>In the above cases, the <code>offset</code> represents the number of bytes away from its own memory address. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems. I personally find this approach less useful in practice even if a stride of greater than 1 does give a larger range to work with in theory (<code>stride*size_of(Elem_Type)</code> bytes).</p>
+<p>It should also be noted that this implementation of a relative pointer does treat the <code>0</code> value as a sentinel value similar to regular pointers.</p>
+<p><em>Relatively</em> recently, I added self-relative pointers to Odin because I found a decent use case for them compared to just using (explicit) offset pointers. I also extended the concept of relative pointers to relative slices too, similar to the <em>offset array</em> example from above.</p>
+<pre><code class="language-odin">relative_data_types :: proc() {
+	fmt.println(&quot;#relative data types&quot;);
+
+	x: int = 123;
+	ptr: #relative(i16) ^int;
+	#assert(size_of(ptr) == size_of(i16));
+
+	ptr = &amp;x;
+	fmt.println(ptr^);
+
+
+	arr := [3]int{1, 2, 3};
+	s := arr[:];
+	rel_slice: #relative(i16) []int;
+	#assert(size_of(rel_slice) == 2*size_of(i16));
+
+	rel_slice = s;
+	fmt.println(rel_slice);
+	fmt.println(rel_slice[:]);
+	fmt.println(rel_slice[1]);
+}
+</code></pre>
+<p>Due to the fact that the underlying base integer of a self relative pointer can be specified by the programmer, it can be exploited by for a lot of useful purpose. One basic example could be having a very small linked list where the next item in the list is defined to be within a certain range. This means you could defined a relative pointer to be stored in a single byte if necessary:</p>
+<pre><code class="language-odin">Node :: struct {
+	data: u8,
+	next: #relative(i8) ^Node,
+}
+#assert(size_of(Node) == 2);
+</code></pre>
+<h2 id="summary">Summary</h2>
+<p>Relative pointers allow for a lot more flexibility compared to &ldquo;traditional&rdquo; pointers, and a godsend with regards to serialization. They do have many advantages and disadvantages of &ldquo;traditional&rdquo; pointers, and the programmer must be absolutely aware of them before using them. Relative pointers can be easily serialized making them ideal for file formats, and relative pointers can be as small as they need to be rather than taking up the same size of a regular pointer (e.g. on 64-bit platforms, a pointer is 64 bits which might be a lot more than the user requires for a specific problem).</p>
+<h2 id="relevant-videos">Relevant Videos</h2>
+<h3 id="sergiy-migdalskiy---performance-optimization-simd-and-cache-at-26-minutes">Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)</h3>
+<div class="youtube">
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/Nsf2_Au6KxU?t=1560" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<h3 id="jonathan-blow---demo-relative-pointers">Jonathan Blow - Demo: Relative Pointers</h3>
+<div class="youtube">
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/Z0tsNFZLxSU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Virtualized memory has many security, safety, and practical benefits. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>I will not discuss how virtual memory works or its benefits in this article. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Jai is also the first language I have seen implement self-relative pointers as part of the type system directly. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>Please note that this is technically undefined behaviour, even if most compilers handle it as expected. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

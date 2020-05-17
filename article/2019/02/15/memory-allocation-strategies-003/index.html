@@ -75,11 +75,17 @@
 <p>As with the arena allocator, an offset into the memory block will be stored and will be moved forwards on every allocation. The difference is that the offset can also be moved backwards when memory is <em>freed</em>. With an arena, you could only free all the memory all at once.</p>
 <h2 id="basic-logic">Basic Logic</h2>
 <p>As with the extended arena in the <a href="/article/2019/02/08/memory-allocation-strategies-002/">previous article</a>, the offset of the previous allocation needs to be tracked. This is required in order to free memory on a <em>per-allocation</em> basis. One approach is to store a <em>header</em> which stores information about that allocation. This <em>header</em> means that the allocator can know how far back it should move the offset to free that memory.</p>
-<!-- raw HTML omitted -->
+<center>
+![Stack Allocator Layout](/images/memory-allocation-strategies/stack_allocator.svg)
+</center>
 <p>To allocate some memory from the stack allocator, as with the arena allocator, it is as simple as moving the offset forward whilst accounting for the header. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
-<!-- raw HTML omitted -->
+<center>
+![Stack Allocator Alloc](/images/memory-allocation-strategies/stack_allocator_alloc.svg)
+</center>
 <p>To free a block, the header that is stored before the block of memory can be read in order to move the offset backwards. In Big-O notation, the freeing of this memory has complexity of <em><strong>O(1)</strong></em> (constant).</p>
-<!-- raw HTML omitted -->
+<center>
+![Stack Allocator Free](/images/memory-allocation-strategies/stack_allocator_free.svg)
+</center>
 <h2 id="header-storage">Header Storage</h2>
 <p>You may have noticed that I never actually state what to store in the allocation header. The reason for this is because there are numerous approaches to stack allocators which store different data. There are three main approaches<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <ul>
@@ -113,9 +119,13 @@ struct Stack_Allocation_Header {
 };
 </code></pre>
 <p>This padding stores the amount of bytes that has to be placed before the header in order to have the new allocation correctly aligned.</p>
-<!-- raw HTML omitted -->
+<center>
+![Stack Allocator Header](/images/memory-allocation-strategies/stack_allocator_header.svg)
+</center>
 <p><strong>Note</strong>: Storing the padding as a byte does limit the the maximum alignment that can used with this stack allocator to 128 bytes. If you require a higher alignment, increase the size of integer used to store the padding. To calculate the maximum alignment that the padding can be used for, use this equation:</p>
-<!-- raw HTML omitted -->
+<div>$$
+\text{Maximum Alignment in Bytes} = {2} ^ {8 \times \text{sizeof}(\text{padding}) - 1}
+$$</div>
 <h2 id="init">Init</h2>
 <p>The <code>stack_init</code> procedure just initializes the parameters for the given stack.</p>
 <pre><code class="language-c">void stack_init(Stack *s, void *backing_buffer, size_t backing_buffer_length) {
@@ -341,7 +351,7 @@ s-&gt;prev_offset = header-&gt;prev_offset;
 </article>
 </main>
 <footer>
-© 2007–2019 Ginger Bill
+© 2007–2020 Ginger Bill
 </footer>
 </div>
 </body>

@@ -4,10 +4,19 @@
     <link>/tags/odin/</link>
     <description>Recent content in odin on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sat, 25 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 17 May 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/odin/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Relative Pointers</title>
+      <link>/article/2020/05/17/relative-pointers/</link>
+      <pubDate>Sun, 17 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2020/05/17/relative-pointers/</guid>
+      <description>Absolute Pointers Pointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</description>
+    </item>
     
     <item>
       <title>A Reply to _Let&#39;s stop copying C_</title>
@@ -25,7 +34,8 @@ I recommend reading the original article first before reading this one as I will
       <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
       
       <guid>/transcript/odin-import-design-discussion/</guid>
-      <description>This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.</description>
+      <description>This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
+[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34;[18:42] lipid: renaming the folder solves the issue[18:43] gingerBill: @lipid Just rename the package name, it can be anything.</description>
     </item>
     
     <item>
