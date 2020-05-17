@@ -203,7 +203,7 @@ struct Relative_Pointer {
 	fmt.println(rel_slice[1]);
 }
 </code></pre>
-<p>Due to the fact that the underlying base integer of a self relative pointer can be specified by the programmer, it can be exploited by for a lot of useful purpose. One basic example could be having a very small linked list where the next item in the list is defined to be within a certain range. This means you could defined a relative pointer to be stored in a single byte if necessary:</p>
+<p>Due to the fact that the underlying base integer of a self relative pointer can be specified by the programmer, it can be exploited for a lot of useful purposes. One basic example could be having a very small linked list where the next item in the list is defined to be within a certain range. This means you could defined a relative pointer to be stored in a single byte if necessary:</p>
 <pre><code class="language-odin">Node :: struct {
 	data: u8,
 	next: #relative(i8) ^Node,
