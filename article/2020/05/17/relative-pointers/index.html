@@ -166,7 +166,7 @@ struct Relative_Pointer {
 	Integer_Base offset;
 
 	Elem *operator-&gt;() {
-		return offset ? (Elem *)((char *)base + offset) : nullptr;
+		return offset ? (Elem *)((char *)&amp;offset + offset) : nullptr;
 	}
 
 	Elem &amp;operator*() {
@@ -174,7 +174,7 @@ struct Relative_Pointer {
 	}
 
 	void operator=(Elem *ptr) {
-		offset = ptr ? (Integer_Base)((char *)base - (char *)&amp;offset) : 0;
+		offset = ptr ? (Integer_Base)((char *)ptr - (char *)&amp;offset) : 0;
 	}
 };
 </code></pre>
