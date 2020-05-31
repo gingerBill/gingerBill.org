@@ -4,10 +4,21 @@
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sun, 17 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 31 May 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Pragmatism in Programming Proverbs</title>
+      <link>/article/2020/05/31/progamming-pragmatist-proverbs/</link>
+      <pubDate>Sun, 31 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2020/05/31/progamming-pragmatist-proverbs/</guid>
+      <description>I was originally going to write a normal prose article regarding the topic of Pragmatism in Programming, however I thought I&amp;rsquo;d experiment in style by writing in a proverbial style.
+The following concepts express the school of thought that I subscribe to which I call Pragmatism in Programming.
+Proverbs written by Ginger Bill The concept of programming   Programming is a tool to solve a problems that you have in the domain of computers</description>
+    </item>
     
     <item>
       <title>Relative Pointers</title>
