@@ -336,3 +336,11 @@ article table td, article table th {
   left: 0;
   top: 0;
 }
+
+
+img[src$='#center'] {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}

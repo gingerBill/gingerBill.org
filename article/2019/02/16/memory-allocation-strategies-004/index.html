@@ -75,28 +75,18 @@
 <p>Pool allocators are usually used to allocate <em>groups</em> of &ldquo;things&rdquo; at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
 <h1 id="basic-logic">Basic Logic</h1>
 <p>A pool allocator takes a backing buffer and divides that buffer into pools/slots/bins/chunks<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> of all the same size.</p>
-<center>
-![Pool Allocator Layout](/images/memory-allocation-strategies/pool_allocator.svg)
-</center>
+<p><img src="/images/memory-allocation-strategies/pool_allocator.svg#center" alt="Pool Allocator Layout"></p>
 <p>The question is how are these allocations and frees determined? And how do they provide very little fragmentation with allocations that can be made in any order?</p>
 <h2 id="free-lists">Free Lists</h2>
 <p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
-<center>
-![Pool Allocator List](/images/memory-allocation-strategies/pool_allocator_list.svg)
-</center>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_list.svg#center" alt="Pool Allocator List"></p>
 <p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
-<center>
-![Pool Allocator List In-Place](/images/memory-allocation-strategies/pool_allocator_list_inplace.svg)
-</center>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg#center" alt="Pool Allocator List In-Place"></p>
 <h2 id="allocate-and-free">Allocate and Free</h2>
 <p>To allocate a chunk, just pop off the head (first element) from the free list. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
-<center>
-![Pool Allocator Alloc](/images/memory-allocation-strategies/pool_allocator_alloc.svg)
-</center>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_alloc.svg#center" alt="Pool Allocator Alloc"></p>
 <p><strong>Note</strong>: The free list does not need to be ordered as its order is determined by how chunks are allocated and freed.</p>
-<center>
-![Pool Allocator Alloc Unordered](/images/memory-allocation-strategies/pool_allocator_alloc_unordered.svg)
-</center>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_alloc_unordered.svg#center" alt="Pool Allocator Alloc Unordered"></p>
 <p>To free a chunk, just push the freed chunk as the head of the free list. In Big-O notation, the freeing of this memory has complexity of <em><strong>O(1)</strong></em> (constant).</p>
 <h1 id="implementation">Implementation</h1>
 <p>The pool allocator requires less code than the arena and stack allocator as there is no logic required for different sized/aligned allocations and resize allocations. The complete pool allocator will have the following procedures:</p>
