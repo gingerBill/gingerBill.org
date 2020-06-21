@@ -1,0 +1,22 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rust on gingerBill</title>
+    <link>/tags/rust/</link>
+    <description>Recent content in rust on gingerBill</description>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Fatal Flaw of Ownership Semantics</title>
+      <link>/article/2020/06/21/the-ownership-semantics-flaw/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2020/06/21/the-ownership-semantics-flaw/</guid>
+      <description>I have had a theoretical idea I have been toying with for the past 18 months off-and-on in my head and I have not fully articulated it aloud yet. It is regarding the concept of Ownership Semantics (OS) or Move Semantics in programming languages. Fundamentally this article is a criticism of the concept and states that the concept is a duality of traditional OOP but applied to a different area.</description>
+    </item>
+    
+  </channel>
+</rss>

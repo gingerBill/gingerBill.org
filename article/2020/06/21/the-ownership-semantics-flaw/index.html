@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="The Fatal Flaw of Ownership Semantics" />
+<meta property="og:description" content="I have had a theoretical idea I have been toying with for the past 18 months off-and-on in my head and I have not fully articulated it aloud yet. It is regarding the concept of Ownership Semantics (OS) or Move Semantics in programming languages. Fundamentally this article is a criticism of the concept and states that the concept is a duality of traditional OOP but applied to a different area." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2020/06/21/the-ownership-semantics-flaw/" />
+<meta property="article:published_time" content="2020-06-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-06-21T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Fatal Flaw of Ownership Semantics"/>
+<meta name="twitter:description" content="I have had a theoretical idea I have been toying with for the past 18 months off-and-on in my head and I have not fully articulated it aloud yet. It is regarding the concept of Ownership Semantics (OS) or Move Semantics in programming languages. Fundamentally this article is a criticism of the concept and states that the concept is a duality of traditional OOP but applied to a different area."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>The Fatal Flaw of Ownership Semantics - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>The Fatal Flaw of Ownership Semantics</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2020-06-21</span>
+		</p>
+	</div>
+</header>
+<p>I have had a theoretical idea I have been toying with for the past 18 months off-and-on in my head and I have not fully articulated it aloud yet. It is regarding the concept of <em>Ownership Semantics</em> (OS) or <em>Move Semantics</em> in programming languages. Fundamentally this article is a criticism of the concept and states that the concept is a duality of traditional OOP but applied to a different area.</p>
+<h2 id="general-definitions-of-terminology">General Definitions of Terminology</h2>
+<p>A general list of definitions of terminology used within this article in order to minimize confusion.</p>
+<ul>
+<li>
+<p>A <em>Value</em> is a datum with an associated type</p>
+</li>
+<li>
+<p>A <em>(Data) Type</em> is an attribute of a value which encodes information about how the data value can be operated upon</p>
+</li>
+<li>
+<p>An <em>Object</em> is a value with associated behaviour, and thus implies it has <em>agency</em></p>
+</li>
+<li>
+<p>A <em>Class</em> is the data type of an <em>Object</em></p>
+</li>
+<li>
+<p>A hierarchy of value ownership is a hierarchy of responsibility of values</p>
+</li>
+<li>
+<p>An <em>Owned-Value</em> is a value which belongs to a hierarchy of value ownership, which implies it is governed by an <em>agent</em></p>
+</li>
+<li>
+<p>An <em>Agent</em> is an actor with the capacity to act within a given environment</p>
+</li>
+<li>
+<p>A <em>Model of Interpretation</em> is a way to view and analyse a subject</p>
+</li>
+<li>
+<p>A <em>Paradigm</em> is a way of classifying models of structure of programming languages; a <em>Paradigm</em> is a <em>model of interpretation</em></p>
+</li>
+<li>
+<p><em>Object Orient(at)ed Programming (OOP)</em> - A paradigm of structuring a program around the sole concept of <em>Objects</em>, commonly through coupling data and code into a single unit.</p>
+</li>
+<li>
+<p><em>Ownership/Move Semantics (OS)</em> - Orientation around responsibility of values in a hierarchical fashion</p>
+</li>
+</ul>
+<h2 id="foundations-of-the-object-orientation-paradigm">Foundations of the Object Orientation Paradigm</h2>
+<p>Though the original conception of the term coined by Alan Kay<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> was never used as he intended it to be, the term <em>Object Orient(at)ed Programming (OOP)</em> has been commonly understood to be a paradigm of structuring a program around the concept of <em>Objects</em>, commonly through coupling data and code into a single unit. Many languages support multiple paradigms, including aspects for the OOP paradigm, but I would class those are multiparadigm rather than being <em>solely</em> an OOP language.</p>
+<p>Most languages implement <em>Objects</em> and <em>Classes</em> in the Simula tradition; most of the notable OOP languages have a similar form by defining methods (member functions) with in the class definition. Traditionally languages such as Java can be classed as <em>solely</em> an OOP language.</p>
+<p>Most traditional OOP languages are based around the concept of <em>inheritance</em>, a mechanism of deriving a class data type from another class data type and retaining similar information. Most people generally view inheritance as a combination of <a href="https://en.wikipedia.org/wiki/Subtyping">subtyping</a> and <a href="https://en.wikipedia.org/wiki/Dynamic_dispatch">dynamic dispatch</a> through <a href="https://en.wikipedia.org/wiki/Virtual_method_table">virtual method tables (vtables)</a>. This is has lead to many discussions asking whether a language can be called as OOP if it does not support inheritance<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>In recent times, <em>inheritance</em> has been falling out of fashion in favour of <em>composition</em><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. This is mostly due to the issue of conforming a <em>class</em> to a strict (singular) hierarchy of agency when in reality, things can belong to many (if not infinite) categories and hierarchies, as well as another aspect which I will be discussing throughout this article.</p>
+<p>There are many criticisms of OOP<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup><sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup><sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup><sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup><sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup><sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup> but my general criticism is that by placing emphasis on trying to solves problem in the type system, it shifts focus from the data structures and algorithms, <a href="/article/2020/05/31/progamming-pragmatist-proverbs/#the-concept-of-programming">the core of what a program fundamentally is</a>.</p>
+<p>Since objects themselves are being treated <em>as if</em> they have behaviour (not just type properties), they are effectively being treated as if they were <em>agents</em> in the program. This mental model has many conclusions, many of which cause issues.</p>
+<p>In my article <a href="https://www.gingerbill.org/article/2020/05/31/progamming-pragmatist-proverbs/"><em>Pragmatism in Programming Proverbs</em></a>, I state:</p>
+<blockquote>
+<p>Object orientated programming is a form of misinterpreted and misapplied Aristotelian Metaphysics applied to a domain it was never meant to model</p>
+</blockquote>
+<p>What I mean by this statement is that <em>artificially</em> conforming any/all relationships between data and types to an artificial hierarchy of <em>agency</em> is a form of naïve-Aristotelian metaphysics. Since there is no actual <em>agency</em> in the programming objects, it is a partial fallacy. When trying to conform a program to have a particular structure when it does not naturally, the absence of a structure in a program is more useful than a bad structure.</p>
+<h3 id="methods">Methods</h3>
+<p>The concept of adding methods to classes/objects has proven useful to many. The real questions are:</p>
+<ul>
+<li>Why?</li>
+<li>And how do people actually conceptualize methods on a day-to-day basis?</li>
+</ul>
+<p>For most people, I am going to bet that methods, in languages with an emphasis on inheritance rather than composition (such as C++ or Java), are treated as a way of categorizing and associating functions/procedures with a data record. There are a few reasons for this approach:</p>
+<ul>
+<li>Easy to organize and search for procedures by a data type</li>
+<li>Allowing methods as a form of syntactic sugar for writing calls in a <em>subject verb object</em> manner e.g. <code>foo_do_thing(x, y)</code> vs <code>x.do_thing(y)</code></li>
+<li>Mental model of behaviour for objects</li>
+</ul>
+<p>From experience, I have found that long time uses of &ldquo;OOP&rdquo; languages eventually start treating methods primarily in the first two approaches.</p>
+<p>I will not go into depth about the other main aspects of OOP such as encapsulation, local retention, forms of polymorphism, etc, as for this article the hierarchical nature is the fundamental aspect of focus. The (linear) hierarchy of agency is the main problem. The reason why people argue for <em>composition over inheritance</em> is that it flattens this linear hierarchy reducing its effect. It is the transition from <a href="https://en.wikipedia.org/wiki/Nominal_type_system">nominal typing</a> to <a href="https://en.wikipedia.org/wiki/Structural_type_system">structural typing</a>, of which is more flexible because many data structures and problems have a <em>non-linear</em> nature to them, which <em>linear</em> approaches <strong>cannot</strong> handle. When trying to adhere to the the strict hierarchical type system approaches, it leads to numerous issues because data is more commonly graph-like (non-linear) than tree-like (linear) for most problems. This strict hierarchy does occur with encapsulation at the object level too, a strict hierarchy of messages/references; this hierarchical nature arises from the concept agency itself, inheritance in not the root cause.</p>
+<p><strong>n.b.</strong> Inheritance is not all bad and does have many real life practical uses, but these costs must be known before using them, like with any tool.</p>
+<h2 id="foundations-of-the-ownership-semantics-paradigm">Foundations of the Ownership Semantics Paradigm</h2>
+<p><a href="https://en.wikipedia.org/wiki/C%2B%2B">C++11</a> introduced the concept of <em>move semantics</em> or <em>ownership semantics</em> (OS), a way to minimize the copying of data through copy constructors. It utilizes the added concept of r-value references (<code>T &amp;&amp;</code>) as a means to do this. However, the concept began to be used for a lot more than its basic purpose. The concept adds the high level abstraction of &ldquo;moving&rdquo; objects rather than &ldquo;copying&rdquo; objects. Physically, a computer only ever copies and this high level abstraction, to treat objects <em>as if</em> they were &ldquo;real objects&rdquo;, is not what actually happens. It is also a <a href="https://en.wikipedia.org/wiki/Category_mistake">category error</a> to treat them as &ldquo;real objects&rdquo; since &ldquo;real objects&rdquo; and &ldquo;programming objects&rdquo; have little connection with each other ontologically. When a value or object is &ldquo;moved&rdquo;, this means is that the <em>responsibilities</em> of the resources of that object have been transferred to another object or environment, <em>agents</em>. In this case, ownership/move semantics is fundamentally based around the <em>responsibilities of values</em> by tracking value usage.</p>
+<p>In this model of agency, the arena of agency can take on many forms, such as blocks, procedure bodies, or aggregate values. Therefore some <em>owned-values</em> also <em>own</em> other values, and thus a value could have agency.</p>
+<p>If we were to call Ownership Semantics a paradigm, it would be the orientation around the <em>responsibility of values</em> in a hierarchical fashion, placing emphasis on this system of responsibility, shifting focus from data structures and algorithms.</p>
+<p>The concept of <em>responsibility</em> and <em>ownership</em> is similar to the real world counter parts in that to own something means to have exclusive use over it and full responsibility over it.</p>
+<p><a href="https://www.rust-lang.org/">Rust</a> is a multi-paradigm programming language but at its core is an Ownership-Orientated language. Everything in Rust has a concept of <em>&ldquo;ownership&rdquo;</em> and <em>lifetime</em> associated with it. Rust is designed around trying to be first and foremost &ldquo;safe&rdquo;, especially with regards to concurrency. Rust does derive from the C++ family in terms of philosophy and style, but uses a more <a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">qualifier-focused</a> declaration syntax and many concepts from functional languages from the <a href="https://en.wikipedia.org/wiki/ML_%28programming_language%29">ML family</a>.</p>
+<p><em>Lifetimes</em> are theoretically orthogonal to <em>ownership</em> but in practical, they usually are intrinsically coupled. I will not discuss the problems with object-based lifetimes in this article.</p>
+<p>The following Rust code can be used to demonstrate this responsibility transfer between different capturing things such as <code>let</code> statements:</p>
+<pre><code class="language-rust">pub struct Foo {
+	value: i32,
+}
+
+fn main() {
+	let foo = Foo{value: 123};
+	let bar = foo; // the responsibility of `foo` is transferred to `bar`
+
+	println!(&quot;{}&quot;, foo.value); // error: use of moved value: `foo.value`
+	println!(&quot;{}&quot;, bar.value);
+}
+
+</code></pre>
+<p>Rust is an immutable-by-default language, but with the option to opt into mutability with <code>mut</code>. Immutability helps a lot with mathematical proofs for logic since things things can be &ldquo;flattened&rdquo; quite easily, but virtually all computers are fundamentally mutable things, even if the abstraction of immutability is a useful tool. As a result, the ownership semantics system requires a few more rules to take into account mutability, by adding the concept of &ldquo;borrowing&rdquo; through references. The general rules for the borrow checker are:</p>
+<ul>
+<li>Each value may have as many immutable borrows as you want</li>
+<li>Each value may only have one mutable borrow at a time</li>
+<li>Each value may not borrow immutably and mutably at the same time</li>
+<li>Values will be &ldquo;dropped&rdquo; when the owning connecting goes out of scope</li>
+<li>Taking a value by <code>self</code> <code>Drop</code>s the original value</li>
+</ul>
+<p>When using Rust (or move semantics to their full extent in C++11), most people will fight the borrow checker regularly<sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>  (especially newcomers to the language or people swapping between different languages). Many people have found approaches to reduce these issues:</p>
+<ul>
+<li>Keep blocks small, structs small, etc&mdash;this reduces the size of the arena of agency and thus reduces the amount of responsibility it must take care of</li>
+<li>Minimize self references in structs, i.e. graph-like data structures are difficult to implement using references</li>
+<li><code>Cel</code>, <code>RefCell</code>, <code>Ref</code>, and <code>Rc</code> are more common than many would like</li>
+<li>Use indices/handles instead of references</li>
+</ul>
+<p>Essentially, all of these approaches are bypassing the borrow checker in some form (if not entirely), especially the use of indices/handles. The first three approaches are to flatten the (linear) responsibility hierarchy.</p>
+<p><strong>n.b.</strong> Ownership semantics do have many practical use cases, and can be used to prove the safety of numerous problems, especially reducing vulnerabilities in programs. This is the main purpose why Rust was developed at Mozilla. Web browsers need to be very <em>safe</em> programs, through sandboxing, data races, networking, and other concurrency issues. Being able to prove certain things at compile time is a very useful thing when it comes to safety and robustness of a program. However, as I have stated that because of the linear nature of OS, it cannot solve a whole range of other problems without resorting to <code>unsafe</code> or another way of bypassing the borrow checker entirely.</p>
+<h2 id="mathematical-formalism-of-ownership-semantics">Mathematical Formalism of Ownership Semantics</h2>
+<p>Ownership semantics are a form of an <a href="https://en.wikipedia.org/wiki/Substructural_type_system#Affine_type_systems">affine substructural type system</a><sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup><sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup> which means that they are fundamentally described by a <a href="https://en.wikipedia.org/wiki/Linear_logic">linear logic</a>, and thus explains why it struggles to express <em>non-linear</em> problems. Therefore ownership semantics and the borrow checker are fundamentally a linear tree (hierarchy) and not a non-linear graph, as described by its underlying formal logic. Many data structures and problems in real life are fundamentally <em>non-linear</em>, of which <em>linear</em> approaches <strong>cannot</strong> handle.</p>
+<p>In C++11 with introduction of move semantics, the STL include the concept of &ldquo;smart pointers&rdquo;, each with different substructural logic.</p>
+<ul>
+<li><code>std::unique_ptr</code> - linear (1-use) self owning pointer  (1u1o)</li>
+<li><code>std::shared_ptr</code> - normal (N-use) self owning pointer  (Nu1o)</li>
+<li><code>std::weak_ptr</code>   - normal (N-use) non-owned pointer    (Nu0o)</li>
+<li><code>T *&amp;&amp;</code>           - affine (0/1-use) non-owned pointer  (?u0o)</li>
+</ul>
+<p>If you would like to learn more about the fundamental logic of the ownership semantics applied to the Rust language, I recommend reading this paper explaining the logic using formal mathematics: <a href="https://arxiv.org/abs/1903.00982">Oxide: The Essence of Rust</a> (arXiv:1903.00982).</p>
+<h2 id="the-duality-of-the-linear-structures">The Duality of the Linear Structures</h2>
+<p>As I have described above, both the OOP and OS both share similarities:</p>
+<ul>
+<li>Traditional-OOP: A (linear) value hierarchy of behaviour. The values act as agents.</li>
+<li>Ownership Semantics: A (linear) value hierarchy of responsibility. Agents are responsible for values.</li>
+</ul>
+<p>In the the OOP case, the value/object is the agent. In the OS case, the agent is whatever has responsibility for it (e.g. another object, function, block, etc). Both have linear value hierarchies which are quite strict and singular.</p>
+<h2 id="singular-holistic-world-view">Singular Holistic World-View</h2>
+<p>Both are singular in nature in that they deal with singular forms of values rather than groups of values. They are both (traditionally) very hierarchical, and place emphasis on the system as a way to control the processes rather than the algorithms directing the processes. Objects and Owned-Values are fundamentally &ldquo;nouns&rdquo;, but programs are &ldquo;verbs&rdquo;.</p>
+<p>Dealing with singular values can be very useful, but not everything is a value. Some things are fundamentally &ldquo;non-values&rdquo; e.g. instructions/control-flow/declarations. It is a similar holistic world-view as OOP where everything must be X(, or produce X).</p>
+<p><em>Ownership Semantics</em> are separate from <em>Lifetime Semantics</em>, but they are both required to be useful in more complex problems, and are usually coupled; naturally because of the singular-value-based nature.</p>
+<h2 id="external-arguments-for-ownership-semantics">External Arguments for Ownership Semantics</h2>
+<ul>
+<li><a href="https://www.chromium.org/Home/chromium-security/memory-safety">Chromium Security Bugs</a></li>
+<li><a href="https://www.zdnet.com/article/microsoft-70-percent-of-all-security-bugs-are-memory-safety-issues/">Microsoft: 70 percent of all security bugs are memory safety issues</a></li>
+<li><a href="https://alexgaynor.net/2019/aug/12/introduction-to-memory-unsafety-for-vps-of-engineering/">Introduction to Memory Unsafety for VPs of Engineering</a></li>
+</ul>
+<p>From these articles, many others have argued that languages like Rust would solve many of these problems, such as <a href="https://en.wikipedia.org/wiki/Use_after_free"><em>use-after-free</em></a>. However this may not be necessarily true. It is correct that ownership semantics would solve <em>some</em> problems that cause things like <em>use-after-free</em> but that does not mean it will solve most of them. Even if things like <em>use-after-free</em> are security/memory bugs, they are usually a symptom of another larger problem than it itself being the root cause.</p>
+<h2 id="alternatives-to-ownership-semantics">Alternatives to Ownership Semantics</h2>
+<p>One thing many people will ask whilst reading this article is &ldquo;if Ownership Semantics are bad, what do you propose as a replacement?&rdquo;</p>
+<p>In general, most hard problems cannot be solved at compile time; because of this, adding more and more concepts to the type system of the language will not help without adding extra costs. This does not mean ownership semantics is bad but not a solution for many problems in that domain.</p>
+<p>A lot of the problems related to responsibility are better solved with forms of &ldquo;subsystems&rdquo; within programs with handle groups of &ldquo;things&rdquo; and give out <em>handles</em> of the &ldquo;thing&rdquo; instead of a direct reference. This is related to the approach many people use already to bypass the borrow checker through using indices/handles. Handles can contain a lot more information than a singular number. A common approach is to store a generation number alongside the index in the handle. If a generation has died, but the handle is asked to be used, the subsystem can give out a dummy sentinel value and report an error.</p>
+<p>Other approaches are to reduce the need for responsibility in the first place. By keeping data structures <a href="https://en.wikipedia.org/wiki/Passive_data_structure">POD</a>, trivially copyable, and the zero value of it useful, can help you change the way you think about the problem at hand and simplify code. It places more emphasis on the data and algorithms themselves rather than the relationships between objects and types.</p>
+<h3 id="useful-resources-regarding-these-alternative-approaches">Useful resources regarding these alternative approaches</h3>
+<ul>
+<li><a href="https://floooh.github.io/2018/06/17/handles-vs-pointers.html">Handles are the better pointers</a> - André Weißflog</li>
+<li>Bitsquid Articles
+<ul>
+<li><a href="http://bitsquid.blogspot.com/2011/09/managing-decoupling-part-4-id-lookup.html">http://bitsquid.blogspot.com/2011/09/managing-decoupling-part-4-id-lookup.html</a></li>
+<li><a href="http://bitsquid.blogspot.com/2014/09/building-data-oriented-entity-system.html">http://bitsquid.blogspot.com/2014/09/building-data-oriented-entity-system.html</a></li>
+</ul>
+</li>
+<li>Making the Zero Value Useful:
+<ul>
+<li><a href="https://ourmachinery.com/post/defaulting-to-zero/">Default to Zero</a></li>
+<li><a href="https://www.gregosuri.com/2015/12/04/go-proverbs-illustrated/#make-the-zero-value-useful">Go Proverbs Illustrated</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Ownership semantics are a way to handle the responsibility of values in a hierarchical fashion Orientation around responsibility of values in a hierarchical fashion. This results in a (linear) value hierarchy of responsibility, where agents are responsible for values. The issues of ownership semantics parallel the same structural issues that Traditional-OOP has which results in a (linear) value hierarchy of behaviour, where the values act as agents.</p>
+<p>Ownership semantics can be a useful tool for certain problems, but due to their underlying linear logic, they <strong>cannot</strong> be use to express <em>non-linear</em> problems which resorts people to try and bypass the concept entirely.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>&ldquo;I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages (so messaging came at the very beginning – it took a while to see how to do messaging in a programming language efficiently enough to be useful).&rdquo; - Alan Kay, 2003 <a href="http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en">http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>The <a href="https://golang.org/">Go programming language</a> does not support inheritance. However under my definition, Go is an OOP language but is designed around (implicit) <code>interface</code>s (a form of <a href="https://en.wikipedia.org/wiki/Type_class">type-classes</a> or <a href="https://en.wikipedia.org/wiki/Structural_type_system">structural typing</a>) as a way to compose objects, and methods can be applied to any user defined type; not just record types. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p><a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">https://en.wikipedia.org/wiki/Composition_over_inheritance</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://www.youtube.com/watch?v=QM1iUe6IofM">https://www.youtube.com/watch?v=QM1iUe6IofM</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p><a href="http://www.stlport.org/resources/StepanovUSA.html">http://www.stlport.org/resources/StepanovUSA.html</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p><a href="https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D">https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7" role="doc-endnote">
+<p><a href="https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html">https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html</a> <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8" role="doc-endnote">
+<p><a href="http://harmful.cat-v.org/software/OO_programming/">http://harmful.cat-v.org/software/OO_programming/</a> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9" role="doc-endnote">
+<p><a href="http://harmful.cat-v.org/software/OO_programming/why_oo_sucks">http://harmful.cat-v.org/software/OO_programming/why_oo_sucks</a> <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10" role="doc-endnote">
+<p>Getting used bypassing the borrow checker to reduce fighting implies people have just found a way to cope with the constraints it imposes. <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11" role="doc-endnote">
+<p>Whilst writing this article, I did not realize that this was already developed, and I accidentally rediscovered substructural type systems and linear logic, and had my own terminology for it. However, it is more appropriate to the more commonly used terminology. <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12" role="doc-endnote">
+ <div>`XnYo` (X-use Y-owners), `?` (0/1), `2+` (2 or more), `N` (arbitrary uses)<br>Examples:<ul><li>`1u1o` (1-use 1-owner, linear owned-value)</li><li>`?u0o` (0/1-use 0-owners, affine non-owned-value)</li><li>`Nu1o` (N-owners 1-owner, normal owned-value)</li><li>`2+1o` (2+-uses 1-owner, relevant owned-value)</ul></div>
+ <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

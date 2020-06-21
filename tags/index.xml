@@ -4,24 +4,24 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sat, 13 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>audio</title>
-      <link>/tags/audio/</link>
-      <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
+      <title>c&#43;&#43;11</title>
+      <link>/tags/c&#43;&#43;11/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/audio/</guid>
+      <guid>/tags/c&#43;&#43;11/</guid>
       <description></description>
     </item>
     
     <item>
       <title>philosophy</title>
       <link>/tags/philosophy/</link>
-      <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/philosophy/</guid>
       <description></description>
@@ -30,9 +30,27 @@
     <item>
       <title>psychology</title>
       <link>/tags/psychology/</link>
-      <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/psychology/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rust</title>
+      <link>/tags/rust/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rust/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>audio</title>
+      <link>/tags/audio/</link>
+      <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/audio/</guid>
       <description></description>
     </item>
     

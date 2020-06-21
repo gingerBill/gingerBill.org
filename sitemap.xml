@@ -4,7 +4,42 @@
   
   <url>
     <loc>/article/</loc>
-    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/c&#43;&#43;11/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/philosophy/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/psychology/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rust/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/article/2020/06/21/the-ownership-semantics-flaw/</loc>
+    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -14,26 +49,6 @@
   
   <url>
     <loc>/article/2020/06/13/flash-fads-model/</loc>
-    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/philosophy/</loc>
-    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/psychology/</loc>
-    <lastmod>2020-06-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-06-13T00:00:00+00:00</lastmod>
   </url>
   
