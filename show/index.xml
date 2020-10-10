@@ -14,6 +14,7 @@
     </itunes:owner>
     <itunes:category text="Technology"/>
     <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="/show/ginger_bill_show.png"/>
     
         <atom:link href="/show/index.xml" rel="self" type="application/rss+xml" />
     
