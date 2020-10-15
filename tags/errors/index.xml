@@ -1,0 +1,22 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>errors on gingerBill</title>
+    <link>/tags/errors/</link>
+    <description>Recent content in errors on gingerBill</description>
+    <language>en-gb</language>
+    <lastBuildDate>Thu, 15 Oct 2020 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/tags/errors/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Error States</title>
+      <link>/show/2/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/show/2/</guid>
+      <description>Notes:  Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense  Structured Exception Handling Microsoft&amp;rsquo;s SEH   Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.  </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -4,15 +4,24 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>errors</title>
+      <link>/tags/errors/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/errors/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>philosophy</title>
       <link>/tags/philosophy/</link>
-      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/philosophy/</guid>
       <description></description>
@@ -21,7 +30,7 @@
     <item>
       <title>podcast</title>
       <link>/tags/podcast/</link>
-      <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/podcast/</guid>
       <description></description>
