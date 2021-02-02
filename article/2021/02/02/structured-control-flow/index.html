@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Structured Control Flow (Brain Dump)" />
+<meta property="og:description" content="Note: This is a &ldquo;brain dump&rdquo; article, and subject to be cleaned up.
+Categories of Structured Control Flow  Procedure call  foo(123, true)   Terminating  return   Conditional  if, if-else, switch   Looping  for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition   Branching  break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements   Deferred  defer/scope(exit)    Pseudo/Partial Categories  Structured Exception Handling (not specifically Microsoft&rsquo;s SEH  try, catch   Default (named) return values  foo :: proc(x: int) -&gt; (val: int, err: Error) { ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/02/02/structured-control-flow/" />
+<meta property="article:published_time" content="2021-02-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-02-02T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Structured Control Flow (Brain Dump)"/>
+<meta name="twitter:description" content="Note: This is a &ldquo;brain dump&rdquo; article, and subject to be cleaned up.
+Categories of Structured Control Flow  Procedure call  foo(123, true)   Terminating  return   Conditional  if, if-else, switch   Looping  for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition   Branching  break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements   Deferred  defer/scope(exit)    Pseudo/Partial Categories  Structured Exception Handling (not specifically Microsoft&rsquo;s SEH  try, catch   Default (named) return values  foo :: proc(x: int) -&gt; (val: int, err: Error) { ."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Structured Control Flow (Brain Dump) - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Structured Control Flow (Brain Dump)</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2021-02-02</span>
+		</p>
+	</div>
+</header>
+<p><strong>Note:</strong> This is a &ldquo;brain dump&rdquo; article, and subject to be cleaned up.</p>
+<h2 id="categories-of-structured-control-flow">Categories of Structured Control Flow</h2>
+<ul>
+<li>Procedure call
+<ul>
+<li><code>foo(123, true)</code></li>
+</ul>
+</li>
+<li>Terminating
+<ul>
+<li><code>return</code></li>
+</ul>
+</li>
+<li>Conditional
+<ul>
+<li><code>if</code>, <code>if-else</code>, <code>switch</code></li>
+</ul>
+</li>
+<li>Looping
+<ul>
+<li><code>for</code> - loop with initial statement, condition, post statement, and body</li>
+<li><code>for-in</code> - loop with a value to be iterated over</li>
+<li><code>while</code> - loop with condition then body</li>
+<li><code>do-while</code> - loop with body then condition</li>
+</ul>
+</li>
+<li>Branching
+<ul>
+<li><code>break</code> - go to end outside of the control statement</li>
+<li><code>continue</code> - skip to the end of a loop</li>
+<li><code>fallthrough</code> - merge two switch case bodies, to have multiple entry points to the merged body</li>
+<li>Labels on other control flow statements</li>
+</ul>
+</li>
+<li>Deferred
+<ul>
+<li><code>defer</code>/<code>scope(exit)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="pseudopartial-categories">Pseudo/Partial Categories</h3>
+<ul>
+<li>Structured Exception Handling (not specifically <a href="https://docs.microsoft.com/en-us/cpp/cpp/structured-exception-handling-c-cpp">Microsoft&rsquo;s SEH</a>
+<ul>
+<li><code>try</code>, <code>catch</code></li>
+</ul>
+</li>
+<li>Default (named) return values
+<ul>
+<li><code>foo :: proc(x: int) -&gt; (val: int, err: Error) { ... }</code></li>
+</ul>
+</li>
+<li><code>async</code>/<code>await</code></li>
+<li><code>yield</code>/<code>resume</code></li>
+</ul>
+<h3 id="examples-of-extensions">Examples of Extensions</h3>
+<p>Examples in Odin</p>
+<pre><code class="language-odin">foo :: proc(x: int) -&gt; (val: int, err: Error) {
+	defer if err != nil {
+		// handle clean up
+	}
+
+	if x &gt; 0 {
+		err = .Bad_Error;
+	} else {
+		val = -x*2 + 1;
+	}
+
+	// returns all the named return values without having the manual specify them
+	return;
+}
+</code></pre>
+<pre><code class="language-odin">the_cases: switch x {
+case 1:
+	loop: for y &gt; 0 {
+		do_thing(&amp;y);
+		if y == 3 {
+			break the_cases;
+		} else if y == 2 {
+			continue loop;
+		}
+		do_other_thing(&amp;y);
+	}
+case 2, 3:
+	do_thing(&amp;y);
+	fallthrough;
+case 4:
+	do_other_thing(&amp;y);
+}
+</code></pre>
+<h2 id="categories-of-unstructured-control-flow">Categories of Unstructured Control Flow</h2>
+<ul>
+<li>Procedure call
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Function_Calls">x86: Call instruction</a></li>
+</ul>
+</li>
+<li>Terminating
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Function_Calls">x86: Return instruction</a></li>
+</ul>
+</li>
+<li>Comparison
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Comparison_Instructions">x86: Comparison instructions</a></li>
+</ul>
+</li>
+<li>Jump
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Unconditional_Jumps">x86: Unconditional jump instructions</a></li>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Jump_Instructions">x86: Conditional jump instructions</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Goto">goto</a></li>
+</ul>
+</li>
+<li>Indirect Jump (goto by value)
+<ul>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc-3.4.0/gcc/Labels-as-Values.html">GNU C: Labels as values (jump tables)</a></li>
+</ul>
+</li>
+<li>Stack Unwinding (exceptions)
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Setjmp.h">longjmp/setjmp</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Interrupt">Interrupts</a></li>
+</ul>
+</li>
+</ul>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

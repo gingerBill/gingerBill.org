@@ -4,10 +4,20 @@
     <link>/tags/philosophy/</link>
     <description>Recent content in philosophy on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Mon, 01 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 02 Feb 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/philosophy/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Structured Control Flow (Brain Dump)</title>
+      <link>/article/2021/02/02/structured-control-flow/</link>
+      <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/02/02/structured-control-flow/</guid>
+      <description>Note: This is a &amp;ldquo;brain dump&amp;rdquo; article, and subject to be cleaned up.
+Categories of Structured Control Flow  Procedure call  foo(123, true)   Terminating  return   Conditional  if, if-else, switch   Looping  for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition   Branching  break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements   Deferred  defer/scope(exit)    Pseudo/Partial Categories  Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH  try, catch   Default (named) return values  foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
+    </item>
     
     <item>
       <title>The Essence of Programming</title>

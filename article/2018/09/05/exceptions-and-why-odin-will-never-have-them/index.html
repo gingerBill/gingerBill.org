@@ -117,8 +117,7 @@ case BazError, PlopError:
 }
 </code></pre>
 <p>The semantics are very similar in this case however the control flow is completely different. In the exceptions case (shown with Python), you enclose a block of code and catch any exceptions that have been raised. In the return value case (shown with Odin), you test the return value explicitly from the call.
-Exceptions require unwinding the stack; this can be slower[^slower] when an exception happens compared to the fixed small cost of a return value.</p>
-<p>[^slower] Theoretically exceptions can be just as fast a return statement because that&rsquo;s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</p>
+Exceptions require unwinding the stack; this can be slower<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> when an exception happens compared to the fixed small cost of a return value.</p>
 <p>In both cases, a &ldquo;catch all&rdquo; is possible:</p>
 <p>Python:</p>
 <pre><code class="language-python">try:
@@ -154,6 +153,14 @@ except SomeError as e:
 <p>With many rules, there will be unexpected emergent behaviour.</p>
 </blockquote>
 <p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Theoretically exceptions can be just as fast a return statement because that&rsquo;s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
 
 </article>
 </main>
