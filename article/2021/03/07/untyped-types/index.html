@@ -89,7 +89,7 @@
 <h4 id="cs-type-promotion">C&rsquo;s Type Promotion</h4>
 <p>In C, there is a set of rules called the &ldquo;usual arithmetic conversions&rdquo; which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
 <h3 id="model-2">Model-2</h3>
-<p>Model-2 has quite a different and can be very foreign to think about if you are so used to Model-1. Model-2 treats values closer to how most people intuitively think about them. The literal <code>123.0</code> just represents the <em>number</em> one hundred and twenty three. It has no intrinsic type to it, it&rsquo;s just a value. Applying this idea to a programming language, the value literal <code>123.0</code> can be represented by a whole range of different types.</p>
+<p>Model-2 is quite and can be very foreign to think about if you are so used to Model-1. Model-2 treats values closer to how most people intuitively think about them. The literal <code>123.0</code> just represents the <em>number</em> one hundred and twenty three. It has no intrinsic type to it, it&rsquo;s just a value. Applying this idea to a programming language, the value literal <code>123.0</code> can be represented by a whole range of different types.</p>
 <p>In Odin, all of these examples will work with the same value literal:</p>
 <pre><code class="language-odin">a: i32 = 123.0;
 b: f32 = 123.0;
