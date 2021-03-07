@@ -4,10 +4,20 @@
     <link>/tags/c/</link>
     <description>Recent content in c on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sun, 17 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Mar 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/c/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Untyped Types</title>
+      <link>/article/2021/03/07/untyped-types/</link>
+      <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/03/07/untyped-types/</guid>
+      <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled there constant value system. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
+ Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+    </item>
     
     <item>
       <title>Relative Pointers</title>

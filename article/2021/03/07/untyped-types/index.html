@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Untyped Types" />
+<meta property="og:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both Ada1 and Go2 both handled there constant value system. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
+ Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/03/07/untyped-types/" />
+<meta property="article:published_time" content="2021-03-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-07T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Untyped Types"/>
+<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both Ada1 and Go2 both handled there constant value system. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
+ Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Untyped Types - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Untyped Types</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2021-03-07</span>
+		</p>
+	</div>
+</header>
+<p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and <a href="https://golang.org/">Go</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> both handled there constant value system. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
+<ul>
+<li>Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</li>
+<li>Model-2: Expressions may have a value, not all expressions have a type. Therefore some values may not have a (concrete) type.</li>
+</ul>
+<h2 id="value-models">Value Models</h2>
+<h3 id="model-1">Model-1</h3>
+<p>Model-1 is the more traditional approach in most languages, especially C-like languages. This has the consequence that all literals must have a concrete type associated with them.</p>
+<p>Using C as an example, every number literal has a type, and to change to a specific type requires a suffix:</p>
+<pre><code class="language-c">123    // int
+123.0  // double
+123.0f // float
+123u   // unsigned int
+123l   // long
+123ll  // long long
+123ul  // unsigned long
+123ull // unsigned long long
+</code></pre>
+<h4 id="cs-type-promotion">C&rsquo;s Type Promotion</h4>
+<p>In C, there is a set of rules called the &ldquo;usual arithmetic conversions&rdquo; which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<h3 id="model-2">Model-2</h3>
+<p>Model-2 has quite a different and can be very to foreign to think about if you are so used to Model-1. Model-2 treats values closer to how most people intuitively think about them. The literal <code>123.0</code> just represents the <em>number</em> one hundred and twenty three. It has no intrinsic type to it, it&rsquo;s just a value. Applying this idea to a programming language, the value literal <code>123.0</code> can be represented by a whole range of different types.</p>
+<p>In Odin, all of these examples will work with the same value literal:</p>
+<pre><code class="language-odin">a: i32 = 123.0;
+b: f32 = 123.0;
+c: f64 = 123.0;
+d: u64 = 123.0;
+// etc
+</code></pre>
+<p>Value literals are not just limited to numbers but work for other kinds of values:</p>
+<pre><code class="language-odin">a: string  = &quot;Hellope!&quot;;
+b: cstring = &quot;Hellope!&quot;;
+c: bool    = true;
+d: b32     = true;
+e: rune    = '\n';
+f: i32     = '\n'; // rune literals can be treated as just numbers
+</code></pre>
+<p>No implicit conversions <em>at runtime</em> have been performed (unlike C) as each value can be represented without truncation.</p>
+<p>A consequence of this model is that constants could have no (concrete) type to them:</p>
+<pre><code class="language-odin">MY_AWESOME_SOCK_COUNT :: 123.0; // named constant without a concrete type
+
+a: i32 = MY_AWESOME_SOCK_COUNT;
+b: f32 = MY_AWESOME_SOCK_COUNT;
+</code></pre>
+<p>In order to get this to &ldquo;feel correct&rdquo; and make it &ldquo;just work&rdquo; leads to a complication in the design of the compiler requiring a big number implementation, since numbers don&rsquo;t have any &ldquo;size&rdquo;/&ldquo;width&rdquo; to them. As a consequence, <code>~0</code> is an error in Odin, whilst it&rsquo;s perfectly valid in C because <code>0</code> has the width of <code>int</code>. In order to achieve the same thing in Odin, a type must be assigned like <code>~u32(0)</code>.</p>
+<h2 id="untyped-types">Untyped Types</h2>
+<p>Odin supports type inference which leads to a interesting question, is the following a valid statement:</p>
+<pre><code class="language-odin">x := 123; // what is the type of 'x'?
+</code></pre>
+<p>There are two solutions to this problem: make this invalid since <code>123</code> has no type, give <code>123</code> a <em>untyped type</em>.</p>
+<p>Untyped types sound like an oxymoron but it is a way to give a <em>default type</em> to a typeless value. The literal <code>123</code> can be assigned the &ldquo;untyped type&rdquo; of &ldquo;untyped integer&rdquo;.</p>
+<pre><code class="language-odin">123       // untyped integer
+123.0     // untyped float
+true      // untyped boolean
+&quot;hellope&quot; // untyped string
+'\n'      // untyped rune
+1i        // untyped complex number
+3j        // untyped quaternion
+5k        // untyped quaternion
+</code></pre>
+<p>Each &ldquo;untyped type&rdquo; can be assigned a <em>default type</em> to which if the value needs to be made concrete at runtime, it will default to that (if possible).</p>
+<pre><code>untyped integer    -&gt; int
+untyped float      -&gt; f64
+untyped boolean    -&gt; bool
+untyped string     -&gt; string
+untyped rune       -&gt; rune
+untyped complex    -&gt; complex128
+untyped quaternion -&gt; quaternion256
+</code></pre>
+<h3 id="comparison-operations-in-odin">Comparison Operations in Odin</h3>
+<p>In Odin, comparison operations will result in the type of the expression to be an &ldquo;untyped boolean&rdquo;. There are two reasons behind this behaviour:</p>
+<ul>
+<li>Allows any comparisons to assign to any boolean type</li>
+<li>Allows the backend to choose the more efficient sized operation if needed, rather than requiring a byte sized operation.</li>
+</ul>
+<h2 id="extra-consequences-of-each-model">Extra Consequences of Each Model</h2>
+<p>For Model-1, the consequence of every expression having a type requires the idea of giving a type to something with no value: <code>void</code>.</p>
+<p>For Model-2, the consequence of some expressions not have a type does not lead a concept of <code>void</code> in the type system. I have noticed this confusion when people ask what the equivalent of <code>void *</code> is in Odin, which is <code>rawptr</code> (a separate specialized pointer type). Another consequence is that it allows for the ability for expressions to have multiple values (not tuples) associated with them, which is how Odin&rsquo;s multiple return values in procedures work.</p>
+<h2 id="advantages-of-each-model">Advantages of Each Model</h2>
+<p>A common question after learning about each model is ask &ldquo;what are the advantages of each model?&rdquo;. Personally, I think this question is actually nonsensical since you cannot compare without context due to each model having different foundational axioms. The advantages completely depend on what you are trying to aim for, the models cannot be compared out of context.</p>
+<p>In Odin and Go, literals are &ldquo;untyped&rdquo; and there are (virtually) no implicit type conversions. The advantage of the untyped literals in this case is that they work for any type that can represent that value (which has no type). This also complements the <a href="https://odin-lang.org/docs/overview/#distinct-types">distinct</a> type systems of both languages.</p>
+<p>In languages with implicit type promotions, literals being typed is less of a (hypothetical) problem. If the rules can be defined without many of the issues from C, then typed literals have little disadvantages to them. Applying typed literals to a distinct type system will cause some problem since explicit casting may be required or defeats the point of distinct typing because implicit casting will be applied.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Most modern C compilers can catch these bugs but that is a patch over a design flaw rather than solution to the underlying problem. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+
