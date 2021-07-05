@@ -3,42 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/article/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/c/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/odin/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/philosophy/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rust/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/article/2021/07/05/value-propagation-experiment/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/zig/</loc>
+    <lastmod>2021-07-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/ada/</loc>
     <lastmod>2021-03-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/article/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/c/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/go/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/odin/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/philosophy/</loc>
-    <lastmod>2021-03-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2021-03-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -108,11 +123,6 @@
   </url>
   
   <url>
-    <loc>/tags/rust/</loc>
-    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/article/2020/06/21/the-ownership-semantics-flaw/</loc>
     <lastmod>2020-06-21T00:00:00+00:00</lastmod>
   </url>
@@ -154,11 +164,6 @@
   
   <url>
     <loc>/article/2019/05/13/a-reply-to-the-road-to-zig/</loc>
-    <lastmod>2019-05-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/zig/</loc>
     <lastmod>2019-05-13T00:00:00+00:00</lastmod>
   </url>
   

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="The Value Propagation Experiment" />
+<meta property="og:description" content="[Originally from a Twitter Thread]
+The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&rsquo;s try! which became ?, or Zig&rsquo;s try, etc.
+I have now removed it from Odin. But why?
+The Problem The hypothesis was that that this idiom was common:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/07/05/value-propagation-experiment/" />
+<meta property="article:published_time" content="2021-07-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-07-05T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Value Propagation Experiment"/>
+<meta name="twitter:description" content="[Originally from a Twitter Thread]
+The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&rsquo;s try! which became ?, or Zig&rsquo;s try, etc.
+I have now removed it from Odin. But why?
+The Problem The hypothesis was that that this idiom was common:"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>The Value Propagation Experiment - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>The Value Propagation Experiment</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2021-07-05</span>
+		</p>
+	</div>
+</header>
+<p><strong>[Originally from a Twitter Thread]</strong></p>
+<h2 id="the-idea">The Idea</h2>
+<p>I recently experimented with adding a feature into <a href="https://odin-lang.org/">Odin</a> which allowed for a way to propagate a value by early returning if that value was <code>false</code> or not <code>nil</code>. It was in a similar vein to Rust&rsquo;s <code>try!</code> which became <a href="https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html"><code>?</code></a>, or Zig&rsquo;s <a href="https://ziglang.org/documentation/master/#try"><code>try</code></a>, etc.</p>
+<p>I have now removed it from Odin. But why?</p>
+<h2 id="the-problem">The Problem</h2>
+<p>The hypothesis was that that this idiom was common:</p>
+<pre><code class="language-odin">x, err := foo();
+if err != nil {
+    return err;
+}
+</code></pre>
+<p>where <code>err</code> may be an enum, a (discriminated) union, or any other kind of value that has <code>nil</code>.</p>
+<p>And replace it with<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<pre><code class="language-c">x := try foo();
+</code></pre>
+<p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. It also fails because Odin (and Go) are languages with multiple return values rather than single-type returns.</p>
+<p>And the more I think about it, the <code>if err != nil { return nil }</code> and similar stuff may be the least worst option, and the best in terms of readability.</p>
+<p>It&rsquo;s a question of whether you are optimizing for reading or typing, and in Odin, it has usually been reading.</p>
+<p>And something like <code>x := try foo();</code> instead of <code>x, err := foo(); if err != nil { return err }</code> does return typing but <code>try</code> is a lot harder to catch. (even with syntax highlighting).</p>
+<p>It happens that Go already declined such a <a href="https://github.com/golang/go/issues/32437#issuecomment-512035919">proposal</a> for numerous reasons. And the research done for this is directly applicable to Odin because both language share the multiple return value semantics.</p>
+<p>The research has been fruitful however. I did experiment with a <code>try x else y</code> construct which has now become a built-in procedure <code>or_else(x, y)</code> which can be used on things with an optional-ok check e.g. map indices, type assertions</p>
+<pre><code class="language-odin">or_else(m[&quot;hellope&quot;], 123)
+or_else(x.?, true)
+</code></pre>
+<h2 id="degenerate-states">Degenerate States</h2>
+<p>Some people may be a little surprised with my experimentation with this exception-like shorthand with error values. Especially since I wrote an article (which was originally two github comments) titled: <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">Exceptions — And Why Odin Will Never Have Them</a>.</p>
+<p>One thing I did not comment on in the that article is the cause of the problem (other than the cultural issues). My hypothesis is that if you have a degenerate type (<a href="https://en.wikipedia.org/wiki/Type_erasure">type erasure</a> or automatic inference), then if a value can convert to it implicitly (easily), people will (ab)use it.</p>
+<p>So in languages with exceptions, all exception values can degenerate to the &ldquo;base type&rdquo;. In Rust, it can either go to the base trait or be inferred parametrically. In Zig it can either do <code>anyerror</code> or it will infer the error set from usage. Go has the built-in interface type <code>error</code> which acts as the common degenerate value.</p>
+<p>As I discuss in the article, I am not against error value propagation within a library, but I am pretty much always against it <strong><em>across</em></strong> library boundaries. A degenerate state has high entropy and a lack of specific information. And due to this form of type erasure, &ldquo;downcasting&rdquo; (broad use of term) is a way to recover the information, but it assumes implicit information which is not know in the type system itself.</p>
+<p>The other issue when people pass the error up the stack for someone else to handle (something I criticize in the previous article already) is that it&rsquo;s common to see this in many codebases already that have such a type: Go, Rust, and Zig (public) codebases exhibit this a lot.</p>
+<p>And my hypothesis for this phenomenon is due to the very nature of this &ldquo;degenerative type&rdquo;.</p>
+<p>Now a design judgement is to be made when designing a language: is such a concept worth it for the problems it intrinsically has. For Odin, I do not think it was worth it. In Odin&rsquo;s, errors are just values, and not something special. For other languages? That&rsquo;s another thing. For Odin, I have found that having an error value type defined per package is absolutely fine (and ergonomic too), and minimizes, but cannot remove, the problem value propagation across library boundaries.</p>
+<h2 id="summary">Summary</h2>
+<p><code>try foo()</code> was a bad idea for Odin consider the rest of its semantics (multiple return values, lack of error value type at the semantics level, optimizes for typing rather than reading)</p>
+<p><code>try x else y</code> has now become <code>or_else(x, y)</code> which is useful.</p>
+<p>n.b. I am not criticizing any particular language&rsquo;s design for doing this, but rather saying that it does work well for Odin&rsquo;s semantics nor philosophy.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

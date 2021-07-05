@@ -4,10 +4,22 @@
     <link>/tags/rust/</link>
     <description>Recent content in rust on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 05 Jul 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The Value Propagation Experiment</title>
+      <link>/article/2021/07/05/value-propagation-experiment/</link>
+      <pubDate>Mon, 05 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/07/05/value-propagation-experiment/</guid>
+      <description>[Originally from a Twitter Thread]
+The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&amp;rsquo;s try! which became ?, or Zig&amp;rsquo;s try, etc.
+I have now removed it from Odin. But why?
+The Problem The hypothesis was that that this idiom was common:</description>
+    </item>
     
     <item>
       <title>The Fatal Flaw of Ownership Semantics</title>
