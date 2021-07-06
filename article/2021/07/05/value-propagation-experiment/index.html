@@ -90,7 +90,7 @@ if err != nil {
 <p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. It also fails because Odin (and Go) are languages with multiple return values rather than single-type returns.</p>
 <p>And the more I think about it, the <code>if err != nil { return err }</code> and similar stuff may be the least worst option, and the best in terms of readability.</p>
 <p>It&rsquo;s a question of whether you are optimizing for reading or typing, and in Odin, it has usually been reading.</p>
-<p>And something like <code>x := try foo();</code> instead of <code>x, err := foo(); if err != nil { return err }</code> does return typing but <code>try</code> is a lot harder to catch. (even with syntax highlighting).</p>
+<p>And something like <code>x := try foo();</code> instead of <code>x, err := foo(); if err != nil { return err }</code> does reduce typing but <code>try</code> is a lot harder to catch. (even with syntax highlighting).</p>
 <p>It happens that Go already declined such a <a href="https://github.com/golang/go/issues/32437#issuecomment-512035919">proposal</a> for numerous reasons. And the research done for this is directly applicable to Odin because both language share the multiple return value semantics.</p>
 <p>The research has been fruitful however. I did experiment with a <code>try x else y</code> construct which has now become a built-in procedure <code>or_else(x, y)</code> which can be used on things with an optional-ok check e.g. map indices, type assertions</p>
 <pre><code class="language-odin">or_else(m[&quot;hellope&quot;], 123)
