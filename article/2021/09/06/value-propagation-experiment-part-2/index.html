@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="The Value Propagation Experiment Part 2" />
+<meta property="og:description" content="**[Originally from a Twitter Thread]**
+I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
+The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
+I think there were three things which were confusing which make it look like a failure of an experiment:
+ try was a confusing name for what the semantics were." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/09/06/value-propagation-experiment-part-2/" />
+<meta property="article:published_time" content="2021-09-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-09-06T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Value Propagation Experiment Part 2"/>
+<meta name="twitter:description" content="**[Originally from a Twitter Thread]**
+I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
+The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
+I think there were three things which were confusing which make it look like a failure of an experiment:
+ try was a confusing name for what the semantics were."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>The Value Propagation Experiment Part 2 - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>The Value Propagation Experiment Part 2</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2021-09-06</span>
+		</p>
+	</div>
+</header>
+<p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+<p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
+<p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
+<p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
+<ul>
+<li><code>try</code> was a confusing name for what the semantics were.</li>
+<li><code>try</code> as a prefix was the wrong place.</li>
+<li>Unifying <code>try</code> with <code>try else</code> was a bad idea for many reasons.</li>
+</ul>
+<p>Changes in the PR:</p>
+<ul>
+<li>Built-in <code>or_else</code> procedure became a binary operator instead (meaning it became a keyword).</li>
+<li><code>or_return</code> was added as a keyword.</li>
+<li><code>or_return</code> became a suffix-operator/atom-expression.</li>
+</ul>
+<pre><code class="language-odin">if i, ok = m[&quot;hellope&quot;] !ok { i = 123 }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-odin">i = m[&quot;hellope&quot;] or_else 123
+</code></pre>
+<pre><code class="language-odin">if err = foo(); err != nil { return }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-od">foo() or_return
+</code></pre>
+<p>Most people understood what the purpose and semantics <code>or_else </code>pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that.</p>
+<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin&rsquo;s core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
+<p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
+<p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
+<p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That&rsquo;s a useful construct for definite.</p>
+<p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of 
+<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>&rsquo;s HxA format. <a href="https://github.com/quelsolaar/HxA">https://github.com/quelsolaar/HxA</a></p>
+<p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
+<p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
+<ul>
+<li>Error value propagation <em>ACROSS</em> library boundaries</li>
+<li><em>Degenerate states</em> due to type erasure or automatic inference</li>
+<li>Cultural lack of partial success states</li>
+</ul>
+<p>The most important one is the degenerate state issue, where all values can generate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don&rsquo;t handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: &ldquo;error or not&rdquo;. This is now equivalent to a fancy boolean.</p>
+<hr>
+<p>I do hope that this addition of <code>or_return</code> does aid a lot of people when making projects and designing packages.</p>
+<p>It does appear to be very useful already for many of the core library package developers for Odin.</p>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+
