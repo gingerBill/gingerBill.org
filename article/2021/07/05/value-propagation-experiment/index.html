@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="The Value Propagation Experiment" />
 <meta property="og:description" content="[Originally from a Twitter Thread]
+Part 2 of this Experiment
 The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&rsquo;s try! which became ?, or Zig&rsquo;s try, etc.
 I have now removed it from Odin. But why?
 The Problem The hypothesis was that that this idiom was common:" />
@@ -16,6 +17,7 @@ The Problem The hypothesis was that that this idiom was common:" />
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Value Propagation Experiment"/>
 <meta name="twitter:description" content="[Originally from a Twitter Thread]
+Part 2 of this Experiment
 The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&rsquo;s try! which became ?, or Zig&rsquo;s try, etc.
 I have now removed it from Odin. But why?
 The Problem The hypothesis was that that this idiom was common:"/>
@@ -73,6 +75,7 @@ The Problem The hypothesis was that that this idiom was common:"/>
 	</div>
 </header>
 <p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
 <h2 id="the-idea">The Idea</h2>
 <p>I recently experimented with adding a feature into <a href="https://odin-lang.org/">Odin</a> which allowed for a way to propagate a value by early returning if that value was <code>false</code> or not <code>nil</code>. It was in a similar vein to Rust&rsquo;s <code>try!</code> which became <a href="https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html"><code>?</code></a>, or Zig&rsquo;s <a href="https://ziglang.org/documentation/master/#try"><code>try</code></a>, etc.</p>
 <p>I have now removed it from Odin. But why?</p>
@@ -108,6 +111,7 @@ or_else(x.?, true)
 <p><code>try foo()</code> was a bad idea for Odin consider the rest of its semantics (multiple return values, lack of error value type at the semantics level, optimizes for typing rather than reading)</p>
 <p><code>try x else y</code> has now become <code>or_else(x, y)</code> which is useful.</p>
 <p>n.b. I am not criticizing any particular language&rsquo;s design for doing this, but rather saying that it does not work well for Odin&rsquo;s semantics nor philosophy.</p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
