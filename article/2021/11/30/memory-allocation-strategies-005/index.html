@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Memory Allocation Strategies - Part 5" />
+<meta property="og:description" content="Free List Allocators" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/11/30/memory-allocation-strategies-005/" />
+<meta property="article:published_time" content="2021-11-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-11-30T00:00:00+00:00" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Memory Allocation Strategies - Part 5"/>
+<meta name="twitter:description" content="Free List Allocators"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Memory Allocation Strategies - Part 5 - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Memory Allocation Strategies - Part 5</h1>
+	 <h2>Free List Allocators</h2>
+	<div class="info">
+		<p><span class="series">Series:</span>
+			<a href="/series/memory-allocation-strategies">Memory Allocation Strategies</a>
+		</p>
+		<p>
+		<span class="date">2021-11-30</span>
+		</p>
+	</div>
+</header>
+<h1 id="free-list-based-allocation">Free List Based Allocation</h1>
+<p>In thre previous article, we looked at the <a href="/article/2019/02/16/memory-allocation-strategies-004/">pool allocator</a>, which splits the supplied backing buffer into <em>chucks</em> of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time <em><strong>O(1)</strong></em> whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</p>
+<p>A free list is a general purpose allocator which, compared to the other allocators that we previously looked at, does not impose any restrictions. It allows allocations and deallocations to be out of order and of any size. Due to its nature, the allocator&rsquo;s performance is not as good as the others previously discussed in this series.</p>
+<p>There are two common approaches to implementing a free list allocator: one using a <a href="https://wikipedia.org/wiki/Linked_list">linked list</a> and one use a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>. Using a linked list approach is the most common approach and what we&rsquo;ll look at first.</p>
+<h1 id="linked-list-approach">Linked List Approach</h1>
+<p>As the title of this section suggests, we&rsquo;ll be using a linked to store the address of free contiguous blocks in the memory along with its size. When the user requests memory, it searches in the linked list for a block where the data can fit. It then removes the element from the linked list and places an allocation header (which is required on free) just before the data (similar to what we used in the article on <a href="/article/2019/02/15/memory-allocation-strategies-003/#data-structures">stack allocators</a>).</p>
+<p>For freeing memory, we recover the allocation header (stored before the allocation) to know the size of the block we want to free. Once that block has been freed, it is inserted into the linked list, and then we try to <em>coalescence</em> contiguous blocks of memory together to create larger blocks.</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator.svg#center" alt="Free List Allocator"></p>
+<h1 id="linked-list-free-list-implementation">Linked List Free List Implementation</h1>
+<p><strong>n.b.</strong> The following implementation does provide some constraints on the size and alignment of requested allocations with this particular allocator. The minimum size of an allocation must be at least the size of the free list node data structure, and the alignment has similar requirements.</p>
+<h2 id="data-structures">Data Structures</h2>
+<p>These are the data structures that are required to implement the linked list based free list allocator.</p>
+<pre><code class="language-c">// Unlike our trivial stack allocator, this header needs to store the 
+// block size along with the padding meaning the header is a bit
+// larger than the trivial stack allocator
+typedef struct Free_List_Allocation_Header Free_List_Allocation_Header;
+struct Free_List_Allocation_Header {
+    size_t block_size;
+    size_t padding;
+};
+
+// An intrusive linked list for the free memory blocks
+typedef struct Free_List_Node Free_List_Node;
+struct Free_List_Node {
+    Free_List_Node *next;
+    size_t block_size;
+};
+
+typedef Placement_Policy Placement_Policy;
+enum Placement_Policy {
+    Placement_Policy_Find_First,
+    Placement_Policy_Find_Best
+};
+
+typedef struct Free_List Free_List;
+struct Free_List {
+    void *           data;
+    size_t           size;
+    size_t           used;
+    
+    Free_List_Node * head;
+    Placement_Policy policy;
+};
+</code></pre>
+<h2 id="initialization">Initialization</h2>
+<pre><code class="language-c">void free_list_free_all(Free_List *fl) {
+    fl-&gt;used = 0;
+    Free_List_Node *first_node = (Free_List_Node *)fl-&gt;data;
+    first_node-&gt;block_size = fl-&gt;size;
+    first_node-&gt;next = NULL;
+    f-&gt;head = first_node;
+}
+
+void free_list_init(Free_List *fl, void *data, size_t size) {
+    fl-&gt;data = data;
+    fl-&gt;size = size;
+    free_list_free_all(fl);
+}
+</code></pre>
+<h2 id="allocation">Allocation</h2>
+<p>To allocate a block of memory within this allocator, we need to look for a block in the memory in which to fit our data. This means iterating across our linked list of free memory blocks until a block has at least the size requested, and then remove it from the linked list of free memory. Finding the first block is called a <em>first-fit</em> placement policy as it stops at the <em>first</em> block which fits the requested memory size. Another placement policy is called the <em>best-fit</em> which looks for a free block of memory which is the smallest available which fits the memory size. The latter option reduces memory fragmentation within the allocator.</p>
+<p>In the diagram there three free memory blocks, but not all are appropriate for the size of the memory allocation that is requested (plus the header)
+<img src="/images/memory-allocation-strategies/free_list_allocator_alloc.svg#center" alt="Free List Allocator Allocate Search"></p>
+<p>When an allocation has been made, the free list will then be corrected to remove the used node.
+<img src="/images/memory-allocation-strategies/free_list_allocator_alloc2.svg#center" alt="Free List Allocator Allocate Store"></p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the new of free blocks in the free list.</p>
+<pre><code class="language-c">Free_List_Node *free_list_find_first(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
+    // Iterates the list and finds the first free block with enough space 
+    Free_List_Node *node = fl-&gt;head;
+    Free_List_Node *prev_node = NULL;
+    
+    size_t padding = 0;
+    
+    while (node != NULL) {
+        padding = calc_padding_wnodeh_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        size_t required_space = size + padding;
+        if (node-&gt;block_size &gt;= required_space) {
+            break;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    if (padding_) *padding_ = padding;
+    if (prev_node_) *prev_node_ = prev_node;
+    return node;
+}
+Free_List_Node *free_list_find_best(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
+    // This iterates the entire list to find the best fit
+    // O(n)
+    size_t smallest_diff = ~(size_t)0;
+    
+    Free_List_Node *node = fl-&gt;head;
+    Free_List_Node *prev_node = NULL;
+    Free_List_Node *best_node = NULL;
+    
+    size_t padding = 0;
+    
+    while (node != NULL) {
+        padding = calc_padding_wnodeh_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        size_t required_space = size + padding;
+        if (node-&gt;block_size &gt;= required_space &amp;&amp; (it.block_size - required_space &lt; smallest_diff)) {
+            best_node = node;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    if (padding_) *padding_ = padding;
+    if (prev_node_) *prev_node_ = prev_node;
+    return best_node;
+}
+</code></pre>
+<pre><code class="language-c">void *free_list_alloc(Free_List *fl, size_t size, size_t alignment) {
+    size_t padding = 0;
+    Free_List_Node *prev_node = NULL;
+    Free_List_Node *node = NULL;
+    size_t alignment_padding, required_space, remaining;
+    Free_List_Allocation_Header *header_ptr;
+    
+    if (size &lt; sizeof(Free_List_Node)) {
+        size = sizeof(Free_List_Node);
+    }
+    if (alignment &lt; 8) {
+        alignment = 8;
+    }
+    
+    
+    if (fl-&gt;policy == Placement_Policy_Find_Best) {
+        node = free_list_find_best(fl, size, alignment, &amp;padding, &amp;prev_node);
+    } else {
+        node = free_list_find_first(fl, size, alignment, &amp;padding, &amp;prev_node);
+    }
+    if (node == NULL) {
+        assert(0 &amp;&amp; &quot;Free list has no free memory&quot;);
+        return NULL;
+    }
+    
+    alignment_padding = padding - sizeof(Free_List_Allocation_Header);
+    required_space = size + padding;
+    remaining = node-&gt;block_size - required_space;
+    
+    if (remaining &gt; 0) {
+        Free_List_Node *new_node = (Free_List_Node *)((char *)node + required_space);
+        new_node-&gt;block_size = rest;
+        free_list_node_insert(&amp;fl-&gt;head, node, new_node);
+    }
+    
+    free_list_node_remove(&amp;fl-&gt;head, prev_node, node);
+    
+    header_ptr = (Free_List_Allocation_Header *)((char *)node + alignment_padding);
+    header_ptr-&gt;block_size = required_space;
+    header_ptr-&gt;padding = alignment_padding;
+    
+    fl-&gt;used += required_space;
+    
+    return (void *)((char *)header_ptr + sizeof(Free_List_Allocation_Header));
+}
+</code></pre>
+<h2 id="free-and-coalescence">Free and Coalescence</h2>
+<p>When freeing a memory block that was allocator with our free list allocator, we need to retrieve the allocation header and that memory block to be treated as a free memory block now. We then need to iterate across the linked list of free memory blocks until will get to the right position in memory order (as the link list is sorted), and then insert new at that position. This can be achieved by looking at the previous and next nodes in the list since they are already sorted by address.</p>
+<p>When the insert of the free list, we want to coalescence any free memory blocks which are contiguous. When we were iterating across linked list we had to store both the previous and next free nodes, this means that we may be able to merge these blocks together if possible.</p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the new of free blocks in the free list.</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator_free.svg#center" alt="Free List Allocator Free and Coalescence"></p>
+<pre><code class="language-c">void free_list_coalescence(Free_List *fl, Free_List_Node *prev_node, Free_List_Node *free_node);
+
+void *free_list_free(Free_List *fl, void *ptr) {
+    Free_List_Allocation_Header *header;
+    Free_List_Node *free_node;
+    Free_List_Node *node;
+    Free_List_Node *prev_node = NULL;
+    
+    if (ptr == NULL) {
+        return;
+    }
+    
+    header = (Free_List_Allocation_Header *)((char *)ptr - sizeof(Free_List_Allocation_Header));
+    free_node = (Free_List_Node *)header;
+    free_node-&gt;block_size = header-&gt;block_size + header-&gt;padding;
+    free_node-&gt;next = NULL;
+    
+    node = fl-&gt;head;
+    while (node != NULL) {
+        if (ptr &lt; node) {
+            free_list_node_insert(&amp;fl-&gt;head, prev_node, free_node);
+            break;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    
+    fl-&gt;used -= free_node-&gt;block_size;
+    
+    free_list_coalescence(fl, prev_node, free_node);
+}
+
+void free_list_coalescence(Free_List *fl, Free_List_Node *prev_node, Free_List_Node *free_node) {
+    if (free_node-&gt;next != NULL &amp;&amp; (void *)((char *)free_node + free_node-&gt;block_size) == free_node-&gt;next) {
+        free_node-&gt;block_size += free_node-&gt;next-&gt;block_size;
+        free_list_node_remove(&amp;fl-&gt;head, free_node, free_node-&gt;next);
+    }
+    
+    if (prev_node-&gt;next != NULL &amp;&amp; (void *)((char *)prev_node + prev_node-&gt;block_size) == free_node) {
+        prev_node-&gt;block_size += free_node-&gt;next-&gt;block_size;
+        free_list_node_remove(&amp;fl-&gt;head, prev_node, free_node);
+    }
+}
+</code></pre>
+<h2 id="utilities">Utilities</h2>
+<p>General utilities needed for free list insertion, removal, and calculating the padding required for the header.</p>
+<pre><code class="language-c">void free_list_node_insert(Free_List_Node **phead, Free_List_Node *prev_node, Free_List_Node *new_node) {
+    if (prev_node == NULL) {
+        if (*phead != NULL) {
+            new_node-&gt;next = *phead;
+        } else {
+            *phead = new_node;
+        }
+    } else {
+        if (prev_node-&gt;next == NULL) {
+            prev_node-&gt;next = new_node;
+            new_node-&gt;next  = NULL;
+        } else {
+            new_node-&gt;next  = prev_node-&gt;next;
+            prev_node-&gt;next = new_node;
+        }
+    }
+}
+
+void free_list_node_remove(Free_List_Node **phead, Free_List_Node *prev_node, Free_List_Node *del_node) {
+    if (prev_node == NULL) { 
+        *phead = del_node-&gt;next; 
+    } else { 
+        prev_node-&gt;next = del_node-&gt;next; 
+    } 
+} 
+
+// Defined Memory Allocation Strategies Part 3: /article/2019/02/15/memory-allocation-strategies-003/#alloc
+size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t header_size);
+</code></pre>
+<h1 id="red-black-tree-approach">Red Black Tree Approach</h1>
+<p>The other way of implementing a free list is with a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>; the purpose of which is improve the speed at which allocations and deallocations can be done in. The linked list from above, any operation made is needed to be iterated across linearly (<em><strong>O(N)</strong></em>). A red black reduces its time complexity to <em><strong>O(log(N))</strong></em>, whilst keeping the space complexity relatively low (using the same trick as before by storing the tree data within the free memory blocks). And as a consequence of this data-structure approach, a <em>best-fit</em> algorithm may be taken always (in order to reduce fragmentation whilst keeping the allocation/deallocation speed).</p>
+<p>The minor increase in space complexity is due to instead of using a singly linked list, a (sorted) doubly linked is required, but as a consequence, it allows coalescence operations in <strong><em>O(1)</em></strong> time.</p>
+<p>This implementation is a common aspect in many <code>malloc</code> implementations, but note that most <code>malloc</code>s utilize multiple different memory allocation strategies that complement each other.</p>
+<p>I will not demonstrate how to implement this approach in this article at leave it as an small exercise for the reader. The following diagram may help:</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator_red_black_tree.svg#center" alt="Free List Red-Black Tree"></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The free list allocator is a very useful allocator for when you need to general purpose allocator that requires allocations of arbitrary size and out of order deallocations.</p>
+<p>In the next article, I will discuss the buddy memory allocator.</p>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

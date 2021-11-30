@@ -4,10 +4,19 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Mon, 06 Sep 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Nov 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>memory allocation theory odin c</title>
+      <link>/tags/memory-allocation-theory-odin-c/</link>
+      <pubDate>Tue, 30 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/memory-allocation-theory-odin-c/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>c</title>
@@ -141,15 +150,6 @@
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/odin-quine/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>memory allocation theory odin c</title>
-      <link>/tags/memory-allocation-theory-odin-c/</link>
-      <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/memory-allocation-theory-odin-c/</guid>
       <description></description>
     </item>
     

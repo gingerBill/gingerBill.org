@@ -4,10 +4,19 @@
     <link>/series/memory-allocation-strategies/</link>
     <description>Recent content in Memory Allocation Strategies on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Nov 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/series/memory-allocation-strategies/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Allocation Strategies - Part 5</title>
+      <link>/article/2021/11/30/memory-allocation-strategies-005/</link>
+      <pubDate>Tue, 30 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/11/30/memory-allocation-strategies-005/</guid>
+      <description>Free List Based Allocation In thre previous article, we looked at the pool allocator, which splits the supplied backing buffer into chucks of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time O(1) whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</description>
+    </item>
     
     <item>
       <title>Memory Allocation Strategies - Part 4</title>
