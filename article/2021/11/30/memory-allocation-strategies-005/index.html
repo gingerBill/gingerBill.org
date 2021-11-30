@@ -74,7 +74,7 @@
 <p>A free list is a general purpose allocator which, compared to the other allocators that we previously looked at, does not impose any restrictions. It allows allocations and deallocations to be out of order and of any size. Due to its nature, the allocator&rsquo;s performance is not as good as the others previously discussed in this series.</p>
 <p>There are two common approaches to implementing a free list allocator: one using a <a href="https://wikipedia.org/wiki/Linked_list">linked list</a> and one use a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>. Using a linked list approach is the most common approach and what we&rsquo;ll look at first.</p>
 <h1 id="linked-list-approach">Linked List Approach</h1>
-<p>As the title of this section suggests, we&rsquo;ll be using a linked to store the address of free contiguous blocks in the memory along with its size. When the user requests memory, it searches in the linked list for a block where the data can fit. It then removes the element from the linked list and places an allocation header (which is required on free) just before the data (similar to what we used in the article on <a href="/article/2019/02/15/memory-allocation-strategies-003/#data-structures">stack allocators</a>).</p>
+<p>As the title of this section suggests, we&rsquo;ll be using a linked list to store the address of free contiguous blocks in the memory along with its size. When the user requests memory, it searches in the linked list for a block where the data can fit. It then removes the element from the linked list and places an allocation header (which is required on free) just before the data (similar to what we used in the article on <a href="/article/2019/02/15/memory-allocation-strategies-003/#data-structures">stack allocators</a>).</p>
 <p>For freeing memory, we recover the allocation header (stored before the allocation) to know the size of the block we want to free. Once that block has been freed, it is inserted into the linked list, and then we try to <em>coalescence</em> contiguous blocks of memory together to create larger blocks.</p>
 <p><img src="/images/memory-allocation-strategies/free_list_allocator.svg#center" alt="Free List Allocator"></p>
 <h1 id="linked-list-free-list-implementation">Linked List Free List Implementation</h1>
@@ -134,7 +134,7 @@ void free_list_init(Free_List *fl, void *data, size_t size) {
 <img src="/images/memory-allocation-strategies/free_list_allocator_alloc.svg#center" alt="Free List Allocator Allocate Search"></p>
 <p>When an allocation has been made, the free list will then be corrected to remove the used node.
 <img src="/images/memory-allocation-strategies/free_list_allocator_alloc2.svg#center" alt="Free List Allocator Allocate Store"></p>
-<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the new of free blocks in the free list.</p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the number of free blocks in the free list.</p>
 <pre><code class="language-c">Free_List_Node *free_list_find_first(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
     // Iterates the list and finds the first free block with enough space 
     Free_List_Node *node = fl-&gt;head;
@@ -229,7 +229,7 @@ Free_List_Node *free_list_find_best(Free_List *fl, size_t size, size_t alignment
 <h2 id="free-and-coalescence">Free and Coalescence</h2>
 <p>When freeing a memory block that was allocator with our free list allocator, we need to retrieve the allocation header and that memory block to be treated as a free memory block now. We then need to iterate across the linked list of free memory blocks until will get to the right position in memory order (as the link list is sorted), and then insert new at that position. This can be achieved by looking at the previous and next nodes in the list since they are already sorted by address.</p>
 <p>When the insert of the free list, we want to coalescence any free memory blocks which are contiguous. When we were iterating across linked list we had to store both the previous and next free nodes, this means that we may be able to merge these blocks together if possible.</p>
-<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the new of free blocks in the free list.</p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the number of free blocks in the free list.</p>
 <p><img src="/images/memory-allocation-strategies/free_list_allocator_free.svg#center" alt="Free List Allocator Free and Coalescence"></p>
 <pre><code class="language-c">void free_list_coalescence(Free_List *fl, Free_List_Node *prev_node, Free_List_Node *free_node);
 
@@ -310,7 +310,7 @@ size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t heade
 <p>The other way of implementing a free list is with a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>; the purpose of which is improve the speed at which allocations and deallocations can be done in. The linked list from above, any operation made is needed to be iterated across linearly (<em><strong>O(N)</strong></em>). A red black reduces its time complexity to <em><strong>O(log(N))</strong></em>, whilst keeping the space complexity relatively low (using the same trick as before by storing the tree data within the free memory blocks). And as a consequence of this data-structure approach, a <em>best-fit</em> algorithm may be taken always (in order to reduce fragmentation whilst keeping the allocation/deallocation speed).</p>
 <p>The minor increase in space complexity is due to instead of using a singly linked list, a (sorted) doubly linked is required, but as a consequence, it allows coalescence operations in <strong><em>O(1)</em></strong> time.</p>
 <p>This implementation is a common aspect in many <code>malloc</code> implementations, but note that most <code>malloc</code>s utilize multiple different memory allocation strategies that complement each other.</p>
-<p>I will not demonstrate how to implement this approach in this article at leave it as an small exercise for the reader. The following diagram may help:</p>
+<p>I will not demonstrate how to implement this approach in this article and leave it as an small exercise for the reader. The following diagram may help:</p>
 <p><img src="/images/memory-allocation-strategies/free_list_allocator_red_black_tree.svg#center" alt="Free List Red-Black Tree"></p>
 <h1 id="conclusion">Conclusion</h1>
 <p>The free list allocator is a very useful allocator for when you need to general purpose allocator that requires allocations of arbitrary size and out of order deallocations.</p>
