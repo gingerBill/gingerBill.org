@@ -4,10 +4,20 @@
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Tue, 30 Nov 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 Dec 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Memory Allocation Strategies - Part 6</title>
+      <link>/article/2021/12/02/memory-allocation-strategies-006/</link>
+      <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/12/02/memory-allocation-strategies-006/</guid>
+      <description>Buddy Memory Allocation In the previous article, we discussed the free list allocator and how it is commonly implemented with a linked list or a red-black tree. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.
+In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get best-fit as a consequence.</description>
+    </item>
     
     <item>
       <title>Memory Allocation Strategies - Part 5</title>
@@ -15,7 +25,7 @@
       <pubDate>Tue, 30 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/11/30/memory-allocation-strategies-005/</guid>
-      <description>Free List Based Allocation In the previous article, we looked at the pool allocator, which splits the supplied backing buffer into chucks of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time O(1) whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</description>
+      <description>Free List Based Allocation In the previous article, we looked at the pool allocator, which splits the supplied backing buffer into chunks of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time O(1) whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</description>
     </item>
     
     <item>
