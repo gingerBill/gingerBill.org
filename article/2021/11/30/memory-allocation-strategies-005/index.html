@@ -135,7 +135,10 @@ void free_list_init(Free_List *fl, void *data, size_t size) {
 <p>When an allocation has been made, the free list will then be corrected to remove the used node.
 <img src="/images/memory-allocation-strategies/free_list_allocator_alloc2.svg#center" alt="Free List Allocator Allocate Store"></p>
 <p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the number of free blocks in the free list.</p>
-<pre><code class="language-c">Free_List_Node *free_list_find_first(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
+<pre><code class="language-c">// Defined Memory Allocation Strategies Part 3: /article/2019/02/15/memory-allocation-strategies-003/#alloc
+size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t header_size);
+
+Free_List_Node *free_list_find_first(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
     // Iterates the list and finds the first free block with enough space 
     Free_List_Node *node = fl-&gt;head;
     Free_List_Node *prev_node = NULL;
@@ -143,7 +146,7 @@ void free_list_init(Free_List *fl, void *data, size_t size) {
     size_t padding = 0;
     
     while (node != NULL) {
-        padding = calc_padding_wnodeh_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        padding = calc_padding_with_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
         size_t required_space = size + padding;
         if (node-&gt;block_size &gt;= required_space) {
             break;
@@ -167,7 +170,7 @@ Free_List_Node *free_list_find_best(Free_List *fl, size_t size, size_t alignment
     size_t padding = 0;
     
     while (node != NULL) {
-        padding = calc_padding_wnodeh_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        padding = calc_padding_with_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
         size_t required_space = size + padding;
         if (node-&gt;block_size &gt;= required_space &amp;&amp; (it.block_size - required_space &lt; smallest_diff)) {
             best_node = node;
@@ -301,10 +304,7 @@ void free_list_node_remove(Free_List_Node **phead, Free_List_Node *prev_node, Fr
     } else { 
         prev_node-&gt;next = del_node-&gt;next; 
     } 
-} 
-
-// Defined Memory Allocation Strategies Part 3: /article/2019/02/15/memory-allocation-strategies-003/#alloc
-size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t header_size);
+}
 </code></pre>
 <h1 id="red-black-tree-approach">Red Black Tree Approach</h1>
 <p>The other way of implementing a free list is with a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>; the purpose of which is to improve the speed at which allocations and deallocations can be done in. The linked list from above, any operation made is needed to be iterated across linearly (<em><strong>O(N)</strong></em>). A red black reduces its time complexity to <em><strong>O(log(N))</strong></em>, whilst keeping the space complexity relatively low (using the same trick as before by storing the tree data within the free memory blocks). And as a consequence of this data-structure approach, a <em>best-fit</em> algorithm may be taken always (in order to reduce fragmentation whilst keeping the allocation/deallocation speed).</p>
