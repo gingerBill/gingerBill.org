@@ -4,10 +4,64 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Thu, 02 Dec 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>go</title>
+      <link>/tags/go/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lisp</title>
+      <link>/tags/lisp/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lisp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lua</title>
+      <link>/tags/lua/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lua/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>odin</title>
+      <link>/tags/odin/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/odin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>philosophy</title>
+      <link>/tags/philosophy/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/philosophy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>/tags/python/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/python/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>memory allocation theory odin c</title>
@@ -24,24 +78,6 @@
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/c/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>odin</title>
-      <link>/tags/odin/</link>
-      <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/odin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>philosophy</title>
-      <link>/tags/philosophy/</link>
-      <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/philosophy/</guid>
       <description></description>
     </item>
     
@@ -69,15 +105,6 @@
       <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/ada/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>go</title>
-      <link>/tags/go/</link>
-      <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/go/</guid>
       <description></description>
     </item>
     

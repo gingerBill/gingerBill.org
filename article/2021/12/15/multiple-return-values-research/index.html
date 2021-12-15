@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Multiple Return Values Research" />
+<meta property="og:description" content="I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2021/12/15/multiple-return-values-research/" />
+<meta property="article:published_time" content="2021-12-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-12-15T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Multiple Return Values Research"/>
+<meta name="twitter:description" content="I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Multiple Return Values Research - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Multiple Return Values Research</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2021-12-15</span>
+		</p>
+	</div>
+</header>
+<p>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through <a href="https://en.wikipedia.org/wiki/Tuple">tuples</a>. 
+My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) <a href="https://odin-lang.org/">Odin</a> has invented a new kind of type system, something to the akin of <em>polyadic expressions</em>.</p>
+<p>It appears that <a href="https://go.dev/">Go</a> and <a href="https://odin-lang.org/">Odin</a> are the only ones with what I call &ldquo;true&rdquo; multiple return values, <em>but</em> Odin&rsquo;s approach is a lot more sophisticated than Go&rsquo;s and extends the concept further.</p>
+<p>Odin&rsquo;s idea is pretty simple: an expression may have <em>n</em>-values, where <em>n</em> is a natural number <em>≥0</em>. Meaning an expression may have 0, 1, 2, 3, 4, etc values, of which each value has a type, not that each expression has a type. An expression with 0-values has no (final) type to it (not even <code>void</code> like in some languages).</p>
+<p>A way of thinking about this is that Odin is fundamentally a <a href="https://wikipedia.org/wiki/Polyad">polyadic</a> language rather than a <a href="https://wikipedia.org/wiki/Monad_(functional_programming)">monadic</a> language, like pretty much everything else. However most languages seem to be polyadic in one aspect: input parameters to procedures/functions. In most languages, you have multiple (monadic) inputs but only one (monadic) output, e.g. (<code>int foo(int, bool, float);</code>). Odin&rsquo;s approach is to just extend this to the rest of the language&rsquo;s type system, not just procedure inputs.</p>
+<h2 id="emulation-with-tuples-in-other-languages">Emulation with Tuples in Other Languages</h2>
+<p>In languages with <a href="https://wikipedia.org/wiki/Tuple">tuples</a>, they can emulate the ability to have multiple return values, especially if the language has sugar encouraging it.
+Let&rsquo;s take <a href="https://www.python.org/">Python</a> as this basic example where tuples can be used to emulate multiple return values:</p>
+<pre><code class="language-py">def foo():
+    return (1, True, &quot;hellope&quot;) # can also be written without the parentheses, as a form of syntactic &quot;sugar&quot;
+
+(x, y, z) = foo() # explicit tuple syntax with a basic form of pattern matching
+x, y, z = foo() # sugar for the above
+a = foo() # assigning  all the values not a single (monadic) 3-tuple
+</code></pre>
+<p>Other languages may not use tuples to achieve multiple return values; languages such as <a href="https://lisp-lang.org/">Common Lisp</a> and <a href="http://www.lua.org/">Lua</a> do things slightly differently by pushing multiple values BUT the handling of the number of values is handled dynamically rather than statically:</p>
+<pre><code class="language-lua">function foo()
+    return 1, true, &quot;hellope&quot;
+end
+
+x, y, z    = foo() -- same as Python example
+x, y       = foo() -- the string value is dropped/ignore
+x, y, z, w = foo() -- a value for 'w' was never returned therefore it is set to 'nil'
+</code></pre>
+<p>This is similar to <a href="https://lisp-lang.org/learn/functions"><code>values</code></a> in Common Lisp, Scheme, etc, of which it can suffer from exactly the same issues in terms of dropping of value bugs etc, especially due to its dynamic typing approach. A good example of this is to show that <code>(type-of (values x y z))</code> is the same as <code>(type-of x)</code> in Common Lisp.</p>
+<p>However, dynamically typed languages are not my area of research for this specific question, statically and strongly typed ones are. And in that case, all of the languages that allow for something like multiple return values (except for Odin and Go) use tuples. However tuples can still be passed around as a singular/monadic intermediary value. Tuples are effectively a form of monad which wrap values of (possibly) different types (essentially an ad-hoc record/struct type), which some languages may allow for explicit or implicit tuple destruction.</p>
+<h2 id="how-odin-differs">How Odin Differs</h2>
+<p>Odin does differ from Go on multiple return values in one important aspect: Go&rsquo;s approach is a bit of hack which only applies in the context of variable assignments. The following is valid in Odin but <em>not</em> valid in Go:</p>
+<pre><code class="language-go">x, y, z := 1, foo() // assuming 'foo' returns 2 values
+</code></pre>
+<p>The reason being is that Go&rsquo;s approach for multiple returns only works in the context of assignment, and the assignment assumes that there is either N-expressions on the RHS or 1-expression on the RHS to match the N-variables on the LHS. Odin&rsquo;s approach is a little more sophisticated here, the assignment assumes that there are N-values on the RHS for each of the N-variables on the LHS; where the N-values may be made from M-expressions (N ≥ M).</p>
+<p>Another fun thing about Odin because of this fact is that you can do the following (which is also not possible in Go):</p>
+<pre><code class="language-odin">foo :: proc() -&gt; (int, bool, string) { ... }
+bar :: proc(int, bool, string) { ... }
+
+bar(foo())
+</code></pre>
+<p>It also means something like this is possible in Odin:</p>
+<pre><code class="language-odin">x, y, z, w := 1.34, foo() // N-variables on the LHS, N-values on the RHS
+
+blaz :: proc() -&gt; (bool, string) { ... }
+bar(1, blaz())
+</code></pre>
+<p>Internally, Odin&rsquo;s approach could be implemented identically to as if a procedure was an input tuple + an output tuple and then automatically destructed, but semantically Odin does not support first-class tuples. n.b. For this research, implementation details are not of concern, only usage/grammar.</p>
+<h3 id="other-areas-of-use-in-odin">Other Areas of Use In Odin</h3>
+<p>Polyadic expressions are also used in another areas of the Odin programming language. One of the most common is the optional-ok idiom<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<pre><code class="language-odin">m: map[string]int
+x: union{int, bool}
+
+value, ok := m[key] // map access
+
+v, ok := x.(int) // type assertion
+
+// a type switch statement is more commonly seen as more cases may need to be handled
+switch y in x {
+case int:  ...
+case bool: ...
+case:      ... 
+}
+</code></pre>
+<h2 id="is-rob-pike-to-blame">Is Rob Pike to Blame?</h2>
+<p>I am wondering if this approach to multiple return values is all <a href="https://wikipedia.org/wiki/Rob_Pike">Rob Pike</a>&rsquo;s fault. Since the only languages I can find that are like what I speak of are:</p>
+<ul>
+<li><a href="https://swtch.com/~rsc/thread/alef.pdf">Alef</a>, <a href="http://www.vitanuova.com/inferno/papers/limbo.html">Limbo</a>, <a href="https://go.dev/">Go</a> (Rob Pike related, the first two being non-destructing tuples)</li>
+<li><a href="https://odin-lang.org/">Odin</a> (<a href="https://www.gingerbill.org/">me</a>, who has been influenced by many of Pike&rsquo;s languages)</li>
+</ul>
+<p>Alef and Limbo had multiple return values through tuples, but tuples were still not really first-class data types in those languages. In many ways, Alef and Limbo were the main precursors to Go (not just <a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)">Oberon</a> and <a href="https://en.wikipedia.org/wiki/Modula">Modula</a>). Limbo&rsquo;s declaration syntax comes from <a href="https://swtch.com/~rsc/thread/newsqueak.pdf">Newsqueak</a> which is also the precursor to Odin&rsquo;s very own declaration syntax<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>So maybe the reason there is little literature (that I can fine) into this topic is purely because it is limited to languages related-to/influenced-by Rob Pike.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It might be the approach taken by Odin may be extremely unique to Odin, however it is also one of the my favourite things about Odin too. And I am really glad I added it so early on, since it has shown its utility really quickly. Coupled with <a href="https://odin-lang.org/docs/overview/#named-results">named return values</a>, bare <code>return</code> statements, and <a href="https://odin-lang.org/docs/overview/#or_return-statement"><code>or_return</code></a>, it is an absolute pleasure to work with.</p>
+<p>If anyone has any more information about this topic, please feel free to contact me with it!</p>
+<p>P.S. If there is no research done into this area, it is a good since since there is so much left to discover in Programming Language Theory.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>This is technically 3 different addressing modes depending on the context (<a href="https://github.com/odin-lang/Odin/blob/4423bc0706a6a1a64cf419720fd65bc723fdf58a/src/parser.hpp#L19-L23">map-index, optional-ok, or optional-ok-ptr</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

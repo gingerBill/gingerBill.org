@@ -4,10 +4,19 @@
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Thu, 02 Dec 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Multiple Return Values Research</title>
+      <link>/article/2021/12/15/multiple-return-values-research/</link>
+      <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2021/12/15/multiple-return-values-research/</guid>
+      <description>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &amp;ldquo;true&amp;rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions.</description>
+    </item>
     
     <item>
       <title>Memory Allocation Strategies - Part 6</title>

@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>go on gingerBill</title>
-    <link>/tags/go/</link>
-    <description>Recent content in go on gingerBill</description>
+    <title>python on gingerBill</title>
+    <link>/tags/python/</link>
+    <description>Recent content in python on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="/tags/go/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -16,16 +16,6 @@
       
       <guid>/article/2021/12/15/multiple-return-values-research/</guid>
       <description>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &amp;ldquo;true&amp;rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions.</description>
-    </item>
-    
-    <item>
-      <title>Untyped Types</title>
-      <link>/article/2021/03/07/untyped-types/</link>
-      <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/article/2021/03/07/untyped-types/</guid>
-      <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
- Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
     </item>
     
   </channel>
