@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Reverse Engineering Alembic" />
+<meta property="og:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
+I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/article/2022/07/11/reverse-engineering-alembic/" />
+<meta property="article:published_time" content="2022-07-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-07-11T00:00:00+00:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reverse Engineering Alembic"/>
+<meta name="twitter:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
+I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate."/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Reverse Engineering Alembic - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/show/">Podcast</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Reverse Engineering Alembic</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2022-07-11</span>
+		</p>
+	</div>
+</header>
+<p>For my work at <a href="https://jangafx.com/">JangaFX</a>, we require the use of the <a href="http://www.alembic.io/">Alembic</a> interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.</p>
+<p>I spent nearly 4 days trying to get the official Alembic C++ API, <a href="https://github.com/alembic/alembic/">https://github.com/alembic/alembic/</a>, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate. After this ordeal I decided to see how difficult it would be to create my own reader, and then writer, for the format from scratch.</p>
+<p>I don&rsquo;t really like to &ldquo;reinvent the wheel&rdquo; when I don&rsquo;t have to, but in this case, the C++ API was an absolute nightmare and I&rsquo;ve spent more time trying to get that to work rather than actually solving the problem I had.</p>
+<p>Making my own library for Alembic turned out to be a little more work than I expected. Even though it is an &ldquo;open source&rdquo; format, it is effectively completely undocumented, and the bits that are documented refer mostly to specific (not all of them) schemas rather than the internal format.</p>
+<p>This article will be a basic document of the internals of the Alembic file format.</p>
+<h2 id="what-actually-is-alembic">What Actually is Alembic?</h2>
+<p>Through my journey into &ldquo;discovering&rdquo; the Alembic format, I found out that <em>Alembic</em> is not actually a file format but masquerades as one. It is in fact two file formats with different memory layouts which can be determined based on the <a href="https://en.wikipedia.org/wiki/List_of_file_signatures">magic file signature</a>:</p>
+<ul>
+<li><a href="https://www.hdfgroup.org/">HDF5</a></li>
+<li>Ogawa<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+</ul>
+<h3 id="hdf5">HDF5</h3>
+<p>HDF5 is a hierarchical data format which is commonly used to store and organize large amounts of data in a <em>hierarchical</em> fashion. It&rsquo;s commonly used in the scientific field rather than the visual effects industry, and as such, this internal format is rarely used for storing data that would be useful for our tasks for importing (e.g. meshes, cameras, animations, etc). HDF5 is effectively a storage format for database-like data, it&rsquo;s a very good format in terms of usage (I will admit I have no idea about its internal design).</p>
+<p>It appears that the vast majority of &ldquo;Alembic&rdquo; files are not in the HDF5 format but in Ogawa.</p>
+<h3 id="ogawa">Ogawa</h3>
+<p>The main format of concern is named <em>Ogawa</em>. It&rsquo;s a little-endian binary format (thank goodness) which was designed to be readable in-place for efficient multi-threaded data reading. This part of the file format is luckily documented<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, and small enough that I could write it in a <a href="https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
+<p>Similar to HDF5, Ogawa is a hierarchical data format that is simple to read, but differing from HDF5, it is completely uncompressed.</p>
+<p><strong>Note:</strong> When decoding binary formats, it is very useful if have a <em>hex-viewer</em> to see the bytes in a readable way. On Windows, I would recommend either <a href="https://www.hhdsoftware.com/free-hex-editor">Hex Editor Neo</a> or <a href="https://www.sweetscape.com/010editor/">010 Editor</a>. Even though the Ogawa format is mostly documented on that GitHub Wiki page, I still required a <em>hex-viewer</em> from time to time to ensure everything was laid out as I expected, especially for the more complex embedded data.</p>
+<p>Its header is very simple:</p>
+<pre><code class="language-odin">MAGIC :: &quot;Ogawa&quot;
+
+File_Header :: struct {
+	magic:   [5]byte, // &quot;Ogawa&quot;
+	wflag:   enum byte { writing = 0x00, closed = 0xff },
+	version: [2]byte, // {0, 1}
+	root_group_offset: u64le,
+}
+</code></pre>
+<p>The magic signature is just 5 bytes containing the ASCII characters <code>Ogawa</code>, followed by a byte-wide flag which states whether the file is open or closed to writing, followed by 2 bytes specifying the version of the format (of which will always be <code>[2]byte{0, 1}</code>), and finally followed by an offset to the root &ldquo;group&rdquo;.</p>
+<p>The <code>wflag</code> is there to allow writing to the file and prevent other applications from trying to read it whilst it is not finished. It begins off as <code>0x00</code> and then once the file is finished, it becomes <code>0xff</code>. For my Alembic writer, I was storing the data in a memory buffer and then writing the entire data to the file at once, meaning this byte-wide flag was not that useful.</p>
+<p>All grouped-based offsets in the Ogawa format are stored in a 64-bit unsigned little endian integer (<code>u64le</code>) representing the number of bytes from the base of the file<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>These group-based offsets come in two different flavours: an <em>Ogawa Group</em> or an <em>Ogawa Data (byte stream)</em>. The offset encodes a flag in its highest bit (63rd bit) to indicate which flavour: Group if 0 and Data if 1. The remaining 63-bits represent the offset to this specific kind of value; if the remaining 63-bits are all zero, it means it is a terminating value (not pointing to any actual memory).</p>
+<p>A <em>Group</em> begins with a <code>u64le</code> representing the number of children following it in memory (of which all are another offset, <code>u64le</code>). If the value is 0, this represents an empty group that has no children.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Group :: struct {
+	num_children: u64le,
+	children:     [num_children]u64le,
+}
+</code></pre>
+<p>A <em>Byte-Stream</em> begins with a <code>u64le</code> representing the number of bytes following it in memory.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Data :: struct {
+	num_bytes: u64le,
+	bytes:     [num_bytes]byte,
+}
+</code></pre>
+<p>This basic file format is very simple to read but it has zero semantic information to make it useful for something like an interchange format. The semantic structure is what I am calling the <em>Meta-Schema for Alembic</em>.</p>
+<h2 id="the-meta-schema-of-alembic-on-top-of-ogawa">The Meta-Schema of Alembic on top of Ogawa</h2>
+<p>To begin decoding the format, I created a basic Ogawa to JSON viewer to see the tree structure of the file format. As I began to understand more of the format, the JSON structure became much more complex but richer in semantic data.</p>
+<p><strong>Note:</strong> I highly recommend converting any hierarchical format into something like JSON just as a debug view alone, since there are many tools such as <a href="https://dadroit.com/">Dadroit</a> that allow for easy viewing. But if you want to make your own format and viewer with your own tools, go ahead!</p>
+<p>After a bit of exploring, the meta-schema begins with the following data for the root group:</p>
+<ul>
+<li>6 children minimum
+<ul>
+<li>Every file that I tested always began with 6 children</li>
+</ul>
+</li>
+<li>Child <code>0</code> is a byte-stream which stores an <code>i32le</code> containing something akin to the archive version (always appeared to <code>0</code>)</li>
+<li>Child <code>1</code> is a byte-stream which stores an <code>i32le</code> containing the file version which must be <code>&gt;=10000</code>
+<ul>
+<li>From the reverse engineering, it appears that the value stored in decimal represents the file format: e.g. <code>10505</code> represents <code>Alembic 1.5.5</code></li>
+</ul>
+</li>
+<li>Child <code>2</code> is a group to the first <em>Objects</em> based at the root</li>
+<li>Child <code>3</code> is a byte-stream which stores the file&rsquo;s <em>metadata</em></li>
+<li>Child <code>4</code> is a byte-stream which stores the time samples and max samples information</li>
+<li>Child <code>5</code> is a byte-stream which stores indexed <em>metadata</em> which nested <em>properties</em> may use later
+<ul>
+<li>In my Alembic writer, I never used any <em>indexed metadata</em> and just did everything inline since it was easier to handle</li>
+</ul>
+</li>
+</ul>
+<p>From this point on, it can be assumed that a lot of the data is unaligned to its natural alignment and must be read accordingly.</p>
+<h3 id="time-samples-and-max-sample">Time Samples and Max Sample</h3>
+<p>This data is only stored at the root group (child <code>4</code>) and referenced elsewhere by index.</p>
+<p>Each value containing the samples is stored in contiguous memory:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Chrono :: distinct f64le
+
+Time_Samples :: struct #packed {
+	max_sample:     u32le,
+	time_per_cycle: Chrono,
+	num_samples:    u32le,
+	samples:        [num_samples]Chrono,
+}
+</code></pre>
+<p>This memory needs to be read in order in order to determine the number of samples.</p>
+<h3 id="metadata">Metadata</h3>
+<p>All metadata is stored as a string. Each entry is a key and value separated by the ASCII character <code>=</code>, and each entry is separated by <code>;</code>. Deserializing this is a very simple operation to do in most languages.
+These strings are <em>NOT</em> <strong>NUL</strong> terminated like in C because they are bounded by a length that usually prefixes it. As I am using <a href="https://odin-lang.org/">Odin</a>, its <code>string</code> type is length-bounded making this process a lot easier to use compared to C.</p>
+<p>The indexed metadata is only stored at the root group (child <code>5</code>) and referenced elsewhere by index.</p>
+<p>Each value is stored in contiguous memory:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Index_Metadata_Entry :: struct {
+	metadata_size:   u8,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<p>The maximum number of index metadata entries allowed is <code>254</code> (<code>0xfe</code>).</p>
+<h3 id="object-data">Object Data</h3>
+<p>The root group stores an offset to the first group (child <code>2</code>) representing <em>Object Data</em>.</p>
+<p>Object data contains a list of the nested children as well properties for its &ldquo;this&rdquo; <em>Object</em>.</p>
+<ul>
+<li>Child <code>0</code> stores the data for the properties in the form of <em>Compound Property Data</em></li>
+<li>Children <code>1..&lt;n-1</code> stores the objects</li>
+<li>Child <code>n-1</code> stores the data for the child <em>Object Headers</em></li>
+</ul>
+<h3 id="object-headers">Object Headers</h3>
+<p>The Object Header are stored in contiguous memory for each entry but depending on the value of its <code>metadata_index</code> (see below) will determine whether the metadata value is stored inline or stored in the indexed metadata at the root group.</p>
+<ul>
+<li>If <code>metadata_index</code> is equal to <code>0xff</code>, the metadata is stored directly after it</li>
+<li>If <code>metadata_index</code> is any other value, it represents the index to the metadata stored at the root group (this value must be less than the number of index metadata entries otherwise it is a invalid file)</li>
+</ul>
+<pre><code class="language-odin">// Pseudo-Odin
+Object_Header :: struct #packed {
+	name_size:      u32le,
+	name:           [name_size]u8,
+	metadata_index: u8,
+}
+
+Object_Header_Inline :: struct #packed {
+	using header:    Object_Header,
+	metadata_size:   u32le,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<h3 id="property-data">Property Data</h3>
+<p>There are three different forms of properties that may be stored within Alembic: Scalar, Array, and Compound.</p>
+<p>Child <code>0</code> of the <em>Object Data</em> group must represent a <em>Compound</em> property data.</p>
+<h4 id="compound-property-data">Compound Property Data</h4>
+<p><em>Compound property data</em> is a group which stores <code>N</code> children for <code>N-1</code> properties. It&rsquo;s effectively a hash map (like a JSON object) containing a keys, properties, and the values of more property data.</p>
+<ul>
+<li>Children <code>0..&lt;N-1</code> represent the nested property data which is denoted by the property headers</li>
+<li>Child <code>N-1</code> is a byte-stream which contains the compound property headers</li>
+</ul>
+<p>In the <em>compound property headers</em> byte-stream, it contains a list of the nested of each property header.</p>
+<p><strong>n.b.</strong> The property headers are the weirdest aspect of the entire format and not simply expressible in terms of basic data structures and require a lot of logic for the encoding.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Property_Header :: struct #packed {
+	info: u32le,
+	when Compound { // determined from info
+		next_sample_index: INT_BASED_ON_SIZE_HINT,
+		if info &amp; 0x0200 != 0 {
+			first_changed_index: INT_BASED_ON_SIZE_HINT,
+			last_changed_index:  INT_BASED_ON_SIZE_HINT,
+		}
+		if info &amp; 0x0100 != 0 {
+			time_sampling_index: INT_BASED_ON_SIZE_HINT,
+		}
+	}
+
+	name_size: INT_BASED_ON_SIZE_HINT,
+	name: [name_size]u8,
+}
+</code></pre>
+<p><code>info</code> is an <code>u32le</code> which encodes information about the property:</p>
+<ul>
+<li>Bits <code>0..&lt;2</code> : represents the property type:
+<ul>
+<li><code>0</code> = <code>Compound</code></li>
+<li><code>1</code> = <code>Scalar</code></li>
+<li><code>2</code> = <code>Array</code></li>
+</ul>
+</li>
+<li>Bits <code>2..&lt;4</code> : represents the size hint <code>INT_BASED_ON_SIZE_HINT</code>
+<ul>
+<li><code>0</code> = <code>u8</code></li>
+<li><code>1</code> = <code>u16le</code></li>
+<li><code>2</code> = <code>u32le</code></li>
+</ul>
+</li>
+<li>Bits <code>4..&lt;8</code> : represents the plain old data type:
+<ul>
+<li><code>0</code> = <code>bool</code> (byte)</li>
+<li><code>1</code> = <code>u8</code></li>
+<li><code>2</code> = <code>i8</code></li>
+<li><code>3</code> = <code>u16le</code></li>
+<li><code>4</code> = <code>i16le</code></li>
+<li><code>5</code> = <code>u32le</code></li>
+<li><code>6</code> = <code>i32le</code></li>
+<li><code>7</code> = <code>u64le</code></li>
+<li><code>8</code> = <code>i64le</code></li>
+<li><code>9</code> = <code>f16le</code></li>
+<li><code>10</code> = <code>f32le</code></li>
+<li><code>11</code> = <code>f64le</code></li>
+<li><code>12</code> = <code>u8</code> string</li>
+<li><code>13</code> = <code>wchar_t</code> string
+<ul>
+<li>I am yet to see this in the wild yet</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Bit <code>9</code> states whether the <code>first_changed_index</code> and <code>last_changed_index</code> is set for a Compound type</li>
+<li>Bit <code>11</code> if set, <code>first_changed_index</code> and <code>last_changed_index</code> equal <code>0</code></li>
+<li>If bits <code>9</code> and <code>11</code> are not set, <code>first_changed_index = 1</code>, <code>last_changed_index = next_sample_index-1</code></li>
+<li>Bit <code>10</code> states if the property data is homogenous</li>
+<li>Bits <code>12..&lt;20</code> : represents the &ldquo;extent&rdquo; of the value. e.g. <code>[][extent]type</code></li>
+<li>Bits <code>20..&lt;28</code> : represents the <code>metadata_index</code>. This follows the same rules as <em>Object Headers</em>
+<ul>
+<li>If <code>metadata_index</code> is equal to <code>0xff</code>, the metadata is stored directly after it</li>
+<li>If <code>metadata_index</code> is any other value, it represents the index to the metadata stored at the root group (this value must be less than the number of index metadata entries otherwise it is a invalid file)</li>
+</ul>
+</li>
+<li>Bits <code>28..&lt;32</code> : I have no idea what these represent, if anything</li>
+</ul>
+<p>For the property headers containing inline metadata:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Property_Header_Inline :: struct #packed {
+	using header:    Property_Header,
+	metadata_size:   INT_BASED_ON_SIZE_HINT,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<h4 id="scalar-property-data">Scalar Property Data</h4>
+<p>Scalar property data is constant if <code>first_changed_index == 0</code> in the property header. Number of samples is equal to the <code>next_sample_index</code>.</p>
+<p>The indexed samples are stored in the children groups on the property data stored beginning at the relative offset 0.</p>
+<p>Depending on the whether the samples are constant or not, the actual index needs to be mapped using the following procedure:</p>
+<pre><code class="language-odin">verify_index :: proc(p: Property, index: u32) -&gt; u32 {
+	assert(index &lt; u32(p.next_sample_index))
+
+	i := u32(index)
+	if i &lt; p.first_changed_index {
+		return 0
+	} else if p.first_changed_index == p.last_changed_index &amp;&amp; p.first_changed_index == 0 {
+		return 0
+	} else if i &gt;= p.last_changed_index {
+		return u32(p.last_changed_index - p.first_changed_index + 1)
+	}
+	return i - p.first_changed_index + 1
+}
+</code></pre>
+<p>The data for each sample contains both the key/hash of the data and the <em>uncompressed</em> data.
+The hash is stored at the beginning; is represented as a 16-byte (128 bit) <a href="http://burtleburtle.net/bob/hash/spooky.html">SpookyHash</a>.
+The data after that is stored after this hash.</p>
+<pre><code class="language-odin">num_samples := u32(p.next_sample_index)
+for sample_index in 0..&lt;num_samples {
+	index := verify_index(p, sample_index)
+	data := get_child_data(archive.data, ph_group, index)
+	sp.samples[sample_index].key = get_sample_key(data[:16])
+	sp.samples[sample_index].data = data[16:]
+}
+</code></pre>
+<h4 id="array-property-data">Array Property Data</h4>
+<p>Array property data is constant if <code>first_changed_index == 0</code> in the property header. Number of samples is equal to the <code>next_sample_index</code>.</p>
+<p>Indexing into the samples is a little more complex than scalar data. The number groups stored for the sample data is doubled up, where the pair of groups
+represent the sample data and then the data for the dimensions. The sample data is similar to that of the scalar but the extra group that represents the dimensions
+is an array of <code>u64le</code> values which represent the tensor shape of the data. Most of the time, the dimensions is just a single element represent the number
+of elements in the array.</p>
+<p>The data group has the same kind of hash prefixing the data (using SpookyHash).</p>
+<pre><code class="language-odin">Data_Type :: struct {
+	pod:    Plain_Old_Data_Type,
+	extent: u8,
+}
+
+get_num_bytes :: proc(dt: Data_Type) -&gt; int {
+	assert(dt.pod &lt; .String)
+	return pod_data_size[dt.pod] * int(dt.extent)
+}
+
+...
+
+num_samples := u32(p.next_sample_index)
+for sample_index in 0..&lt;num_samples {
+	// * 2 for array properties since the dimensions are also written
+	index := verify_index(p, sample_index) * 2
+
+	sample := &amp;ap.samples[sample_index]
+
+	dims_data, _ := get_child_data(archive.data, ph_group, index+1)
+	data := get_child_data(archive.data, ph_group, index+0) or_return
+
+	if len(data) &gt; 0 {
+		assert(len(data) &gt;= 16)
+		sample.key = get_sample_key(data[:16])
+		sample.data = data[16:]
+	}
+
+	sz := get_num_bytes(p.data_type)
+
+	dims: []u64
+	if len(dims_data) == 0 {
+		dims = make([]u64, 1)
+		if len(data) == 0 {
+			dims[0] = 0
+		} else {
+			dims[0] = u64((len(data)-16) / sz)
+		}
+	} else {
+		dims = mem.slice_data_cast([]u64, dims_data)
+	}
+	sample.dims = dims
+}
+</code></pre>
+<h2 id="schemas-of-alembic">Schemas of Alembic</h2>
+<p>I will discuss the schemas of Alembic at a later date since they could fill their own article. For the need we have, we only really care about reading in Cameras and Xforms (Transforms), and writing out Particles/Points.</p>
+<h2 id="general-views-of-the-format">General Views of the Format</h2>
+<p>I think the general format <em>Ogawa</em> format is absolute fine but because of its lack of semantic structure, it requires applying one to it. Even JSON has some semantic meaning by virtue of being a text-format (of which I have been using as a format to display to debug the Ogawa data).</p>
+<p><strong>Note:</strong> I would never recommend using JSON when another file format is better fit (especially if you have the luxury of using a custom format), JSON is too general for the vast majority of use cases. If you have the choice of using an interchange format, always use a binary one (even a custom one) since it is pretty much never the case you will need to modify the file in a text editor.</p>
+<p>The design of the property header is very strange to me. It seems like it is trying to be as compact as possible but the reset of the file format is uncompressed. I cannot see why this bit would need to be compressed/compacted when the property data it refers to is uncompressed. The size hint bit is really bizarre and I personally would have just stuck with a single integer type (i.e. <code>u32le</code>) to keep things better.</p>
+<p>The use of indexed metadata seems a bit bizarre since because the entire format is offset-based, the indexed stuff could have pointed to the same memory address to save memory. I know this means that the hierarchy is now not strict, but for metadata, I personally don&rsquo;t think it would be much of an issue.</p>
+<p>Speaking of the offset-based file formats, one potential issue for malicious files is form cycles in the hierarchy, which could cause many readers to crash.</p>
+<p>I am not sure why Spooky-Hash was used. It is not really an easy hashing algorithm to implement (~330 LOC of Odin) and not necessarily better than other hashes out there. It is also not that commonly used compared to simpler (and maybe better) hashes.</p>
+<h2 id="in-sum">In Sum</h2>
+<p>After a lot of work, I got a fully functioning Alembic reader and writer that was ~2000 LOC of Odin (including the necessary schemas we required at <a href="https://jangafx.com/">JangaFX</a>). This is a hell of a lot smaller and simpler than the official Alembic C++ API for the same amount of functionality.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Technically it&rsquo;s Ogawa-Flavour Alembic with its own specific meta-schema, of which I will get to that later in the article. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>I&rsquo;m a huge fan of file binary formats designed this way where they use effectively internal <a href="http://localhost:1313/article/2020/05/17/relative-pointers/">relative pointers</a>, of which I should explain my preferred approach to designing binary file format in the future. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+</article>
+</main>
+<footer>
+© 2007–2020 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

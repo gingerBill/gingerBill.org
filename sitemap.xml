@@ -3,17 +3,62 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/article/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
+    <loc>/tags/alembic/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/go/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
+    <loc>/article/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/c/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/c&#43;&#43;/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/format/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/interchange/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/odin/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/reverse-engineering/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/article/2022/07/11/reverse-engineering-alembic/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2022-07-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/go/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
   </url>
   
@@ -33,22 +78,12 @@
   </url>
   
   <url>
-    <loc>/tags/odin/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/philosophy/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/python/</loc>
-    <lastmod>2021-12-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2021-12-15T00:00:00+00:00</lastmod>
   </url>
   
@@ -75,11 +110,6 @@
   <url>
     <loc>/article/2021/11/30/memory-allocation-strategies-005/</loc>
     <lastmod>2021-11-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/c/</loc>
-    <lastmod>2021-09-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -264,11 +294,6 @@
   
   <url>
     <loc>/article/2015/08/19/defer-in-cpp/</loc>
-    <lastmod>2015-08-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/c&#43;&#43;/</loc>
     <lastmod>2015-08-19T00:00:00+00:00</lastmod>
   </url>
   

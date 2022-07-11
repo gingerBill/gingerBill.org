@@ -4,10 +4,20 @@
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Wed, 15 Dec 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 11 Jul 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reverse Engineering Alembic</title>
+      <link>/article/2022/07/11/reverse-engineering-alembic/</link>
+      <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2022/07/11/reverse-engineering-alembic/</guid>
+      <description>For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
+I spent nearly 4 days trying to get the official Alembic C++ API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate.</description>
+    </item>
     
     <item>
       <title>Multiple Return Values Research</title>
