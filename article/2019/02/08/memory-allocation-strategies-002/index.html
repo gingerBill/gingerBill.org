@@ -207,7 +207,7 @@ void *arena_alloc(Arena *a, size_t size) {
 
 	if (old_mem == NULL || old_size == 0) {
 		return arena_alloc_align(a, new_size, align);
-	} else if (a-&gt;buf &lt;= old_mem &amp;&amp; old_mem &lt; a-&gt;buf+buf_len) {
+	} else if (a-&gt;buf &lt;= old_mem &amp;&amp; old_mem &lt; a-&gt;buf+a-&gt;buf_len) {
 		if (a-&gt;buf+a-&gt;prev_offset == old_mem) {
 			a-&gt;curr_offset = a-&gt;prev_offset + new_size;
 			if (new_size &gt; old_size) {
