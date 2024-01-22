@@ -6,9 +6,10 @@
   <meta property="og:title" content="Memory Allocation Strategies - Part 6" />
 <meta property="og:description" content="Buddy Allocators" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2021/12/02/memory-allocation-strategies-006/" />
+<meta property="og:url" content="/article/2021/12/02/memory-allocation-strategies-006/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2021-12-02T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-12-02T00:00:00+00:00" />
+<meta property="og:see_also" content="/article/2021/11/30/memory-allocation-strategies-005/" /><meta property="og:see_also" content="/article/2019/02/16/memory-allocation-strategies-004/" /><meta property="og:see_also" content="/article/2019/02/15/memory-allocation-strategies-003/" /><meta property="og:see_also" content="/article/2019/02/08/memory-allocation-strategies-002/" /><meta property="og:see_also" content="/article/2019/02/01/memory-allocation-strategies-001/" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -311,26 +312,26 @@ void *buddy_allocator_alloc(Buddy_Allocator *b, size_t size) {
 <h1 id="conclusion">Conclusion</h1>
 <p>The buddy allocator is a powerful allocator and a conceptually simple algorithm but implementing it efficiently is a lot harder than all of the previous allocators that have been discussed in this series.</p>
 <p>In the next set of articles, I will discuss the a lot about virtual memory; how it works, how we can utilize it, and its benefits.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>The Wikipedia article is not that easy to understand, especially from the basic table diagram given in the <em>Example</em> section. (Accessed 2021-12-01) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>The Wikipedia article is not that easy to understand, especially from the basic table diagram given in the <em>Example</em> section. (Accessed 2021-12-01)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>Just like Jackie Chan and Chris Tucker in <a href="https://www.imdb.com/title/tt0120812/">Rush Hour</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>Just like Jackie Chan and Chris Tucker in <a href="https://www.imdb.com/title/tt0120812/">Rush Hour</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>The allocator may have enough memory left but none of it is contiguous due to too much internal fragmentation. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>The allocator may have enough memory left but none of it is contiguous due to too much internal fragmentation.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p>All becoming a single buddy, trying to be someone else: <a href="https://www.imdb.com/title/tt0120601/">https://www.imdb.com/title/tt0120601/</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p>All becoming a single buddy, trying to be someone else: <a href="https://www.imdb.com/title/tt0120601/">https://www.imdb.com/title/tt0120601/</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

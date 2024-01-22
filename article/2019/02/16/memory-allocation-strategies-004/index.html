@@ -6,9 +6,10 @@
   <meta property="og:title" content="Memory Allocation Strategies - Part 4" />
 <meta property="og:description" content="Pool Allocators" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2019/02/16/memory-allocation-strategies-004/" />
+<meta property="og:url" content="/article/2019/02/16/memory-allocation-strategies-004/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2019-02-16T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-02-16T00:00:00+00:00" />
+<meta property="og:see_also" content="/article/2021/12/02/memory-allocation-strategies-006/" /><meta property="og:see_also" content="/article/2021/11/30/memory-allocation-strategies-005/" /><meta property="og:see_also" content="/article/2019/02/15/memory-allocation-strategies-003/" /><meta property="og:see_also" content="/article/2019/02/08/memory-allocation-strategies-002/" /><meta property="og:see_also" content="/article/2019/02/01/memory-allocation-strategies-001/" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -205,17 +206,17 @@ void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
 <h1 id="conclusion">Conclusion</h1>
 <p>The pool allocator is a very useful allocator for when you need to allocator &ldquo;things&rdquo; in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
 <p>In the next article, I will discuss <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list memory allocators</a>.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>What&rsquo;s in a name? That which we call a rose. By any other name would smell as sweet. <a href="https://www.owleyes.org/text/romeo-and-juliet/read/act-ii-scene-ii">Romeo and Juliet (II, ii, 1-2)</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>What&rsquo;s in a name? That which we call a rose. By any other name would smell as sweet. <a href="https://www.owleyes.org/text/romeo-and-juliet/read/act-ii-scene-ii">Romeo and Juliet (II, ii, 1-2)</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>If there is not an available free chunk, it will point to nothing (<code>NULL</code>). <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>If there is not an available free chunk, it will point to nothing (<code>NULL</code>).&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

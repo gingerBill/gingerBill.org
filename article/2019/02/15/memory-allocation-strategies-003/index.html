@@ -6,9 +6,10 @@
   <meta property="og:title" content="Memory Allocation Strategies - Part 3" />
 <meta property="og:description" content="Stack Allocators" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2019/02/15/memory-allocation-strategies-003/" />
+<meta property="og:url" content="/article/2019/02/15/memory-allocation-strategies-003/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2019-02-15T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-02-15T00:00:00+00:00" />
+<meta property="og:see_also" content="/article/2021/12/02/memory-allocation-strategies-006/" /><meta property="og:see_also" content="/article/2021/11/30/memory-allocation-strategies-005/" /><meta property="og:see_also" content="/article/2019/02/16/memory-allocation-strategies-004/" /><meta property="og:see_also" content="/article/2019/02/08/memory-allocation-strategies-002/" /><meta property="og:see_also" content="/article/2019/02/01/memory-allocation-strategies-001/" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -317,29 +318,29 @@ s-&gt;curr_offset = s-&gt;prev_offset;
 s-&gt;prev_offset = header-&gt;prev_offset;
 </code></pre>
 <h1 id="comments-and-conclusion">Comments and Conclusion</h1>
-<p>The stack allocator is the first of many allocators that will use the concept of a <em>header</em> for allocations. In this basic form of a stack allocator, unless you want the LIFO behaviour enforced, I would personally recommend using an arena allocator with the <code>Temp_Arena_Memory</code> construct instead. However if you require something like C++'s constructors and destructors, a stack allocator will be more friendly to that framework (RAII)<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>.</p>
+<p>The stack allocator is the first of many allocators that will use the concept of a <em>header</em> for allocations. In this basic form of a stack allocator, unless you want the LIFO behaviour enforced, I would personally recommend using an arena allocator with the <code>Temp_Arena_Memory</code> construct instead. However if you require something like C++&rsquo;s constructors and destructors, a stack allocator will be more friendly to that framework (RAII)<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>.</p>
 <p>You can extend the stack allocator even further by having two different offsets: one that starts at the beginning and increments forwards, and another that starts at the end and increments backwards. This is called a double-ended stack and allows for the maximization of memory usage whilst keeping fragmentation extremely low (as long as the offset never overlap).</p>
 <p>In the next article, I will discuss <em>pool allocators</em> and how they are extremely useful for creating and destroying things in completely random order of the same size.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>These approaches can be combined and are not mutually exclusive. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>These approaches can be combined and are not mutually exclusive.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>I rarely need this as I usually track the size of the allocation manually. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>I rarely need this as I usually track the size of the allocation manually.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>It is an exercise for the reader to figure out how to make this more efficient by not allocating more memory if it is was the previous allocation. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>It is an exercise for the reader to figure out how to make this more efficient by not allocating more memory if it is was the previous allocation.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>You can reduce the size of the header by using smaller integers but this does reduce the size of the allocations that can be used. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>You can reduce the size of the header by using smaller integers but this does reduce the size of the allocations that can be used.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p><a href="https://wikipedia.org/wiki/Placement_syntax">https://wikipedia.org/wiki/Placement_syntax</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p><a href="https://wikipedia.org/wiki/Placement_syntax">https://wikipedia.org/wiki/Placement_syntax</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

@@ -1,0 +1,27 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>benchmark on gingerBill</title>
+    <link>/tags/benchmark/</link>
+    <description>Recent content in benchmark on gingerBill</description>
+    <language>en-gb</language>
+    <lastBuildDate>Mon, 22 Jan 2024 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="/tags/benchmark/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Why I Hate Language Benchmarks</title>
+      <link>/article/2024/01/22/comparing-language-benchmarks/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2024/01/22/comparing-language-benchmarks/</guid>
+      <description>[Originally from a Twitter Thread]
+Original Twitter Post
+I don&amp;rsquo;t know if I have &amp;ldquo;ranted&amp;rdquo; about this here before but:
+I absolutely HATE comparing programming languages with &amp;ldquo;benchmarks&amp;rdquo;.
+Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
+Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers.</description>
+    </item>
+    
+  </channel>
+</rss>

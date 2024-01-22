@@ -28,7 +28,7 @@
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were.</description>
+try was a confusing name for what the semantics were.</description>
     </item>
     
     <item>
@@ -51,7 +51,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2021/03/07/untyped-types/</guid>
       <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
- Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
     </item>
     
     <item>
@@ -61,7 +61,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2021/02/02/structured-control-flow/</guid>
       <description>Note: This is a &amp;ldquo;brain dump&amp;rdquo; article, and subject to be cleaned up.
-Categories of Structured Control Flow  Procedure call  foo(123, true)   Terminating  return   Conditional  if, if-else, switch   Looping  for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition   Branching  break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements   Deferred  defer/scope(exit)    Pseudo/Partial Categories  Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH  try, catch   Default (named) return values  foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
+Categories of Structured Control Flow Procedure call foo(123, true) Terminating return Conditional if, if-else, switch Looping for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition Branching break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements Deferred defer/scope(exit) Pseudo/Partial Categories Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH try, catch Default (named) return values foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
     </item>
     
     <item>
@@ -80,7 +80,7 @@ Essentially Ordered Aspects In a previous article of mine, I state that &amp;ldq
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/2/</guid>
-      <description>Notes:  Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense  Structured Exception Handling Microsoft&amp;rsquo;s SEH   Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.  </description>
+      <description>Notes: Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense Structured Exception Handling Microsoft&amp;rsquo;s SEH Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems. </description>
     </item>
     
     <item>
@@ -89,7 +89,7 @@ Essentially Ordered Aspects In a previous article of mine, I state that &amp;ldq
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/1/</guid>
-      <description>Notes: Schools  Procedural/Pragmatist Mathematical/Functional Bodging Business/Managerial  Definitions  Bodge  (British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&amp;rsquo;s alright. https://www.urbandictionary.com/define.php?term=bodge    Books and References  A Conflict of Visions - Thomas Sowell Fallen human nature Rousseau&amp;rsquo;s theory of human nature  </description>
+      <description>Notes: Schools Procedural/Pragmatist Mathematical/Functional Bodging Business/Managerial Definitions Bodge (British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&amp;rsquo;s alright. https://www.urbandictionary.com/define.php?term=bodge Books and References A Conflict of Visions - Thomas Sowell Fallen human nature Rousseau&amp;rsquo;s theory of human nature </description>
     </item>
     
     <item>
@@ -108,8 +108,7 @@ General Definitions of Terminology A general list of definitions of terminology 
       <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/article/2020/06/13/flash-fads-model/</guid>
-      <description>Audio Article:
-</description>
+      <description>Audio Article:</description>
     </item>
     
   </channel>

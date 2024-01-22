@@ -4,10 +4,46 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Mon, 11 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2024 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>benchmark</title>
+      <link>/tags/benchmark/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/benchmark/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>c</title>
+      <link>/tags/c/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/c/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>comparison</title>
+      <link>/tags/comparison/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/comparison/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>odin</title>
+      <link>/tags/odin/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/odin/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>alembic</title>
@@ -15,15 +51,6 @@
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>/tags/alembic/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>c</title>
-      <link>/tags/c/</link>
-      <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/c/</guid>
       <description></description>
     </item>
     
@@ -51,15 +78,6 @@
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>/tags/interchange/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>odin</title>
-      <link>/tags/odin/</link>
-      <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/odin/</guid>
       <description></description>
     </item>
     

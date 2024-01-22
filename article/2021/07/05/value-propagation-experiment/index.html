@@ -10,9 +10,10 @@ The Idea I recently experimented with adding a feature into Odin which allowed f
 I have now removed it from Odin. But why?
 The Problem The hypothesis was that that this idiom was common:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2021/07/05/value-propagation-experiment/" />
+<meta property="og:url" content="/article/2021/07/05/value-propagation-experiment/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2021-07-05T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-07-05T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Value Propagation Experiment"/>
@@ -112,14 +113,14 @@ or_else(x.?, true)
 <p><code>try x else y</code> has now become <code>or_else(x, y)</code> which is useful.</p>
 <p>n.b. I am not criticizing any particular language&rsquo;s design for doing this, but rather saying that it does not work well for Odin&rsquo;s semantics nor philosophy.</p>
 <p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

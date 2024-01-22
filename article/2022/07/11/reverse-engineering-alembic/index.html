@@ -7,9 +7,10 @@
 <meta property="og:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
 I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2022/07/11/reverse-engineering-alembic/" />
+<meta property="og:url" content="/article/2022/07/11/reverse-engineering-alembic/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2022-07-11T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-07-11T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Reverse Engineering Alembic"/>
@@ -373,20 +374,20 @@ for sample_index in 0..&lt;num_samples {
 <p>I am not sure why Spooky-Hash was used. It is not really an easy hashing algorithm to implement (~330 LOC of Odin) and not necessarily better than other hashes out there. It is also not that commonly used compared to simpler (and maybe better) hashes.</p>
 <h2 id="in-sum">In Sum</h2>
 <p>After a lot of work, I got a fully functioning Alembic reader and writer that was ~2000 LOC of Odin (including the necessary schemas we required at <a href="https://jangafx.com/">JangaFX</a>). This is a hell of a lot smaller and simpler than the official Alembic C++ API for the same amount of functionality.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Technically it&rsquo;s Ogawa-Flavour Alembic with its own specific meta-schema, of which I will get to that later in the article. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Technically it&rsquo;s Ogawa-Flavour Alembic with its own specific meta-schema, of which I will get to that later in the article.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>I&rsquo;m a huge fan of file binary formats designed this way where they use effectively internal <a href="/article/2020/05/17/relative-pointers/">relative pointers</a>, of which I should explain my preferred approach to designing binary file format in the future. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>I&rsquo;m a huge fan of file binary formats designed this way where they use effectively internal <a href="/article/2020/05/17/relative-pointers/">relative pointers</a>, of which I should explain my preferred approach to designing binary file format in the future.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

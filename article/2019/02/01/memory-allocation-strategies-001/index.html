@@ -6,9 +6,10 @@
   <meta property="og:title" content="Memory Allocation Strategies - Part 1" />
 <meta property="og:description" content="Thinking About Memory and Allocation" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2019/02/01/memory-allocation-strategies-001/" />
+<meta property="og:url" content="/article/2019/02/01/memory-allocation-strategies-001/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2019-02-01T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-02-01T00:00:00+00:00" />
+<meta property="og:see_also" content="/article/2021/12/02/memory-allocation-strategies-006/" /><meta property="og:see_also" content="/article/2021/11/30/memory-allocation-strategies-005/" /><meta property="og:see_also" content="/article/2019/02/16/memory-allocation-strategies-004/" /><meta property="og:see_also" content="/article/2019/02/15/memory-allocation-strategies-003/" /><meta property="og:see_also" content="/article/2019/02/08/memory-allocation-strategies-002/" />
 
 
   <meta name="twitter:card" content="summary"/>
@@ -84,21 +85,21 @@
 <table>
 <thead>
 <tr>
-<th align="right"></th>
-<th align="center">Size Known</th>
-<th align="center">Size Unknown</th>
+<th style="text-align:right"></th>
+<th style="text-align:center">Size Known</th>
+<th style="text-align:center">Size Unknown</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="right"><strong>Lifetime Known</strong></td>
-<td align="center">95%</td>
-<td align="center">~4%</td>
+<td style="text-align:right"><strong>Lifetime Known</strong></td>
+<td style="text-align:center">95%</td>
+<td style="text-align:center">~4%</td>
 </tr>
 <tr>
-<td align="right"><strong>Lifetime Unknown</strong></td>
-<td align="center">~1%</td>
-<td align="center">&lt;1%</td>
+<td style="text-align:right"><strong>Lifetime Unknown</strong></td>
+<td style="text-align:center">~1%</td>
+<td style="text-align:center">&lt;1%</td>
 </tr>
 </tbody>
 </table>
@@ -137,27 +138,27 @@
 <li>Automatic Lifetime Allocations</li>
 <li>Allocation Grouping and Mental Models</li>
 </ul>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
+<li id="fn:4">
 <p>These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).
-Memory within these generations usually get allocated and freed at the same time (born, live, and die together). <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+Memory within these generations usually get allocated and freed at the same time (born, live, and die together).&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p>I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p>I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

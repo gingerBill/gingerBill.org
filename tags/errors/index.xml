@@ -15,7 +15,7 @@
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/2/</guid>
-      <description>Notes:  Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense  Structured Exception Handling Microsoft&amp;rsquo;s SEH   Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.  </description>
+      <description>Notes: Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense Structured Exception Handling Microsoft&amp;rsquo;s SEH Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems. </description>
     </item>
     
   </channel>

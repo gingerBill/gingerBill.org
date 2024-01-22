@@ -25,7 +25,7 @@
       
       <guid>/article/2021/03/07/untyped-types/</guid>
       <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
- Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
     </item>
     
   </channel>

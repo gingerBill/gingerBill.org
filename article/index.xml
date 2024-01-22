@@ -4,10 +4,24 @@
     <link>/article/</link>
     <description>Recent content in Articles on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Mon, 11 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2024 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Why I Hate Language Benchmarks</title>
+      <link>/article/2024/01/22/comparing-language-benchmarks/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2024/01/22/comparing-language-benchmarks/</guid>
+      <description>[Originally from a Twitter Thread]
+Original Twitter Post
+I don&amp;rsquo;t know if I have &amp;ldquo;ranted&amp;rdquo; about this here before but:
+I absolutely HATE comparing programming languages with &amp;ldquo;benchmarks&amp;rdquo;.
+Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
+Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers.</description>
+    </item>
     
     <item>
       <title>Reverse Engineering Alembic</title>
@@ -57,7 +71,7 @@ In the previous article, the red black tree approach was briefly discussed as a 
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were.</description>
+try was a confusing name for what the semantics were.</description>
     </item>
     
     <item>
@@ -80,7 +94,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2021/03/07/untyped-types/</guid>
       <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
- Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
     </item>
     
     <item>
@@ -90,7 +104,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2021/02/02/structured-control-flow/</guid>
       <description>Note: This is a &amp;ldquo;brain dump&amp;rdquo; article, and subject to be cleaned up.
-Categories of Structured Control Flow  Procedure call  foo(123, true)   Terminating  return   Conditional  if, if-else, switch   Looping  for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition   Branching  break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements   Deferred  defer/scope(exit)    Pseudo/Partial Categories  Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH  try, catch   Default (named) return values  foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
+Categories of Structured Control Flow Procedure call foo(123, true) Terminating return Conditional if, if-else, switch Looping for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition Branching break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements Deferred defer/scope(exit) Pseudo/Partial Categories Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH try, catch Default (named) return values foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
     </item>
     
     <item>
@@ -119,8 +133,7 @@ General Definitions of Terminology A general list of definitions of terminology 
       <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>/article/2020/06/13/flash-fads-model/</guid>
-      <description>Audio Article:
-</description>
+      <description>Audio Article:</description>
     </item>
     
     <item>
@@ -131,7 +144,7 @@ General Definitions of Terminology A general list of definitions of terminology 
       <guid>/article/2020/05/31/progamming-pragmatist-proverbs/</guid>
       <description>I was originally going to write a normal prose article regarding the topic of Pragmatism in Programming, however I thought I&amp;rsquo;d experiment in style by writing in a proverbial style.
 The following concepts express the school of thought that I subscribe to which I call Pragmatism in Programming.
-Proverbs written by Ginger Bill The concept of programming   Programming is a tool to solve problems that you have in the domain of computers</description>
+Proverbs written by Ginger Bill The concept of programming Programming is a tool to solve problems that you have in the domain of computers</description>
     </item>
     
     <item>
@@ -160,7 +173,7 @@ I recommend reading the original article first before reading this one as I will
       
       <guid>/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
       <description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
- Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them.</description>
+Odin1 Scopes Zig They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</description>
     </item>
     
     <item>
@@ -170,7 +183,7 @@ I recommend reading the original article first before reading this one as I will
       
       <guid>/article/2019/03/10/quine-in-odin/</guid>
       <description>A Quine in Odin:
-package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `; </description>
+package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `;</description>
     </item>
     
     <item>
@@ -214,13 +227,13 @@ Most people are taught to think of memory in terms of the stack and the heap, wh
     
     <item>
       <title>Exceptions --- And Why Odin Will Never Have Them</title>
-      <link>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</link>
+      <link>/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/</link>
       <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</guid>
+      <guid>/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/</guid>
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
- https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
+https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
     </item>
     
     <item>
@@ -253,7 +266,7 @@ Metaprogramming is an &amp;ldquo;art&amp;rdquo; of writing programs to treats ot
       <guid>/article/2015/08/19/defer-in-cpp/</guid>
       <description>One of my favourite things about Go is the defer statement. The defer statement pushes a function call onto a list; the list of saved calls in called when the function returns.
 Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how D has scope(exit).
-C++11 Implementation template &amp;lt;typename F&amp;gt;struct privDefer {F f;privDefer(F f) : f(f) {}~privDefer() { f(); }};template &amp;lt;typename F&amp;gt;privDefer&amp;lt;F&amp;gt; defer_func(F f) {return privDefer&amp;lt;F&amp;gt;(f);}#define DEFER_1(x, y) x##y#define DEFER_2(x, y) DEFER_1(x, y)#define DEFER_3(x) DEFER_2(x, __COUNTER__)#define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;}) Explanation One of the most common examples for this in Go is files.</description>
+C++11 Implementation template &amp;lt;typename F&amp;gt;struct privDefer {F f;privDefer(F f) : f(f) {}~privDefer() { f(); }};template &amp;lt;typename F&amp;gt;privDefer&amp;lt;F&amp;gt; defer_func(F f) {return privDefer&amp;lt;F&amp;gt;(f);}#define DEFER_1(x, y) x##y#define DEFER_2(x, y) DEFER_1(x, y)#define DEFER_3(x) DEFER_2(x, __COUNTER__)#define defer(code) auto DEFER_3(_defer_) = defer_func([&amp;amp;](){code;})Explanation One of the most common examples for this in Go is files.</description>
     </item>
     
   </channel>

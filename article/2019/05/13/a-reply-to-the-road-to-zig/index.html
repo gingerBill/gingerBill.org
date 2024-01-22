@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="A Reply to _The Road to Zig 1.0_" />
 <meta property="og:description" content="It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
- Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them." />
+Odin1 Scopes Zig They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2019/05/13/a-reply-to-the-road-to-zig/" />
+<meta property="og:url" content="/article/2019/05/13/a-reply-to-the-road-to-zig/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2019-05-13T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-05-13T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A Reply to _The Road to Zig 1.0_"/>
 <meta name="twitter:description" content="It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
- Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them."/>
+Odin1 Scopes Zig They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!"/>
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -133,7 +134,7 @@
 <p>Error propagation is fine within a library/package/module but you ought not to be encouraging propagation <em>across</em> library boundaries. There are so many issues I have seen in real life, which lead to <em>crappy software</em>, where errors are just left for &ldquo;someone else&rdquo; to handle. Error propagation also has the the tendency to remove information about the type of error as it is reduced to a &ldquo;simpler&rdquo; error type up the stack. If you are designing a language to aid in producing <em>quality software</em>, don&rsquo;t add a core feature to the language which encourages sloppy habits.</p>
 <p>Odin&rsquo;s approach to error handling is to treat errors as nothing special. Error cases are handled like any other piece of code. In conjunction with Odin&rsquo;s multiple return values, enumerations, unions, and many other features, this means the user can return extra information, including <em>error values</em>, alongside the normal return values if wanted and handle them accordingly.</p>
 <h2 id="clean-up-code">Clean-up Code</h2>
-<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++'s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>. Zig extends the <code>defer</code> to work with the error system with <code>errdefer</code>, which is a nice and natural extension of this system and is coherent with the rest of the language&rsquo;s design.</p>
+<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++&rsquo;s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>. Zig extends the <code>defer</code> to work with the error system with <code>errdefer</code>, which is a nice and natural extension of this system and is coherent with the rest of the language&rsquo;s design.</p>
 <h2 id="error-sets">Error Sets</h2>
 <p>Errors sets are an interesting concept that extend the error system in Zig. I would personally like to see this feature extended to enumerations too as it seems like a natural extension to the concept of a value set<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. However, it might be better to have a specialized error type than a specialization of a previous error type even if it increases code use (this is of course depends on the situation).</p>
 <h2 id="build-system">Build System</h2>
@@ -162,32 +163,32 @@
 <p>The design underwent a lot of revisions and experiments in the very early stages as I did not know what was optimal for increasing my productivity. I knew the basic concepts of what I wanted but that was it. Concepts such as the package system took nearly a year to flesh-out and design as it took a while to discover what were the actual problems with certain approaches.</p>
 <p>At the end of the day, I am a pragmatic man and I do not see the need for type-theory purity if it increases friction in the language.</p>
 <p>If you like the sound of it and want to find out more, please check it out at <a href="https://www.odin-lang.org/">https://www.odin-lang.org/</a> and <a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a>.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>For those who do not know, I am the creator of the <a href="https://www.gingerbill.org/odin/">Odin programming language</a>. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>For those who do not know, I am the creator of the <a href="https://www.gingerbill.org/odin/">Odin programming language</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>See the Left-Pad Package causing severe issues across many other piece of code, <a href="https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages">https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>See the Left-Pad Package causing severe issues across many other piece of code, <a href="https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages">https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>For a possible way to improve the culture, please see the <a href="https://handmade.network/manifesto">Handmade.Network</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>For a possible way to improve the culture, please see the <a href="https://handmade.network/manifesto">Handmade.Network</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>I have discussed this issue before with Andrew and I really do not see this as much of an issue as he does. If you are a desktop machine and run out of memory, don&rsquo;t try to recover from the panic, quit the program or even shut-down the computer. As for other machinery, plan accordingly! <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>I have discussed this issue before with Andrew and I really do not see this as much of an issue as he does. If you are a desktop machine and run out of memory, don&rsquo;t try to recover from the panic, quit the program or even shut-down the computer. As for other machinery, plan accordingly!&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p>And aiding your programming language with interfacing with foreign code and help it get more widely adopted. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p>And aiding your programming language with interfacing with foreign code and help it get more widely adopted.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:6" role="doc-endnote">
-<p>I talk about the <code>defer</code> statement in a previous <a href="/article/2015/08/19/defer-in-cpp/">article</a>. <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:6">
+<p>I talk about the <code>defer</code> statement in a previous <a href="/article/2015/08/19/defer-in-cpp/">article</a>.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:7" role="doc-endnote">
-<p>It might be incorrect to call it a set as they can only be one of the values in the set of possible values. A union, sum-type, or something similar may be a better name for the concept. <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:7">
+<p>It might be incorrect to call it a set as they can only be one of the values in the set of possible values. A union, sum-type, or something similar may be a better name for the concept.&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

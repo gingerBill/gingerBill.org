@@ -4,10 +4,24 @@
     <link>/tags/odin/</link>
     <description>Recent content in odin on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Mon, 11 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2024 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/odin/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Why I Hate Language Benchmarks</title>
+      <link>/article/2024/01/22/comparing-language-benchmarks/</link>
+      <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/article/2024/01/22/comparing-language-benchmarks/</guid>
+      <description>[Originally from a Twitter Thread]
+Original Twitter Post
+I don&amp;rsquo;t know if I have &amp;ldquo;ranted&amp;rdquo; about this here before but:
+I absolutely HATE comparing programming languages with &amp;ldquo;benchmarks&amp;rdquo;.
+Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
+Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers.</description>
+    </item>
     
     <item>
       <title>Reverse Engineering Alembic</title>
@@ -38,7 +52,7 @@ I spent nearly 4 days trying to get the official Alembic C++ API, https://github
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were.</description>
+try was a confusing name for what the semantics were.</description>
     </item>
     
     <item>
@@ -61,7 +75,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2021/03/07/untyped-types/</guid>
       <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
- Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
     </item>
     
     <item>
@@ -95,13 +109,13 @@ I recommend reading the original article first before reading this one as I will
     
     <item>
       <title>Exceptions --- And Why Odin Will Never Have Them</title>
-      <link>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</link>
+      <link>/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/</link>
       <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/</guid>
+      <guid>/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/</guid>
       <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
- https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626  There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
+https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
     </item>
     
     <item>

@@ -6,9 +6,10 @@
   <meta property="og:title" content="Relative Pointers" />
 <meta property="og:description" content="Absolute Pointers Pointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2020/05/17/relative-pointers/" />
+<meta property="og:url" content="/article/2020/05/17/relative-pointers/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2020-05-17T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-05-17T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Relative Pointers"/>
@@ -110,7 +111,7 @@ struct Based_Pointer {
 </code></pre>
 <h2 id="offset-pointers">Offset Pointers</h2>
 <p>Another approach which is very similar to based pointers but the base is not explicitly defined by the type itself, which I will refer to as <em>offset pointers</em>. I use this approach a lot when designing file formats, which has the base being the start of the file. I originally learnt about this trick from reading the Quake source code for the MD2/MD3/MD4 file formats which used this trick a lot, especially for <em>relative arrays</em>.</p>
-<p>This shows one of the main advantages of relative pointers: serializeability. This means that the data structure can be <code>memcpy</code>'d and still be valid.</p>
+<p>This shows one of the main advantages of relative pointers: serializeability. This means that the data structure can be <code>memcpy</code>&rsquo;d and still be valid.</p>
 <p>Offset pointers can also be replicated in C++ through the use of templates. Similar to the previous user-defined based pointers above, the size of the underlying integer can be any size. One of the cool tricks here is that the data structure&rsquo;s fields do not contain any type information about what data type it pointers but rather that data type is encoded in the constant parameters of the templated data structure.</p>
 <pre><code class="language-c">template &lt;typename T&gt;
 struct Offset_Pointer {
@@ -158,7 +159,7 @@ get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
 <h2 id="self-relative-pointers">Self-Relative Pointers</h2>
 <p>The last approach is to define the base to be the memory address of the offset itself.</p>
 <p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow&rsquo;s programming language<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
-<p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>'d and still be (mostly) valid.</p>
+<p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>&rsquo;d and still be (mostly) valid.</p>
 <p>One issue with self-relative pointers is that for the value itself to be valid, it must be in an addressable memory space (i.e. must be an l-value and not in a register). If a language containing such a concept wanted to ensure the validity of such a data type, any other data type that contains it would also have to be addressable to. This adds a form of virality to the type system, adding a new concept of addressability to the type system directly. However, even if this was enforced, there are cases when a self-relative pointer in non-addressable memory could be perfectly valid.</p>
 <p>Another issue is that smaller base integer types for the internal offset value means that they can only be valid over a smaller range than regular pointers.</p>
 <p>Relative pointers can be implemented in C++ with the use of templates and operator overloading<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>:</p>
@@ -224,23 +225,23 @@ struct Relative_Pointer {
 	<iframe width="560" height="315" src="https://www.youtube.com/embed/Z0tsNFZLxSU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 <br>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Virtualized memory has many security, safety, and practical benefits. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Virtualized memory has many security, safety, and practical benefits.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>I will not discuss how virtual memory works or its benefits in this article. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>I will not discuss how virtual memory works or its benefits in this article.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>Jai is also the first language I have seen implement self-relative pointers as part of the type system directly. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>Please note that this is technically undefined behaviour, even if most compilers handle it as expected. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>Please note that this is technically undefined behaviour, even if most compilers handle it as expected.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

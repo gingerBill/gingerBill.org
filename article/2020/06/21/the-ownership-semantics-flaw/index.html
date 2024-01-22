@@ -7,9 +7,10 @@
 <meta property="og:description" content="I have been toying with a theoretical idea for the past 18 months off-and-on in my head and I have not fully articulated it aloud yet. It is regarding the concept of Ownership Semantics (OS) or Move Semantics in programming languages. Fundamentally this article is a criticism of the concept and states that the concept is a duality of traditional OOP but applied to a different area.
 General Definitions of Terminology A general list of definitions of terminology used within this article in order to minimize confusion." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2020/06/21/the-ownership-semantics-flaw/" />
+<meta property="og:url" content="/article/2020/06/21/the-ownership-semantics-flaw/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2020-06-21T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-06-21T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Fatal Flaw of Ownership Semantics"/>
@@ -224,47 +225,47 @@ fn main() {
 <h2 id="conclusion">Conclusion</h2>
 <p>Ownership semantics are a way to handle the responsibility of values in a hierarchical fashion Orientation around responsibility of values in a hierarchical fashion. This results in a (linear) value hierarchy of responsibility, where agents are responsible for values. The issues of ownership semantics parallel the same structural issues that Traditional-OOP has which results in a (linear) value hierarchy of behaviour, where the values act as agents.</p>
 <p>Ownership semantics can be a useful tool for certain problems, but due to their underlying linear logic, they <strong>cannot</strong> be use to express <em>non-linear</em> problems which resorts people to try and bypass the concept entirely.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>&ldquo;I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages (so messaging came at the very beginning – it took a while to see how to do messaging in a programming language efficiently enough to be useful).&rdquo; - Alan Kay, 2003 <a href="http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en">http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>&ldquo;I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages (so messaging came at the very beginning – it took a while to see how to do messaging in a programming language efficiently enough to be useful).&rdquo; - Alan Kay, 2003 <a href="http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en">http://userpage.fu-berlin.de/~ram/pub/pub_jf47ht81Ht/doc_kay_oop_en</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>The <a href="https://golang.org/">Go programming language</a> does not support inheritance. However under my definition, Go is an OOP language but is designed around (implicit) <code>interface</code>s (a form of <a href="https://en.wikipedia.org/wiki/Type_class">type-classes</a> or <a href="https://en.wikipedia.org/wiki/Structural_type_system">structural typing</a>) as a way to compose objects, and methods can be applied to any user defined type; not just record types. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>The <a href="https://golang.org/">Go programming language</a> does not support inheritance. However under my definition, Go is an OOP language but is designed around (implicit) <code>interface</code>s (a form of <a href="https://en.wikipedia.org/wiki/Type_class">type-classes</a> or <a href="https://en.wikipedia.org/wiki/Structural_type_system">structural typing</a>) as a way to compose objects, and methods can be applied to any user defined type; not just record types.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p><a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">https://en.wikipedia.org/wiki/Composition_over_inheritance</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p><a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">https://en.wikipedia.org/wiki/Composition_over_inheritance</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p><a href="https://www.youtube.com/watch?v=QM1iUe6IofM">https://www.youtube.com/watch?v=QM1iUe6IofM</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p><a href="https://www.youtube.com/watch?v=QM1iUe6IofM">https://www.youtube.com/watch?v=QM1iUe6IofM</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p><a href="http://www.stlport.org/resources/StepanovUSA.html">http://www.stlport.org/resources/StepanovUSA.html</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p><a href="http://www.stlport.org/resources/StepanovUSA.html">http://www.stlport.org/resources/StepanovUSA.html</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:6" role="doc-endnote">
-<p><a href="https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D">https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:6">
+<p><a href="https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D">https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:7" role="doc-endnote">
-<p><a href="https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html">https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html</a> <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:7">
+<p><a href="https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html">https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:8" role="doc-endnote">
-<p><a href="http://harmful.cat-v.org/software/OO_programming/">http://harmful.cat-v.org/software/OO_programming/</a> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:8">
+<p><a href="http://harmful.cat-v.org/software/OO_programming/">http://harmful.cat-v.org/software/OO_programming/</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:9" role="doc-endnote">
-<p><a href="http://harmful.cat-v.org/software/OO_programming/why_oo_sucks">http://harmful.cat-v.org/software/OO_programming/why_oo_sucks</a> <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:9">
+<p><a href="http://harmful.cat-v.org/software/OO_programming/why_oo_sucks">http://harmful.cat-v.org/software/OO_programming/why_oo_sucks</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:10" role="doc-endnote">
-<p>Getting used bypassing the borrow checker to reduce fighting implies people have just found a way to cope with the constraints it imposes. <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:10">
+<p>Getting used bypassing the borrow checker to reduce fighting implies people have just found a way to cope with the constraints it imposes.&#160;<a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:11" role="doc-endnote">
-<p>Whilst writing this article, I did not realize that this was already developed, and I accidentally rediscovered substructural type systems and linear logic, and had my own terminology for it. However, it is more appropriate to the more commonly used terminology. <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:11">
+<p>Whilst writing this article, I did not realize that this was already developed, and I accidentally rediscovered substructural type systems and linear logic, and had my own terminology for it. However, it is more appropriate to the more commonly used terminology.&#160;<a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:12" role="doc-endnote">
+<li id="fn:12">
  <div>`XnYo` (X-use Y-owners), `?` (0/1), `2+` (2 or more), `N` (arbitrary uses)<br>Examples:<ul><li>`1u1o` (1-use 1-owner, linear owned-value)</li><li>`?u0o` (0/1-use 0-owners, affine non-owned-value)</li><li>`Nu1o` (N-uses 1-owner, normal owned-value)</li><li>`2+1o` (2+-uses 1-owner, relevant owned-value)</ul></div>
- <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
+&#160;<a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

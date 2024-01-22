@@ -19,7 +19,7 @@
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were.</description>
+try was a confusing name for what the semantics were.</description>
     </item>
     
     <item>
@@ -42,7 +42,7 @@ The Problem The hypothesis was that that this idiom was common:</description>
       
       <guid>/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
       <description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
- Odin1 Scopes Zig  They are all very good languages but with entirely different philosophies behind them.</description>
+Odin1 Scopes Zig They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</description>
     </item>
     
   </channel>

@@ -6,9 +6,10 @@
   <meta property="og:title" content="Multiple Return Values Research" />
 <meta property="og:description" content="I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2021/12/15/multiple-return-values-research/" />
+<meta property="og:url" content="/article/2021/12/15/multiple-return-values-research/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2021-12-15T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-12-15T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Multiple Return Values Research"/>
@@ -66,7 +67,7 @@
 		</p>
 	</div>
 </header>
-<p>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through <a href="https://en.wikipedia.org/wiki/Tuple">tuples</a>. 
+<p>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through <a href="https://en.wikipedia.org/wiki/Tuple">tuples</a>.
 My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) <a href="https://odin-lang.org/">Odin</a> has invented a new kind of type system, something to the akin of <em>polyadic expressions</em>.</p>
 <p>It appears that <a href="https://go.dev/">Go</a> and <a href="https://odin-lang.org/">Odin</a> are the only ones with what I call &ldquo;true&rdquo; multiple return values, <em>but</em> Odin&rsquo;s approach is a lot more sophisticated than Go&rsquo;s and extends the concept further.</p>
 <p>Odin&rsquo;s idea is pretty simple: an expression may have <em>n</em>-values, where <em>n</em> is a natural number <em>≥0</em>. Meaning an expression may have 0, 1, 2, 3, 4, etc values, of which each value has a type, not that each expression has a type. An expression with 0-values has no (final) type to it (not even <code>void</code> like in some languages).</p>
@@ -138,17 +139,17 @@ case:      ...
 <p>It might be the approach taken by Odin may be extremely unique to Odin, however it is also one of the my favourite things about Odin too. And I am really glad I added it so early on, since it has shown its utility really quickly. Coupled with <a href="https://odin-lang.org/docs/overview/#named-results">named return values</a>, bare <code>return</code> statements, and <a href="https://odin-lang.org/docs/overview/#or_return-statement"><code>or_return</code></a>, it is an absolute pleasure to work with.</p>
 <p>If anyone has any more information about this topic, please feel free to contact me with it!</p>
 <p>P.S. If there is no research done into this area, it is a good sign since there is so much left to discover in Programming Language Theory.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>This is technically 3 different addressing modes depending on the context (<a href="https://github.com/odin-lang/Odin/blob/4423bc0706a6a1a64cf419720fd65bc723fdf58a/src/parser.hpp#L19-L23">map-index, optional-ok, or optional-ok-ptr</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>This is technically 3 different addressing modes depending on the context (<a href="https://github.com/odin-lang/Odin/blob/4423bc0706a6a1a64cf419720fd65bc723fdf58a/src/parser.hpp#L19-L23">map-index, optional-ok, or optional-ok-ptr</a>)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p><a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p><a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
 </article>
 </main>

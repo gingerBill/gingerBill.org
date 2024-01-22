@@ -8,11 +8,12 @@
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were." />
+try was a confusing name for what the semantics were." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2021/09/06/value-propagation-experiment-part-2/" />
+<meta property="og:url" content="/article/2021/09/06/value-propagation-experiment-part-2/" /><meta property="article:section" content="article" />
 <meta property="article:published_time" content="2021-09-06T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-09-06T00:00:00+00:00" />
+
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="The Value Propagation Experiment Part 2"/>
@@ -20,7 +21,7 @@ I think there were three things which were confusing which make it look like a f
 I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
 The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
 I think there were three things which were confusing which make it look like a failure of an experiment:
- try was a confusing name for what the semantics were."/>
+try was a confusing name for what the semantics were."/>
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -104,7 +105,7 @@ I think there were three things which were confusing which make it look like a f
 <p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
 <p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
 <p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That&rsquo;s a useful construct for definite.</p>
-<p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of 
+<p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of
 <a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>&rsquo;s HxA format. <a href="https://github.com/quelsolaar/HxA">https://github.com/quelsolaar/HxA</a></p>
 <p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
 <p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
