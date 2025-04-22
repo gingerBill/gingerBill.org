@@ -44,36 +44,32 @@
 </blockquote>
 <h2 id="ideals-are-not-principles">Ideals are not Principles</h2>
 <p>All of these lists of ideals of essential freedoms—and I&rsquo;d argue they are not principles in the slightest—have not aided in anything in the long run. To use the <a href="https://en.wikipedia.org/wiki/The_Free_Software_Definition#The_Four_Essential_Freedoms_of_Free_Software">GNU&rsquo;s list</a> for example:</p>
-<ul>
-<li>The freedom to run the program as you wish, for any purpose (freedom 0).
+<h4 id="the-freedom-to-run-the-program-as-you-wish-for-any-purpose-freedom-0">The freedom to run the program as you wish, for any purpose (freedom 0).</h4>
 <ul>
 <li>Assuming you can even run it in the first place.</li>
+<li>This statement is also kind of vague but I won&rsquo;t go into to itto much.</li>
 </ul>
-</li>
-<li>The freedom to study how the program works, and change it so it does your computing as you wish (freedom 1). Access to the source code is a precondition for this.
+<h4 id="the-freedom-to-study-how-the-program-works-and-change-it-so-it-does-your-computing-as-you-wish-freedom-1-access-to-the-source-code-is-a-precondition-for-this">The freedom to study how the program works, and change it so it does your computing as you wish (freedom 1). Access to the source code is a precondition for this.</h4>
 <ul>
 <li>This is actually two &ldquo;freedoms&rdquo; combined together. The first is access to source code, and the second is that &ldquo;secrets&rdquo; should not exist (i.e. secret sauce/source).</li>
 <li>And why should that be free-as-in-beer <strong>in practice</strong>? I understand the &ldquo;ideal&rdquo; here is not suggesting it ought to be free-as-in-beer but that is end-result. And I&rsquo;d argue the vast majority of FOSS advocates would say paying for source (i.e. Source Available) is not <em>Open Source</em>.</li>
 </ul>
-</li>
-<li>The freedom to redistribute copies so you can help others (freedom 2).
+<h4 id="the-freedom-to-redistribute-copies-so-you-can-help-others-freedom-2">The freedom to redistribute copies so you can help others (freedom 2).</h4>
 <ul>
 <li>Why?! Do we allow this for forms of intellectual property? If software is intellectual property, why is it different?
 <ul>
-<li>I know I&rsquo;ve made the argument it is in a separate category, but if it is actually a form of intellectual property, then our legals systems do not and should not allow for this.</li>
+<li>I know I&rsquo;ve made the argument it is in a separate category, but if it is actually a form of intellectual property, then our legal systems do not and should not allow for this.</li>
 </ul>
 </li>
 <li>This &ldquo;freedom&rdquo; is probably the most egregious with respect to the &ldquo;ideology of communism&rdquo; proclamation.</li>
 </ul>
-</li>
-<li>The freedom to distribute copies of your modified versions to others (freedom 3). By doing this, you can give the whole community a chance to benefit from your changes. Access to the source code is a precondition for this.
+<h4 id="the-freedom-to-distribute-copies-of-your-modified-versions-to-others-freedom-3-by-doing-this-you-can-give-the-whole-community-a-chance-to-benefit-from-your-changes-access-to-the-source-code-is-a-precondition-for-this">The freedom to distribute copies of your modified versions to others (freedom 3). By doing this, you can give the whole community a chance to benefit from your changes. Access to the source code is a precondition for this.</h4>
 <ul>
-<li>This viral nature of licences like GPL are a fundamentally pernicious aspect of the FOSS (not necessarily OSS) movement. It&rsquo;s this idea of &ldquo;forcing&rdquo; charity on others. Of course you are &ldquo;free&rdquo; to not use the software, but if there are virtually no other options, you either have to write the thing yourself, or have the potential to have virtually no business model.</li>
+<li>This viral nature of licences like GPL are a fundamentally pernicious aspect of the FOSS (not necessarily OSS) movement. It&rsquo;s this idea of &ldquo;forcing&rdquo; charity on others.</li>
+<li>Of course you are &ldquo;free&rdquo; to not use the software, but if there are virtually no other options, you either have to write the thing yourself, or have the potential to have virtually no business model.</li>
 <li>This point is also an extension of (freedom 2) and as such, not helping the case.</li>
 </ul>
-</li>
-</ul>
-<p>As to my previous statement, none of these are <em>principles</em>. &ldquo;Freedom 0&rdquo; the foundation for the rest isn&rsquo;t even foundational. It pretty much relies on time preference between using pre-made software and home-made software. Software could be a service, but it&rsquo;s also, again, an implementation of an algorithm/idea. Of course I know these &ldquo;ideals&rdquo; only apply to <em>some</em> FOSS advocates, and not necessarily any OSS advocates, but</p>
+<p>As to my previous statement, none of these are <em>principles</em>. &ldquo;Freedom 0&rdquo; the foundation for the rest isn&rsquo;t even foundational. It pretty much relies on time preference between using pre-made software and home-made software. Software could be a service, but it&rsquo;s also, again, an implementation of an algorithm/idea. Of course I know these &ldquo;ideals&rdquo; only apply to <em>some</em> FOSS advocates, and not necessarily any OSS advocates, but it&rsquo;s still the general perception of it.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>To conclude from this very unstructured brain-dump, I can understand the original sentiment that a lot of the mentality of advocating for OSS/FOSS is from a similar standpoint of the &ldquo;ideology of communism&rdquo;, but I do not conceptualize it that way. I don&rsquo;t think OSS nor FOSS has been a good thing for software, and probably a huge acceleration towards why software has been getting worse over the years.</p>
 <div class="footnotes" role="doc-endnotes">
