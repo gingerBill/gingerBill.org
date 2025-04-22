@@ -15,8 +15,269 @@
       <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/12/02/memory-allocation-strategies-006/</guid>
-      <description>Buddy Memory Allocation In the previous article, we discussed the free list allocator and how it is commonly implemented with a linked list or a red-black tree. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.
-In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get best-fit as a consequence.</description>
+      <description><h1 id="buddy-memory-allocation">Buddy Memory Allocation</h1>
+<p>In the previous article, we discussed the <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list allocator</a> and how it is commonly implemented with a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#linked-list-approach">linked list</a> or a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#red-black-tree-approach">red-black tree</a>. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.</p>
+<p>In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get <em>best-fit</em> as a consequence. One of the big problems with free lists is that they are <em>very</em> susceptible to <a href="https://wikipedia.org/wiki/Fragmentation_(computing)">internal memory fragmentation</a> due to allocations being of any size. If we still require the properties of free lists but want to reduce internal memory fragmentation, the <a href="https://wikipedia.org/wiki/Buddy_memory_allocation">Buddy algorithm</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> works in a similar principle.</p>
+<h1 id="the-algorithm">The Algorithm</h1>
+<p>The <em>Buddy Algorithm</em> assumes that the backing memory block is a power-of-two in bytes. When an allocation is requested, the allocator looks for a block whose size is at least the size of the requested allocation (similar to a free list). If the requested allocation size is less than half of the block, it is split into two (left and right), and the two resulting blocks are called &ldquo;buddies&rdquo;<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. If this requested allocation size is still less than half the size of the left buddy, the buddy block is recursively split until the resulting buddy is as small as possible to fit the requested allocation size.</p>
+<p>When a block is released, we can try to performance coalescence on buddies (contiguous neighbouring blocks). Similar to <a href="/article/2021/11/30/memory-allocation-strategies-005/#free-and-coalescence">free lists</a>, there are particular conditions that are needed. Coalescence cannot be performed if a block is has no (free) buddy, the block is still in use, or the buddy block is partially used.</p>
+<p><img src="/images/memory-allocation-strategies/buddy_allocator.svg#center" alt="Buddy Allocator Splitting Algorithm"></p>
+<h1 id="the-implementation">The Implementation</h1>
+<h2 id="buddy-block-data-structure">Buddy Block Data Structure</h2>
+<p>Each block in the buddy allocator will have a header (similar to our free list in the previous article) which stores information about it <em>inline</em>. It stores its size and whether it is free.</p>
+<pre><code class="language-c">typedef struct Buddy_Block Buddy_Block;
+struct Buddy_Block { // Allocation header (metadata)
+    size_t size; 
+    bool   is_free;
+};
+</code></pre>
+<p>We do not need store a pointer to the next buddy block as we can calculate it directly from the stored size.</p>
+<pre><code class="language-c">Buddy_Block *buddy_block_next(Buddy_Block *block) {
+    return (Buddy_Block *)((char *)block + block-&gt;size);
+}
+</code></pre>
+<p>n.b. Many implementations of a buddy allocator use a doubly linked list here and store explicit pointers, which allows for easier coalescence of neighbouring buddies and forward and backwards traversal. However this does add an extra cost of increasing the size of the allocation header for the memory block.</p>
+<h2 id="recursive-split">Recursive Split</h2>
+<p>As described above, to get the best fitting block a recursive splitting algorithm is required. We need to continually split a block until it is the optimal size for the allocation of the requested size.</p>
+<pre><code class="language-c">Buddy_Block *buddy_block_split(Buddy_Block *block, size_t size) {
+    if (block != NULL &amp;&amp; size != 0) {
+        // Recursive split
+        while (size &lt; block-&gt;size) {
+            size_t sz = block-&gt;size &gt;&gt; 1;
+            block-&gt;size = sz;
+            block = buddy_block_next(block);
+            block-&gt;size = sz;
+            block-&gt;is_free = true;
+        }
+        
+        if (size &lt;= block-&gt;size) {
+            return block;
+        }
+    }
+    
+    // Block cannot fit the requested allocation size
+    return NULL;
+}
+</code></pre>
+<h2 id="finding-the-best-block">Finding the Best Block</h2>
+<p>Searching for a free block that matches the requested allocation size can be achieved by traversing an (implicit) linked list bounded by <code>head</code> and <code>tail</code> pointers<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. If a block for the requested allocation size cannot be found, but there is a larger free block, the above splitting algorithm is used. If there is no free block available, the following procedure with return <code>NULL</code> to represent that the allocator is (possibly) out of memory<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
+<pre><code class="language-c">Buddy_Block *buddy_block_find_best(Buddy_Block *head, Buddy_Block *tail, size_t size) {
+    // Assumes size != 0
+    
+    Buddy_Block *best_block = NULL;
+    Buddy_Block *block = head;                    // Left Buddy
+    Buddy_Block *buddy = buddy_block_next(block); // Right Buddy
+     
+    // The entire memory section between head and tail is free, 
+    // just call 'buddy_block_split' to get the allocation
+    if (buddy == tail &amp;&amp; block-&gt;is_free) {
+        return buddy_block_split(block, size);
+    }
+    
+    // Find the block which is the 'best_block' to requested allocation sized
+    while (block &lt; tail &amp;&amp; buddy &lt; tail) { // make sure the buddies are within the range
+        // If both buddies are free, coalesce them together
+        // NOTE: this is an optimization to reduce fragmentation
+        //       this could be completely ignored
+        if (block-&gt;is_free &amp;&amp; buddy-&gt;is_free &amp;&amp; block-&gt;size == buddy-&gt;size) {
+            block-&gt;size &lt;&lt;= 1
+            if (size &lt;= block-&gt;size &amp;&amp; (best_block == NULL || block-&gt;size &lt;= best_block-&gt;size)) {
+                best_block = block;
+            }
+            
+            block = buddy_block_next(buddy);
+            if (block &lt; tail) {
+                // Delay the buddy block for the next iteration
+                buddy = buddy_block_next(block);
+            }
+            continue;
+        }
+        
+                
+        if (block-&gt;is_free &amp;&amp; size &lt;= block-&gt;size &amp;&amp; 
+            (best_block == NULL || block-&gt;size &lt;= best_block-&gt;size)) {
+            best_block = block;
+        }
+        
+        if (buddy-&gt;is_free &amp;&amp; size &lt;= buddy-&gt;size &amp;&amp;
+            (best_block == NULL || buddy-&gt;size &lt; best_block-&gt;size)) { 
+            // If each buddy are the same size, then it makes more sense 
+            // to pick the buddy as it &quot;bounces around&quot; less
+            best_block = buddy;
+        }
+        
+        if (block-&gt;size &lt;= buddy-&gt;size) {
+            block = buddy_block_next(buddy);
+            if (block &lt; tail) {
+                // Delay the buddy block for the next iteration
+                buddy = buddy_block_next(block);
+            }
+        } else {
+            // Buddy was split into smaller blocks
+            block = buddy;
+            buddy = buddy_block_next(buddy);
+        }
+    }
+    
+    if (best_block != NULL) {
+        // This will handle the case if the 'best_block' is also the perfect fit
+        return buddy_block_split(best_block, size);
+    }
+    
+    // Maybe out of memory
+    return NULL;
+}
+</code></pre>
+<p>This algorithm can suffer from undue internal fragmentation. As an exercise for the reader, you can coalesce on neighbouring free buddies<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> as you iterate.</p>
+<h2 id="initialization">Initialization</h2>
+<p>Initialization of the buddy allocator itself is relatively simple. The allocator itself stores three pieces of information: the <code>head</code> block (same the backing memory data), a sentinel pointer <code>tail</code> which represents the upper memory boundary of the backing memory data (<code>(char *)head + size)</code>, which means it is not a &ldquo;real&rdquo; block), and the alignment for each allocation. The procedure <code>buddy_allocator_init</code> below does some minor checks for the data itself with <code>assert</code>ions.</p>
+<p>n.b. This implementation of a buddy allocator does require that all allocations must have the same alignment in order to simplify the code a lot. Buddy allocators are usually a single strategy as part of a more complicated allocator and thus the assumption of alignment is less of an issue in practice.</p>
+<pre><code class="language-c">typedef struct Buddy_Allocator Buddy_Allocator;
+struct Buddy_Allocator {
+    Buddy_Block *head; // same pointer as the backing memory data
+    Buddy_Block *tail; // sentinel pointer representing the memory boundary
+    size_t alignment; 
+};
+
+void buddy_allocator_init(Buddy_Allocator *b, void *data, size_t size, size_t alignment) {
+    assert(data != NULL);
+    assert(is_power_of_two(size) &amp;&amp; &quot;size is not a power-of-two&quot;);
+    assert(is_power_of_two(alignment) &amp;&amp; &quot;alignment is not a power-of-two&quot;);
+    
+    // The minimum alignment depends on the size of the `Buddy_Block` header
+    assert(is_power_of_two(sizeof(Buddy_Block)) == 0);
+    if (alignment &lt; sizeof(Buddy_Block)) {
+        alignment = sizeof(Buddy_Block);
+    }
+    assert((uintptr_t)data % alignment == 0 &amp;&amp; &quot;data is not aligned to minimum alignment&quot;);
+    
+    b-&gt;head          = (Buddy_Block *)data;
+    b-&gt;head-&gt;size    = size;
+    b-&gt;head-&gt;is_free = true;
+    
+    // The tail here is a sentinel value and not a true block
+    b-&gt;tail = buddy_block_next(b-&gt;head);
+    
+    b-&gt;alignment = alignment;
+}
+</code></pre>
+<h2 id="allocation">Allocation</h2>
+<p>Allocation is relatively straightforward since we have set everything else up already now. We first need increase requested allocation size to a fit the header and align forward before we find a best fitting block. If one is found, we then need to offset from the header to the usable data. If a block cannot be found, we can keep coalescing any free blocks until we cannot coalesce any more and then try to look for a usable block again. If not block is found, we return <code>NULL</code> to signify that we are out of memory with this particular allocator.</p>
+<pre><code class="language-c">size_t buddy_block_size_required(Buddy_Allocator *b, size_t size) {
+    size_t actual_size = b-&gt;alignment;
+    
+    size += sizeof(Buddy_Block);
+    size = align_forward_size(size, b-&gt;alignment); 
+    
+    while (size &gt; actual_size) {
+        actual_size &lt;&lt;= 1;
+    }
+    
+    return actual_size;
+}
+
+void buddy_block_coalescence(Buddy_Block *head, Buddy_Block *tail) {
+    for (;;) { 
+        // Keep looping until there are no more buddies to coalesce
+        
+        Buddy_Block *block = head;   
+        Buddy_Block *buddy = buddy_block_next(block);   
+        
+        bool no_coalescence = true;
+        while (block &lt; tail &amp;&amp; buddy &lt; tail) { // make sure the buddies are within the range
+            if (block-&gt;is_free &amp;&amp; buddy-&gt;is_free &amp;&amp; block-&gt;size == buddy-&gt;size) {
+                // Coalesce buddies into one
+                block-&gt;size &lt;&lt;= 1;
+                block = buddy_block_next(block);
+                if (block &lt; tail) {
+                    buddy = buddy_block_next(block);
+                    no_coalescence = false;
+                }
+            } else if (block-&gt;size &lt; buddy-&gt;size) {
+                // The buddy block is split into smaller blocks
+                block = buddy;
+                buddy = buddy_block_next(buddy);
+            } else {
+                block = buddy_block_next(buddy);
+                if (block &lt; tail) {
+                    // Leave the buddy block for the next iteration
+                    buddy = buddy_block_next(block);
+                }
+            }
+        }
+        
+        if (no_coalescence) {
+            return;
+        }
+    }
+}
+
+void *buddy_allocator_alloc(Buddy_Allocator *b, size_t size) {
+    if (size != 0) {    
+        size_t actual_size = buddy_block_size_required(b, size);
+        
+        Buddy_Block *found = buddy_block_find_best(b-&gt;head, b-&gt;tail, actual_size);
+        if (found == NULL) {
+            // Try to coalesce all the free buddy blocks and then search again
+            buddy_block_coalescence(b-&gt;head, b-&gt;tail);
+            found = buddy_block_find_best(b-&gt;head, b-&gt;tail, actual_size);
+        }
+            
+        if (found != NULL) {
+            found-&gt;is_free = false;
+            return (void *)((char *)found + b-&gt;alignment);
+        }
+        
+        // Out of memory (possibly due to too much internal fragmentation)
+    }
+    
+    return NULL;
+}
+</code></pre>
+<p>The general time-complexity of this allocation algorithm is <em><strong>O(N)</strong></em> on average but a space complexity of <em><strong>O(log N)</strong></em>.</p>
+<p>n.b. As buddy allocators are still susceptible to internal fragmentation; it is less than a normal free list allocator but because of the power-of-two restriction, it is less severe in practice.</p>
+<h2 id="freeing-memory">Freeing Memory</h2>
+<p>Freeing memory is very trivial with this algorithm since all we need to do is mark the header (which is stored before the passed pointer) as being free.</p>
+<pre><code class="language-c">void buddy_allocator_free(Buddy_Allocator *b, void *data) {
+    if (data != NULL) {
+        Buddy_Block *block;
+        
+        assert(b-&gt;head &lt;= data);
+        assert(data &lt; b-&gt;tail);
+        
+        block = (Buddy_Block *)((char *)data - b-&gt;alignment);
+        block-&gt;is_free = true;
+        
+        // NOTE: Coalescence could be done now but it is optional
+        // buddy_block_coalescence(b-&gt;head, b-&gt;tail);
+    }
+}
+</code></pre>
+<p>The general time-complexity of freeing memory is <em><strong>O(1)</strong></em>. If you wanted to, <code>buddy_block_coalescence</code> could be performed straight after this free to aid in minimizing internal fragmentation.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The buddy allocator is a powerful allocator and a conceptually simple algorithm but implementing it efficiently is a lot harder than all of the previous allocators that have been discussed in this series.</p>
+<p>In the next set of articles, I will discuss the a lot about virtual memory; how it works, how we can utilize it, and its benefits.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The Wikipedia article is not that easy to understand, especially from the basic table diagram given in the <em>Example</em> section. (Accessed 2021-12-01)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Just like Jackie Chan and Chris Tucker in <a href="https://www.imdb.com/title/tt0120812/">Rush Hour</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>The allocator may have enough memory left but none of it is contiguous due to too much internal fragmentation.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>All becoming a single buddy, trying to be someone else: <a href="https://www.imdb.com/title/tt0120601/">https://www.imdb.com/title/tt0120601/</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -25,7 +286,253 @@ In the previous article, the red black tree approach was briefly discussed as a 
       <pubDate>Tue, 30 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/11/30/memory-allocation-strategies-005/</guid>
-      <description>Free List Based Allocation In the previous article, we looked at the pool allocator, which splits the supplied backing buffer into chunks of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time O(1) whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</description>
+      <description><h1 id="free-list-based-allocation">Free List Based Allocation</h1>
+<p>In the previous article, we looked at the <a href="/article/2019/02/16/memory-allocation-strategies-004/">pool allocator</a>, which splits the supplied backing buffer into <em>chunks</em> of equal size and keeps track of which of the chunks are free. Pool allocators are fast allocators that allow for out of order free in constant time <em><strong>O(1)</strong></em> whilst keeping very little fragmentation. The main restriction of a pool allocator is that every memory allocation must be of the same size.</p>
+<p>A free list is a general purpose allocator which, compared to the other allocators that we previously looked at, does not impose any restrictions. It allows allocations and deallocations to be out of order and of any size. Due to its nature, the allocator&rsquo;s performance is not as good as the others previously discussed in this series.</p>
+<p>There are two common approaches to implementing a free list allocator: one using a <a href="https://wikipedia.org/wiki/Linked_list">linked list</a> and one use a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>. Using a linked list approach is the most common approach and what we&rsquo;ll look at first.</p>
+<h1 id="linked-list-approach">Linked List Approach</h1>
+<p>As the title of this section suggests, we&rsquo;ll be using a linked list to store the address of free contiguous blocks in the memory along with its size. When the user requests memory, it searches in the linked list for a block where the data can fit. It then removes the element from the linked list and places an allocation header (which is required on free) just before the data (similar to what we used in the article on <a href="/article/2019/02/15/memory-allocation-strategies-003/#data-structures">stack allocators</a>).</p>
+<p>For freeing memory, we recover the allocation header (stored before the allocation) to know the size of the block we want to free. Once that block has been freed, it is inserted into the linked list, and then we try to <em>coalescence</em> contiguous blocks of memory together to create larger blocks.</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator.svg#center" alt="Free List Allocator"></p>
+<h1 id="linked-list-free-list-implementation">Linked List Free List Implementation</h1>
+<p><strong>n.b.</strong> The following implementation does provide some constraints on the size and alignment of requested allocations with this particular allocator. The minimum size of an allocation must be at least the size of the free list node data structure, and the alignment has similar requirements.</p>
+<h2 id="data-structures">Data Structures</h2>
+<p>These are the data structures that are required to implement the linked list based free list allocator.</p>
+<pre><code class="language-c">// Unlike our trivial stack allocator, this header needs to store the 
+// block size along with the padding meaning the header is a bit
+// larger than the trivial stack allocator
+typedef struct Free_List_Allocation_Header Free_List_Allocation_Header;
+struct Free_List_Allocation_Header {
+    size_t block_size;
+    size_t padding;
+};
+
+// An intrusive linked list for the free memory blocks
+typedef struct Free_List_Node Free_List_Node;
+struct Free_List_Node {
+    Free_List_Node *next;
+    size_t block_size;
+};
+
+typedef Placement_Policy Placement_Policy;
+enum Placement_Policy {
+    Placement_Policy_Find_First,
+    Placement_Policy_Find_Best
+};
+
+typedef struct Free_List Free_List;
+struct Free_List {
+    void *           data;
+    size_t           size;
+    size_t           used;
+    
+    Free_List_Node * head;
+    Placement_Policy policy;
+};
+</code></pre>
+<h2 id="initialization">Initialization</h2>
+<pre><code class="language-c">void free_list_free_all(Free_List *fl) {
+    fl-&gt;used = 0;
+    Free_List_Node *first_node = (Free_List_Node *)fl-&gt;data;
+    first_node-&gt;block_size = fl-&gt;size;
+    first_node-&gt;next = NULL;
+    f-&gt;head = first_node;
+}
+
+void free_list_init(Free_List *fl, void *data, size_t size) {
+    fl-&gt;data = data;
+    fl-&gt;size = size;
+    free_list_free_all(fl);
+}
+</code></pre>
+<h2 id="allocation">Allocation</h2>
+<p>To allocate a block of memory within this allocator, we need to look for a block in the memory in which to fit our data. This means iterating across our linked list of free memory blocks until a block has at least the size requested, and then remove it from the linked list of free memory. Finding the first block is called a <em>first-fit</em> placement policy as it stops at the <em>first</em> block which fits the requested memory size. Another placement policy is called the <em>best-fit</em> which looks for a free block of memory which is the smallest available which fits the memory size. The latter option reduces memory fragmentation within the allocator.</p>
+<p>In the diagram there three free memory blocks, but not all are appropriate for the size of the memory allocation that is requested (plus the header)
+<img src="/images/memory-allocation-strategies/free_list_allocator_alloc.svg#center" alt="Free List Allocator Allocate Search"></p>
+<p>When an allocation has been made, the free list will then be corrected to remove the used node.
+<img src="/images/memory-allocation-strategies/free_list_allocator_alloc2.svg#center" alt="Free List Allocator Allocate Store"></p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the number of free blocks in the free list.</p>
+<pre><code class="language-c">// Defined Memory Allocation Strategies Part 3: /article/2019/02/15/memory-allocation-strategies-003/#alloc
+size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t header_size);
+
+Free_List_Node *free_list_find_first(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
+    // Iterates the list and finds the first free block with enough space 
+    Free_List_Node *node = fl-&gt;head;
+    Free_List_Node *prev_node = NULL;
+    
+    size_t padding = 0;
+    
+    while (node != NULL) {
+        padding = calc_padding_with_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        size_t required_space = size + padding;
+        if (node-&gt;block_size &gt;= required_space) {
+            break;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    if (padding_) *padding_ = padding;
+    if (prev_node_) *prev_node_ = prev_node;
+    return node;
+}
+Free_List_Node *free_list_find_best(Free_List *fl, size_t size, size_t alignment, size_t *padding_, Free_List_Node **prev_node_) {
+    // This iterates the entire list to find the best fit
+    // O(n)
+    size_t smallest_diff = ~(size_t)0;
+    
+    Free_List_Node *node = fl-&gt;head;
+    Free_List_Node *prev_node = NULL;
+    Free_List_Node *best_node = NULL;
+    
+    size_t padding = 0;
+    
+    while (node != NULL) {
+        padding = calc_padding_with_header((uintptr_t)node, (uintptr_t)alignment, sizeof(Free_List_Allocation_Header));
+        size_t required_space = size + padding;
+        if (node-&gt;block_size &gt;= required_space &amp;&amp; (it.block_size - required_space &lt; smallest_diff)) {
+            best_node = node;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    if (padding_) *padding_ = padding;
+    if (prev_node_) *prev_node_ = prev_node;
+    return best_node;
+}
+</code></pre>
+<pre><code class="language-c">void *free_list_alloc(Free_List *fl, size_t size, size_t alignment) {
+    size_t padding = 0;
+    Free_List_Node *prev_node = NULL;
+    Free_List_Node *node = NULL;
+    size_t alignment_padding, required_space, remaining;
+    Free_List_Allocation_Header *header_ptr;
+    
+    if (size &lt; sizeof(Free_List_Node)) {
+        size = sizeof(Free_List_Node);
+    }
+    if (alignment &lt; 8) {
+        alignment = 8;
+    }
+    
+    
+    if (fl-&gt;policy == Placement_Policy_Find_Best) {
+        node = free_list_find_best(fl, size, alignment, &amp;padding, &amp;prev_node);
+    } else {
+        node = free_list_find_first(fl, size, alignment, &amp;padding, &amp;prev_node);
+    }
+    if (node == NULL) {
+        assert(0 &amp;&amp; &quot;Free list has no free memory&quot;);
+        return NULL;
+    }
+    
+    alignment_padding = padding - sizeof(Free_List_Allocation_Header);
+    required_space = size + padding;
+    remaining = node-&gt;block_size - required_space;
+    
+    if (remaining &gt; 0) {
+        Free_List_Node *new_node = (Free_List_Node *)((char *)node + required_space);
+        new_node-&gt;block_size = rest;
+        free_list_node_insert(&amp;fl-&gt;head, node, new_node);
+    }
+    
+    free_list_node_remove(&amp;fl-&gt;head, prev_node, node);
+    
+    header_ptr = (Free_List_Allocation_Header *)((char *)node + alignment_padding);
+    header_ptr-&gt;block_size = required_space;
+    header_ptr-&gt;padding = alignment_padding;
+    
+    fl-&gt;used += required_space;
+    
+    return (void *)((char *)header_ptr + sizeof(Free_List_Allocation_Header));
+}
+</code></pre>
+<h2 id="free-and-coalescence">Free and Coalescence</h2>
+<p>When freeing a memory block that was allocated with our free list allocator, we need to retrieve the allocation header and that memory block to be treated as a free memory block now. We then need to iterate across the linked list of free memory blocks until will get to the right position in memory order (as the link list is sorted), and then insert new at that position. This can be achieved by looking at the previous and next nodes in the list since they are already sorted by address.</p>
+<p>When the insert of the free list, we want to coalescence any free memory blocks which are contiguous. When we were iterating across linked list we had to store both the previous and next free nodes, this means that we may be able to merge these blocks together if possible.</p>
+<p>This algorithm has a time complexity of <em><strong>O(N)</strong></em>, where N is the number of free blocks in the free list.</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator_free.svg#center" alt="Free List Allocator Free and Coalescence"></p>
+<pre><code class="language-c">void free_list_coalescence(Free_List *fl, Free_List_Node *prev_node, Free_List_Node *free_node);
+
+void *free_list_free(Free_List *fl, void *ptr) {
+    Free_List_Allocation_Header *header;
+    Free_List_Node *free_node;
+    Free_List_Node *node;
+    Free_List_Node *prev_node = NULL;
+    
+    if (ptr == NULL) {
+        return;
+    }
+    
+    header = (Free_List_Allocation_Header *)((char *)ptr - sizeof(Free_List_Allocation_Header));
+    free_node = (Free_List_Node *)header;
+    free_node-&gt;block_size = header-&gt;block_size + header-&gt;padding;
+    free_node-&gt;next = NULL;
+    
+    node = fl-&gt;head;
+    while (node != NULL) {
+        if (ptr &lt; node) {
+            free_list_node_insert(&amp;fl-&gt;head, prev_node, free_node);
+            break;
+        }
+        prev_node = node;
+        node = node-&gt;next;
+    }
+    
+    fl-&gt;used -= free_node-&gt;block_size;
+    
+    free_list_coalescence(fl, prev_node, free_node);
+}
+
+void free_list_coalescence(Free_List *fl, Free_List_Node *prev_node, Free_List_Node *free_node) {
+    if (free_node-&gt;next != NULL &amp;&amp; (void *)((char *)free_node + free_node-&gt;block_size) == free_node-&gt;next) {
+        free_node-&gt;block_size += free_node-&gt;next-&gt;block_size;
+        free_list_node_remove(&amp;fl-&gt;head, free_node, free_node-&gt;next);
+    }
+    
+    if (prev_node-&gt;next != NULL &amp;&amp; (void *)((char *)prev_node + prev_node-&gt;block_size) == free_node) {
+        prev_node-&gt;block_size += free_node-&gt;next-&gt;block_size;
+        free_list_node_remove(&amp;fl-&gt;head, prev_node, free_node);
+    }
+}
+</code></pre>
+<h2 id="utilities">Utilities</h2>
+<p>General utilities needed for free list insertion, removal, and calculating the padding required for the header.</p>
+<pre><code class="language-c">void free_list_node_insert(Free_List_Node **phead, Free_List_Node *prev_node, Free_List_Node *new_node) {
+    if (prev_node == NULL) {
+        if (*phead != NULL) {
+            new_node-&gt;next = *phead;
+        } else {
+            *phead = new_node;
+        }
+    } else {
+        if (prev_node-&gt;next == NULL) {
+            prev_node-&gt;next = new_node;
+            new_node-&gt;next  = NULL;
+        } else {
+            new_node-&gt;next  = prev_node-&gt;next;
+            prev_node-&gt;next = new_node;
+        }
+    }
+}
+
+void free_list_node_remove(Free_List_Node **phead, Free_List_Node *prev_node, Free_List_Node *del_node) {
+    if (prev_node == NULL) { 
+        *phead = del_node-&gt;next; 
+    } else { 
+        prev_node-&gt;next = del_node-&gt;next; 
+    } 
+}
+</code></pre>
+<h1 id="red-black-tree-approach">Red Black Tree Approach</h1>
+<p>The other way of implementing a free list is with a <a href="https://wikipedia.org/wiki/Red%E2%80%93black_tree">red black tree</a>; the purpose of which is to improve the speed at which allocations and deallocations can be done in. The linked list from above, any operation made is needed to be iterated across linearly (<em><strong>O(N)</strong></em>). A red black reduces its time complexity to <em><strong>O(log(N))</strong></em>, whilst keeping the space complexity relatively low (using the same trick as before by storing the tree data within the free memory blocks). And as a consequence of this data-structure approach, a <em>best-fit</em> algorithm may be taken always (in order to reduce fragmentation whilst keeping the allocation/deallocation speed).</p>
+<p>The minor increase in space complexity is due to instead of using a singly linked list, a (sorted) doubly linked is required, but as a consequence, it allows coalescence operations in <strong><em>O(1)</em></strong> time.</p>
+<p>This implementation is a common aspect in many <code>malloc</code> implementations, but note that most <code>malloc</code>s utilize multiple different memory allocation strategies that complement each other.</p>
+<p>I will not demonstrate how to implement this approach in this article and leave it as an small exercise for the reader. The following diagram may help:</p>
+<p><img src="/images/memory-allocation-strategies/free_list_allocator_red_black_tree.svg#center" alt="Free List Red-Black Tree"></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The free list allocator is a very useful allocator for when you need to general purpose allocator that requires allocations of arbitrary size and out of order deallocations.</p>
+<p>In the next article, I will discuss the <a href="/article/2021/12/02/memory-allocation-strategies-006/">buddy memory allocator</a>.</p>
+</description>
     </item>
     
     <item>
@@ -34,8 +541,154 @@ In the previous article, the red black tree approach was briefly discussed as a 
       <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/02/16/memory-allocation-strategies-004/</guid>
-      <description>Pool-Based Allocation In the previous article, we looked at the stack allocator, which was the natural evolution of the linear/arena allocator. In this article, I will cover the fixed-sized pool allocator.
-A pool allocator is a bit different from the previous allocation strategies that I have covered. A pool splits the supplied backing buffer into chunks of equal size and keeps track of which of the chunks are free. When an allocation is wanted, a free chunk is given.</description>
+      <description><h1 id="pool-based-allocation">Pool-Based Allocation</h1>
+<p>In the previous article, we looked at the <a href="/article/2019/02/15/memory-allocation-strategies-003/">stack allocator</a>, which was the natural evolution of the <a href="/article/2019/02/08/memory-allocation-strategies-002/">linear/arena allocator</a>. In this article, I will cover the fixed-sized <em>pool allocator</em>.</p>
+<p>A pool allocator is a bit different from the previous allocation strategies that I have covered. A pool splits the supplied backing buffer into <em>chunks</em> of equal size and keeps track of which of the chunks are free. When an allocation is wanted, a free chunk is given. When a chunk is wanted to be freed, it adds that chunk to the list of free chunks.</p>
+<p>Pool allocators are extremely useful when you need to allocate chunks of memory of the same size which need are created and destroy dynamically, especially in a random order. Pools also have the benefit that arenas and stacks have in that they provide very little fragmentation and allocate/free in constant time <em><strong>O(1)</strong></em>.</p>
+<p>Pool allocators are usually used to allocate <em>groups</em> of &ldquo;things&rdquo; at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
+<h1 id="basic-logic">Basic Logic</h1>
+<p>A pool allocator takes a backing buffer and divides that buffer into pools/slots/bins/chunks<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> of all the same size.</p>
+<p><img src="/images/memory-allocation-strategies/pool_allocator.svg#center" alt="Pool Allocator Layout"></p>
+<p>The question is how are these allocations and frees determined? And how do they provide very little fragmentation with allocations that can be made in any order?</p>
+<h2 id="free-lists">Free Lists</h2>
+<p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_list.svg#center" alt="Pool Allocator List"></p>
+<p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg#center" alt="Pool Allocator List In-Place"></p>
+<h2 id="allocate-and-free">Allocate and Free</h2>
+<p>To allocate a chunk, just pop off the head (first element) from the free list. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_alloc.svg#center" alt="Pool Allocator Alloc"></p>
+<p><strong>Note</strong>: The free list does not need to be ordered as its order is determined by how chunks are allocated and freed.</p>
+<p><img src="/images/memory-allocation-strategies/pool_allocator_alloc_unordered.svg#center" alt="Pool Allocator Alloc Unordered"></p>
+<p>To free a chunk, just push the freed chunk as the head of the free list. In Big-O notation, the freeing of this memory has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<h1 id="implementation">Implementation</h1>
+<p>The pool allocator requires less code than the arena and stack allocator as there is no logic required for different sized/aligned allocations and resize allocations. The complete pool allocator will have the following procedures:</p>
+<ul>
+<li><code>pool_init</code> initialize the pool with a pre-allocated memory buffer</li>
+<li><code>pool_alloc</code> pops off the head from the free list</li>
+<li><code>pool_free</code> pushes on the freed chunk as the head of the free list</li>
+<li><code>pool_free_all</code> pushes every chunk in the pool onto the free list</li>
+</ul>
+<h2 id="data-structures">Data Structures</h2>
+<p>The pool data structure contains a backing buffer, the size of each chunk, and the head to the free list.</p>
+<pre><code class="language-c">typedef struct Pool Pool;
+struct Pool {
+	unsigned char *buf;
+	size_t buf_len;
+	size_t chunk_size;
+
+	Pool_Free_Node *head; // Free List Head
+};
+</code></pre>
+<p>Each node in the free list just contains a pointer to the next free chunk, which could be <code>NULL</code> if it is the <em>tail</em> (last element).</p>
+<pre><code class="language-c">typedef struct Pool_Free_Node Pool_Free_Node;
+struct Pool_Free_Node {
+	Pool_Free_Node *next;
+};
+</code></pre>
+<h2 id="init">Init</h2>
+<p>Initializing a pool is pretty simple however, because each chunk has the same size and alignment, this logic can be done now rather than later.</p>
+<pre><code class="language-c">void pool_free_all(Pool *p); // This procedure will be covered later in this article
+
+void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
+               size_t chunk_size, size_t chunk_alignment) {
+	// Align backing buffer to the specified chunk alignment
+	uintptr_t initial_start = (uintptr_t)backing_buffer;
+	uintptr_t start = align_forward_uintptr(initial_start, (uintptr_t)chunk_alignment);
+	backing_buffer_length -= (size_t)(start-initial_start);
+
+	// Align chunk size up to the required chunk_alignment
+	chunk_size = align_forward_size(chunk_size, chunk_alignment);
+
+	// Assert that the parameters passed are valid
+	assert(chunk_size &gt;= sizeof(Pool_Free_Node) &amp;&amp;
+	       &quot;Chunk size is too small&quot;);
+	assert(backing_buffer_length &gt;= chunk_size &amp;&amp;
+	       &quot;Backing buffer length is smaller than the chunk size&quot;);
+
+	// Store the adjusted parameters
+	p-&gt;buf = (unsigned char *)backing_buffer;
+	p-&gt;buf_len = backing_buffer_length;
+	p-&gt;chunk_size = chunk_size;
+	p-&gt;head = NULL; // Free List Head
+
+	// Set up the free list for free chunks
+	pool_free_all(p);
+}
+</code></pre>
+<h2 id="alloc">Alloc</h2>
+<p>The <code>pool_alloc</code> procedure is a lot simpler than other allocators as each chunk has the same size and alignment and thus these parameters do not need to be passed to the procedure. The latest free chunk from the free list is popped off and is then used as the new allocation.</p>
+<pre><code class="language-c">void *pool_alloc(Pool *p) {
+	// Get latest free node
+	Pool_Free_Node *node = p-&gt;head;
+
+	if (node == NULL) {
+		assert(0 &amp;&amp; &quot;Pool allocator has no free memory&quot;);
+		return NULL;
+	}
+
+	// Pop free node
+	p-&gt;head = p-&gt;head-&gt;next;
+
+	// Zero memory by default
+	return memset(node, 0, p-&gt;chunk_size);
+}
+</code></pre>
+<h2 id="free">Free</h2>
+<p>Freeing an allocation is pretty much the opposite of an allocation. The chunk to be freed is pushed onto the free list.</p>
+<pre><code class="language-c">void pool_free(Pool *p, void *ptr) {
+	Pool_Free_Node *node;
+
+	void *start = p-&gt;buf;
+	void *end = &amp;p-&gt;buf[p-&gt;buf_len];
+
+	if (ptr == NULL) {
+		// Ignore NULL pointers
+		return;
+	}
+
+	if (!(start &lt;= ptr &amp;&amp; ptr &lt; end)) {
+		assert(0 &amp;&amp; &quot;Memory is out of bounds of the buffer in this pool&quot;);
+		return;
+	}
+
+	// Push free node
+	node = (Pool_Free_Node *)ptr;
+	node-&gt;next = p-&gt;head;
+	p-&gt;head = node;
+}
+</code></pre>
+<h2 id="free-all">Free All</h2>
+<p>Freeing all the memory is equivalent of pushing all the chunks onto the free list.</p>
+<pre><code class="language-c">void pool_free_all(Pool *p) {
+	size_t chunk_count = p-&gt;buf_len / p-&gt;chunk_size;
+	size_t i;
+
+	// Set all chunks to be free
+	for (i = 0; i &lt; chunk_count; i++) {
+		void *ptr = &amp;p-&gt;buf[i * p-&gt;chunk_size];
+		Pool_Free_Node *node = (Pool_Free_Node *)ptr;
+		// Push free node onto thte free list
+		node-&gt;next = p-&gt;head;
+		p-&gt;head = node;
+	}
+}
+</code></pre>
+<h1 id="conclusion">Conclusion</h1>
+<p>The pool allocator is a very useful allocator for when you need to allocator &ldquo;things&rdquo; in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
+<p>In the next article, I will discuss <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list memory allocators</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>What&rsquo;s in a name? That which we call a rose. By any other name would smell as sweet. <a href="https://www.owleyes.org/text/romeo-and-juliet/read/act-ii-scene-ii">Romeo and Juliet (II, ii, 1-2)</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>If there is not an available free chunk, it will point to nothing (<code>NULL</code>).&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -44,8 +697,278 @@ A pool allocator is a bit different from the previous allocation strategies that
       <pubDate>Fri, 15 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/02/15/memory-allocation-strategies-003/</guid>
-      <description>Stack-Like (LIFO) Allocation In the previous article, we looked at the linear/arena allocator, which is the simplest of all memory allocators. In this article, I will cover the fixed-sized stack-like allocator. Throughout this article, I will refer to this allocator as a stack allocator.
-Note: A stack-like allocator means that the allocator acts like a data structure following the last-in, first-out (LIFO) principle. This has nothing to do with the stack or the stack frame.</description>
+      <description><h1 id="stack-like-lifo-allocation">Stack-Like (LIFO) Allocation</h1>
+<p>In the previous article, we looked at the <a href="/article/2019/02/08/memory-allocation-strategies-002/">linear/arena allocator</a>, which is the simplest of all memory allocators. In this article, I will cover the fixed-sized stack-like allocator. Throughout this article, I will refer to this allocator as a <em>stack allocator</em>.</p>
+<p><strong>Note:</strong> A stack-like allocator means that the allocator acts like a data structure following the <em>last-in, first-out</em> (LIFO) principle. This has nothing to do with <em>the stack</em> or the <em>stack frame</em>.</p>
+<p>The stack allocator is the natural evolution from the arena allocator. The approach with the stack allocator is to manage memory in a stack-like fashion following the LIFO principle. Therefore, like a stack of books, if you put something on the top of the stack earlier, you need to pick that book up first before you get one underneath.</p>
+<p>As with the arena allocator, an offset into the memory block will be stored and will be moved forwards on every allocation. The difference is that the offset can also be moved backwards when memory is <em>freed</em>. With an arena, you could only free all the memory all at once.</p>
+<h2 id="basic-logic">Basic Logic</h2>
+<p>As with the extended arena in the <a href="/article/2019/02/08/memory-allocation-strategies-002/">previous article</a>, the offset of the previous allocation needs to be tracked. This is required in order to free memory on a <em>per-allocation</em> basis. One approach is to store a <em>header</em> which stores information about that allocation. This <em>header</em> means that the allocator can know how far back it should move the offset to free that memory.</p>
+<p><img src="/images/memory-allocation-strategies/stack_allocator.svg#center" alt="Stack Allocator Layout"></p>
+<p>To allocate some memory from the stack allocator, as with the arena allocator, it is as simple as moving the offset forward whilst accounting for the header. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p><img src="/images/memory-allocation-strategies/stack_allocator_alloc.svg#center" alt="Stack Allocator Alloc"></p>
+<p>To free a block, the header that is stored before the block of memory can be read in order to move the offset backwards. In Big-O notation, the freeing of this memory has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p><img src="/images/memory-allocation-strategies/stack_allocator_free.svg#center" alt="Stack Allocator Free"></p>
+<h2 id="header-storage">Header Storage</h2>
+<p>You may have noticed that I never actually state what to store in the allocation header. The reason for this is because there are numerous approaches to stack allocators which store different data. There are three main approaches<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<ul>
+<li>Store the padding from the previous offset</li>
+<li>Store the previous offset</li>
+<li>Store the size of the allocation</li>
+</ul>
+<p>In this article, I will cover the first two approaches, the first of which I will refer to as a <em>loose stack</em> or <em>small stack</em> as it stores very little information in the header. The third approach is useful if you want to query the size of an allocation dynamically<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<h1 id="implementation-of-the-loosesmall-stack-allocator">Implementation of the Loose/Small Stack Allocator</h1>
+<p>The stack allocator will act like an arena allocator in many regards except for the ability to free memory on a per-allocation basis. The complete stack allocator will have the following procedures:</p>
+<ul>
+<li><code>stack_init</code> initialize the stack with a pre-allocated memory buffer</li>
+<li><code>stack_alloc</code> increments the offset to indicate the current buffer offset whilst taking into account the allocation header</li>
+<li><code>stack_free</code> frees the memory passed to it and decrements the offset to <em>free</em> that memory</li>
+<li><code>stack_resize</code> first checks to see if the allocation being resized was the previously performed allocation and if so, the same pointer will be returned and the buffer offset is changed. Otherwise, stack_alloc will be called instead.</li>
+<li><code>stack_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero.</li>
+</ul>
+<h2 id="data-structures">Data Structures</h2>
+<p>The (loose/small) stack data structure contains the same information as an arena.</p>
+<pre><code class="language-c">typedef struct Stack Stack;
+struct Stack {
+	unsigned char *buf;
+	size_t buf_len;
+	size_t offset;
+};
+</code></pre>
+<p>The allocation header for this particular stack implementation uses an integer to encode the padding.</p>
+<pre><code class="language-c">typedef struct Stack_Allocation_Header Stack_Allocation_Header;
+struct Stack_Allocation_Header {
+	uint8_t padding;
+};
+</code></pre>
+<p>This padding stores the amount of bytes that has to be placed before the header in order to have the new allocation correctly aligned.</p>
+<p><img src="/images/memory-allocation-strategies/stack_allocator_header.svg#center" alt="Stack Allocator Header"></p>
+<p><strong>Note</strong>: Storing the padding as a byte does limit the the maximum alignment that can used with this stack allocator to 128 bytes. If you require a higher alignment, increase the size of integer used to store the padding. To calculate the maximum alignment that the padding can be used for, use this equation:</p>
+<div>$$
+\text{Maximum Alignment in Bytes} = {2} ^ {8 \times \text{sizeof}(\text{padding}) - 1}
+$$</div>
+<h2 id="init">Init</h2>
+<p>The <code>stack_init</code> procedure just initializes the parameters for the given stack.</p>
+<pre><code class="language-c">void stack_init(Stack *s, void *backing_buffer, size_t backing_buffer_length) {
+	s-&gt;buf = (unsigned char *)backing_buffer;
+	s-&gt;buf_len = backing_buffer_length;
+	s-&gt;offset = 0;
+}
+</code></pre>
+<h2 id="alloc">Alloc</h2>
+<p>Unlike an arena, a stack allocator requires a header alongside the allocation. As previously stated above, the <code>calc_padding_with_header</code> procedure is similar to the <code>align_forward</code> procedure from the previous article, however it determines how much space is needed with respect to the header and the requested alignment. In the header, the amount padding needs to be stored and the address after that header needs to be returned.</p>
+<pre><code class="language-c">size_t calc_padding_with_header(uintptr_t ptr, uintptr_t alignment, size_t header_size) {
+	uintptr_t p, a, modulo, padding, needed_space;
+
+	assert(is_power_of_two(alignment));
+
+	p = ptr;
+	a = alignment;
+	modulo = p &amp; (a-1); // (p % a) as it assumes alignment is a power of two
+
+	padding = 0;
+	needed_space = 0;
+
+	if (modulo != 0) { // Same logic as 'align_forward'
+		padding = a - modulo;
+	}
+
+	needed_space = (uintptr_t)header_size;
+
+	if (padding &lt; needed_space) {
+		needed_space -= padding;
+
+		if ((needed_space &amp; (a-1)) != 0) {
+			padding += a * (1+(needed_space/a));
+		} else {
+			padding += a * (needed_space/a);
+		}
+	}
+
+	return (size_t)padding;
+}
+
+void *stack_alloc_align(Stack *s, size_t size, size_t alignment) {
+	uintptr_t curr_addr, next_addr;
+	size_t padding;
+	Stack_Allocation_Header *header;
+
+
+	assert(is_power_of_two(alignment));
+
+	if (alignment &gt; 128) {
+		// As the padding is 8 bits (1 byte), the largest alignment that can
+		// be used is 128 bytes
+		alignment = 128;
+	}
+
+	curr_addr = (uintptr_t)s-&gt;buf + (uintptr_t)s-&gt;offset;
+	padding = calc_padding_with_header(curr_addr, (uintptr_t)alignment, sizeof(Stack_Allocation_Header));
+	if (s-&gt;offset + padding + size &gt; s-&gt;buf_len) {
+		// Stack allocator is out of memory
+		return NULL;
+	}
+	s-&gt;offset += padding;
+
+	next_addr = curr_addr + (uintptr_t)padding;
+	header = (Stack_Allocation_Header *)(next_addr - sizeof(Stack_Allocation_Header));
+	header-&gt;padding = (uint8_t)padding;
+
+	s-&gt;offset += size;
+
+	return memset((void *)next_addr, 0, size);
+}
+
+// Because C does not have default parameters
+void *stack_alloc(Stack *s, size_t size) {
+	return stack_alloc_align(s, size, DEFAULT_ALIGNMENT);
+}
+</code></pre>
+<h2 id="free">Free</h2>
+<p>For <code>stack_free</code>, the pointer passed needs to be checked as to whether it is valid (i.e. it was allocated by this allocator). If it is valid, this means it is possible to acquire the header of this allocation. Using a little <em>pointer arithmetic</em>, we can reset the offset to the allocation previous to the passed pointer.</p>
+<pre><code class="language-c">void stack_free(Stack *s, void *ptr) {
+	if (ptr != NULL) {
+		uintptr_t start, end, curr_addr;
+		Stack_Allocation_Header *header;
+		size_t prev_offset;
+
+		start = (uintptr_t)s-&gt;buf;
+		end = start + (uintptr_t)s-&gt;buf_len;
+		curr_addr = (uintptr_t)ptr;
+
+		if (!(start &lt;= curr_addr &amp;&amp; curr_addr &lt; end)) {
+			assert(0 &amp;&amp; &quot;Out of bounds memory address passed to stack allocator (free)&quot;);
+			return;
+		}
+
+		if curr_addr &gt;= start+(uintptr_t)s-&gt;offset {
+			// Allow double frees
+			return;
+		}
+
+		header = (Stack_Allocation_Header *)(curr_addr - sizeof(Stack_Allocation_Header));
+		prev_offset = (size_t)(curr_addr - (uintptr_t)header-&gt;padding - start);
+
+		s-&gt;offset = prev_offset;
+	}
+}
+</code></pre>
+<h2 id="resize">Resize</h2>
+<p>Resizing an allocation is sometimes useful in an stack allocator. As we don&rsquo;t store the previous offset for this particular version, we will just reallocate new memory if there needs to be a change in allocation size<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<pre><code class="language-c">void *stack_resize_align(Stack *s, void *ptr, size_t old_size, size_t new_size, size_t alignment) {
+	if (ptr == NULL) {
+		return stack_alloc_align(s, new_size, alignment);
+	} else if (new_size == 0) {
+		stack_free(s, ptr);
+		return NULL;
+	} else {
+		uintptr_t start, end, curr_addr;
+		size_t min_size = old_size &lt; new_size ? old_size : new_size;
+		void *new_ptr;
+
+		start = (uintptr_t)s-&gt;buf;
+		end = start + (uintptr_t)s-&gt;buf_len;
+		curr_addr = (uintptr_t)ptr;
+		if (!(start &lt;= curr_addr &amp;&amp; curr_addr &lt; end)) {
+			assert(0 &amp;&amp; &quot;Out of bounds memory address passed to stack allocator (resize)&quot;);
+			return NULL;
+		}
+
+		if (curr_addr &gt;= start + (uintptr_t)s-&gt;offset) {
+			// Treat as a double free
+			return NULL;
+		}
+
+		if old_size == size {
+			return ptr;
+		}
+
+		new_ptr = stack_alloc_align(s, new_size, alignment);
+		memmove(new_ptr, ptr, min_size);
+		return new_ptr;
+	}
+}
+
+void *stack_resize(Stack *s, void *ptr, size_t old_size, size_t new_size) {
+	return stack_resize_align(s, ptr, old_size, new_size, DEFAULT_ALIGNMENT);
+}
+</code></pre>
+<h2 id="free-all">Free All</h2>
+<p>Finally, <code>stack_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero. This is very useful for when you want to reset on a per cycle/frame basis. This acts identically to an arena in this case.</p>
+<pre><code class="language-c">void stack_free_all(Stack *s) {
+	s-&gt;offset = 0;
+}
+</code></pre>
+<h1 id="improving-the-stack-allocator">Improving the Stack Allocator</h1>
+<p>This loose/small stack allocator above is already very useful but it does not enforce the LIFO principle for frees. It allows the user to free any block of memory in any order but frees everything that was allocated after it. In order to enforce the LIFO principle, data about the previous offset needs to be stored in the header and the general data structure.</p>
+<pre><code class="language-c">struct Stack_Allocation_Header {
+	size_t prev_offset;
+	size_t padding;
+};
+
+struct Stack {
+	unsigned char *buf;
+	size_t buf_len;
+	size_t prev_offset;
+	size_t curr_offset;
+};
+</code></pre>
+<p>This new header is a lot larger compared to the simple padding approach<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, but it does mean that LIFO for frees can be enforced. There only needs to be a few adjustments to the code. The resize procedure is left as an exercise for the reader.</p>
+<h3 id="stack_alloc_align"><code>stack_alloc_align</code></h3>
+<pre><code class="language-c">...
+
+s-&gt;prev_offset = s-&gt;offset; // Store the previous offset
+s-&gt;offset += padding;
+
+next_addr = curr_addr + (uintptr_t)padding;
+header = (Stack_Allocation_Header *)(next_addr - sizeof(Stack_Allocation_Header));
+header-&gt;padding = padding;
+header-&gt;prev_offset = s-&gt;prev_offset; // store the previous offset in the header
+
+s-&gt;offset += size;
+</code></pre>
+<h3 id="stack_free"><code>stack_free</code></h3>
+<pre><code class="language-c">...
+
+header = (Stack_Allocation_Header *)(curr_addr - sizeof(Stack_Allocation_Header));
+
+// Calculate previous offset from the header and its address
+prev_offset = (size_t)(curr_addr - (uintptr_t)header-&gt;padding - start);
+
+if (prev_offset != header-&gt;prev_offset) {
+	assert(0 &amp;&amp; &quot;Out of order stack allocator free&quot;);
+	return;
+}
+
+// Reset the offsets to the previous allocation
+s-&gt;curr_offset = s-&gt;prev_offset;
+s-&gt;prev_offset = header-&gt;prev_offset;
+</code></pre>
+<h1 id="comments-and-conclusion">Comments and Conclusion</h1>
+<p>The stack allocator is the first of many allocators that will use the concept of a <em>header</em> for allocations. In this basic form of a stack allocator, unless you want the LIFO behaviour enforced, I would personally recommend using an arena allocator with the <code>Temp_Arena_Memory</code> construct instead. However if you require something like C++&rsquo;s constructors and destructors, a stack allocator will be more friendly to that framework (RAII)<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>.</p>
+<p>You can extend the stack allocator even further by having two different offsets: one that starts at the beginning and increments forwards, and another that starts at the end and increments backwards. This is called a double-ended stack and allows for the maximization of memory usage whilst keeping fragmentation extremely low (as long as the offset never overlap).</p>
+<p>In the next article, I will discuss <em>pool allocators</em> and how they are extremely useful for creating and destroying things in completely random order of the same size.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>These approaches can be combined and are not mutually exclusive.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I rarely need this as I usually track the size of the allocation manually.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>It is an exercise for the reader to figure out how to make this more efficient by not allocating more memory if it is was the previous allocation.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>You can reduce the size of the header by using smaller integers but this does reduce the size of the allocations that can be used.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://wikipedia.org/wiki/Placement_syntax">https://wikipedia.org/wiki/Placement_syntax</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -54,7 +977,224 @@ Note: A stack-like allocator means that the allocator acts like a data structure
       <pubDate>Fri, 08 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/02/08/memory-allocation-strategies-002/</guid>
-      <description>Linear Allocation The first memory allocation strategy that I will cover is also one of the simplest ones: linear allocation. As the name suggests, memory is allocated linearly. Throughout this series, I will be using the concept of an allocator as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a Arena.</description>
+      <description><h1 id="linear-allocation">Linear Allocation</h1>
+<p>The first memory allocation strategy that I will cover is also one of the simplest ones: linear allocation. As the name suggests,  memory is allocated linearly. Throughout this series, I will be using the concept of an <em>allocator</em> as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a <em>Arena</em>.</p>
+<h2 id="basic-logic">Basic Logic</h2>
+<p>The arena&rsquo;s logic only requires an offset (or pointer) to state the end of the last allocation<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p><img src="/images/memory-allocation-strategies/linear_allocator.svg#center" alt="Linear Allocator Layout"></p>
+<p>To allocate some memory from the arena, it is as simple as moving the offset (or pointer) forward. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p><img src="/images/memory-allocation-strategies/linear_allocator_alloc.svg#center" alt="Linear Allocator Alloc"></p>
+<p>Due to being the simplest allocator possible, the arena allocator does not allow the user to free certain blocks of memory. The memory is usually freed all at once.</p>
+<h2 id="basic-implementation">Basic Implementation</h2>
+<p><strong>Note:</strong> The following code examples will be in written in C.</p>
+<p>The simplest arena allocator <em>could</em> look like this:</p>
+<pre><code class="language-c">static unsigned char *arena_buffer;
+static size_t arena_buffer_length;
+static size_t arena_offset;
+
+void *arena_alloc(size_t size) {
+	// Check to see if the backing memory has space left
+	if (arena_offset+size &lt;= arena_buffer_length) {
+		void *ptr = &amp;arena_buffer[arena_offset];
+		arena_offset += size;
+		// Zero new memory by default
+		memset(ptr, 0, size);
+		return ptr;
+	}
+	// Return NULL if the arena is out of memory
+	return NULL;
+}
+</code></pre>
+<p>As you may be able to tell, this is as simple as it gets. There are two issues with this basic approach:</p>
+<ul>
+<li>You cannot reuse this procedure for different arenas</li>
+<li>The pointer returned may not be aligned correctly for the data you need</li>
+</ul>
+<p>The first issue can be easily solved by coupling that global data into a structure and passing that to the procedure <code>arena_alloc</code>. As for the second issue, this requires understanding about the basic issues of <em>unaligned memory</em>.</p>
+<h1 id="memory-alignment">Memory Alignment</h1>
+<p>Modern computer architectures will always read memory at its &ldquo;word size&rdquo; (4 bytes on a 32 bit machine, 8 bytes on a 64 bit machine). If you have an unaligned memory access (on a processor that allows for that), the processor will have to read multiple &ldquo;words&rdquo;. This means that an unaligned memory access <em>may</em> be much slower than an aligned memory access.
+I will not write too much about memory alignment in this series. If you would like to learn more, I recommend the following articles:</p>
+<ul>
+<li><a href="https://developer.ibm.com/technologies/systems/articles/pa-dalign/">IBM - Data alignment: Straighten up and fly right</a></li>
+<li><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">Gallery of Processor Cache Effects</a></li>
+<li><a href="http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html">x86 Protected Mode Basics</a></li>
+</ul>
+<h2 id="aligning-a-memory-address">Aligning a Memory Address</h2>
+<p>On virtually all architectures, the amount of bytes that something must be aligned by must be a power of two (1, 2, 4, 8, 16, etc). This means we should create procedure to assert that the alignment is a power of two:</p>
+<pre><code class="language-c">bool is_power_of_two(uintptr_t x) {
+	return (x &amp; (x-1)) == 0;
+}
+</code></pre>
+<p>To align a memory address to the specified alignment is simple modulo arithmetic. You are looking to find how many bytes forward you need to go in order for the memory address is a multiple of the specified alignment.</p>
+<pre><code class="language-c">uintptr_t align_forward(uintptr_t ptr, size_t align) {
+	uintptr_t p, a, modulo;
+
+	assert(is_power_of_two(align));
+
+	p = ptr;
+	a = (uintptr_t)align;
+	// Same as (p % a) but faster as 'a' is a power of two
+	modulo = p &amp; (a-1);
+
+	if (modulo != 0) {
+		// If 'p' address is not aligned, push the address to the
+		// next value which is aligned
+		p += a - modulo;
+	}
+	return p;
+}
+</code></pre>
+<p>Now that we know how to align memory, that means we can update our original <code>arena_alloc</code> to support alignment properly and store the arena data within a structure.</p>
+<pre><code class="language-c">typedef struct Arena Arena;
+struct Arena {
+	unsigned char *buf;
+	size_t         buf_len;
+	size_t         prev_offset; // This will be useful for later on
+	size_t         curr_offset;
+};
+
+void *arena_alloc_align(Arena *a, size_t size, size_t align) {
+	// Align 'curr_offset' forward to the specified alignment
+	uintptr_t curr_ptr = (uintptr_t)a-&gt;buf + (uintptr_t)a-&gt;curr_offset;
+	uintptr_t offset = align_forward(curr_ptr, align);
+	offset -= (uintptr_t)a-&gt;buf; // Change to relative offset
+
+	// Check to see if the backing memory has space left
+	if (offset+size &lt;= a-&gt;buf_len) {
+		void *ptr = &amp;a-&gt;buf[offset];
+		a-&gt;prev_offset = offset;
+		a-&gt;curr_offset = offset+size;
+
+		// Zero new memory by default
+		memset(ptr, 0, size);
+		return ptr;
+	}
+	// Return NULL if the arena is out of memory (or handle differently)
+	return NULL;
+}
+
+#ifndef DEFAULT_ALIGNMENT
+#define DEFAULT_ALIGNMENT (2*sizeof(void *))
+#endif
+
+// Because C doesn't have default parameters
+void *arena_alloc(Arena *a, size_t size) {
+	return arena_alloc_align(a, size, DEFAULT_ALIGNMENT);
+}
+</code></pre>
+<h1 id="implementing-the-rest">Implementing the Rest</h1>
+<p>The arena allocator is usable for basic things now but it is missing a few features that would make it practical for everyday use. The complete arena allocator will have the following procedures:</p>
+<ul>
+<li><code>arena_init</code> initialize the arena with a pre-allocated memory buffer</li>
+<li><code>arena_alloc</code> simply increments an offset to indicate the current buffer offset</li>
+<li><code>arena_free</code> does absolutely nothing (just there for completeness)</li>
+<li><code>arena_resize</code> first checks to see if the allocation being resized was the previously performed allocation and if so, the same pointer will be returned and the buffer offset is changed. Otherwise, <code>arena_alloc</code> will be called instead.</li>
+<li><code>arena_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero.</li>
+</ul>
+<h2 id="init">Init</h2>
+<p>The <code>arena_init</code> procedure just initializes the parameters for the given arena.</p>
+<pre><code class="language-c">void arena_init(Arena *a, void *backing_buffer, size_t backing_buffer_length) {
+	a-&gt;buf = (unsigned char *)backing_buffer;
+	a-&gt;buf_len = backing_buffer_length;
+	a-&gt;curr_offset = 0;
+	a-&gt;prev_offset = 0;
+}
+</code></pre>
+<h2 id="free">Free</h2>
+<p>As I previously stated, <code>arena_free</code> does absolutely nothing. It exists purely for completeness.</p>
+<pre><code class="language-c">void arena_free(Arena *a, void *ptr) {
+	// Do nothing
+}
+</code></pre>
+<h2 id="resize">Resize</h2>
+<p>Resizing an allocation is sometimes useful in an arena. To reduce waste of memory, it is useful to track the <code>prev_offset</code> and if the <code>old_memory</code> passed in equals the offset provided, just resize that memory block.</p>
+<pre><code class="language-c">void *arena_resize_align(Arena *a, void *old_memory, size_t old_size, size_t new_size, size_t align) {
+	unsigned char *old_mem = (unsigned char *)old_memory;
+
+	assert(is_power_of_two(align));
+
+	if (old_mem == NULL || old_size == 0) {
+		return arena_alloc_align(a, new_size, align);
+	} else if (a-&gt;buf &lt;= old_mem &amp;&amp; old_mem &lt; a-&gt;buf+buf_len) {
+		if (a-&gt;buf+a-&gt;prev_offset == old_mem) {
+			a-&gt;curr_offset = a-&gt;prev_offset + new_size;
+			if (new_size &gt; old_size) {
+				// Zero the new memory by default
+				memset(&amp;a-&gt;buf[a-&gt;curr_offset], 0, new_size-old_size);
+			}
+			return old_memory;
+		} else {
+			void *new_memory = arena_alloc_align(a, new_size, align);
+			size_t copy_size = old_size &lt; new_size ? old_size : new_size;
+			// Copy across old memory to the new memory
+			memmove(new_memory, old_memory, copy_size);
+			return new_memory;
+		}
+
+	} else {
+		assert(0 &amp;&amp; &quot;Memory is out of bounds of the buffer in this arena&quot;);
+		return NULL;
+	}
+
+}
+
+// Because C doesn't have default parameters
+void *arena_resize(Arena *a, void *old_memory, size_t old_size, size_t new_size) {
+	return arena_resize_align(a, old_memory, old_size, new_size, DEFAULT_ALIGNMENT);
+}
+</code></pre>
+<h2 id="free-all">Free All</h2>
+<p>Finally, <code>arena_free_all</code> is used to free all the memory within the allocator by setting the buffer offsets to zero. This is very useful for when you want to reset on a per cycle/frame basis.</p>
+<pre><code class="language-c">void arena_free_all(Arena *a) {
+	a-&gt;curr_offset = 0;
+	a-&gt;prev_offset = 0;
+}
+</code></pre>
+<h1 id="using-the-allocator">Using the Allocator</h1>
+<p>To use the allocator, you need to provide some backing memory. A simple approach is to provide an array:</p>
+<pre><code class="language-c">unsigned char backing_buffer[256];
+Arena a = {0};
+arena_init(&amp;a, backing_buffer, 256);
+</code></pre>
+<p>Another approach is to use <code>malloc</code>:</p>
+<pre><code class="language-c">void *backing_buffer = malloc(256);
+Arena a = {0};
+arena_init(&amp;a, backing_buffer, 256);
+</code></pre>
+<h1 id="conclusion">Conclusion</h1>
+<p>You have now implemented your very first custom allocator! The full source code is <a href="/code/memory-allocation-strategies/part002.c">available here</a>.</p>
+<p>In the next article, I will be talking about the basic evolution of the <em>arena allocator</em> in to a <a href="/article/2019/02/15/memory-allocation-strategies-003/"><em>stack allocator</em></a>.</p>
+<h1 id="extra-features">Extra Features</h1>
+<p>One extra feature you could add is a temporary arena memory <em>savepoint</em>. This is extremely useful for when you just want to use some memory in an arena for a very short period and then reset to the previously saved point.</p>
+<pre><code class="language-c">typedef struct Temp_Arena_Memory Temp_Arena_Memory;
+struct Temp_Arena_Memory {
+	Arena *arena;
+	size_t prev_offset;
+	size_t curr_offset;
+};
+
+Temp_Arena_Memory temp_arena_memory_begin(Arena *a) {
+	Temp_Arena_Memory temp;
+	temp.arena = a;
+	temp.prev_offset = a-&gt;prev_offset;
+	temp.curr_offset = a-&gt;curr_offset;
+	return temp;
+}
+
+void temp_arena_memory_end(Temp_Arena_Memory temp) {
+	temp.arena-&gt;prev_offset = temp.prev_offset;
+	temp.arena-&gt;curr_offset = temp.curr_offset;
+}
+</code></pre>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Other data may stored such as the offset of the beginning of the previous allocation or allocation count.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -63,8 +1203,96 @@ Note: A stack-like allocator means that the allocator acts like a data structure
       <pubDate>Fri, 01 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/02/01/memory-allocation-strategies-001/</guid>
-      <description>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.
-Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack.</description>
+      <description><p>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
+<p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and that the heap is magical in nature.</p>
+<p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
+<p><img src="/images/memory-allocation-strategies/virtual_memory.svg#center" alt="Virtual Memory"></p>
+<h1 id="thinking-about-allocation">Thinking About Allocation</h1>
+<p>When it comes to allocation, there are three main aspects to think about<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>:</p>
+<ul>
+<li>The size of the allocation</li>
+<li>The lifetime of that memory</li>
+<li>The usage of that memory</li>
+</ul>
+<p>I usually imagine the first two aspects in the following table, for most problem domains, where the percentages signify what proportion of allocations fall into that category:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"></th>
+<th style="text-align:center">Size Known</th>
+<th style="text-align:center">Size Unknown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><strong>Lifetime Known</strong></td>
+<td style="text-align:center">95%</td>
+<td style="text-align:center">~4%</td>
+</tr>
+<tr>
+<td style="text-align:right"><strong>Lifetime Unknown</strong></td>
+<td style="text-align:center">~1%</td>
+<td style="text-align:center">&lt;1%</td>
+</tr>
+</tbody>
+</table>
+<p>In the top-left category (Size Known + Lifetime Known), this is the area in which I will be covering the most in this series. Most of the time, you do know the size of the allocation, or the upper bounds at least, and the lifetime of the allocation in question.</p>
+<p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to &ldquo;resize/realloc&rdquo; the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
+<p>In the bottom-left category (Size Known + Lifetime Unknown), this is the area in which you may not know how long that memory needs to be around but you do know how much memory is needed. In this case, you could say that the &ldquo;ownership&rdquo; of that memory across multiple systems is ill-defined. A common solution for this domain of problems is reference counting or ownership semantics.</p>
+<p>In the bottom-right category (Size Unknown + Lifetime Unknown), this is the area in which you have literally no idea how much memory you need nor how long it will be needed for. In practice, this is quite rare and you <em>ought</em> to try and avoid these situations when possible. However, the general solution for this domain of problems is garbage collection<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>Please note that in domain specific areas, these percentages will be completely different. For instance, a web server that may be handling an unknown amount of requests may require a form of garbage collection if the memory is limited or it may be cheaper to just buy more memory.</p>
+<h1 id="generations-of-lifetimes">Generations of Lifetimes</h1>
+<p>For the common category, the general approach that I take is to think about memory lifetimes in terms of generations. An <em>allocation generation</em> is a way to organize memory lifetimes into a hierarchical structure<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
+<ul>
+<li>
+<p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p>
+</li>
+<li>
+<p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &ldquo;cycle&rdquo; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p>
+</li>
+<li>
+<p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p>
+</li>
+</ul>
+<h2 id="memory-hierarchies">Memory Hierarchies</h2>
+<p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory &mdash; the human brain can only hold so much.</p>
+<p>The same localist thought process can be applied to the memory-space/size of which I will be discussing in later articles in this series.</p>
+<h1 id="the-compilers-knowledge-of-the-program">The Compiler&rsquo;s Knowledge of the Program</h1>
+<p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
+<p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
+<h1 id="coming-next">Coming Next</h1>
+<p>In this series, I will discuss the different kinds of memory models and allocation strategies that can be used. These are the topics that will be covered:</p>
+<ul>
+<li>Sequential (Contiguous) Allocations</li>
+<li>Virtual Memory</li>
+<li>Out of Order Allocators and Fragmentation</li>
+<li><code>malloc</code></li>
+<li>Hierarchies of Allocators</li>
+<li>Automatic Lifetime Allocations</li>
+<li>Allocation Grouping and Mental Models</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Memory safety is another aspect to think about but I will not cover that in this series as that requires a separate set of solutions and trade-offs. In the domains that I deal with, memory safety is not a huge concern.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).
+Memory within these generations usually get allocated and freed at the same time (born, live, and die together).&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
   </channel>

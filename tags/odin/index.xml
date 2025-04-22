@@ -15,10 +15,39 @@
       <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/11/10/opengl-is-not-right-handed/</guid>
-      <description>The original Twitter thread: https://x.com/TheGingerBill/status/1508833104567414785
-I have a huge gripe when I read articles/tutorials on OpenGL: most people have no idea what they are talking about when it comes to coordinate systems and matrices.
-Specifically: OpenGL is NOT right-handed; the confusion over column-major &amp;ldquo;matrices&amp;rdquo;.
-Let&amp;rsquo;s clear up the first point. Many people will say OpenGL uses a right-handed coordinate system. Loads of articles/tutorials will keep repeating the view that OpenGL uses a right-handed coordinate system.</description>
+      <description><p>The original Twitter thread: <a href="https://x.com/TheGingerBill/status/1508833104567414785">https://x.com/TheGingerBill/status/1508833104567414785</a></p>
+<hr>
+<p>I have a huge gripe when I read articles/tutorials on OpenGL: most people have no idea what they are talking about when it comes to coordinate systems and matrices.</p>
+<p>Specifically: OpenGL is <strong>NOT</strong> right-handed; the confusion over column-major &ldquo;matrices&rdquo;.</p>
+<p>Let&rsquo;s clear up the first point. Many people will say OpenGL uses a right-handed coordinate system. Loads of articles/tutorials will keep repeating the view that OpenGL uses a right-handed coordinate system. So the question is, why do people think this?</p>
+<p>Modern OpenGL only knows about the <em>Normalized Device Coordinates (NDC)</em>, which is treated as if it is a left-handed 3D coordinate space. This means that OpenGL &ldquo;is&rdquo; left-handed, not right-handed as many articles will tell you.</p>
+<p>The origin of &ldquo;right-handed&rdquo; comes from the fixed-function days, where Z entries in the functions <code>glOrtho</code> and <code>glFrustum</code> were negated, which flips the handedness. Back in those days, it forced users to pretty much had to use a right-handed world space coordinate system.
+The Z-axis flip is to convert from the <em>conventional</em> world/entity space to the left handed Normalized Device Coordinates (NDC). And modern OpenGL only knowns the NDC.</p>
+<p><img src="/images/proj_to_ndc.jpg" alt="image"></p>
+<h2 id="so-why-has-this-false-idea-persisted">So why has this false idea persisted?</h2>
+<ul>
+<li>It <strong>&ldquo;was&rdquo;</strong> true.</li>
+<li>It distinguishes it from Direct3D.</li>
+<li>People just repeat things w/o understanding it.</li>
+<li>Most who use OpenGL don&rsquo;t really know anything about the GPU nor what the NDC is.</li>
+</ul>
+<p><strong>PLEASE READ THE SPEC BEFORE MAKING TUTORIALS!</strong></p>
+<p>Now for the <strong>&ldquo;column-major&rdquo;</strong> part.</p>
+<p>This part is actually overloaded and means two things: what is the default vector kind (column-vector vs row-vector), and what is the internal memory layout of a matrix (array-of-column-vectors vs array-of-row-vectors).</p>
+<p>A good article on this has been written by <a href="https://x.com/rygorous">@rygorous</a> regarding this so I won&rsquo;t repeat it too much. <a href="https://fgiesen.wordpress.com/2012/02/12/row-major-vs-column-major-row-vectors-vs-column-vectors/">Row major vs. column major, row vectors vs. column vectors</a>.</p>
+<p>It works because (A B)^T = B^T A^T (where T is the transpose). But where does this difference in convention come from? My best hypothesis is the physics vs mathematics distinction (just like everything else). In physics you default to using column-vectors and in mathematics you default to using row-vectors. It&rsquo;s just a convention.</p>
+<p>It&rsquo;s just another distinction between OpenGL and Direct3D which makes very little difference at the end of the day, especially since in both GLSL and HLSL, you can specify whether a matrix is <code>row_major</code> or <code>column_major</code> if necessary.</p>
+<p>I personally prefer column-vectors because of my background in physics but all that is important is that you are consistent/coherent in your codebase, and make sure that all conventions are make extremely clear: handedness, axis direction, &ldquo;Euler&rdquo;-angle conventions, units, etc.</p>
+<p>GLSL also doesn&rsquo;t help it in that the matrix types are written &ldquo;backwards&rdquo; to most other conventions. <code>mat2x3</code> in GLSL means a 3 row by 2 column matrix.</p>
+<p>GLSL does not work for this well known mnemonic:</p>
+<ul>
+<li>(A, B) x (B, C) = (A, C)</li>
+<li>e.g. (3 by 4) x (4 by 1) = (3 by 1)</li>
+</ul>
+<p>Then there is the other related issue of having matrices that are stored in the array-of-column-vector layout: many programming languages don&rsquo;t have a built-in concept of a matrix &amp; an array-of-row-vectors will be easier to write as an array-of-column-vectors because it is text.</p>
+<p>It is common to write a matrix in a language like the following <code>float x[3][3] = {...};</code> and if you are trying to adhere to &ldquo;column-major&rdquo; memory layout, then you will have to write it down transposed compared to how you would write it down on paper.</p>
+<p>The <a href="https://odin-lang.org/">Odin</a> programming language has both built-in array programming (vectors &amp; swizzling) and matrices, and as a result, this textual issue is completely removed! It even allows you to treat vectors as if they are column-vectors or row-vectors, and things will &ldquo;just work&rdquo;! You can even specify the memory layout of the matrices if needed too with <code>#column_major matrix[R, C]T</code> (the default) or <code>#row_major matrix[R, C]T</code>.</p>
+</description>
     </item>
     
     <item>
@@ -27,11 +56,53 @@ Let&amp;rsquo;s clear up the first point. Many people will say OpenGL uses a rig
       <pubDate>Sun, 08 Sep 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/09/08/odin-weird-to-market/</guid>
-      <description>[Originally from a Twitter Thread]
-Original Twitter Post
-&amp;ldquo;Killer Feature&amp;rdquo; Odin is a weird programming language to advertise/market for.
-Odin is very pragmatic in terms of its design and overall philosophy. Unlike all popular languages out there, it has no &amp;ldquo;killer feature&amp;rdquo;. I&amp;rsquo;ve tried to design it to solve actual problems with actual solutions.
-Those languages with a &amp;ldquo;killer feature&amp;rdquo; to them do make them &amp;ldquo;standout&amp;rdquo; and consequentially more &amp;ldquo;hypeable&amp;rdquo;. The problem is that those &amp;ldquo;killer features&amp;rdquo; are usually absolute nonsense, very niche, or they rarely have any big benefit.</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://x.com/TheGingerBill/status/1832797478728433873">Original Twitter Post</a></p>
+<h2 id="killer-feature">&ldquo;Killer Feature&rdquo;</h2>
+<p>Odin is a weird programming language to advertise/market for.</p>
+<p>Odin is very pragmatic in terms of its design and overall philosophy. Unlike all popular languages out there, it has no &ldquo;killer feature&rdquo;. I&rsquo;ve tried to design it to solve actual problems with actual solutions.</p>
+<p>Those languages with a &ldquo;killer feature&rdquo; to them do make them &ldquo;standout&rdquo; and consequentially more &ldquo;hypeable&rdquo;. The problem is that those &ldquo;killer features&rdquo; are usually absolute nonsense, very niche, or they rarely have any big benefit. Hype doesn&rsquo;t make software better. Odin isn&rsquo;t a &ldquo;big idea&rdquo; language but rather make an alternative to C on modern systems; it tries to solve the problems that other systems languages have failed to address. The problems are usually small but unrelated to each other; not solveable with a single &ldquo;big idea&rdquo;<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>And before people say: &ldquo;Odin&rsquo;s &lsquo;killer feature&rsquo; is that it has none&rdquo;, how the heck do you market that? That seems like an anti-marketing feature. There isn&rsquo;t an example of a popular programming language out there which hasn&rsquo;t got a &ldquo;killer feature&rdquo;, even C&rsquo;s was that in many way it is a &ldquo;portable assembly&rdquo; (even if that is not actually true).</p>
+<h2 id="hypeability">Hypeability</h2>
+<p>I know I have a bad habit when people ask me &ldquo;why should I use Odin?&rdquo;: I ask them what their actual needs are, and then tell them to try Odin as well as the other &ldquo;competition&rdquo; to see which they prefer. I know that&rsquo;s honest English politeness to a tee, but that&rsquo;s me as a man.</p>
+<p>I want Odin to be as best as it can be, but without trying to sell the world to someone in the process. I want to show people the trade-offs that each design has, even in other languages, and not ignore those trade-offs. There are no solutions, only trade-offs.</p>
+<p>The lack of &ldquo;hypeableness&rdquo; that Odin offers is kind of reflected in the people that seem to be attracted to Odin in the first place. They seem very pragmatic, and just want to get on with programming. And as such, they are the kind of people who don&rsquo;t even share/hype Odin. I guess I don&rsquo;t want to easily attract the people who are more driven by hype the pragmatic concerns. I want to make software a better place, and attracting such people is detrimental to that endeavour in the  first place.</p>
+<p>Just look at all the hyped JavaScript frameworks out there, and do they really make better software? Or do they just optimize for a mythical &ldquo;Developer Experience (DX)&rdquo;<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> which just results in more crap which gets slower, bulkier, and offer less for the actual user?</p>
+<p>This is probably why some of my &ldquo;hot takes&rdquo; have been doing the rounds every now and then. I am trying to find out what the actual problems are and see what possible options there are to either solve or mitigate them on a case-by-case basis. A lot of those &ldquo;hot takes&rdquo; have been a form of marketing, and I am trying to at least give myself some exposure. Every single of them is just my opinion, which I usually think is quite mundane too. The web is huge, and thus there will be people who think those takes are shocking.</p>
+<p>And to be clear I don&rsquo;t want to make Odin &ldquo;hypeable&rdquo; in the first place. I am glad with the steady, stable, and albeit slow, growth that Odin has been getting. The people who try Odin out, pretty much always stay for the longhaul as they fall in love with the language since it does bring them the &ldquo;joy of programming&rdquo; back. Something which I do advertise on the <a href="https://odin-lang.org/">Odin website</a> is the &ldquo;joy of programming&rdquo; aspect, but that is something that cannot be explained in words, but rather has to be experienced to believe.</p>
+<h2 id="target-audience">Target Audience</h2>
+<p>Another issue with advertising/marketing a systems-level programming language is that it is niche. It has manual memory management, high control over memory layout, <a href="https://pkg.odin-lang.org/core/simd/">S</a>I<a href="https://pkg.odin-lang.org/core/simd/x86/">M</a>D and <a href="https://odin-lang.org/docs/overview/#soa-data-types">SOA</a> support, etc. Great for people who need that level of control, but not needed for the general webdev. Obviously that isn&rsquo;t the intended audience for Odin, but the problem is that in the social media landscape, those voices are the loudest and many will actually shutdown the voices of people who disagree with them just because they are not in the webdev domain.</p>
+<p>A minor issue that people are starting to think that Odin is &ldquo;just&rdquo; for gamedev. It makes me laugh because gamedev is pretty much the most wide domain possible where you will do virtually every area of programming possible. So &ldquo;just&rdquo; is a huge compliment but clearly the wrong image. It&rsquo;s like saying C++ is &ldquo;just&rdquo; for gamedev, when obviously it can be used for anything. The same as Odin, because it&rsquo;s a systems programming language. Odin does bundle with many game/application oriented packages but they are just that: packages.</p>
+<h2 id="conceptual-thinking">Conceptual Thinking</h2>
+<p>This is another problem. &ldquo;Odin&rdquo; can be thought of in a few different ways:</p>
+<ul>
+<li>The language itself</li>
+<li>The language+the compiler</li>
+<li>The language+the+compiler+core library+vendor library</li>
+<li>The entire ecosystem</li>
+</ul>
+<p>When people speak of Python, they usually think of the entire ecosystem. I&rsquo;ve worked with people who honestly thought Python was Numpy etc, and that you just had to download them. They had no distinction between any of the concepts, &ldquo;Python&rdquo; was just the &ldquo;tool itself&rdquo;. Since I am an originally C programmer (and language designer), all of those distinctions are made obviously clear to me. There is no single C compiler, and they are all different. There stdlib is dreadful and you want to replace it with your own thing straightaway. But C still prevails.</p>
+<p>I make those distinctions because I believe it makes things a lot clearer about programming itself, and helps you understand what the flaws are in the tool; thus know what you can do to mitigate/workaround those issues. But this does require a higher quality standard that than of the norm.</p>
+<h2 id="funding">Funding</h2>
+<p>Another issue is that Odin is <em>free</em>.</p>
+<p>As weird as it sounds but since about 20 years ago, it&rsquo;s nigh impossible to sell a compiler. People expect a programming language and compiler to be free; without caring how much time, money, and effort that goes into building a tool.</p>
+<p>Odin does have a GitHub Sponsors page (<a href="https://github.com/sponsors/odin-lang/">https://github.com/sponsors/odin-lang/</a>) but we make very little, and definitely not enough to pay anyone full-time yet. We will pay for the odd paid work when we have the money, but only for a few weeks here and there.</p>
+<p>I would love to have a few people working full-time on Odin, but it&rsquo;s something we cannot afford. It&rsquo;s also one of the main motivations too: to actually pay people for their work.</p>
+<h2 id="open-question">Open Question</h2>
+<p>So I ask you fellow internet users:</p>
+<p>How the heck do you advertise/market Odin (a systems-level programming language) when it does not have a discernable &ldquo;killer feature&rdquo; nor is &ldquo;hypeable&rdquo; by its very nature of being a pragmatic language?</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>[This bit is rhetorical; I won&rsquo;t reply to it]. Name a popular language out here today, and I can name the &ldquo;killer feature&rdquo; for that language and why it became popular because of it. People maybe complain about the &ldquo;feature&rdquo; after many years but it&rsquo;s what brought them to it.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Developer Experience (DX) is probably a <a href="https://www.wordnik.com/words/psyops">psyop</a> that makes software even worse; at expense of making the programmer think he is being more productive when in reality he is being less so because the DX is optimizing for that dopamine hit of &ldquo;felt-productivity&rdquo; than actual productivity and quality.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -40,10 +111,205 @@ Those languages with a &amp;ldquo;killer feature&amp;rdquo; to them do make them
       <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/06/17/go-iterator-design/</guid>
-      <description>NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423
-TL;DR It makes Go feel too &amp;ldquo;functional&amp;rdquo; rather than being an unabashed imperative language.
-I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.
-The merged PR for the proposal can be found here: https://github.</description>
+      <description><p><em>NOTE: This is based on, but completely rewritten, from a Twitter post: <a href="https://x.com/TheGingerBill/status/1802645945642799423">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
+<p><strong>TL;DR</strong> It makes Go <em>feel</em> too &ldquo;functional&rdquo; rather than being an unabashed imperative language.</p>
+<p>I recently saw a post on <a href="https://x.com/ohmypy/status/1801180323406844062">Twitter</a> showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.</p>
+<p>The <em>merged PR</em> for the proposal can be found here: <a href="https://github.com/golang/go/issues/61897">https://github.com/golang/go/issues/61897</a></p>
+<p>It has a in-depth explanation of the design explaining why certain approaches were chosen instead, so I do recommend reading it if you are familiar with Go.</p>
+<p>Here is the example from the original Tweet I found:</p>
+<pre><code class="language-go">func Backward[E any](s []E) func(func(int, E) bool) {
+	return func(yield func(int, E) bool) {
+		for i := len(s)-1; i &gt;= 0; i-- {
+			if !yield(i, s[i]) {
+				// Where clean-up code goes
+				return
+			}
+		}
+	}
+}
+
+s := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}
+for _, el in range Backward(s) {
+	fmt.Print(el, &quot; &quot;)
+}
+// c b a
+</code></pre>
+<p>This example is clear enough in <em>what</em> it does, but the entire design of it is a bit crazy to me for the general/majority use case.</p>
+<p>From what I understand it appears that the code will be transformed into something like the following:</p>
+<pre><code class="language-go">Backward(s)(func(_ int, el string) bool {
+	fmt.Print(el, &quot; &quot;)
+	return true // `return false` would be the equivalent of an explicit `break`
+})
+</code></pre>
+<p>This means that Go&rsquo;s iterators are much closer to what some languages have with a &ldquo;for each&rdquo; method (e.g. <code>.forEach()</code> in JavaScript) and passing a callback to it. And fun fact, this approach is already possible in Go &lt;1.23 but it does not have the syntactic sugar to use it within a <code>for range</code> statement.</p>
+<p>I will try to summarize the rationale Go 1.23 iterators, but it seems that they ware wanting to minimize a few factors:</p>
+<ul>
+<li>Make the iterator look/act like a generator from other languages (thus the <code>yield</code>)</li>
+<li>Minimize the need for sharing too many stack frames</li>
+<li>Allow for clean-up with <code>defer</code></li>
+<li>Reduce data being stored outside of the control flow</li>
+</ul>
+<p>As <a href="https://research.swtch.com/">Russ Cox (rsc)</a> explains in the original proposal:</p>
+<blockquote>
+<p>Note regarding push vs pull iterator types: The vast majority of the time, push iterators are more convenient to implement and to use, because setup and teardown can be done around the yield calls rather than having to implement those as separate operations and then expose them to the caller. Direct use (including with a range loop) of the push iterator requires giving up storing any data in control flow, so individual clients may occasionally want a pull iterator instead. Any such code can trivially call Pull and defer stop.</p>
+</blockquote>
+<p>Russ Cox goes into more detail in his article <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a> about why he likes this approach to design.</p>
+<h3 id="more-complex-example">More Complex Example</h3>
+<p><strong>NOTE:</strong> Do not worry about what this actually does, I just wanted to show an example of the clean-up needed with something like <code>defer</code>.</p>
+<p>An example from the original PR shows an example of a much more complex approach requiring clean-up where values which are <em>pulled</em> directly:</p>
+<pre><code class="language-go">// Pairs returns an iterator over successive pairs of values from seq.
+func Pairs[V any](seq iter.Seq[V]) iter.Seq2[V, V] {
+	return func(yield func(V, V) bool) bool {
+		next, stop := iter.Pull(it)
+		defer stop()
+		v1, ok1 := next()
+		v2, ok2 := next()
+		for ok1 || ok2 {
+			if !yield(v1, v2) {
+				return false
+			}
+		}
+		return true
+	}
+}
+</code></pre>
+<h2 id="an-alternative-pseudo-proposal-state-machine">An Alternative Pseudo-Proposal (State Machine)</h2>
+<p><strong>NOTE:</strong> I am not suggesting Go does this whatsoever.</p>
+<p>When designing <a href="https://odin-lang.org/">Odin</a>, I wanted the ability for the user to design their own kind of &ldquo;iterators&rdquo;, but have them be very simple; in fact, just normal procedures. I didn&rsquo;t want to add a special construct to the language just for this&mdash;this would complicate the language too much which is what I wanted to minimize in Odin.</p>
+<p>One possible pseudo-proposal I could give for Go iterators would look like the following:</p>
+<pre><code class="language-go">func Backward[E any](s []E) func() (int, E, bool) {
+	i := len(s)-1
+	return func(onBreak bool) (idx int, elem E, ok bool) {
+		if onBreak || !(i &gt;= 0) {
+			// Where clean-up code goes, if there is any
+			return
+		}
+		idx, elem, ok = i, s[i], true
+		i--
+		return
+	}
+}
+</code></pre>
+<p>This pseudo-proposal would operator like this:</p>
+<pre><code class="language-go">for it := Backward(s);; {
+	_, el, ok := it(false)
+	if !ok {
+		break // it(true) does not need to be called because the `false` was called
+	}
+
+	fmt.Print(el, &quot; &quot;)
+}
+</code></pre>
+<p>This is similar what I do in Odin <strong>BUT</strong> Odin does not support stack-frame-scope-capturing closures, only non-scope-capturing procedure literals. Because Go is garbage-collected, I see little need to no utilize them like this. The main difference is that Odin does not try to unify the ideas into one construct.</p>
+<p>I know some people will this think this approach is a lot more complicated. It is doing the opposite of what Cox prefers with storing data in control flow, and store the data outside of it. But this is usually what I want from an iterator rather than what Go is going to do. And this is the problem: it removes the elegance of storing the data in the control flow&ndash;the push/pull distinction that Cox explains.</p>
+<p><strong>NOTE:</strong> I am very much an imperative programmer and I like to know how things actually execute, rather than trying to make it &ldquo;elegant looking&rdquo; code. So the approach I wrote above is fundamentally about thinking with regards to execution.</p>
+<p>n.b. The typeclass/interface route would not work in Go because this would not be an orthogonal design concept and actually be more confusing than necessary&mdash;this is why I did not originally propose it. Different languages have different requirements as to what works in them.</p>
+<h2 id="gos-apparent-philosophy">Go&rsquo;s Apparent Philosophy</h2>
+<p>The approach that Go 1.23 takes seems to go in the face of the <em>apparent</em> philosophy of making Go for the general (frankly mediocre) programmer at Google who doesn&rsquo;t want to (nor can) use a &ldquo;complex&rdquo; language like C++.</p>
+<p>To quote <a href="http://herpolhode.com/rob/">Rob Pike</a>:</p>
+<blockquote>
+<p>The key point here is our programmers are Googlers, they&rsquo;re not researchers. They&rsquo;re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They&rsquo;re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.</p>
+</blockquote>
+<p>I know many people are offended by this comment, but it&rsquo;s <strong>brilliant</strong> language design by understanding who you are designing the language for. It is not insulting, but rather the a matter of fact statement as Go was originally for the people who work(ed) at Google, and similar industries. You might be a &ldquo;better and more capable&rdquo; programmer than the average Googler but that doesn&rsquo;t matter. There is a reason people love Go: it&rsquo;s simple, opinionated, and most people can pick it up very quickly.</p>
+<p>However this iterator design does seem out of character to Go, especially for the someone like proposer Russ Cox (assuming he was <em>actual</em> the original proposer) on the Go team. It makes Go a lot more complicated, and even more &ldquo;magical&rdquo; too. I understand how the iterator system works because I am <em>literally</em> a language design and compiler implementer. It also has the possible issue to it won&rsquo;t be a well performing approach either because of its need for closures and callbacks.</p>
+<p>Maybe the argument for its design is that the <em>average Go programmer</em> is not meant to <strong>implement</strong> iterators but just <strong>use</strong> them. And that the majority of the iterators that people will need will be already available in Go&rsquo;s standard library, or by the third-party package itself. So the onus is put on the package <em>writer</em>, not the package <em>user</em>.</p>
+<p>This is why I think a lot of people seem to be &ldquo;angry&rdquo; over the design. It goes against everything Go was originally &ldquo;meant to be&rdquo; in the eyes of a lot of people, and it seems like a really complicated &ldquo;mess&rdquo;. I understand the &ldquo;beauty&rdquo; that it looks like a generator with the <code>yield</code> and inline code approach, but I do not think that is necessarily in the vein of what Go is to a lot of people. Go does hide a lot of how the magic works under the scenes, especially with garbage collection, <code>go</code>routines, <code>select</code> statement, and many other constructs. However, I think this is a little too magical in that it <em>exposes</em> the magic to the user a little too much, whilst looking overly complex to the average Go programmer.</p>
+<p>The other aspect where people find this &ldquo;confusing&rdquo; is that it&rsquo;s a <code>func</code> that returns <code>func</code> that takes a <code>func</code> as an argument. And that the body of the <code>for range</code> is transformed into a <code>func</code> and all <code>break</code>s (and other escaping control flow) are converted into a <code>return false</code>. It&rsquo;s just three levels of procedures deep, which again feels like a functional language rather than an imperative language.</p>
+<p><strong>NOTE:</strong> that I am not suggesting they replace the iterator design with what I am suggesting, but rather a generalized iterator approach may have not been a good thing Go in the first place. For me at least, Go is an unapologetic imperative language with first-class CSP-like constructs. It&rsquo;s not trying to be a functional-like language. Iterators are in that weird place where they do exist in imperative languages, but they are very &ldquo;functionally&rdquo; as a concept. Iterators can be very <em>elegant</em> in functional languages, but in some many unabashed imperative languages, they always feel &ldquo;weird&rdquo; somehow <strong>because</strong> they are being unified into a separate construct rather than separating out the parts of it (initialize+iterator+destroy).</p>
+<h2 id="aside-odins-approach">Aside: Odin&rsquo;s Approach</h2>
+<p>As I alluded to previously, in Odin an iterator is just a procedure call where the last value of the multiple return is just a boolean indicating whether to continue or not. And because Odin does not support closures, the equivalent Go <code>Backward</code> iterator in Odin is a little more code to type.</p>
+<p><strong><strong>NOTE:</strong> Before people say &ldquo;that looks even more complex&rdquo;, please continue reading the article. Most Odin iterators are not like this, and I would never recommend writing such an iterator where a trivial for-loop would be preferred for both the reader and the writer of the code.</strong></p>
+<pre><code class="language-odin">// Explicit struct for the state
+Backward_Iterator :: struct($E: typeid) {
+	slice: []E,
+	idx:   int,
+}
+
+// Explicit construction for the iterator
+backward_make :: proc(s: []$E) -&gt; Backward_Iterator(E) {
+	return {slice = s, idx = len(s)-1}
+}
+
+backward_iterate :: proc(it: ^Backward_Iterator($E)) -&gt; (elem: E, idx: int, ok: bool) {
+	if it.idx &gt;= 0 {
+		elem, idx, ok = it.slice[it.idx], it.idx, true
+		it.idx -= 1
+	}
+	return
+}
+
+
+s := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}
+it := backward_make(s)
+for el, _ in backward_iterate(&amp;it) { // `for el in` could have been written too
+	fmt.print(el, &quot; &quot;)
+}
+// c b a
+</code></pre>
+<p>This does <em>appear to be</em> a lot more complicated that the Go approach because it requires you to write a lot more code. However, it&rsquo;s actually a hell of a lot simpler to understand, comprehend, and even faster to execute. The iterator does not call the for-loop&rsquo;s body, rather the body calls the iterator. I know Cox loves the ability of <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a>, and I do agree it is nice but does not fit well within Odin, especially with the lack of closures (because Odin is a manual memory managed language).</p>
+<p>An &ldquo;iterator&rdquo; is just syntactic sugar for the following:</p>
+<pre><code class="language-odin">for {
+	el, _, ok := backward_iterate(&amp;it)
+	if !ok {
+		break
+	}
+	fmt.print(el, &quot; &quot;)
+}
+
+// With `or_break`
+
+for {
+	el, _ := backward_iterate(&amp;it) or_break
+	fmt.print(el, &quot; &quot;)
+}
+</code></pre>
+<p>Odin&rsquo;s approach is just removing the magic and making it extremely clear what is going on. &ldquo;Construction&rdquo; and &ldquo;destruction&rdquo; must be handled manually with explicit procedures. And that iteration is just a simple procedure which is called each loop. All three constructs are handled separately rather merged into one confusing one like in Go 1.23.</p>
+<p>Odin does not hide the magic, whilst Go&rsquo;s approach is actually very magical. Odin makes you handle the &ldquo;closure-like&rdquo; values manually along with the construction and destruction of the &ldquo;iterator&rdquo; itself.</p>
+<p>Odin&rsquo;s approach also trivially allows you to have as many multiple return values as wanted too! A good example of this is Odin&rsquo;s <code>core:encoding/csv</code> package where the <code>Reader</code> can be treated like an iterator:</p>
+<pre><code class="language-odin">// core:encoding/csv
+iterator_next :: proc(r: ^Reader) -&gt; (record: []string, idx: int, err: Error, more: bool) {...}
+</code></pre>
+<pre><code class="language-odin">// User code
+for record, idx, err in csv.iterator_next(&amp;reader) {
+	...
+}
+</code></pre>
+<h2 id="aside-c-iterators">Aside: C++ Iterators</h2>
+<p>I will try to not get into a huge rant about C++ &ldquo;iterators&rdquo; in this article. C++ iterators are much more than <em>mere iterators</em> whilst at least Go&rsquo;s approach is still a <em>mere iterator</em>. I completely understand why C++ &ldquo;iterators&rdquo; do what they do, but 99.99% of the time I just want a <em>mere iterator</em>; not something that has all of the algebraic properties that allow it to be utilized in more &ldquo;general&rdquo; places.</p>
+<p>For people who don&rsquo;t know C++ very well, an iterator is a custom <code>struct</code>/<code>class</code> which requires it to have overloaded <code>operators</code> on it to make it act like a &ldquo;pointer&rdquo;. Historically, a C++ &ldquo;iterator&rdquo; would look like this:</p>
+<pre><code class="language-cpp">{
+	auto &amp;&amp; __range = range-expression ;
+	auto __begin = begin-expr ;
+	auto __end = end-expr ;
+	for ( ; __begin != __end; ++__begin) {
+		range-declaration = *__begin;
+		loop-statement
+	}
+}
+</code></pre>
+<p>And would be wrapped in a &ldquo;macro&rdquo; before C++11 ranged-for loop syntax (and <code>auto</code>) became a thing.</p>
+<p>The biggest issue is that C++ &ldquo;iterators&rdquo; require you to define 5 different operations at a minimum.</p>
+<p>The following three operator overloads:</p>
+<ul>
+<li><code>operator==</code> or <code>operator!=</code></li>
+<li><code>operator++</code></li>
+<li><code>operator*</code></li>
+</ul>
+<p>Along with two stand-alone procedures or bound methods which return an iterator value:</p>
+<ul>
+<li><code>begin</code></li>
+<li><code>end</code></li>
+</ul>
+<p>If I was to design C++ <em>mere iterators</em>, I would have just add a simple method to a <code>struct</code>/<code>class</code> called <code>iterator_next</code> or something. And that&rsquo;s it. Yes it does mean the other algebraic properties are lost, but I honestly do not need these EVER for any problem I am working on. When I am working on those kinds of problems, they will always be either a contiguous array, or I will implement the algorithm manually because I want to guarantee the performance will be good for that data-structure. However, there is a reason I made my own language (Odin) because I completely disagree with the entire C++ philosophy, and I want to get away from that madness.</p>
+<p>C++ &ldquo;iterators&rdquo; are a hell of a lot more complicated than Go&rsquo;s iterators but they are much more &ldquo;direct&rdquo; with the local operation. At least with Go, you don&rsquo;t need to construct a type with 5 different properties rather</p>
+<h2 id="in-conclusion">In Conclusion</h2>
+<p>I feel like Go&rsquo;s iterators do make sense with the design principles applied to them <strong>BUT</strong> <em>seem</em> antithetical to what most people view Go as being. I know Go &ldquo;has had to&rdquo; get more complex over the years, especially with the introduction of Generics (which I do think are actually well designed, with only a few syntax quibbles), but the introduction of iterators of this ilk <em>feels</em> wrong.</p>
+<p>I think the short of it is that it feels like it goes against the apparent philosophy of Go that many people believe, coupled with it being a very functional way of doing things rather than imperative.</p>
+<p>And because of those reasons, I think that is why people don&rsquo;t like the iterator stuff, even if I completely understand the design choices made. It doesn&rsquo;t &ldquo;feel&rdquo; like what Go original was to many people.</p>
+<p>Maybe the concerns of mine (and others) are overblown and most people will never actually implement them and just use them, and that them being this complicated to implement.</p>
+<p>Second to last controversial take: Maybe Go needed to &ldquo;gate-keep&rdquo; even more and just tell the &ldquo;functional-bros&rdquo; to go away and stop asking for such features which make Go a much more complicated and complex language.</p>
+<p>Last controversial take: if it was me, I would just not have allowed custom iterators into Go whatsoever, but I am not on the Go team (nor do I want to be).</p>
+</description>
     </item>
     
     <item>
@@ -52,10 +318,28 @@ The merged PR for the proposal can be found here: https://github.</description>
       <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/04/05/string-type-distinctions/</guid>
-      <description>[Originally from a Twitter Thread]
-Original Twitter Post
-One thing many languages &amp;amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:
-string value (string or char const *) string builder (strings.Builder or realloc+snprintf) Backing buffer for a string ([]byte or char *) They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1542603515054497792">Original Twitter Post</a></p>
+<p>One thing many languages &amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:</p>
+<ol>
+<li>string value (<code>string</code> or <code>char const *</code>)</li>
+<li>string builder (<code>strings.Builder</code> or <code>realloc+snprintf</code>)</li>
+<li>Backing buffer for a string (<code>[]byte</code> or <code>char *</code>)</li>
+</ol>
+<p>They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.</p>
+<p>They have different use cases which don&rsquo;t actually overlap in practice. Most of the issues with strings come from trying to merge concepts into one.</p>
+<p>In <a href="https://odin-lang.org/">Odin</a>, the distinction between a string value and byte array is very important. <code>string</code> is semantically a string and not an array of 8-bit unsigned integers. There is an implied character encoding (UTF-8) as part of the value. <code>string</code> is also an immutable value in Odin.</p>
+<p>Having a string be immutable allows for a lot of optimizations, but in practice, you never want to mutate the string value itself once it has been created. And when you do mutate it, it most definitely a bug.</p>
+<p>This is why it is important to make a distinction between #1 and #3 and separate the concepts.</p>
+<p>Another way to conceptualize the ideas is as the following:</p>
+<ul>
+<li>(3) is the &ldquo;backing data&rdquo;, an arena of sorts (fixed or dynamic)</li>
+<li>(2) are the operations on that buffer (fixed or dynamic)</li>
+<li>(1) is the final value that points to (3) and produced by (2)</li>
+</ul>
+<p>Coupled with Run-Time Type Information (RTTI), having a distinction between []byte and string allows for a lot of really decent (de)serialization tooling, especially for &ldquo;magical&rdquo; printing (e.g. fmt.println).</p>
+<p>P.S. Even C makes a distinction between a string an array of integers</p>
+</description>
     </item>
     
     <item>
@@ -64,11 +348,41 @@ string value (string or char const *) string builder (strings.Builder or realloc
       <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/04/04/video-that-inspired-odin/</guid>
-      <description>[Originally from a Twitter Thread]
-Original Twitter Post
-Many people may not know this but this video by Sean Barrett @nothings is partially the reason why I made the Odin programming language.
-And I&amp;rsquo;ll explain what insights it gave me in this thread 🧵.
-A lot of these seem &amp;ldquo;so obvious&amp;rdquo; but for some reason it never clicked to me before this video. A lot of the &amp;ldquo;higher level&amp;rdquo; &amp;ldquo;scripting&amp;rdquo; languages are not that much higher level than C.</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1775853386694332461">Original Twitter Post</a></p>
+<p>Many people may not know this but this video by Sean Barrett <a href="https://twitter.com/nothings">@nothings</a> is partially the reason why I made the <a href="https://odin-lang.org/">Odin programming language</a>.</p>
+<div class="youtube">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/eAhWIO1Ra6M" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<p>And I&rsquo;ll explain what insights it gave me in this thread 🧵.</p>
+<p>A lot of these seem &ldquo;so obvious&rdquo; but for some reason it never clicked to me before this video. A lot of the &ldquo;higher level&rdquo; &ldquo;scripting&rdquo; languages are not that much higher level than C. Those languages just have garbage collection and much better standard libraries than C.</p>
+<p>Those languages are &ldquo;easier to use&rdquo; than C just because they have loads of built-in data structures like arrays, hash maps, and built-in syntax for them (how &ldquo;extravagant&rdquo;, I know).</p>
+<p>I was already well aware of the STB libraries that Sean developed, and the single-header-file style too of them (which is mostly a cope for C&rsquo;s flaws), but it never clicked to me that the library that Sean used the most was the <a href="https://github.com/nothings/stb">&ldquo;stb.h&rdquo;</a> one.</p>
+<p>This lead me to organize code I had used in previous projects already and put that into a single and easy to use library which I could use in any of my C projects going forward in 2015/2016: <a href="https://github.com/gingerBill/gb/blob/master/gb.h">https://github.com/gingerBill/gb/blob/master/gb.h</a></p>
+<p>However by around March, I began experimenting with just making an &ldquo;augmented&rdquo; C compiler so that I could add constructs to C which I found to be some of the most annoying things C lacked. The first, and most important, two constructs were:</p>
+<ul>
+<li>Slices</li>
+<li><code>defer</code></li>
+</ul>
+<p>I had already been using <code>defer</code> in C++ for many years already. I really wished the concept was native to C. (My opinion has now changed now for C for many reasons).</p>
+<p>P.S. I wrote an <a href="https://www.gingerbill.org/article/2015/08/19/defer-in-cpp/">article</a> about what I had been doing back in 2015 for defer in C++11</p>
+<p>Eventually I realized I couldn&rsquo;t just add constructs and features to C to &ldquo;improve&rdquo; my personal projects, and that any of my professional projects could not use them either. This then lead me to starting my own compiler to fix those issues I had with C.</p>
+<p>Interestingly, &ldquo;Odin&rdquo; (which was the original codename which just stuck) started life as a Pascal-like language with begin/end too, but I was trying to make it &ldquo;C-like&rdquo; enough for what I wanted. About 3 months later, I had implemented ~70% of Odin; the other ~30% took 7 years.</p>
+<p>Odin wasn&rsquo;t my first programming language that I had designed nor implemented, but it was the first where I actually went &ldquo;you know what?—this will actually be useful for my general needs&rdquo;. And now I use it for my living at <a href="https://jangafx.com/">JangaFX</a>, where all of our products are written in it.</p>
+<p>Other than slices and <code>defer</code>, the other things I did for Odin were to solve a few practical issues I had in C:</p>
+<ul>
+<li>A slice-based <code>string</code> type</li>
+<li>Decent variadic parameters (a slice-based one)</li>
+<li>RTTI (not bug-prone format verbs in printf, and not my janky generated stuff)</li>
+<li>Actual libraries</li>
+</ul>
+<p>I won&rsquo;t discuss the benefits of slices here but I will discuss the latter 3 things of that list.</p>
+<p>In C, pretty much my only use case for variadic parameters were <code>printf</code>-style things. Adding a decent form of that + coupled with RTTI, allowed me to have a runtime-typesafe <code>printf</code>.</p>
+<p>As for &ldquo;actual libraries&rdquo;, they need their own namespace. When the user imports it, he can change import name itself, rather than relying on the library to prefix everything (or C++ namespace) to minimize namespace collisions.</p>
+<p>This eventually lead to Odin&rsquo;s <a href="https://odin-lang.org/docs/overview/#packages">package system</a>.</p>
+<p>I highly recommend everyone to watch <a href="https://www.youtube.com/embed/eAhWIO1Ra6M">this talk</a> by Sean Barrett! It was a huge inspiration for me, and just a general eye-opener for something which should have been obvious to me at the time but wasn&rsquo;t.</p>
+</description>
     </item>
     
     <item>
@@ -77,12 +391,17 @@ A lot of these seem &amp;ldquo;so obvious&amp;rdquo; but for some reason it neve
       <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/01/22/comparing-language-benchmarks/</guid>
-      <description>[Originally from a Twitter Thread]
-Original Twitter Post
-I don&amp;rsquo;t know if I have &amp;ldquo;ranted&amp;rdquo; about this here before but:
-I absolutely HATE comparing programming languages with &amp;ldquo;benchmarks&amp;rdquo;.
-Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
-Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers.</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1749417960559505591">Original Twitter Post</a></p>
+<p>I don&rsquo;t know if I have &ldquo;ranted&rdquo; about this here before but:</p>
+<p>I absolutely <strong>HATE</strong> comparing programming languages with &ldquo;benchmarks&rdquo;.</p>
+<p>Language benchmarks <em>rarely</em> ever actually test for anything useful when comparing one language against another. This goes for ANY language.</p>
+<p>Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers. Comparing different languages is not even in the same category. When comparing languages, you are not just comparing the optimizing backend of the compiler (assuming it even is compiled), but a completely different input. And most benchmarks rarely use the semantically equivalent code to test against. The implementations vary widely. And even in the case where the input is semantically equivalent AND the compiler backends for each language use the same &ldquo;library&rdquo; (e.g. LLVM), even then the semantics of each language may not allow for certain passes. LLVM is a good example which assumes C and C++ semantics. If your language does not adhere to C and C++ semantics, then most of the passes in LLVM cannot be used. And some compilers may have different default &ldquo;flags&rdquo; too, which makes dumb comparisons rarely equal (e.g. native vs portable microarchitectures).</p>
+<p>Clarifying the semantically equivalent aspect: a printing procedure in one language may be drastically different too. Runtime vs compile-time type information or none at all, flushing after each call or not, richer formatting or not, etc. Are you even comparing the same thing? There is also the &ldquo;idiomatic&rdquo; aspect which I hate too. &ldquo;Idiomatic&rdquo; in one language is a subjective and personal construct, and may produce very different results compared to &ldquo;non-idiomatic&rdquo; code. &ldquo;Idiomatic&rdquo; styles might produce slower code in general; the tests won&rsquo;t show this.</p>
+<p>One of the most egregious websites for this is: <a href="https://programming-language-benchmarks.vercel.app">https://programming-language-benchmarks.vercel.app</a>. I recommend anyone to compare two languages of the same ilk and actually read the differences between the code in the tests; note how they are nothing alike most of the time. Different implementations &amp; logic.</p>
+<p><em><strong>n.b.</strong></em> I do personally try to make distinctions between the language, the compiler, the core library, and the ecosystem, as much as I can. I know most people do not and just lump everything together as a single package. This is due to most languages having a single implementation. But if you come from a C or C++ background, like my own, then you are/were confronted with the selection of different toolchains from the start (MSVC, Clang, GCC, Intel, tcc, 8cc, etc). And you are usually forced to write/import your own core library too (e.g. C&rsquo;s is awful). For a language like Lua, there are different implementations, but they pretty much offer the same &ldquo;ecosystem&rdquo;, but just differ in how they are ran (i.e. VM vs JIT). And for many people, the choice of which to use is dictated by the use case.</p>
+<p>In summation, metrology is hard. You actually need to know what you are comparing against; if that thing is even measurable (quantitatively or qualitatively) in the first place; that the things you are comparing are actually useful or valid for what you want to know. Comparing multivariate things against each other and going &ldquo;yep, that entire &rsquo;language&rsquo; is faster than this one&rdquo; is misguided at best, and idiotic at worse. Please don&rsquo;t treat &ldquo;benchmarks&rdquo; such as these as mostly pseudo-science, not science. Just because it has loads of numbers and &ldquo;measurements&rdquo;, does not make it &ldquo;scientific&rdquo;.</p>
+</description>
     </item>
     
     <item>
@@ -91,8 +410,326 @@ Even in the best case scenario: you are comparing different compilers for the sa
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>/article/2022/07/11/reverse-engineering-alembic/</guid>
-      <description>For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
-I spent nearly 4 days trying to get the official Alembic C++ API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate.</description>
+      <description><p>For my work at <a href="https://jangafx.com/">JangaFX</a>, we require the use of the <a href="http://www.alembic.io/">Alembic</a> interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.</p>
+<p>I spent nearly 4 days trying to get the official Alembic C++ API, <a href="https://github.com/alembic/alembic/">https://github.com/alembic/alembic/</a>, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate. After this ordeal I decided to see how difficult it would be to create my own reader, and then writer, for the format from scratch.</p>
+<p>I don&rsquo;t really like to &ldquo;reinvent the wheel&rdquo; when I don&rsquo;t have to, but in this case, the C++ API was an absolute nightmare and I&rsquo;ve spent more time trying to get that to work rather than actually solving the problem I had.</p>
+<p>Making my own library for Alembic turned out to be a little more work than I expected. Even though it is an &ldquo;open source&rdquo; format, it is effectively completely undocumented, and the bits that are documented refer mostly to specific (not all of them) schemas rather than the internal format.</p>
+<p>This article will be a basic document of the internals of the Alembic file format.</p>
+<h2 id="what-actually-is-alembic">What Actually is Alembic?</h2>
+<p>Through my journey into &ldquo;discovering&rdquo; the Alembic format, I found out that <em>Alembic</em> is not actually a file format but masquerades as one. It is in fact two file formats with different memory layouts which can be determined based on the <a href="https://en.wikipedia.org/wiki/List_of_file_signatures">magic file signature</a>:</p>
+<ul>
+<li><a href="https://www.hdfgroup.org/">HDF5</a></li>
+<li>Ogawa<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+</ul>
+<h3 id="hdf5">HDF5</h3>
+<p>HDF5 is a hierarchical data format which is commonly used to store and organize large amounts of data in a <em>hierarchical</em> fashion. It&rsquo;s commonly used in the scientific field rather than the visual effects industry, and as such, this internal format is rarely used for storing data that would be useful for our tasks for importing (e.g. meshes, cameras, animations, etc). HDF5 is effectively a storage format for database-like data, it&rsquo;s a very good format in terms of usage (I will admit I have no idea about its internal design).</p>
+<p>It appears that the vast majority of &ldquo;Alembic&rdquo; files are not in the HDF5 format but in Ogawa.</p>
+<h3 id="ogawa">Ogawa</h3>
+<p>The main format of concern is named <em>Ogawa</em>. It&rsquo;s a little-endian binary format (thank goodness) which was designed to be readable in-place for efficient multi-threaded data reading. This part of the file format is luckily documented<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, and small enough that I could write it in a <a href="https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
+<p>Similar to HDF5, Ogawa is a hierarchical data format that is simple to read, but differing from HDF5, it is completely uncompressed.</p>
+<p><strong>Note:</strong> When decoding binary formats, it is very useful if have a <em>hex-viewer</em> to see the bytes in a readable way. On Windows, I would recommend either <a href="https://www.hhdsoftware.com/free-hex-editor">Hex Editor Neo</a> or <a href="https://www.sweetscape.com/010editor/">010 Editor</a>. Even though the Ogawa format is mostly documented on that GitHub Wiki page, I still required a <em>hex-viewer</em> from time to time to ensure everything was laid out as I expected, especially for the more complex embedded data.</p>
+<p>Its header is very simple:</p>
+<pre><code class="language-odin">MAGIC :: &quot;Ogawa&quot;
+
+File_Header :: struct {
+	magic:   [5]byte, // &quot;Ogawa&quot;
+	wflag:   enum byte { writing = 0x00, closed = 0xff },
+	version: [2]byte, // {0, 1}
+	root_group_offset: u64le,
+}
+</code></pre>
+<p>The magic signature is just 5 bytes containing the ASCII characters <code>Ogawa</code>, followed by a byte-wide flag which states whether the file is open or closed to writing, followed by 2 bytes specifying the version of the format (of which will always be <code>[2]byte{0, 1}</code>), and finally followed by an offset to the root &ldquo;group&rdquo;.</p>
+<p>The <code>wflag</code> is there to allow writing to the file and prevent other applications from trying to read it whilst it is not finished. It begins off as <code>0x00</code> and then once the file is finished, it becomes <code>0xff</code>. For my Alembic writer, I was storing the data in a memory buffer and then writing the entire data to the file at once, meaning this byte-wide flag was not that useful.</p>
+<p>All grouped-based offsets in the Ogawa format are stored in a 64-bit unsigned little endian integer (<code>u64le</code>) representing the number of bytes from the base of the file<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>These group-based offsets come in two different flavours: an <em>Ogawa Group</em> or an <em>Ogawa Data (byte stream)</em>. The offset encodes a flag in its highest bit (63rd bit) to indicate which flavour: Group if 0 and Data if 1. The remaining 63-bits represent the offset to this specific kind of value; if the remaining 63-bits are all zero, it means it is a terminating value (not pointing to any actual memory).</p>
+<p>A <em>Group</em> begins with a <code>u64le</code> representing the number of children following it in memory (of which all are another offset, <code>u64le</code>). If the value is 0, this represents an empty group that has no children.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Group :: struct {
+	num_children: u64le,
+	children:     [num_children]u64le,
+}
+</code></pre>
+<p>A <em>Byte-Stream</em> begins with a <code>u64le</code> representing the number of bytes following it in memory.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Data :: struct {
+	num_bytes: u64le,
+	bytes:     [num_bytes]byte,
+}
+</code></pre>
+<p>This basic file format is very simple to read but it has zero semantic information to make it useful for something like an interchange format. The semantic structure is what I am calling the <em>Meta-Schema for Alembic</em>.</p>
+<h2 id="the-meta-schema-of-alembic-on-top-of-ogawa">The Meta-Schema of Alembic on top of Ogawa</h2>
+<p>To begin decoding the format, I created a basic Ogawa to JSON viewer to see the tree structure of the file format. As I began to understand more of the format, the JSON structure became much more complex but richer in semantic data.</p>
+<p><strong>Note:</strong> I highly recommend converting any hierarchical format into something like JSON just as a debug view alone, since there are many tools such as <a href="https://dadroit.com/">Dadroit</a> that allow for easy viewing. But if you want to make your own format and viewer with your own tools, go ahead!</p>
+<p>After a bit of exploring, the meta-schema begins with the following data for the root group:</p>
+<ul>
+<li>6 children minimum
+<ul>
+<li>Every file that I tested always began with 6 children</li>
+</ul>
+</li>
+<li>Child <code>0</code> is a byte-stream which stores an <code>i32le</code> containing something akin to the archive version (always appeared to <code>0</code>)</li>
+<li>Child <code>1</code> is a byte-stream which stores an <code>i32le</code> containing the file version which must be <code>&gt;=10000</code>
+<ul>
+<li>From the reverse engineering, it appears that the value stored in decimal represents the file format: e.g. <code>10505</code> represents <code>Alembic 1.5.5</code></li>
+</ul>
+</li>
+<li>Child <code>2</code> is a group to the first <em>Objects</em> based at the root</li>
+<li>Child <code>3</code> is a byte-stream which stores the file&rsquo;s <em>metadata</em></li>
+<li>Child <code>4</code> is a byte-stream which stores the time samples and max samples information</li>
+<li>Child <code>5</code> is a byte-stream which stores indexed <em>metadata</em> which nested <em>properties</em> may use later
+<ul>
+<li>In my Alembic writer, I never used any <em>indexed metadata</em> and just did everything inline since it was easier to handle</li>
+</ul>
+</li>
+</ul>
+<p>From this point on, it can be assumed that a lot of the data is unaligned to its natural alignment and must be read accordingly.</p>
+<h3 id="time-samples-and-max-sample">Time Samples and Max Sample</h3>
+<p>This data is only stored at the root group (child <code>4</code>) and referenced elsewhere by index.</p>
+<p>Each value containing the samples is stored in contiguous memory:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Chrono :: distinct f64le
+
+Time_Samples :: struct #packed {
+	max_sample:     u32le,
+	time_per_cycle: Chrono,
+	num_samples:    u32le,
+	samples:        [num_samples]Chrono,
+}
+</code></pre>
+<p>This memory needs to be read in order in order to determine the number of samples.</p>
+<h3 id="metadata">Metadata</h3>
+<p>All metadata is stored as a string. Each entry is a key and value separated by the ASCII character <code>=</code>, and each entry is separated by <code>;</code>. Deserializing this is a very simple operation to do in most languages.
+These strings are <em>NOT</em> <strong>NUL</strong> terminated like in C because they are bounded by a length that usually prefixes it. As I am using <a href="https://odin-lang.org/">Odin</a>, its <code>string</code> type is length-bounded making this process a lot easier to use compared to C.</p>
+<p>The indexed metadata is only stored at the root group (child <code>5</code>) and referenced elsewhere by index.</p>
+<p>Each value is stored in contiguous memory:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Index_Metadata_Entry :: struct {
+	metadata_size:   u8,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<p>The maximum number of index metadata entries allowed is <code>254</code> (<code>0xfe</code>).</p>
+<h3 id="object-data">Object Data</h3>
+<p>The root group stores an offset to the first group (child <code>2</code>) representing <em>Object Data</em>.</p>
+<p>Object data contains a list of the nested children as well properties for its &ldquo;this&rdquo; <em>Object</em>.</p>
+<ul>
+<li>Child <code>0</code> stores the data for the properties in the form of <em>Compound Property Data</em></li>
+<li>Children <code>1..&lt;n-1</code> stores the objects</li>
+<li>Child <code>n-1</code> stores the data for the child <em>Object Headers</em></li>
+</ul>
+<h3 id="object-headers">Object Headers</h3>
+<p>The Object Header are stored in contiguous memory for each entry but depending on the value of its <code>metadata_index</code> (see below) will determine whether the metadata value is stored inline or stored in the indexed metadata at the root group.</p>
+<ul>
+<li>If <code>metadata_index</code> is equal to <code>0xff</code>, the metadata is stored directly after it</li>
+<li>If <code>metadata_index</code> is any other value, it represents the index to the metadata stored at the root group (this value must be less than the number of index metadata entries otherwise it is a invalid file)</li>
+</ul>
+<pre><code class="language-odin">// Pseudo-Odin
+Object_Header :: struct #packed {
+	name_size:      u32le,
+	name:           [name_size]u8,
+	metadata_index: u8,
+}
+
+Object_Header_Inline :: struct #packed {
+	using header:    Object_Header,
+	metadata_size:   u32le,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<h3 id="property-data">Property Data</h3>
+<p>There are three different forms of properties that may be stored within Alembic: Scalar, Array, and Compound.</p>
+<p>Child <code>0</code> of the <em>Object Data</em> group must represent a <em>Compound</em> property data.</p>
+<h4 id="compound-property-data">Compound Property Data</h4>
+<p><em>Compound property data</em> is a group which stores <code>N</code> children for <code>N-1</code> properties. It&rsquo;s effectively a hash map (like a JSON object) containing a keys, properties, and the values of more property data.</p>
+<ul>
+<li>Children <code>0..&lt;N-1</code> represent the nested property data which is denoted by the property headers</li>
+<li>Child <code>N-1</code> is a byte-stream which contains the compound property headers</li>
+</ul>
+<p>In the <em>compound property headers</em> byte-stream, it contains a list of the nested of each property header.</p>
+<p><strong>n.b.</strong> The property headers are the weirdest aspect of the entire format and not simply expressible in terms of basic data structures and require a lot of logic for the encoding.</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Property_Header :: struct #packed {
+	info: u32le,
+	when Compound { // determined from info
+		next_sample_index: INT_BASED_ON_SIZE_HINT,
+		if info &amp; 0x0200 != 0 {
+			first_changed_index: INT_BASED_ON_SIZE_HINT,
+			last_changed_index:  INT_BASED_ON_SIZE_HINT,
+		}
+		if info &amp; 0x0100 != 0 {
+			time_sampling_index: INT_BASED_ON_SIZE_HINT,
+		}
+	}
+
+	name_size: INT_BASED_ON_SIZE_HINT,
+	name: [name_size]u8,
+}
+</code></pre>
+<p><code>info</code> is an <code>u32le</code> which encodes information about the property:</p>
+<ul>
+<li>Bits <code>0..&lt;2</code> : represents the property type:
+<ul>
+<li><code>0</code> = <code>Compound</code></li>
+<li><code>1</code> = <code>Scalar</code></li>
+<li><code>2</code> = <code>Array</code></li>
+</ul>
+</li>
+<li>Bits <code>2..&lt;4</code> : represents the size hint <code>INT_BASED_ON_SIZE_HINT</code>
+<ul>
+<li><code>0</code> = <code>u8</code></li>
+<li><code>1</code> = <code>u16le</code></li>
+<li><code>2</code> = <code>u32le</code></li>
+</ul>
+</li>
+<li>Bits <code>4..&lt;8</code> : represents the plain old data type:
+<ul>
+<li><code>0</code> = <code>bool</code> (byte)</li>
+<li><code>1</code> = <code>u8</code></li>
+<li><code>2</code> = <code>i8</code></li>
+<li><code>3</code> = <code>u16le</code></li>
+<li><code>4</code> = <code>i16le</code></li>
+<li><code>5</code> = <code>u32le</code></li>
+<li><code>6</code> = <code>i32le</code></li>
+<li><code>7</code> = <code>u64le</code></li>
+<li><code>8</code> = <code>i64le</code></li>
+<li><code>9</code> = <code>f16le</code></li>
+<li><code>10</code> = <code>f32le</code></li>
+<li><code>11</code> = <code>f64le</code></li>
+<li><code>12</code> = <code>u8</code> string</li>
+<li><code>13</code> = <code>wchar_t</code> string
+<ul>
+<li>I am yet to see this in the wild yet</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Bit <code>9</code> states whether the <code>first_changed_index</code> and <code>last_changed_index</code> is set for a Compound type</li>
+<li>Bit <code>11</code> if set, <code>first_changed_index</code> and <code>last_changed_index</code> equal <code>0</code></li>
+<li>If bits <code>9</code> and <code>11</code> are not set, <code>first_changed_index = 1</code>, <code>last_changed_index = next_sample_index-1</code></li>
+<li>Bit <code>10</code> states if the property data is homogenous</li>
+<li>Bits <code>12..&lt;20</code> : represents the &ldquo;extent&rdquo; of the value. e.g. <code>[][extent]type</code></li>
+<li>Bits <code>20..&lt;28</code> : represents the <code>metadata_index</code>. This follows the same rules as <em>Object Headers</em>
+<ul>
+<li>If <code>metadata_index</code> is equal to <code>0xff</code>, the metadata is stored directly after it</li>
+<li>If <code>metadata_index</code> is any other value, it represents the index to the metadata stored at the root group (this value must be less than the number of index metadata entries otherwise it is a invalid file)</li>
+</ul>
+</li>
+<li>Bits <code>28..&lt;32</code> : I have no idea what these represent, if anything</li>
+</ul>
+<p>For the property headers containing inline metadata:</p>
+<pre><code class="language-odin">// Pseudo-Odin
+Property_Header_Inline :: struct #packed {
+	using header:    Property_Header,
+	metadata_size:   INT_BASED_ON_SIZE_HINT,
+	metadata_string: [metadata_size]u8,
+}
+</code></pre>
+<h4 id="scalar-property-data">Scalar Property Data</h4>
+<p>Scalar property data is constant if <code>first_changed_index == 0</code> in the property header. Number of samples is equal to the <code>next_sample_index</code>.</p>
+<p>The indexed samples are stored in the children groups on the property data stored beginning at the relative offset 0.</p>
+<p>Depending on the whether the samples are constant or not, the actual index needs to be mapped using the following procedure:</p>
+<pre><code class="language-odin">verify_index :: proc(p: Property, index: u32) -&gt; u32 {
+	assert(index &lt; u32(p.next_sample_index))
+
+	i := u32(index)
+	if i &lt; p.first_changed_index {
+		return 0
+	} else if p.first_changed_index == p.last_changed_index &amp;&amp; p.first_changed_index == 0 {
+		return 0
+	} else if i &gt;= p.last_changed_index {
+		return u32(p.last_changed_index - p.first_changed_index + 1)
+	}
+	return i - p.first_changed_index + 1
+}
+</code></pre>
+<p>The data for each sample contains both the key/hash of the data and the <em>uncompressed</em> data.
+The hash is stored at the beginning; is represented as a 16-byte (128 bit) <a href="http://burtleburtle.net/bob/hash/spooky.html">SpookyHash</a>.
+The data after that is stored after this hash.</p>
+<pre><code class="language-odin">num_samples := u32(p.next_sample_index)
+for sample_index in 0..&lt;num_samples {
+	index := verify_index(p, sample_index)
+	data := get_child_data(archive.data, ph_group, index)
+	sp.samples[sample_index].key = get_sample_key(data[:16])
+	sp.samples[sample_index].data = data[16:]
+}
+</code></pre>
+<h4 id="array-property-data">Array Property Data</h4>
+<p>Array property data is constant if <code>first_changed_index == 0</code> in the property header. Number of samples is equal to the <code>next_sample_index</code>.</p>
+<p>Indexing into the samples is a little more complex than scalar data. The number groups stored for the sample data is doubled up, where the pair of groups
+represent the sample data and then the data for the dimensions. The sample data is similar to that of the scalar but the extra group that represents the dimensions
+is an array of <code>u64le</code> values which represent the tensor shape of the data. Most of the time, the dimensions is just a single element represent the number
+of elements in the array.</p>
+<p>The data group has the same kind of hash prefixing the data (using SpookyHash).</p>
+<pre><code class="language-odin">Data_Type :: struct {
+	pod:    Plain_Old_Data_Type,
+	extent: u8,
+}
+
+get_num_bytes :: proc(dt: Data_Type) -&gt; int {
+	assert(dt.pod &lt; .String)
+	return pod_data_size[dt.pod] * int(dt.extent)
+}
+
+...
+
+num_samples := u32(p.next_sample_index)
+for sample_index in 0..&lt;num_samples {
+	// * 2 for array properties since the dimensions are also written
+	index := verify_index(p, sample_index) * 2
+
+	sample := &amp;ap.samples[sample_index]
+
+	dims_data, _ := get_child_data(archive.data, ph_group, index+1)
+	data := get_child_data(archive.data, ph_group, index+0) or_return
+
+	if len(data) &gt; 0 {
+		assert(len(data) &gt;= 16)
+		sample.key = get_sample_key(data[:16])
+		sample.data = data[16:]
+	}
+
+	sz := get_num_bytes(p.data_type)
+
+	dims: []u64
+	if len(dims_data) == 0 {
+		dims = make([]u64, 1)
+		if len(data) == 0 {
+			dims[0] = 0
+		} else {
+			dims[0] = u64((len(data)-16) / sz)
+		}
+	} else {
+		dims = mem.slice_data_cast([]u64, dims_data)
+	}
+	sample.dims = dims
+}
+</code></pre>
+<h2 id="schemas-of-alembic">Schemas of Alembic</h2>
+<p>I will discuss the schemas of Alembic at a later date since they could fill their own article. For the need we have, we only really care about reading in Cameras and Xforms (Transforms), and writing out Particles/Points.</p>
+<h2 id="general-views-of-the-format">General Views of the Format</h2>
+<p>I think the general format <em>Ogawa</em> format is absolute fine but because of its lack of semantic structure, it requires applying one to it. Even JSON has some semantic meaning by virtue of being a text-format (of which I have been using as a format to display to debug the Ogawa data).</p>
+<p><strong>Note:</strong> I would never recommend using JSON when another file format is better fit (especially if you have the luxury of using a custom format), JSON is too general for the vast majority of use cases. If you have the choice of using an interchange format, always use a binary one (even a custom one) since it is pretty much never the case you will need to modify the file in a text editor.</p>
+<p>The design of the property header is very strange to me. It seems like it is trying to be as compact as possible but the reset of the file format is uncompressed. I cannot see why this bit would need to be compressed/compacted when the property data it refers to is uncompressed. The size hint bit is really bizarre and I personally would have just stuck with a single integer type (i.e. <code>u32le</code>) to keep things better.</p>
+<p>The use of indexed metadata seems a bit bizarre since because the entire format is offset-based, the indexed stuff could have pointed to the same memory address to save memory. I know this means that the hierarchy is now not strict, but for metadata, I personally don&rsquo;t think it would be much of an issue.</p>
+<p>Speaking of the offset-based file formats, one potential issue for malicious files is form cycles in the hierarchy, which could cause many readers to crash.</p>
+<p>I am not sure why Spooky-Hash was used. It is not really an easy hashing algorithm to implement (~330 LOC of Odin) and not necessarily better than other hashes out there. It is also not that commonly used compared to simpler (and maybe better) hashes.</p>
+<h2 id="in-sum">In Sum</h2>
+<p>After a lot of work, I got a fully functioning Alembic reader and writer that was ~2000 LOC of Odin (including the necessary schemas we required at <a href="https://jangafx.com/">JangaFX</a>). This is a hell of a lot smaller and simpler than the official Alembic C++ API for the same amount of functionality.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Technically it&rsquo;s Ogawa-Flavour Alembic with its own specific meta-schema, of which I will get to that later in the article.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>I&rsquo;m a huge fan of file binary formats designed this way where they use effectively internal <a href="/article/2020/05/17/relative-pointers/">relative pointers</a>, of which I should explain my preferred approach to designing binary file format in the future.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -101,7 +738,90 @@ I spent nearly 4 days trying to get the official Alembic C++ API, https://github
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/12/15/multiple-return-values-research/</guid>
-      <description>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &amp;ldquo;true&amp;rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions.</description>
+      <description><p>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through <a href="https://en.wikipedia.org/wiki/Tuple">tuples</a>.
+My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) <a href="https://odin-lang.org/">Odin</a> has invented a new kind of type system, something to the akin of <em>polyadic expressions</em>.</p>
+<p>It appears that <a href="https://go.dev/">Go</a> and <a href="https://odin-lang.org/">Odin</a> are the only ones with what I call &ldquo;true&rdquo; multiple return values, <em>but</em> Odin&rsquo;s approach is a lot more sophisticated than Go&rsquo;s and extends the concept further.</p>
+<p>Odin&rsquo;s idea is pretty simple: an expression may have <em>n</em>-values, where <em>n</em> is a natural number <em>≥0</em>. Meaning an expression may have 0, 1, 2, 3, 4, etc values, of which each value has a type, not that each expression has a type. An expression with 0-values has no (final) type to it (not even <code>void</code> like in some languages).</p>
+<p>A way of thinking about this is that Odin is fundamentally a <a href="https://wikipedia.org/wiki/Polyad">polyadic</a> language rather than a <a href="https://wikipedia.org/wiki/Monad_(functional_programming)">monadic</a> language, like pretty much everything else. However most languages seem to be polyadic in one aspect: input parameters to procedures/functions. In most languages, you have multiple (monadic) inputs but only one (monadic) output, e.g. (<code>int foo(int, bool, float);</code>). Odin&rsquo;s approach is to just extend this to the rest of the language&rsquo;s type system, not just procedure inputs.</p>
+<h2 id="emulation-with-tuples-in-other-languages">Emulation with Tuples in Other Languages</h2>
+<p>In languages with <a href="https://wikipedia.org/wiki/Tuple">tuples</a>, they can emulate the ability to have multiple return values, especially if the language has sugar encouraging it.
+Let&rsquo;s take <a href="https://www.python.org/">Python</a> as this basic example where tuples can be used to emulate multiple return values:</p>
+<pre><code class="language-py">def foo():
+    return (1, True, &quot;hellope&quot;) # can also be written without the parentheses, as a form of syntactic &quot;sugar&quot;
+
+(x, y, z) = foo() # explicit tuple syntax with a basic form of pattern matching
+x, y, z = foo() # sugar for the above
+a = foo() # assigning  all the values not a single (monadic) 3-tuple
+</code></pre>
+<p>Other languages may not use tuples to achieve multiple return values; languages such as <a href="https://lisp-lang.org/">Common Lisp</a> and <a href="http://www.lua.org/">Lua</a> do things slightly differently by pushing multiple values BUT the handling of the number of values is handled dynamically rather than statically:</p>
+<pre><code class="language-lua">function foo()
+    return 1, true, &quot;hellope&quot;
+end
+
+x, y, z    = foo() -- same as Python example
+x, y       = foo() -- the string value is dropped/ignore
+x, y, z, w = foo() -- a value for 'w' was never returned therefore it is set to 'nil'
+</code></pre>
+<p>This is similar to <a href="https://lisp-lang.org/learn/functions"><code>values</code></a> in Common Lisp, Scheme, etc, of which it can suffer from exactly the same issues in terms of dropping of value bugs etc, especially due to its dynamic typing approach. A good example of this is to show that <code>(type-of (values x y z))</code> is the same as <code>(type-of x)</code> in Common Lisp.</p>
+<p>However, dynamically typed languages are not my area of research for this specific question, statically and strongly typed ones are. And in that case, all of the languages that allow for something like multiple return values (except for Odin and Go) use tuples. However tuples can still be passed around as a singular/monadic intermediary value. Tuples are effectively a form of monad which wrap values of (possibly) different types (essentially an ad-hoc record/struct type), which some languages may allow for explicit or implicit tuple destruction.</p>
+<h2 id="how-odin-differs">How Odin Differs</h2>
+<p>Odin does differ from Go on multiple return values in one important aspect: Go&rsquo;s approach is a bit of hack which only applies in the context of variable assignments. The following is valid in Odin but <em>not</em> valid in Go:</p>
+<pre><code class="language-go">x, y, z := 1, foo() // assuming 'foo' returns 2 values
+</code></pre>
+<p>The reason being is that Go&rsquo;s approach for multiple returns only works in the context of assignment, and the assignment assumes that there is either N-expressions on the RHS or 1-expression on the RHS to match the N-variables on the LHS. Odin&rsquo;s approach is a little more sophisticated here, the assignment assumes that there are N-values on the RHS for each of the N-variables on the LHS; where the N-values may be made from M-expressions (N ≥ M).</p>
+<p>Another fun thing about Odin because of this fact is that you can do the following (which is also not possible in Go):</p>
+<pre><code class="language-odin">foo :: proc() -&gt; (int, bool, string) { ... }
+bar :: proc(int, bool, string) { ... }
+
+bar(foo())
+</code></pre>
+<p>It also means something like this is possible in Odin:</p>
+<pre><code class="language-odin">x, y, z, w := 1.34, foo() // N-variables on the LHS, N-values on the RHS
+
+blaz :: proc() -&gt; (bool, string) { ... }
+bar(1, blaz())
+</code></pre>
+<p>Internally, Odin&rsquo;s approach could be implemented identically to as if a procedure was an input tuple + an output tuple and then automatically destructed, but semantically Odin does not support first-class tuples. n.b. For this research, implementation details are not of concern, only usage/grammar.</p>
+<h3 id="other-areas-of-use-in-odin">Other Areas of Use In Odin</h3>
+<p>Polyadic expressions are also used in another areas of the Odin programming language. One of the most common is the optional-ok idiom<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<pre><code class="language-odin">m: map[string]int
+x: union{int, bool}
+
+value, ok := m[key] // map access
+
+v, ok := x.(int) // type assertion
+
+// a type switch statement is more commonly seen as more cases may need to be handled
+switch y in x {
+case int:  ...
+case bool: ...
+case:      ... 
+}
+</code></pre>
+<h2 id="is-rob-pike-to-blame">Is Rob Pike to Blame?</h2>
+<p>I am wondering if this approach to multiple return values is all <a href="https://wikipedia.org/wiki/Rob_Pike">Rob Pike</a>&rsquo;s fault. Since the only languages I can find that are like what I speak of are:</p>
+<ul>
+<li><a href="https://swtch.com/~rsc/thread/alef.pdf">Alef</a>, <a href="http://www.vitanuova.com/inferno/papers/limbo.html">Limbo</a>, <a href="https://go.dev/">Go</a> (Rob Pike related, the first two being non-destructing tuples)</li>
+<li><a href="https://odin-lang.org/">Odin</a> (<a href="https://www.gingerbill.org/">me</a>, who has been influenced by many of Pike&rsquo;s languages)</li>
+</ul>
+<p>Alef and Limbo had multiple return values through tuples, but tuples were still not really first-class data types in those languages. In many ways, Alef and Limbo were the main precursors to Go (not just <a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)">Oberon</a> and <a href="https://en.wikipedia.org/wiki/Modula">Modula</a>). Limbo&rsquo;s declaration syntax comes from <a href="https://swtch.com/~rsc/thread/newsqueak.pdf">Newsqueak</a> which is also the precursor to Odin&rsquo;s very own declaration syntax<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>So maybe the reason there is little literature (that I can fine) into this topic is purely because it is limited to languages related-to/influenced-by Rob Pike.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It might be the approach taken by Odin may be extremely unique to Odin, however it is also one of the my favourite things about Odin too. And I am really glad I added it so early on, since it has shown its utility really quickly. Coupled with <a href="https://odin-lang.org/docs/overview/#named-results">named return values</a>, bare <code>return</code> statements, and <a href="https://odin-lang.org/docs/overview/#or_return-statement"><code>or_return</code></a>, it is an absolute pleasure to work with.</p>
+<p>If anyone has any more information about this topic, please feel free to contact me with it!</p>
+<p>P.S. If there is no research done into this area, it is a good sign since there is so much left to discover in Programming Language Theory.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>This is technically 3 different addressing modes depending on the context (<a href="https://github.com/odin-lang/Odin/blob/4423bc0706a6a1a64cf419720fd65bc723fdf58a/src/parser.hpp#L19-L23">map-index, optional-ok, or optional-ok-ptr</a>)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -110,11 +830,50 @@ I spent nearly 4 days trying to get the official Alembic C++ API, https://github
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/09/06/value-propagation-experiment-part-2/</guid>
-      <description>**[Originally from a Twitter Thread]**
-I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
-The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
-I think there were three things which were confusing which make it look like a failure of an experiment:
-try was a confusing name for what the semantics were.</description>
+      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+<p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
+<p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
+<p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
+<ul>
+<li><code>try</code> was a confusing name for what the semantics were.</li>
+<li><code>try</code> as a prefix was the wrong place.</li>
+<li>Unifying <code>try</code> with <code>try else</code> was a bad idea for many reasons.</li>
+</ul>
+<p>Changes in the PR:</p>
+<ul>
+<li>Built-in <code>or_else</code> procedure became a binary operator instead (meaning it became a keyword).</li>
+<li><code>or_return</code> was added as a keyword.</li>
+<li><code>or_return</code> became a suffix-operator/atom-expression.</li>
+</ul>
+<pre><code class="language-odin">if i, ok = m[&quot;hellope&quot;] !ok { i = 123 }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-odin">i = m[&quot;hellope&quot;] or_else 123
+</code></pre>
+<pre><code class="language-odin">if err = foo(); err != nil { return }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-od">foo() or_return
+</code></pre>
+<p>Most people understood what the purpose and semantics <code>or_else </code>pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that.</p>
+<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin&rsquo;s core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
+<p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
+<p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
+<p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That&rsquo;s a useful construct for definite.</p>
+<p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of
+<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>&rsquo;s HxA format. <a href="https://github.com/quelsolaar/HxA">https://github.com/quelsolaar/HxA</a></p>
+<p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
+<p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
+<ul>
+<li>Error value propagation <em>ACROSS</em> library boundaries</li>
+<li><em>Degenerate states</em> due to type erasure or automatic inference</li>
+<li>Cultural lack of partial success states</li>
+</ul>
+<p>The most important one is the degenerate state issue, where all values can degenerate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don&rsquo;t handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: &ldquo;error or not&rdquo;. This is now equivalent to a fancy boolean.</p>
+<hr>
+<p>I do hope that this addition of <code>or_return</code> does aid a lot of people when making projects and designing packages.</p>
+<p>It does appear to be very useful already for many of the core library package developers for Odin.</p>
+</description>
     </item>
     
     <item>
@@ -123,11 +882,53 @@ try was a confusing name for what the semantics were.</description>
       <pubDate>Mon, 05 Jul 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/07/05/value-propagation-experiment/</guid>
-      <description>[Originally from a Twitter Thread]
-Part 2 of this Experiment
-The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&amp;rsquo;s try! which became ?, or Zig&amp;rsquo;s try, etc.
-I have now removed it from Odin. But why?
-The Problem The hypothesis was that that this idiom was common:</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
+<h2 id="the-idea">The Idea</h2>
+<p>I recently experimented with adding a feature into <a href="https://odin-lang.org/">Odin</a> which allowed for a way to propagate a value by early returning if that value was <code>false</code> or not <code>nil</code>. It was in a similar vein to Rust&rsquo;s <code>try!</code> which became <a href="https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html"><code>?</code></a>, or Zig&rsquo;s <a href="https://ziglang.org/documentation/master/#try"><code>try</code></a>, etc.</p>
+<p>I have now removed it from Odin. But why?</p>
+<h2 id="the-problem">The Problem</h2>
+<p>The hypothesis was that that this idiom was common:</p>
+<pre><code class="language-odin">x, err := foo();
+if err != nil {
+    return err;
+}
+</code></pre>
+<p>where <code>err</code> may be an enum, a (discriminated) union, or any other kind of value that has <code>nil</code>.</p>
+<p>And replace it with<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<pre><code class="language-c">x := try foo();
+</code></pre>
+<p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. It also fails because Odin (and Go) are languages with multiple return values rather than single-type returns.</p>
+<p>And the more I think about it, the <code>if err != nil { return err }</code> and similar stuff may be the least worst option, and the best in terms of readability.</p>
+<p>It&rsquo;s a question of whether you are optimizing for reading or typing, and in Odin, it has usually been reading.</p>
+<p>And something like <code>x := try foo();</code> instead of <code>x, err := foo(); if err != nil { return err }</code> does reduce typing but <code>try</code> is a lot harder to catch (even with syntax highlighting).</p>
+<p>It happens that Go already declined such a <a href="https://github.com/golang/go/issues/32437#issuecomment-512035919">proposal</a> for numerous reasons. And the research done for this is directly applicable to Odin because both languages share the multiple return value semantics.</p>
+<p>The research has been fruitful however. I did experiment with a <code>try x else y</code> construct which has now become a built-in procedure <code>or_else(x, y)</code> which can be used on things with an optional-ok check e.g. map indices, type assertions</p>
+<pre><code class="language-odin">or_else(m[&quot;hellope&quot;], 123)
+or_else(x.?, true)
+</code></pre>
+<h2 id="degenerate-states">Degenerate States</h2>
+<p>Some people may be a little surprised with my experimentation with this exception-like shorthand with error values. Especially since I wrote an article (which was originally two github comments) titled: <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">Exceptions — And Why Odin Will Never Have Them</a>.</p>
+<p>One thing I did not comment on in the that article is the cause of the problem (other than the cultural issues). My hypothesis is that if you have a degenerate type (<a href="https://en.wikipedia.org/wiki/Type_erasure">type erasure</a> or automatic inference), then if a value can convert to it implicitly (easily), people will (ab)use it.</p>
+<p>So in languages with exceptions, all exception values can degenerate to the &ldquo;base type&rdquo;. In Rust, it can either go to the base trait or be inferred parametrically. In Zig it can either do <code>anyerror</code> or it will infer the error set from usage. Go has the built-in interface type <code>error</code> which acts as the common degenerate value.</p>
+<p>As I discuss in the article, I am not against error value propagation within a library, but I am pretty much always against it <strong><em>across</em></strong> library boundaries. A degenerate state has high entropy and a lack of specific information. And due to this form of type erasure, &ldquo;downcasting&rdquo; (broad use of term) is a way to recover the information, but it assumes implicit information which is not known in the type system itself.</p>
+<p>The other issue when people pass the error up the stack for someone else to handle (something I criticize in the previous article already) is that it&rsquo;s common to see this in many codebases already that have such a type: Go, Rust, and Zig (public) codebases exhibit this a lot.</p>
+<p>And my hypothesis for this phenomenon is due to the very nature of this &ldquo;degenerative type&rdquo;.</p>
+<p>Now a design judgement is to be made when designing a language: is such a concept worth it for the problems it intrinsically has. For Odin, I do not think it was worth it. In Odin, errors are just values, and not something special. For other languages? That&rsquo;s another thing. For Odin, I have found that having an error value type defined per package is absolutely fine (and ergonomic too), and minimizes, but cannot remove, the problem value propagation across library boundaries.</p>
+<h2 id="summary">Summary</h2>
+<p><code>try foo()</code> was a bad idea for Odin consider the rest of its semantics (multiple return values, lack of error value type at the semantics level, optimizes for typing rather than reading)</p>
+<p><code>try x else y</code> has now become <code>or_else(x, y)</code> which is useful.</p>
+<p>n.b. I am not criticizing any particular language&rsquo;s design for doing this, but rather saying that it does not work well for Odin&rsquo;s semantics nor philosophy.</p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -136,8 +937,103 @@ The Problem The hypothesis was that that this idiom was common:</description>
       <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/03/07/untyped-types/</guid>
-      <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
-Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+      <description><p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and <a href="https://golang.org/">Go</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
+<ul>
+<li>Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</li>
+<li>Model-2: Expressions may have a value, not all expressions have a type. Therefore some values may not have a (concrete) type.</li>
+</ul>
+<h2 id="value-models">Value Models</h2>
+<h3 id="model-1">Model-1</h3>
+<p>Model-1 is the more traditional approach in most languages, especially C-like languages. This has the consequence that all literals must have a concrete type associated with them.</p>
+<p>Using C as an example, every number literal has a type, and to change to a specific type requires a suffix:</p>
+<pre><code class="language-c">123    // int
+123.0  // double
+123.0f // float
+123u   // unsigned int
+123l   // long
+123ll  // long long
+123ul  // unsigned long
+123ull // unsigned long long
+</code></pre>
+<h4 id="cs-type-promotion">C&rsquo;s Type Promotion</h4>
+<p>In C, there is a set of rules called the &ldquo;usual arithmetic conversions&rdquo; which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<h3 id="model-2">Model-2</h3>
+<p>Model-2 is quite different and can be very foreign to think about if you are so used to Model-1. Model-2 treats values closer to how most people intuitively think about them. The literal <code>123.0</code> just represents the <em>number</em> one hundred and twenty three. It has no intrinsic type to it, it&rsquo;s just a value. Applying this idea to a programming language, the value literal <code>123.0</code> can be represented by a whole range of different types.</p>
+<p>In Odin, all of these examples will work with the same value literal:</p>
+<pre><code class="language-odin">a: i32 = 123.0;
+b: f32 = 123.0;
+c: f64 = 123.0;
+d: u64 = 123.0;
+// etc
+</code></pre>
+<p>Value literals are not just limited to numbers but work for other kinds of values:</p>
+<pre><code class="language-odin">a: string  = &quot;Hellope!&quot;;
+b: cstring = &quot;Hellope!&quot;;
+c: bool    = true;
+d: b32     = true;
+e: rune    = '\n';
+f: i32     = '\n'; // rune literals can be treated as just numbers
+</code></pre>
+<p>No implicit conversions <em>at runtime</em> have been performed (unlike C) as each value can be represented without truncation.</p>
+<p>A consequence of this model is that constants could have no (concrete) type to them:</p>
+<pre><code class="language-odin">MY_AWESOME_SOCK_COUNT :: 123.0; // named constant without a concrete type
+
+a: i32 = MY_AWESOME_SOCK_COUNT;
+b: f32 = MY_AWESOME_SOCK_COUNT;
+</code></pre>
+<p>In order to get this to &ldquo;feel correct&rdquo; and make it &ldquo;just work&rdquo; leads to a complication in the design of the compiler requiring a big number implementation, since numbers don&rsquo;t have any &ldquo;size&rdquo;/&ldquo;width&rdquo; to them. As a consequence, <code>~0</code> is an error in Odin, whilst it&rsquo;s perfectly valid in C because <code>0</code> has the width of <code>int</code>. In order to achieve the same thing in Odin, a type must be assigned like <code>~u32(0)</code>.</p>
+<h2 id="untyped-types">Untyped Types</h2>
+<p>Odin supports type inference which leads to a interesting question, is the following a valid statement:</p>
+<pre><code class="language-odin">x := 123; // what is the type of 'x'?
+</code></pre>
+<p>There are two solutions to this problem: make this invalid since <code>123</code> has no type, give <code>123</code> a <em>untyped type</em>.</p>
+<p>Untyped types sound like an oxymoron but it is a way to give a <em>default type</em> to a typeless value. The literal <code>123</code> can be assigned the &ldquo;untyped type&rdquo; of &ldquo;untyped integer&rdquo;.</p>
+<pre><code class="language-odin">123       // untyped integer
+123.0     // untyped float
+true      // untyped boolean
+&quot;hellope&quot; // untyped string
+'\n'      // untyped rune
+1i        // untyped complex number
+3j        // untyped quaternion
+5k        // untyped quaternion
+</code></pre>
+<p>Each &ldquo;untyped type&rdquo; can be assigned a <em>default type</em> to which if the value needs to be made concrete at runtime, it will default to that (if possible).</p>
+<pre><code>untyped integer    -&gt; int
+untyped float      -&gt; f64
+untyped boolean    -&gt; bool
+untyped string     -&gt; string
+untyped rune       -&gt; rune
+untyped complex    -&gt; complex128
+untyped quaternion -&gt; quaternion256
+</code></pre>
+<h3 id="comparison-operations-in-odin">Comparison Operations in Odin</h3>
+<p>In Odin, comparison operations will result in the type of the expression to be an &ldquo;untyped boolean&rdquo;. There are two reasons behind this behaviour:</p>
+<ul>
+<li>Allows any comparisons to assign to any boolean type</li>
+<li>Allows the backend to choose the more efficient sized operation if needed, rather than requiring a byte sized operation.</li>
+</ul>
+<h2 id="extra-consequences-of-each-model">Extra Consequences of Each Model</h2>
+<p>For Model-1, the consequence of every expression having a type requires the idea of giving a type to something with no value: <code>void</code>.</p>
+<p>For Model-2, the consequence of some expressions not have a type does not lead a concept of <code>void</code> in the type system. I have noticed this confusion when people ask what the equivalent of <code>void *</code> is in Odin, which is <code>rawptr</code> (a separate specialized pointer type). Another consequence is that it allows for the ability for expressions to have multiple values (not tuples) associated with them, which is how Odin&rsquo;s multiple return values in procedures work.</p>
+<h2 id="advantages-of-each-model">Advantages of Each Model</h2>
+<p>A common question after learning about each model is ask &ldquo;what are the advantages of each model?&rdquo;. Personally, I think this question is actually nonsensical since you cannot compare without context due to each model having different foundational axioms. The advantages completely depend on what you are trying to aim for, the models cannot be compared out of context.</p>
+<p>In Odin and Go, literals are &ldquo;untyped&rdquo; and there are (virtually) no implicit type conversions. The advantage of the untyped literals in this case is that they work for any type that can represent that value (which has no type). This also complements the <a href="https://odin-lang.org/docs/overview/#distinct-types">distinct</a> type systems of both languages.</p>
+<p>In languages with implicit type promotions, literals being typed is less of a (hypothetical) problem. If the rules can be defined without many of the issues from C, then typed literals have little disadvantages to them. Applying typed literals to a distinct type system will cause some problem since explicit casting may be required or defeats the point of distinct typing because implicit casting will be applied.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Most modern C compilers can catch these bugs but that is a patch over a design flaw rather than solution to the underlying problem.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -146,7 +1042,182 @@ Model-1: Expressions have a type, not all expressions may have a value. Therefor
       <pubDate>Sun, 17 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/article/2020/05/17/relative-pointers/</guid>
-      <description>Absolute Pointers Pointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</description>
+      <description><h2 id="absolute-pointers">Absolute Pointers</h2>
+<p>Pointers are a value type in programming languages that store a memory address. A pointer <em>references</em> a location in memory, and obtaining the value stored at this location in memory is known as <em>dereferencing</em> a pointer.
+Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</p>
+<p>When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call this form of pointer an <em>absolute</em> pointer. On most modern machines with virtualized memory, this is rarely the case any more, and for good reasons<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. In the case of virtualized memory spaces, these pointers do not refer to a physical memory address but rather an alias to a physical memory address, in which usually the operating system handles on a per page basis<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. In a sense, these pointers that belong to virtualized memory spaces can be classed as a form of <em>relative</em> pointer.</p>
+<p>At the end of the day, a pointer can be treated/encoded as if it was an integer of some form. Knowing this fact is extremely useful, not just with pointer arithmetic in C/C++, but also relative pointers.</p>
+<h2 id="varieties-of-relative-pointers">Varieties of Relative Pointers</h2>
+<p>In general, there are four forms of relative pointers:</p>
+<ul>
+<li>Virtual memory pointers&mdash;relative to the virtualized memory space</li>
+<li>Global-based pointers&mdash;relative to a global variable</li>
+<li>Offset pointers&mdash;relative to an explicitly defined base, such as the beginning of a file</li>
+<li>Self-Relative/Auto-Relative pointers&mdash;relative to its own memory address</li>
+</ul>
+<h2 id="global-based-pointers">Global-Based Pointers</h2>
+<p>MSVC supports a non-official extension to C and C++, <a href="https://docs.microsoft.com/en-us/cpp/cpp/based-pointers-cpp"><em>based pointers</em></a>, which allows the user to declare pointers based on pointers. They can be declared using the <code>__based</code> keyword.</p>
+<pre><code class="language-c">void *global_buffer;
+
+struct Linked_List {
+	struct Linked_List __based(global_buffer) *next;
+	void __based(global_buffer) *data;
+};
+</code></pre>
+<p>The size of a based pointer is still the same size as a regular pointer, but now the value it points to <em>relative</em> to that value.</p>
+<p>This form of relative pointers is useful but because it is based on a globally defined variable, it muddles the type system by coupling it with values which means it cannot be applied as generally. Based pointers can also be replicated in C++ through the use of templates and operator overloading, it also has the advantage of allowing the size of the user defined based pointer to be a different size to a regular pointer:</p>
+<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+struct Based_Pointer {
+	static void *base = ...;
+	Integer_Base offset;
+
+	Elem *operator-&gt;() {
+		return offset ? (Elem *)((char *)base + offset) : nullptr;
+	}
+
+	Elem &amp;operator*() {
+		return *this-&gt;(operator-&gt;)();
+	}
+
+	void operator=(Elem *ptr) {
+		offset = ptr ? (Integer_Base)((char *)ptr - (char *)base) : 0;
+	}
+};
+</code></pre>
+<h2 id="offset-pointers">Offset Pointers</h2>
+<p>Another approach which is very similar to based pointers but the base is not explicitly defined by the type itself, which I will refer to as <em>offset pointers</em>. I use this approach a lot when designing file formats, which has the base being the start of the file. I originally learnt about this trick from reading the Quake source code for the MD2/MD3/MD4 file formats which used this trick a lot, especially for <em>relative arrays</em>.</p>
+<p>This shows one of the main advantages of relative pointers: serializeability. This means that the data structure can be <code>memcpy</code>&rsquo;d and still be valid.</p>
+<p>Offset pointers can also be replicated in C++ through the use of templates. Similar to the previous user-defined based pointers above, the size of the underlying integer can be any size. One of the cool tricks here is that the data structure&rsquo;s fields do not contain any type information about what data type it pointers but rather that data type is encoded in the constant parameters of the templated data structure.</p>
+<pre><code class="language-c">template &lt;typename T&gt;
+struct Offset_Pointer {
+	uint32_t offset;
+};
+
+template &lt;typename T&gt;
+T *get_ptr(void *base, Offset_Pointer&lt;T&gt; ptr) {
+	return (T *)((char *)base  + ptr.offset);
+}
+
+template &lt;typename T&gt;
+struct Offset_Array {
+	uint32_t offset;
+	uint32_t length;
+};
+
+template &lt;typename T&gt;
+T *get_array(void *base, Offset_Array&lt;T&gt; array, uint32_t *length) {
+	if (length) *length = array.length;
+	return (T *)((char *)base  + array.offset);
+}
+</code></pre>
+<p>The same form of data structure can be implemented in Odin too:</p>
+<pre><code class="language-odin">Offset_Pointer :: struct(T: typeid) {
+	offset: u32,
+}
+
+get_ptr :: proc(base: rawptr, ptr: $P/Offset_Pointer($T)) -&gt; ^T {
+	return (^T)(uintptr(base) + uintptr(ptr.offset));
+}
+
+
+Offset_Array :: struct(T: typeid) {
+	offset: u32,
+	length: u32,
+}
+
+get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
+	ptr := (^T)(uintptr(base) + uintptr(ptr.offset));
+	return mem.slice_ptr(ptr, int(array.length));
+}
+</code></pre>
+<p>In the above cases, the <code>offset</code> represents the number of bytes away from the <em>base</em>. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems.</p>
+<h2 id="self-relative-pointers">Self-Relative Pointers</h2>
+<p>The last approach is to define the base to be the memory address of the offset itself.</p>
+<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow&rsquo;s programming language<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
+<p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>&rsquo;d and still be (mostly) valid.</p>
+<p>One issue with self-relative pointers is that for the value itself to be valid, it must be in an addressable memory space (i.e. must be an l-value and not in a register). If a language containing such a concept wanted to ensure the validity of such a data type, any other data type that contains it would also have to be addressable to. This adds a form of virality to the type system, adding a new concept of addressability to the type system directly. However, even if this was enforced, there are cases when a self-relative pointer in non-addressable memory could be perfectly valid.</p>
+<p>Another issue is that smaller base integer types for the internal offset value means that they can only be valid over a smaller range than regular pointers.</p>
+<p>Relative pointers can be implemented in C++ with the use of templates and operator overloading<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>:</p>
+<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+struct Relative_Pointer {
+	Integer_Base offset;
+
+	Elem *operator-&gt;() {
+		return offset ? (Elem *)((char *)&amp;offset + offset) : nullptr;
+	}
+
+	Elem &amp;operator*() {
+		return *this-&gt;(operator-&gt;)();
+	}
+
+	void operator=(Elem *ptr) {
+		offset = ptr ? (Integer_Base)((char *)ptr - (char *)&amp;offset) : 0;
+	}
+};
+</code></pre>
+<p>In the above cases, the <code>offset</code> represents the number of bytes away from its own memory address. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems. I personally find this approach less useful in practice even if a stride of greater than 1 does give a larger range to work with in theory (<code>stride*size_of(Elem_Type)</code> bytes).</p>
+<p>It should also be noted that this implementation of a relative pointer does treat the <code>0</code> value as a sentinel value similar to regular pointers.</p>
+<p><em>Relatively</em> recently, I added self-relative pointers to Odin because I found a decent use case for them compared to just using (explicit) offset pointers. I also extended the concept of relative pointers to relative slices too, similar to the <em>offset array</em> example from above.</p>
+<pre><code class="language-odin">relative_data_types :: proc() {
+	fmt.println(&quot;#relative data types&quot;);
+
+	x: int = 123;
+	ptr: #relative(i16) ^int;
+	#assert(size_of(ptr) == size_of(i16));
+
+	ptr = &amp;x;
+	fmt.println(ptr^);
+
+
+	arr := [3]int{1, 2, 3};
+	s := arr[:];
+	rel_slice: #relative(i16) []int;
+	#assert(size_of(rel_slice) == 2*size_of(i16));
+
+	rel_slice = s;
+	fmt.println(rel_slice);
+	fmt.println(rel_slice[:]);
+	fmt.println(rel_slice[1]);
+}
+</code></pre>
+<p>Due to the fact that the underlying base integer of a self relative pointer can be specified by the programmer, it can be exploited for a lot of useful purposes. One basic example could be having a very small linked list where the next item in the list is defined to be within a certain range. This means you could defined a relative pointer to be stored in a single byte if necessary:</p>
+<pre><code class="language-odin">Node :: struct {
+	data: u8,
+	next: #relative(i8) ^Node,
+}
+#assert(size_of(Node) == 2);
+</code></pre>
+<h2 id="summary">Summary</h2>
+<p>Relative pointers allow for a lot more flexibility compared to &ldquo;traditional&rdquo; pointers, and a godsend with regards to serialization. They do have many advantages and disadvantages compared to &ldquo;traditional&rdquo; pointers, and the programmer must be absolutely aware of them before using them. Relative pointers can be easily serialized making them ideal for file formats, and relative pointers can be as small as they need to be rather than taking up the same size of a regular pointer (e.g. on 64-bit platforms, a pointer is 64 bits which might be a lot more than the user requires for a specific problem).</p>
+<h2 id="relevant-videos">Relevant Videos</h2>
+<h3 id="sergiy-migdalskiy---performance-optimization-simd-and-cache-at-26-minutes">Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)</h3>
+<div class="youtube">
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/Nsf2_Au6KxU?t=1560" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<h3 id="jonathan-blow---demo-relative-pointers">Jonathan Blow - Demo: Relative Pointers</h3>
+<div class="youtube">
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/Z0tsNFZLxSU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Virtualized memory has many security, safety, and practical benefits.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I will not discuss how virtual memory works or its benefits in this article.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>Please note that this is technically undefined behaviour, even if most compilers handle it as expected.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -155,8 +1226,184 @@ Model-1: Expressions have a type, not all expressions may have a value. Therefor
       <pubDate>Sat, 25 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/article/2020/01/25/a-reply-to-lets-stop-copying-c/</guid>
-      <description>I read the article Let&amp;rsquo;s stop copying C about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&amp;rsquo;s mistakes.
-I recommend reading the original article first before reading this one as I will be commenting directly on the subsections of the article.</description>
+      <description><p>I read the article <a href="https://eev.ee/blog/2016/12/01/lets-stop-copying-c/">Let&rsquo;s stop copying C</a> about 3 years ago. Recently someone brought it up again and I thought I would comment on the points being made. The article argues that newer languages ought not to copy the mistakes of C and comment on may of C&rsquo;s mistakes.</p>
+<p>I recommend reading the original article first before reading this one as I will be commenting directly on the subsections of the article.</p>
+<p>A lot of my comments will be with regards to systems-level programming languages and not programming languages in general, and I will be referring back to <a href="https://odin-lang.org/">my language Odin</a> as a contrast with C.</p>
+<h2 id="textual-inclusion">Textual inclusion</h2>
+<p>Back in the day when C was made, it is perfectly understandable why <code>#include</code> was used over different approaches. C was designed to be able to be implemented with a single-pass compiler<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. However, since the advent of more modern computers, this approach is not needed and a proper library/module/package system is a better solution to the problem. C++ approach with <code>namespace</code>s is not a solution and more of a hack.</p>
+<p>One huge annoyance with C is the issue of namespace collisions. The general approach to solve this is to make the interface to your library prefixed with something e.g. <code>lib_</code>. However, this does not guarantee that namespace collisions don&rsquo;t happen, and it means that you have to write these extra prefixes when you just want to write the code as normal without having to worry about all of this. From a usability standpoint, when you &ldquo;import&rdquo; a library, you want to be able to have those imported entities belong to its own scope which can be named with an <em>import name</em>.</p>
+<p>The main categories of how I think most languages handle libraries in this fashion are the following:</p>
+<ul>
+<li>Python (file is the library scope)
+<ul>
+<li><code>import foo</code></li>
+<li><code>from foo import bar</code></li>
+<li><code>from foo import *</code></li>
+</ul>
+</li>
+<li>Modula/Odin/Go (directory is the library scope)
+<ul>
+<li><code>import &quot;foo&quot;</code></li>
+<li><code>import bar &quot;foo&quot;</code></li>
+</ul>
+</li>
+</ul>
+<p>After a lot of experimentation, I decided to settle for something like Modula for Odin as it was the best compromise in practice. I originally wanted to support single-file libraries but found that I could not get them to work with multiple-file libraries in a nice way.</p>
+<p>There is kind of a use case for textual inclusion, and that is embedding data within the program itself. This is one of the reasons why I have the built-in procedure <code>#load</code> in Odin. This procedure takes a constant string as a file path and returns a slice of bytes of the data of that file. It&rsquo;s not exactly textual inclusion but it does solve some of the problems that <code>#include</code> has been used for in C.</p>
+<h2 id="optional-block-delimiters">Optional block delimiters</h2>
+<p>In Odin, there are no optional block delimiters but if you want to do a single statement, you have to explicitly state it (as a compromise):</p>
+<pre><code class="language-odin">if condition {
+	thing();
+}
+
+if condition do thing();
+
+// Mixing {} and do is not allowed
+if condition do { thing(); } // not allowed
+</code></pre>
+<h2 id="bitwise-operator-precedence">Bitwise operator precedence</h2>
+<p>C&rsquo;s operator precedence for bitwise operations is bad and requires an &ldquo;overuse&rdquo; of parentheses. I fixed this in Odin so that they feel a lot better. Getting the right precedence required a bit of experimentation to get it to <em>feel</em> correct.</p>
+<h2 id="negative-modulo">Negative modulo</h2>
+<p>In different languages, the operator <code>%</code> is usually implemented as either dividend modulo or divisor modulo operations. In C, it is now defined as dividend. In Odin, I added the <code>%%</code> operator to solve this issue. Where <code>%</code> is dividend and <code>%%</code> is divisor. For unsigned integers, <code>%</code> and <code>%%</code> are identical, but the difference comes when using signed integers.</p>
+<p><code>%%</code> is equivalent to the following using <code>%</code>:</p>
+<pre><code>a %% b == ((a % b) + b) % b
+</code></pre>
+<pre><code>a %  b = a - trunc(a/b) * b
+a %% b = a - floor(a/b) * b
+</code></pre>
+<p>See the following for more information: <a href="https://wikipedia.org/wiki/Modulo_operation">https://wikipedia.org/wiki/Modulo_operation</a></p>
+<h2 id="leading-zero-for-octal">Leading zero for octal</h2>
+<p>I agree C&rsquo;s octal notation has many issues, and this has its routes back when bytes were not always a multiple of 8 bits. This is why Odin uses <code>0o777</code> to denote a number as octal; it is more consistent with other numeric bases too: <code>0b</code> for binary, <code>0o</code> for octal, <code>0d</code> for explicit decimal, <code>0z</code> for dozenal, <code>0x</code> for hexadecimal.</p>
+<h2 id="no-power-operator">No power operator</h2>
+<p>For a systems level programming language, having a &ldquo;power&rdquo; operator is not a good idea. Having an explicit <code>pow</code> procedure is a lot clearer as to what is happening for two reasons:</p>
+<ul>
+<li>It is not a cheap operation and it is rarely a single instruction on the hardware</li>
+<li>There are different approaches to handling the power operation, so favouring one over the other in syntax is a little weird</li>
+</ul>
+<h2 id="c-style-for-loops">C-style for loops</h2>
+<p>I agree that 90% of the time you just want a <code>for in</code> style loop. However C-style <code>for</code> loops do have their uses and getting rid of them entirely is not a great idea.</p>
+<p>If you would like to see Odin&rsquo;s approach to loops, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#for-statement">https://odin-lang.org/docs/overview/#for-statement</a>.</p>
+<h2 id="switch-with-default-fallthrough">Switch with default fallthrough</h2>
+<p>I personally use <code>switch</code> statement as the equivalent of a jump-table and/or if-else chain. For this reason, I usually want each case to have a <code>break</code> at the end and for each case to be a separate scope too. This is why in Odin I added an explicit <code>fallthrough</code> statement and made each case its own scope.</p>
+<p>I also extended the <code>switch</code> statement to properly understand:</p>
+<ul>
+<li><code>enum</code> types</li>
+<li>discriminated <code>union</code>s</li>
+<li><code>any</code> type</li>
+<li>Ranges</li>
+<li>Multiple cases</li>
+</ul>
+<p><code>switch</code> statements in Odin require all cases of <code>enum</code> and <code>union</code> to be handled by default unless explicitly specified with <code>#partial switch</code>.</p>
+<p>If you would like to see Odin&rsquo;s approach to switch statements, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#switch-statement">https://odin-lang.org/docs/overview/#switch-statement</a>.</p>
+<h2 id="type-first">Type first</h2>
+<p>C&rsquo;s &ldquo;type first&rdquo; was a weird design decision. It was meant to expression that the type declaration is the same as how it is used in an expression. For this reason, C has given us some of the most &ldquo;wonderful&rdquo; declarations:</p>
+<pre><code class="language-c">int *x[3];   // array 3 of pointer to int
+int (*x)[3]; // pointer to array 3 of int
+
+_Atomic unsigned long long int const volatile *restrict foo[]; // Yeah...
+</code></pre>
+<p>And not to mention that type qualifiers can be in different places and still mean the same thing:</p>
+<pre><code class="language-c">int const x;
+const int x;
+
+const int *y;
+int const *y;
+</code></pre>
+<p>C&rsquo;s approach also requires a symbol table whilst parsing to disambiguate between types declarations and an expression e.g.:</p>
+<pre><code>foo * bar; // Is this an expression or a declaration? You need to check the symbol table to find out
+</code></pre>
+<p>This is why for Odin, I went for a more Pascal-style approach to types, which is a lot easier to read, parse, and comprehend.</p>
+<pre><code class="language-odin">x: [3]^int; // array 3 of pointer to int
+y: ^[3]int; // pointer to array 3 of int
+</code></pre>
+<p>Instead of following C&rsquo;s approach of &ldquo;declarations match usage&rdquo;, Odin&rsquo;s approach is &ldquo;types on the left, usage on the right&rdquo;.</p>
+<pre><code class="language-odin">x: [3]int;  // type on the LHS
+x[1] = 123; // usage on the RHS
+
+y: ^int = ...;
+y^ = 123;
+
+z: [6]^int = ...;
+z[3]^ = 123;
+</code></pre>
+<p>Coupled with Odin&rsquo;s very strong and orthogonal type system, things <em>just work</em> as expected and are easy to comprehend for mere mortals like myself.</p>
+<h2 id="weak-typing">Weak typing</h2>
+<p>C&rsquo;s implicit numeric conversions and <em>array demotion to pointer</em> conversion are a source of many bugs and confusions. C++ tried to fix some of this but still its type system is quite weak in many regards.</p>
+<pre><code class="language-c">typedef int My_Int;
+
+int x = 123;
+My_Int y = x; // this is allowed as `My_Int` is just an alias of `int`
+</code></pre>
+<p>Odin&rsquo;s strong type system is one of its extremely huge advantages. More errors are caught earlier because of it, and it allows you to do a lot more.</p>
+<pre><code class="language-odin">Int_Alias :: int;          // alias of int
+My_Int    :: distinct int; // distinct type from int but keeps its properties
+
+#assert(Int_Alias == int);
+#assert(My_Int != int);
+
+x: int = 123;
+y: Int_Alias = x; // fine
+
+z: My_Int = x; // error, an explicit cast is required
+</code></pre>
+<p>If you would like to see Odin&rsquo;s approach to <code>distinct</code> types, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#distinct-types">https://odin-lang.org/docs/overview/#distinct-types</a>.</p>
+<h2 id="integer-division">Integer division</h2>
+<p>I disagree with this conclusion here regarding integer division. I guess dimensional analysis is baked into me as I don&rsquo;t usually want an expression to change the types based on the operator. If I have two integers of the same type and use an operator on them, I expect the result to be of the same type, not a new one.</p>
+<pre><code class="language-odin">z := x / y;
+#assert(type_of(x) == type_of(y));
+#assert(type_of(z) == type_of(y));
+</code></pre>
+<h2 id="bytestrings">Bytestrings</h2>
+<p>Strings are funny things because human languages are complicated things. With Odin I went with what I think is the best compromise: strings are internally byte slices with the assumption that they have UTF-8 encoding.</p>
+<p>I am not a fan of UTF-32 strings due to their size, and UTF-16 should die out but Windows still uses the encoding pervasively.</p>
+<p>C&rsquo;s null-terminated strings made sense back in the day but not any more. Storing the length with the pointer to the data is personally my preferred approach, as this allows for substrings very easily.</p>
+<p>Along with the <code>string</code> type in Odin, Odin does support <code>cstring</code> to aid with the <code>foreign</code> system with interfacing with languages like C that have null-terminates strings.</p>
+<h2 id="increment-and-decrement">Increment and decrement</h2>
+<p><code>++</code> and <code>--</code> are both a blessing and a curse in C. They are an expression which allows for things like <code>*ptr++</code> and <code>array[index++]</code> to be done. However, in a language that does not require these &ldquo;hacks&rdquo;, these operators are quite useless. The other issue is that order of evaluation for <code>++</code> in undefined behaviour in C, so <code>array[index++] = ++index;</code> is not a good idea to do.</p>
+<p>This is why Odin only has <code>+=</code> and <code>-=</code>.</p>
+<h2 id="-operator"><code>!</code> Operator</h2>
+<p>This is mainly an aesthetic thing and I personally don&rsquo;t care either way. I chose <code>!</code>, <code>&amp;&amp;</code>, and <code>||</code> for Odin as I was trying to make an alternative to C. However, I could have easily gone down the keyword approach like Python with <code>not</code>, <code>and</code>, and <code>or</code>.</p>
+<h2 id="single-return-and-out-parameters">Single return and out parameters</h2>
+<p>Multiple results are a godsend to use in Odin. They allow for numerous things where passing pointers were originally needed. In Odin, if a pointer is passed to a procedure now, it is usually implies an &ldquo;in-out&rdquo; parameter, coupled with the Odin&rsquo;s calling convention allowing certain parameters to be passed by pointer implicitly to improve performance (equivalent to an implicit <code>T const &amp;</code> in C++).</p>
+<p>Multiple results allow for named results which allows for a form of auto-documentation.</p>
+<p>If you would like to see Odin&rsquo;s approach to multiple results, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#multiple-results">https://odin-lang.org/docs/overview/#multiple-results</a>.</p>
+<h2 id="silent-errors">Silent errors</h2>
+<p>As many know, I am not a fan of exception-style error handling, which I expressed in my <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">article on exceptions</a>.</p>
+<p>With Odin&rsquo;s multiple results, strong type system, and <code>enum</code>s &amp; <code>union</code>s, error handling is a lot nice to deal with.</p>
+<h2 id="nulls">Nulls</h2>
+<p>I think the notion that &ldquo;null&rdquo; is a billion dollar mistake is well overblown. <code>NULL</code>/<code>nil</code> is just one of many invalid memory addresses, and in practice most of invalid memory address are not <code>NULL</code>. This is related to the <a href="https://wikipedia.org/wiki/Streetlight_effect">drunkard&rsquo;s search principle</a> (a drunk man looks for his lost keys at night under a lamppost because he can see in that area). I have found that null pointers are usually very easy to find and fix, especially since most platforms reserve the first page of (virtual) memory to check for these errors.</p>
+<p>In theory, <code>NULL</code> is still a perfectly valid memory address it is just that we have decided on the convention that <code>NULL</code> is useful for marking a pointer as unset.</p>
+<p>Many languages now have support for maybe/option types or nullable types (monads), however I am still not a huge fan of them in practice as I rarely require them in systems-level programming. I know very well this is a &ldquo;controversial&rdquo; opinion, but systems-level programming languages deal with memory all the time and can easily get into &ldquo;unsafe&rdquo; states on purpose. Restricting this can actually make things like custom allocators very difficult to implement, along with other things<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>Odin can technically implement a maybe type through <code>union</code> but not to the extent many people would like (especially with the syntactic sugar).</p>
+<h2 id="assignment-as-expression">Assignment as expression</h2>
+<p>I completely agree that assignment as an expression is a bad idea and causes more problems than the utility it gives.</p>
+<h2 id="no-hyphens-in-identifiers">No hyphens in identifiers</h2>
+<p>I think using possible operators in identifiers is just waiting for trouble, even if it &ldquo;looks pretty&rdquo;.</p>
+<h2 id="braces-and-semicolons">Braces and semicolons</h2>
+<p>This is mainly an aesthetic thing with huge consequences. Braces and semicolons serve purposes. Braces denote a new block and semicolons terminate a statement. If you want to remove semicolons from a language, you will either need to enforce a brace style (like Go) or have sensitive white-space through something like Python&rsquo;s offside rule.</p>
+<p>For Odin, I wanted braces but I did not want to enforce a code style on the use at the language level, which means that it requires semicolons.</p>
+<p>I could have gone with Python&rsquo;s offside rule but I personally prefer braces even if I enjoy programming in Python.</p>
+<h2 id="blaming-the-programmer">Blaming the programmer</h2>
+<p>A lot of the issues in C come from C&rsquo;s poor and lacking type system. I am not against &ldquo;blaming the programmer&rdquo;, in theory, for a systems-level programming language because in many cases you are meant to be able to shoot your foot off if you so do wish. However, I do think providing extra structure to the type system to not require the user having to do any of this is a very good idea.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>A lot of C&rsquo;s mistakes are only mistakes in retrospective, but C is still an extremely useful language to use, and I am still extremely productive in it.</p>
+<p>To quote Fred Brooks in his book <em>No Silver Bullet – Essence and Accident in Software Engineering</em>:</p>
+<blockquote>
+<p>There is no single development, in either technology or management technique, which by itself promises even one order of magnitude [tenfold] improvement within a decade in productivity, in reliability, in simplicity.</p>
+</blockquote>
+<p>And sadly, this is <em>still</em> true with regards to comparing C to other higher level general purpose languages, as they do not offer an order of magnitude improvement in productivity. C hit a local maximum of productive for which so many still have yet to understand why and learn from.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The preprocessor is technically a separate language on top of C, and single-pass too.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>This topic alone may require an article to itself.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -165,8 +1412,336 @@ I recommend reading the original article first before reading this one as I will
       <pubDate>Sat, 18 May 2019 00:00:00 +0000</pubDate>
       
       <guid>/transcript/odin-import-design-discussion/</guid>
-      <description>This is an partially edited transcript from 2019-05-18 on the Handmade.Network Discord server.
-[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is &#34;lipid_math&#34;, not &#34;math&#34;, but it gives me Redeclaration of &#39;math&#39; in this scope on that line&#34;[18:42] lipid: renaming the folder solves the issue[18:43] gingerBill: @lipid Just rename the package name, it can be anything.</description>
+      <description><p>This is an partially edited transcript from 2019-05-18 on the <a href="https://Handmade.Network">Handmade.Network</a> Discord server.</p>
+<pre class="pre-wrap"><code>[18:42] lipid: I have a package with my extra math stuff at shared:lipid/math, but I also import core:math. The package name in lipid/math is "lipid_math", not "math", but it gives me Redeclaration of 'math' in this scope on that line"
+[18:42] lipid: renaming the folder solves the issue
+[18:43] gingerBill: @lipid Just rename the package name, it can be anything.
+[18:43] gingerBill: The directory name is what you "import"
+[18:43] gingerBill: Think of the package name as a unique identifier
+[18:43] lipid: I figured the package name; was what names the package.
+[18:45] gingerBill: @lipid No. This may be a confusing thing but the reason you have to type package foo at the top is mainly to solve the problem of consistent link name for entities. The other alternatives are not a good idea in my opinion and come with compromises I do not like.
+[18:49] mv: @gingerBill having the path name be the import name is really confusing
+[18:49] gingerBill: @mv It wasn't that way for a little while.
+[18:49] mv: except it isn't always, so there's a fallback, which makes it super confusing
+[18:50] gingerBill: I just cannot find a good way around it.
+[18:50] mv: it's really bad
+[18:50] gingerBill: I know it's bad.
+[18:50] gingerBill: If you can think of a better rule, please do.
+[18:50] mv: why not just make the package name the import name?
+[18:50] mv: what's the downsides to that?
+[18:50] gingerBill: It was that way.
+[18:50] gingerBill: And I think it was you that even complained about that.
+[18:50] mv: the user can, and should be able to, keep the package wherever they want
+[18:50] mv: i don't think i've complained about that
+[18:51] gingerBill: The problem here is that package foo is there to solve the problem of consistent link names. That is all.
+[18:51] mv: i would bet you 99% of users would assume it's the package name that's the import name. you'll have tons of bugs from user error that might as well be a design error
+[18:51] gingerBill: I would bet the other way around.
+[18:52] gingerBill: I bet most users will look at the import path and think "okay, my package is called this, I expected the import name to be the same as the directory I am importing".
+[18:52] gingerBill: And I changed it because I did have a lot of "complaints"/"confusions" over that rule.
+[18:52] gingerBill: It's one of the main problems with this approach.
+[18:52] mv: I think that's a massive fallacy. the program/code shuoldn't be beholden to externalities like that imo
+[18:53] gingerBill: One way around it is to remove package foo entirely but then you require absolutely paths from an absolute root directory e.g. GOPATH
+[18:53] gingerBill: I'm not sure what you mean by "shouldn't" in this case.
+[18:53] mv: i think the package foo thing is really nice
+[18:54] gingerBill: Changing the rules is quite easy to do and experimentation is what we need.
+[18:54] gingerBill: But I think the difference is here is that you and I are making packages all the time but most people will just use one.
+[18:54] mv: can you mix packages in the same folder?
+[18:55] gingerBill: No.
+[18:55] mv: then it seems superfluous, unless  you give it some other meaning (i.e. the import name)
+[18:55] gingerBill: As I said, the entire reason that package foo exists is to solve consistent linking names without the requirement of an absolute root directory.
+[18:56] mv: i don't  get what that means
+[18:56] lipid: So can't the compiler just take the folder name and use it for whatever purpose it would have used package foo?
+[18:56] gingerBill:
+	package foo
+
+	my_proc :: proc() {}
+
+	////////////////////
+
+	package bar
+
+	my_proc :: proc() {}
+
+In the assembly, it would mean that the top procedure would be foo.my_proc and the bottom procedure would be bar.my_proc
+[18:57] mv: yeah
+[18:57] mv: which makes sense?
+[18:57] gingerBill: Yes. But it's not obvious that that is the best solution.
+[18:57] mv: I think I should be able to have multiple folders that has the same package name and swap one for the other in my program. the import name should not have to change
+[18:57] gingerBill: Exactly.
+[18:57] mv: if the folder name is the import name, this can't be
+[18:57] gingerBill: Not true.
+[18:58] gingerBill:
+import baz1 "shared:foo/bar/baz" // package foo_baz
+import baz2 "shared:fuz/bup/baz" // package what_the
+[18:58] lipid: ^ that gives the error i described..
+[18:59] gingerBill: @lipid The package name does not have to match the directory name.
+[18:59] lipid: it would be baz redeclared at line 2
+[18:59] gingerBill: Correct
+18:59] mv: i mean, i'm fine with being able to rename the import name. that doesn't take away anything from anything
+[18:59] gingerBill: I know.
+[19:00] gingerBill: I understand what you are talking about.
+[19:00] mv: i might be dense, but i still don't see the downside of just having the package name be the import name. it removes the other issues :S
+[19:00] gingerBill: It's just that I changed the behaviour from what you preferred because so many people intuitively thought it was the new way.
+[19:00] gingerBill: What other issues?
+[19:00] mv: it's confusing
+[19:00] gingerBill: I know it's confusing.
+[19:00] gingerBill: But I don't want the equivalent of GOPATH
+[19:01] mv: it's not the first time i've seen this: https://discordapp.com/channels/239737791225790464/308329320017952769/579363557897142285
+[19:01] mv: why do you need the GOPATH approach?
+[19:01] gingerBill: So there are two problems here which are both mixing together.
+[19:01] gingerBill: Let's separate them to make both clear.
+[19:03] gingerBill: Problems:
+* The ability to have consistent linkage names for entities that do not rely on an absolute root directory to generate the prefix for the entity from the path
+* The default import name of a package when imported
+[19:03] gingerBill: The first is best solved with this package foo thing at the top of the file.
+[19:03] gingerBill: It's not perfect but it works.
+[19:03] gingerBill: foo acts a unique identifier for that package.
+[19:03] gingerBill: The problem is, is that means it that no other package can have that name.
+[19:04] mv: which is fine?
+[19:04] gingerBill: Yes. I think it is a good compromise.
+[19:04] gingerBill: But this then leads to the second question.
+[19:04] gingerBill: Does this package foo have any relation to the default import name of a package when imported?
+[19:04] gingerBill: If it does have a relation, what is that relation?
+[19:05] gingerBill: And if not, what would be the default import name?
+[19:05] gingerBill: One solution is to enforce custom names and use a syntax like this:
+foo :: import "core:my_lib";
+[19:06] gingerBill: But the problem with this approach is that I don't actually want people to import packages anywhere but the file scope (reasons for this is a little complicated and a completely different discussion for another day)
+[19:06] mv: it's inconsistent syntax, so that's not too good I think :stuck_out_tongue:
+[19:06] gingerBill: And many languages assumes a default import name already, so why try to fight that learnt instinct when it does give you anything?
+[19:07] gingerBill: I know it's inconsistent but the entire import system is inconsistent, especially the foreign system.
+[19:07] gingerBill: So it's a compromise I will have to live with.
+[19:08] mv:
+import "foo-bar"
+
+now you're in trouble
+[19:08] gingerBill: Exactly. And in this case now the package foo name is chosen.
+[19:08] gingerBill: But...
+[19:08] gingerBill: That was the decisions I made in like 30 seconds.
+[19:09] gingerBill: It might be better to say "you cannot make a package name from this path, give it one explicitly"
+[19:09] lipid: wait, what? it falls back on the foo if the filename is not usable?
+[19:09] gingerBill: But this case does come up:
+import "gl-v3" // gl
+[19:09] gingerBill: @lipid Currently yes. This is NOT fixed in design.
+[19:09] gingerBill: Minor rules like this need some experimentation to know what feels correct.
+[19:09] mv: i haven't been convinced of any downsides of package foo deciding the import name yet :P
+other than not being able to use the same package name twice, which doesn't seem to be a bit issue. if it is you could rename it explicitly
+[19:10] lipid: wew lad
+[19:10] gingerBill: @mv But do you keep your directory name the same as the package name?
+[19:10] gingerBill: If so, that's why there is no problem.
+[19:10] mv: the directory name could/should be anything
+[19:10] gingerBill: It should be anything.
+[19:10] gingerBill: That's my point.
+[19:10] mv: it's just a container
+[19:10] mv: it can't be anything, because not everything is a valid identifier
+[19:11] gingerBill: But a directory can be named anything, even non-identifiers.
+[19:11] gingerBill: And it might make perfect sense to call it that
+[19:11] mv: yes
+[19:11] gingerBill: My issue is not what you are focusing on.
+[19:12] gingerBill: My issue is with regards to people reading the code who are not that well aware of the works of the code.
+[19:12] gingerBill: And in many cases, not everyone is going to read what the package that has been imported uses as the import name.
+[19:12] gingerBill: In those cases, people will just read the import path and assume that's the import name.
+[19:12] gingerBill: And for so many languages, this is what people have been trained to assume.
+[19:13] mv: there's also the issue of documentation for my libraries. I don't want my documentation code be invalid if someone names their directory something random or something that makes sense to them
+[19:13] gingerBill: Welcome to the rabbit hole of package design and why it took me over a year to get even this far with them
+[19:14] gingerBill: It's not as simple think it is.
+[19:14] mv: requiring an explicit import name might be better
+[19:15] mv: then there's no issue with my docs, if they're self-contained
+[19:15] gingerBill: It might be.
+[19:16] gingerBill: And might solve a bunch of problems too.
+[19:16] mv: yeah
+[19:16] gingerBill: But
+[19:16] gingerBill: I dunno.
+[19:16] gingerBill: For me:
+	import "shared:platform"
+	import "shared:gl"
+	import "shared:math"
+	import "shared:gfx"
+	import "shared:ui"
+
+	import "core:fmt"
+	import "core:mem"
+	import "core:os"
+	import "core:sync"
+
+
+I know exactly what is going to be added.
+[19:17] gingerBill: When I read this, I assume that the import name will reflect the directory because so many other languages do that.
+[19:18] gingerBill: Go does closer to what you, Morten, expect but it solves the consistent linking name with having GOPATH and generating the prefix from that import path.
+[19:18] gingerBill: In Go, there are no relative imports (kind of)
+[19:18] gingerBill: Everything is absolute.
+[19:19] gingerBill: Other languages such as Python just abstract the directory structure and treat it like a selector expression:
+import foo.bar.baz as baz
+from foo.bar import baz
+[19:20] gingerBill: But then Python suffers from the issue of "where does foo live?"
+[19:20] gingerBill: And this is why most Python projects require a virtual environment.
+[19:20] gingerBill: I really really should write all this down.
+[19:20] Mr_47: You just did
+[19:20] gingerBill: As it's not at all obvious why I would design it the way I did.
+[19:20] mv: thinking about it a bit
+	my main issue with the directory name as the import name is then:
+	 - that there are invalid directory names that can't work as import names, and
+	 - users should be able to pick any directory name
+
+	my main issue with the package name is then:
+	 - it's not clear what the package name is from the code importing it
+	 - sub-packages can't share the same link name?
+
+all of these would be sorted with explicit names then I think?
+
+The issue in your example here is that you make assumptions on the user's behalf
+[19:21] gingerBill: I do. But users make assumptions too.
+[19:21] mv: indeed
+[19:22] mv: i think this argument is quite weak due to requiring a fallback when there's invalid names :stuck_out_tongue:
+[19:22] gingerBill: I think the fallback is a bad idea too.
+[19:23] mv: to me the fallback isn't the weakness. it's that there are invalid  cases that is the weakness
+[19:23] gingerBill: If I am using the directory path, just fail if it cannot determine one.
+[19:23] mv: that's better, but not very nice
+[19:24] mv: the collection does the equivalent of GOPATH doesn't it?
+[19:25] gingerBill: Kind of.
+[19:26] gingerBill: But you are not required to even have a collection other than the core one.
+[19:26] gingerBill: All of the non-core packages could just be imported relatively.
+[19:26] gingerBill: Which is what I want.
+[19:26] mv: I think that's fine
+[19:26] ThisDrunkDane: I would just require explicit import name
+[19:27] gingerBill: So maybe the best solution at the moment is to prevent the fallback to package foo as the default import name and just tell the use to use an explicit one.
+[19:27] gingerBill: @ThisDrunkDane I don't think explicit it a good idea.
+[19:27] mv: it's a bit of redundancy
+[19:27] ThisDrunkDane: I think its fine
+[19:28] mv: yeah, getting rid of the fallback is probably fine
+then if you also have all the odin files in the folder be the same package that's fine by me :stuck_out_tongue:
+[19:28] gingerBill: If it's explicit, it just begs the question of why not import like a normal value declaration?
+ui :: #import("shared:ui");
+[19:28] mv: it's an unusual use of the syntax isn't it
+[19:29] gingerBill: Current code:
+	String import_name = path_to_entity_name(id->import_name.string, id->fullpath, false);
+	// String import_name = id->import_name.string;
+	if (import_name.len == 0 || import_name == "_") {
+	    import_name = scope->pkg->name;
+	}
+	if (is_blank_ident(import_name)) {
+	    if (id->is_using) {
+	        // TODO(bill): Should this be a warning?
+	    } else {
+	        error(token, "Import name, %.*s, cannot be use as an import name as it is not a valid identifier", LIT(id->import_name.string));
+	    }
+	} else {
+	    GB_ASSERT(id->import_name.pos.line != 0);
+	    id->import_name.string = import_name;
+	    Entity *e = alloc_entity_import_name(parent_scope, id->import_name, t_invalid,
+	                                         id->fullpath, id->import_name.string,
+	                                         scope);
+
+	    add_entity(ctx->checker, parent_scope, nullptr, e);
+	    if (id->is_using) {
+	        add_entity_use(ctx, nullptr, e);
+	    }
+	}
+[19:29] gingerBill: Note I just have to remove two lines.
+[19:29] gingerBill: @mv Which one?
+[19:29] mv: there's no constant - variable duality
+[19:30] gingerBill: I'm still confused :stuck_out_tongue:
+[19:30] gingerBill: What is the "unusual" bit referring to exactly?
+[19:31] mv: it's sort of consistent with the rest
+[19:31] mv: :: for (compile time) constants, := for (runtime) variables
+[19:31] gingerBill: It is a little more consistent but as I said previously, it does beg another question: "why limit imports to the file scope?---if the syntax allows for it."
+[19:32] mv: simplicity?
+[19:33] gingerBill: Not a good enough reasons, sadly.
+[19:33] gingerBill: I allow procedures and types and other constants to be nested within a procedure.
+[19:33] gingerBill: Why not imports too?
+[19:33] mv: wouldn't it complicate things significantly?
+[19:33] mv: backend wise
+[19:33] gingerBill: Hell yes.
+[19:34] gingerBill: It complicates things extremely.
+[19:34] mv: so "not worth it"
+[19:34] gingerBill: But to the user, they have no idea why that would be the case.
+[19:34] gingerBill: If the syntax looks different, the user will intuitively understand that the semantics are different.
+[19:34] gingerBill: And don't forget that the foreign system exists too.
+[19:35] gingerBill: And,
+	foreign import kernel32 "system:Kernel32.lib"
+
+	foreign kernel32 {
+	    ...
+	}
+[19:35] gingerBill: Is really weird syntax but it makes sense because it's not anything like the normal value declarations.
+[19:36] gingerBill: If the semantics are different, make the syntax different.
+[19:36] mv: indeed
+[19:36] gingerBill: Does this make more sense now as to why I settled on import "foo" for the syntax?
+[19:36] gingerBill: It's not an accident.
+[19:37] mv: not really. I agree on the latest remark: different semantics, different syntax
+[19:37] gingerBill: import does have quite different of semantics. There are things you might not be realising about it.
+[19:37] gingerBill: One is "which scope does the import name live in?"
+[19:37] mv: i'm not against the current way of importing :stuck_out_tongue:
+[19:38] gingerBill: (I know, I am just explaining all this as I might copy and save this elsewhere)
+[19:38] gingerBill: One thing I wanted to do was to make people think locally; especially regarding imports.
+[19:39] gingerBill: Python is a notorious example of people import entities directly rather than import the library/scope that contains the entity.
+[19:39] gingerBill: And as a result, people import things that were subsequently imported.
+[19:39] gingerBill: And then it's just a huge mess when you are trying to read things.
+[19:39] gingerBill: This is why I don't like people doing using import as it makes things harder to read.
+[19:40] gingerBill: That is why import creates an import name, as it encourages the user to use the import name rather than have those entities implicitly added to the file's/package's scope.
+[19:41] gingerBill: If you want that, explicitly do it e.g.
+	import "shared:math"
+
+	Vector2 :: math.Vector2;
+	Vector3 :: math.Vector3;
+	Rect :: math.Rect;
+[19:41] gingerBill: This is what I do and it makes it very clear what I am "importing" explicitly.
+[19:41] gingerBill: Python does do the:
+from x import y, z, w
+[19:42] gingerBill: But from what I said previously, it does cause a huge range of problems that I see in Python code all the time.
+[19:42] gingerBill: Also, Python code does mean that someone has to organize the code and explicitly state what is exported for that package in the case of __init__.py et al.
+[19:43] gingerBill: Python's approach to libraries has too micromanaging going on.
+[19:43] gingerBill: (I also apologizing for using the terms package and library interchangeably even though they are technically slightly separate concepts)
+[19:43] ThisDrunkDane: Force explitic with import "shared:foo" as bananas
+[19:43] gingerBill: (And sorry for the brain dump, I am going to just write this up)
+[19:44] gingerBill: @ThisDrunkDane You're gonna hate my next question. Why not use as for casting?
+[19:44] mv: I quite dislike from in python
+[19:44] ThisDrunkDane: @gingerBill Cause we tried it before
+[19:44] gingerBill: @ThisDrunkDane I had as before, and I removed it for so many reasons.
+[19:45] gingerBill: :stuck_out_tongue:
+[19:45] ThisDrunkDane: @gingerBill Yes for casting, but importing isn't casting
+[19:45] gingerBill: @ThisDrunkDane But why have a separate syntax for just that reason?
+[19:46] ThisDrunkDane: Because using as for casting was horrible?
+[19:46] gingerBill: `((123 as i32) + 43) as f32` is not nice to write.
+	`f32(i32(123) + 43)` is so much nicer and clearer and more consistent.
+[19:46] gingerBill: @ThisDrunkDane It was horrible but why add a keyword for just that minor concept?
+[19:46] gingerBill: It is also backwards to every other declaration.
+[19:47] gingerBill:
+	name : type : expr;
+	import path as name
+[19:48] ThisDrunkDane: then just do foo :: import "test" and be over with it, I seriously don't see why it's such a problem
+[19:49] gingerBill: @ThisDrunkDane please read why I said that's not an option
+[19:49] ThisDrunkDane: I did
+[19:49] ThisDrunkDane: And I don't agree
+[19:49] gingerBill: I'm BDFL remember :stuck_out_tongue:
+[19:50] mv:
+	#import("foo:bar", baz)
+[19:50] gingerBill: How is that any different?
+[19:50] ThisDrunkDane: And that doesn't stop me from saying I don't see why it's such a problem :stuck_out_tongue:
+[19:50] mv: it isn't
+[19:50] mv: import and foreign import are quite lonely aren't they
+[19:51] mv: sort of a one trick pony
+[19:51] gingerBill: I don't mind having them be differentiated
+[19:51] gingerBill: They are different in virtually every other language
+[19:51] gingerBill: There might be a reason for this.
+[19:51] mv: they're semantically different
+[19:52] gingerBill: Exactly!
+[19:52] gingerBill: So I think just changing the import name rules is the only important question
+[19:52] mv:
+	#foreign("foo:bar", baz)
+[19:53] mv: what about link
+[19:55] gingerBill: What about foreign blocks?
+[19:55] mv: tough one
+[19:56] mv: what about import foreign
+[19:56] mv: instead of foreign import
+[19:57] mv: what about having the library name in the foreign block?¨
+[19:58] mv:
+	foreign foo "foo.lib" {
+	    ...
+	}
+[19:59] gingerBill: I did consider that but having a name means you can abstract platforms much easier
+[19:59] mv: true
+</code></pre>
+</description>
     </item>
     
     <item>
@@ -175,9 +1750,98 @@ I recommend reading the original article first before reading this one as I will
       <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
-Original Comments:
-https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go.</description>
+      <description><p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
+<p>Original Comments:</p>
+<ul>
+<li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701</a></li>
+<li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626</a></li>
+</ul>
+<p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
+Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
+You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it&rsquo;s structural control flow.
+Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage.
+I do hate how most languages handle &ldquo;errors&rdquo;. Treat errors like any other piece of code. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
+<hr>
+<p>To expand on what I mean by this statement:</p>
+<blockquote>
+<p>You can the exact same semantics as a try except block by using a switch in statement.</p>
+</blockquote>
+<p>Python:</p>
+<pre><code class="language-python">try:
+	x = foo()
+except ValueError as e:
+	pass # Handle error
+except BarError as e:
+	pass # Handle error
+except (BazError, PlopError) as e:
+	pass # Handle errors
+</code></pre>
+<p>Odin:</p>
+<pre><code class="language-odin">Error :: union {
+	ValueError,
+	BarError,
+	BazError,
+	PlopError,
+}
+
+foo :: proc() -&gt; (Value_Type, Error) { ... }
+
+x, err := foo();
+switch e in err {
+case ValueError:
+	// Handle error
+case BarError:
+	// Handle error
+case BazError, PlopError:
+	// Handle errors
+}
+</code></pre>
+<p>The semantics are very similar in this case however the control flow is completely different. In the exceptions case (shown with Python), you enclose a block of code and catch any exceptions that have been raised. In the return value case (shown with Odin), you test the return value explicitly from the call.
+Exceptions require unwinding the stack; this can be slower<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> when an exception happens compared to the fixed small cost of a return value.</p>
+<p>In both cases, a &ldquo;catch all&rdquo; is possible:</p>
+<p>Python:</p>
+<pre><code class="language-python">try:
+	x = foo()
+except Exception:
+	pass # An error has happened
+</code></pre>
+<p>Odin:</p>
+<pre><code class="language-odin">x, err := foo();
+if err != nil {
+	// An error has happened
+}
+</code></pre>
+<p>One &ldquo;advantage&rdquo; many people like with exceptions is the ability to catch any error from a block of code:</p>
+<pre><code class="language-python">try:
+	x = foo()
+	y = bar(x)
+	z = baz(y)
+except SomeError as e:
+	pass
+</code></pre>
+<p>I personally see this as a huge vice, rather than a virtue. From reading the code, you cannot know where the error comes from. Return values are explicit about this and you know exactly what and where has caused the error.</p>
+<p>One of the consequences of exceptions is that errors can be raised anywhere and caught anywhere. This means that the culture of pass the error up the stack for &ldquo;someone else&rdquo; to handle. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don&rsquo;t pass them up the stack. You make your mess; you clean it.</p>
+<p>Go&rsquo;s built-in <code>error</code> type has the exact same tendency of people return errors up the stack:</p>
+<pre><code class="language-go">if err != nil {
+	return nil, err
+}
+</code></pre>
+<p>From what I have read, most people&rsquo;s complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
+<hr>
+<p>I hope this has cleared up a lot of the questions regarding Odin&rsquo;s take on error handling. I think error handling ought to be treated like any other piece of code.</p>
+<blockquote>
+<p>With many rules, there will be unexpected emergent behaviour.</p>
+</blockquote>
+<p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Theoretically exceptions can be just as fast a return statement because that&rsquo;s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -186,9 +1850,60 @@ https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://gith
       <pubDate>Mon, 12 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations
-n.b. This is a philosophical article and not a technical article. There are no correct answers to the questions that I will pose &amp;ndash; only compromises.
-I&amp;rsquo;m considering what the &amp;ldquo;best&amp;rdquo; declaration syntax would be. Historically, there have been two categories: which I will call qualifier-focused and type-focused. An example of qualifier-focused would be the Pascal family. An example of type-focused would be the C family.</description>
+      <description><p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations">https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations</a></p>
+<p>n.b. This is a philosophical article and not a technical article. There are no correct answers to the questions that I will pose &ndash; only compromises.</p>
+<p>I&rsquo;m considering what the &ldquo;best&rdquo; declaration syntax would be. Historically, there have been two categories: which I will call qualifier-focused and type-focused.
+An example of qualifier-focused would be the Pascal family. An example of type-focused would be the C family. Odin, like Jai, have been experimenting with an name-focused declaration syntax. These categories place emphasis on different aspects of the declarations.</p>
+<ul>
+<li>Qualifier-focused places emphasis on the kind/qualifier of declaration (<code>var x = 123; const K = true;</code>)</li>
+<li>Type-focused places emphasis on the type of the declaration (<code>int x = 123; bool const K = true;</code>)</li>
+<li>Name-focused places emphasis on the name of the declarations and that the right hand side must be an expression (<code>x := 123; K :: true;</code>)</li>
+</ul>
+<p>Some languages have a hybrid approach to the syntax of declarations. Python uses a form of name-focused for general variable declaration but qualifier-focused for function, class, and import declarations. Most modern derivatives of the C family may use type-focused for most declarations but use qualifier-focused for import declarations.</p>
+<p>There are some issue regarding all three approaches.</p>
+<h2 id="qualifier-focused">Qualifier-Focused</h2>
+<ul>
+<li>Most forms of qualifier-focused require numerous keywords to specify the kind of declaration</li>
+<li>Qualifier-focused adds verbosity to the syntax due to the extra keywords</li>
+<li>Qualifier-focused declarations have a tendency to make you define all declarations at the top of a scope and/or group declarations together of the same kind together. This nudges the programmers to not intermingle declarations and assignments. Depending on the views of programmer, this can be viewed as a positive aspect.</li>
+</ul>
+<h2 id="type-focused">Type-Focused</h2>
+<ul>
+<li>Every declaration must be associated with a type and thus be part of the type system. This is one of the reasons why <code>void</code> is in C. If a function must specify the return type, the solution to this is to create a &ldquo;non-type&rdquo;, i.e. <code>void</code>. Having a <code>void</code> type does cause issues in the type system in general but I will not consider those in this article.</li>
+<li>In the case of C++ and others, type inference must be done through a form of qualifier-focused (e.g. <code>auto</code> or <code>var</code>)</li>
+</ul>
+<h2 id="name-focused">Name-Focused</h2>
+<ul>
+<li>Name-focused has three aspects to the declaration, the left hand side (lhs), the right hand side (rhs), and the middle part. The lhs aspect are the names of the entities to be declared whilst the rhs aspect of the declaration are forms of expressions. This means that all declarations must be a declaration of an expression. This does mean that all declarations must be assigned with a form of expression. The middle part denotes the type which could be optional.</li>
+<li>In a self-contained language, having only expression assigned declarations is not a problem. The difficulty comes from interfacing with foreign code, such as C, and having a consistent syntax. In C, there are two forms of function declarations: function prototypes and full functions with bodies. A function prototype is not a form of expression. A function with a body which can be thought of a named lambda function.</li>
+<li>An inconsistency with name-focused is with variable declarations without an assignment (<code>x: int;</code>). It is implied that the declaration has an implicit rhs expression, the zero/default value. It is also implied that the declaration must be a variable declaration (and not a constant declaration).</li>
+</ul>
+<h2 id="on-the-aesthetics-of-qualifier-focused">On the Aesthetics of Qualifier-Focused</h2>
+<p>I will be open, I have a minor bias towards qualifier-focused due to Pascal being one of my very first languages. So when I started creating Odin, the language that I am designing and making, I started with a very Pascal syntax (including <code>begin</code> and <code>end</code>) but when the language became &ldquo;public&rdquo;, the syntax changed to be closer to that of Jonathan Blow&rsquo;s language, Jai. I was intrigued by the idea of the name-focused syntax with its very elegant approach to type inference. However, I have had doubts about the syntax for quite a while. At one point, I struggled to find a solution to the issue of foreign procedures and foreign variables. Originally, I solved the issue for foreign procedures with replacing the procedure body with a <code>#foreign</code> tag. However, this approach cannot be applied to a foreign variable declaration and still be consistent. On an impulsive whim, I switched the entire declaration syntax to a Go-like qualifier-focused style for 2 weeks. (I have done this switch twice.) The solution to the foreign entities was to have a procedure lambda without a body by replacing the body with <code>---</code> and surrounding all foreign declarations in a <code>foreign</code> block. In Odin, a procedure without a body cannot be distinguished from a procedure type and thus there needed to be a way to specify a procedure literal/lambda without a body.</p>
+<pre><code class="language-odin">foreign my_lib {
+    some_var: i32;
+    amazing_foo :: proc &quot;c&quot; (a, b: i32, c: f32) -&gt; rawptr ---;
+}
+</code></pre>
+<p>There are two reasons for this conflict that I have between qualifier-focused and name-focused. The first is that name-focused is elegant and terse to write compared to qualifier-focused. The second is the &ldquo;ugliness&rdquo; of qualifier-focused with conjunction with other forms of statements.</p>
+<p>Qualifier-focused looks &ldquo;ugly&rdquo; when it is combined with control statements:</p>
+<pre><code class="language-go">for var x = 0; x &lt; 10; x += 1 {
+}
+</code></pre>
+<p>The two keywords together in the <code>for var</code> block looks &ldquo;dense and wrong&rdquo; to me and makes reading the construct much more difficult. However, placing an open parenthesis in between the keywords reduces some of this &ldquo;density&rdquo;:</p>
+<pre><code class="language-go">for (var x = 0; x &lt; 10; x += 1) {
+}
+</code></pre>
+<p>It does look slightly better but it is still &ldquo;dense&rdquo;. These parentheses make it less &ldquo;ugly&rdquo; for some reason and it&rsquo;s not self apparent as to why the separation between the two words by punctuation improves matters.</p>
+<p>This is probably a reason as to why Go uses the <code>:=</code> operator, especially in this case:</p>
+<pre><code>for x := 0; x &lt; 10; x += 1 {
+}
+for idx, val := range array {
+}
+</code></pre>
+<p><code>:=</code> is a pragmatic solution to this aesthetic problem with the qualifier-focused <code>var</code>. However, this is not to say that the <code>:=</code> operator is great. In Go, it has extra semantics to make Go feel more like a &ldquo;dynamic language&rdquo; (variables will be shadowed with <code>:=</code>). Even if you had both <code>var</code> and <code>:=</code>, and that they did the exact same thing, it does beg the question: why have two things that do exactly the same thing?</p>
+<p>I have been researching the topic of syntax in language design for a long time now. It&rsquo;s been an interesting topic and I think I should actually write most of my findings. I hope this condensed explanation of the issues with regards to declaration syntax has aided others as to my predicament.</p>
+</description>
     </item>
     
     <item>
@@ -197,9 +1912,23 @@ I&amp;rsquo;m considering what the &amp;ldquo;best&amp;rdquo; declaration syntax
       <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
       
       <guid>/article/2016/12/01/the-metaprogramming-dilemma/</guid>
-      <description>Article was originally posted here: https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemma
-Designing this language has been difficult but fun. Two of the original goals of this language were simplicity and metaprogramming however, these together could be an oxymoron. But before I explain why, I first need to explain what I mean by &amp;ldquo;metaprogramming&amp;rdquo;.
-Metaprogramming is an &amp;ldquo;art&amp;rdquo; of writing programs to treats other programs as their data. This means that a program could generate, read, analyse, and transform code or even itself to achieve a certain solution.</description>
+      <description><p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemma">https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemma</a></p>
+<p>Designing this language has been difficult but fun. Two of the original goals of this language were simplicity and metaprogramming however, these together could be an oxymoron. But before I explain why, I first need to explain what I mean by &ldquo;metaprogramming&rdquo;.</p>
+<p>Metaprogramming is an &ldquo;art&rdquo; of writing programs to treats other programs as their data. This means that a program could generate, read, analyse, and transform code or even itself to achieve a certain solution. The approaches of metaprogramming can be split into a few distinct categories:</p>
+<ul>
+<li>Introspection (and Reflection for OOP languages)</li>
+<li>Compile Time Execution (CTE)</li>
+<li>Template Programming</li>
+<li>Macros (Textual and Syntactic)</li>
+<li>Parametric Polymorphism (&ldquo;Generics&rdquo;)</li>
+</ul>
+<p>Many languages have metaprogramming functionalities: C has textual macros; C++ has textual macros, a functional templating language, and rudimentary introspection; Nim has all of the above; Go has external textual &ldquo;templates/macros&rdquo;. Each approach has its advantages and disadvantages but all can be used together to achieve different solutions and results.</p>
+<p>Introspection is already part of the language and is a functionality I think is necessary in a &ldquo;modern&rdquo; language. It is needed to have something like a &ldquo;type-safe printf&rdquo; (at runtime) and the ability to serialize data with ease. However, introspection does require extra memory to be stored for the type information. (n.b. Reflection is only appropriate for object oriented programming language which this language is not.)</p>
+<p>Compile Time Execution (CTE) is an idea that I&rsquo;ve been pondering for a while and it&rsquo;s already part of Jon Blow&rsquo;s language, Jai. It would be a stage of the compiler which runs any Odin code the user requests before the creation of the executable. The data modified and generated by this stage will be used as the initialization data for the compiled code. I have come to the conclusion that this CTE stage would be required to be ran through an interpreter to achieve the results needed. However there are few problems with this CTE stage. The main problem being: pointers will point to invalid memory addresses. This is because the memory space of the interpreter in completely different to the memory space of the executable (compiled code). Numerous types are stored with pointers internally and these values would be invalid at runtime. Due to this problem (and few others), this powerful feature becomes extremely delicate.</p>
+<p>Templates can be thought of a subset of macros. Templates are usually a simple substitution mechanism that operate on the Abstract Syntax Tree (AST). Macros on the other hand, could be a simple text substitution system (akin to C&rsquo;s preprocessor) or even a compile AST modification and generation tool (similar to Lisp or Nim). Templates could even be an entire language built into the language (like C++&rsquo;s templates). This makes them both extremely powerful but also &ldquo;magic&rdquo;.</p>
+<p>Parametric polymorphism, or commonly referred to as &ldquo;Generics&rdquo; (which is a very &ldquo;generic&rdquo; name too), is the ability to duplicate certain &ldquo;snippets&rdquo; of code that have a similar structure but different types/names/etc. A basic example is a generic sorting function which accepts an array of a certain type and a sorting function for that specific type. In a language such as C, this would either have to achieved through code duplication (copy&amp;paste or macros), or through void pointers to remove the type information. The former method can become cumbersome and prone to mistakes while the latter, removes a lot of type safety and prevents compiler optimizations. In a language that does have &ldquo;generics&rdquo;, this &ldquo;problem&rdquo; can be solved. However, the problem hand is very really a generic problem and &ldquo;genericizing&rdquo; the problem doesn&rsquo;t actually solve the original problem. &ldquo;Generics&rdquo; can be emulated through the use of templates and macros which means that it may not need to be a built in feature of a language.</p>
+<p>This now brings me to the dilemma. How far do I want to go with metaprogramming in this language? How far can I go whilst keeping Odin a simple language? Or is the very definition of metaprogramming not simple? Or should metaprogramming be left to an external (standardized) tool (like <code>go generate</code>)?</p>
+</description>
     </item>
     
   </channel>

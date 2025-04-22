@@ -15,10 +15,205 @@
       <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/06/17/go-iterator-design/</guid>
-      <description>NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423
-TL;DR It makes Go feel too &amp;ldquo;functional&amp;rdquo; rather than being an unabashed imperative language.
-I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.
-The merged PR for the proposal can be found here: https://github.</description>
+      <description><p><em>NOTE: This is based on, but completely rewritten, from a Twitter post: <a href="https://x.com/TheGingerBill/status/1802645945642799423">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
+<p><strong>TL;DR</strong> It makes Go <em>feel</em> too &ldquo;functional&rdquo; rather than being an unabashed imperative language.</p>
+<p>I recently saw a post on <a href="https://x.com/ohmypy/status/1801180323406844062">Twitter</a> showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.</p>
+<p>The <em>merged PR</em> for the proposal can be found here: <a href="https://github.com/golang/go/issues/61897">https://github.com/golang/go/issues/61897</a></p>
+<p>It has a in-depth explanation of the design explaining why certain approaches were chosen instead, so I do recommend reading it if you are familiar with Go.</p>
+<p>Here is the example from the original Tweet I found:</p>
+<pre><code class="language-go">func Backward[E any](s []E) func(func(int, E) bool) {
+	return func(yield func(int, E) bool) {
+		for i := len(s)-1; i &gt;= 0; i-- {
+			if !yield(i, s[i]) {
+				// Where clean-up code goes
+				return
+			}
+		}
+	}
+}
+
+s := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}
+for _, el in range Backward(s) {
+	fmt.Print(el, &quot; &quot;)
+}
+// c b a
+</code></pre>
+<p>This example is clear enough in <em>what</em> it does, but the entire design of it is a bit crazy to me for the general/majority use case.</p>
+<p>From what I understand it appears that the code will be transformed into something like the following:</p>
+<pre><code class="language-go">Backward(s)(func(_ int, el string) bool {
+	fmt.Print(el, &quot; &quot;)
+	return true // `return false` would be the equivalent of an explicit `break`
+})
+</code></pre>
+<p>This means that Go&rsquo;s iterators are much closer to what some languages have with a &ldquo;for each&rdquo; method (e.g. <code>.forEach()</code> in JavaScript) and passing a callback to it. And fun fact, this approach is already possible in Go &lt;1.23 but it does not have the syntactic sugar to use it within a <code>for range</code> statement.</p>
+<p>I will try to summarize the rationale Go 1.23 iterators, but it seems that they ware wanting to minimize a few factors:</p>
+<ul>
+<li>Make the iterator look/act like a generator from other languages (thus the <code>yield</code>)</li>
+<li>Minimize the need for sharing too many stack frames</li>
+<li>Allow for clean-up with <code>defer</code></li>
+<li>Reduce data being stored outside of the control flow</li>
+</ul>
+<p>As <a href="https://research.swtch.com/">Russ Cox (rsc)</a> explains in the original proposal:</p>
+<blockquote>
+<p>Note regarding push vs pull iterator types: The vast majority of the time, push iterators are more convenient to implement and to use, because setup and teardown can be done around the yield calls rather than having to implement those as separate operations and then expose them to the caller. Direct use (including with a range loop) of the push iterator requires giving up storing any data in control flow, so individual clients may occasionally want a pull iterator instead. Any such code can trivially call Pull and defer stop.</p>
+</blockquote>
+<p>Russ Cox goes into more detail in his article <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a> about why he likes this approach to design.</p>
+<h3 id="more-complex-example">More Complex Example</h3>
+<p><strong>NOTE:</strong> Do not worry about what this actually does, I just wanted to show an example of the clean-up needed with something like <code>defer</code>.</p>
+<p>An example from the original PR shows an example of a much more complex approach requiring clean-up where values which are <em>pulled</em> directly:</p>
+<pre><code class="language-go">// Pairs returns an iterator over successive pairs of values from seq.
+func Pairs[V any](seq iter.Seq[V]) iter.Seq2[V, V] {
+	return func(yield func(V, V) bool) bool {
+		next, stop := iter.Pull(it)
+		defer stop()
+		v1, ok1 := next()
+		v2, ok2 := next()
+		for ok1 || ok2 {
+			if !yield(v1, v2) {
+				return false
+			}
+		}
+		return true
+	}
+}
+</code></pre>
+<h2 id="an-alternative-pseudo-proposal-state-machine">An Alternative Pseudo-Proposal (State Machine)</h2>
+<p><strong>NOTE:</strong> I am not suggesting Go does this whatsoever.</p>
+<p>When designing <a href="https://odin-lang.org/">Odin</a>, I wanted the ability for the user to design their own kind of &ldquo;iterators&rdquo;, but have them be very simple; in fact, just normal procedures. I didn&rsquo;t want to add a special construct to the language just for this&mdash;this would complicate the language too much which is what I wanted to minimize in Odin.</p>
+<p>One possible pseudo-proposal I could give for Go iterators would look like the following:</p>
+<pre><code class="language-go">func Backward[E any](s []E) func() (int, E, bool) {
+	i := len(s)-1
+	return func(onBreak bool) (idx int, elem E, ok bool) {
+		if onBreak || !(i &gt;= 0) {
+			// Where clean-up code goes, if there is any
+			return
+		}
+		idx, elem, ok = i, s[i], true
+		i--
+		return
+	}
+}
+</code></pre>
+<p>This pseudo-proposal would operator like this:</p>
+<pre><code class="language-go">for it := Backward(s);; {
+	_, el, ok := it(false)
+	if !ok {
+		break // it(true) does not need to be called because the `false` was called
+	}
+
+	fmt.Print(el, &quot; &quot;)
+}
+</code></pre>
+<p>This is similar what I do in Odin <strong>BUT</strong> Odin does not support stack-frame-scope-capturing closures, only non-scope-capturing procedure literals. Because Go is garbage-collected, I see little need to no utilize them like this. The main difference is that Odin does not try to unify the ideas into one construct.</p>
+<p>I know some people will this think this approach is a lot more complicated. It is doing the opposite of what Cox prefers with storing data in control flow, and store the data outside of it. But this is usually what I want from an iterator rather than what Go is going to do. And this is the problem: it removes the elegance of storing the data in the control flow&ndash;the push/pull distinction that Cox explains.</p>
+<p><strong>NOTE:</strong> I am very much an imperative programmer and I like to know how things actually execute, rather than trying to make it &ldquo;elegant looking&rdquo; code. So the approach I wrote above is fundamentally about thinking with regards to execution.</p>
+<p>n.b. The typeclass/interface route would not work in Go because this would not be an orthogonal design concept and actually be more confusing than necessary&mdash;this is why I did not originally propose it. Different languages have different requirements as to what works in them.</p>
+<h2 id="gos-apparent-philosophy">Go&rsquo;s Apparent Philosophy</h2>
+<p>The approach that Go 1.23 takes seems to go in the face of the <em>apparent</em> philosophy of making Go for the general (frankly mediocre) programmer at Google who doesn&rsquo;t want to (nor can) use a &ldquo;complex&rdquo; language like C++.</p>
+<p>To quote <a href="http://herpolhode.com/rob/">Rob Pike</a>:</p>
+<blockquote>
+<p>The key point here is our programmers are Googlers, they&rsquo;re not researchers. They&rsquo;re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They&rsquo;re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.</p>
+</blockquote>
+<p>I know many people are offended by this comment, but it&rsquo;s <strong>brilliant</strong> language design by understanding who you are designing the language for. It is not insulting, but rather the a matter of fact statement as Go was originally for the people who work(ed) at Google, and similar industries. You might be a &ldquo;better and more capable&rdquo; programmer than the average Googler but that doesn&rsquo;t matter. There is a reason people love Go: it&rsquo;s simple, opinionated, and most people can pick it up very quickly.</p>
+<p>However this iterator design does seem out of character to Go, especially for the someone like proposer Russ Cox (assuming he was <em>actual</em> the original proposer) on the Go team. It makes Go a lot more complicated, and even more &ldquo;magical&rdquo; too. I understand how the iterator system works because I am <em>literally</em> a language design and compiler implementer. It also has the possible issue to it won&rsquo;t be a well performing approach either because of its need for closures and callbacks.</p>
+<p>Maybe the argument for its design is that the <em>average Go programmer</em> is not meant to <strong>implement</strong> iterators but just <strong>use</strong> them. And that the majority of the iterators that people will need will be already available in Go&rsquo;s standard library, or by the third-party package itself. So the onus is put on the package <em>writer</em>, not the package <em>user</em>.</p>
+<p>This is why I think a lot of people seem to be &ldquo;angry&rdquo; over the design. It goes against everything Go was originally &ldquo;meant to be&rdquo; in the eyes of a lot of people, and it seems like a really complicated &ldquo;mess&rdquo;. I understand the &ldquo;beauty&rdquo; that it looks like a generator with the <code>yield</code> and inline code approach, but I do not think that is necessarily in the vein of what Go is to a lot of people. Go does hide a lot of how the magic works under the scenes, especially with garbage collection, <code>go</code>routines, <code>select</code> statement, and many other constructs. However, I think this is a little too magical in that it <em>exposes</em> the magic to the user a little too much, whilst looking overly complex to the average Go programmer.</p>
+<p>The other aspect where people find this &ldquo;confusing&rdquo; is that it&rsquo;s a <code>func</code> that returns <code>func</code> that takes a <code>func</code> as an argument. And that the body of the <code>for range</code> is transformed into a <code>func</code> and all <code>break</code>s (and other escaping control flow) are converted into a <code>return false</code>. It&rsquo;s just three levels of procedures deep, which again feels like a functional language rather than an imperative language.</p>
+<p><strong>NOTE:</strong> that I am not suggesting they replace the iterator design with what I am suggesting, but rather a generalized iterator approach may have not been a good thing Go in the first place. For me at least, Go is an unapologetic imperative language with first-class CSP-like constructs. It&rsquo;s not trying to be a functional-like language. Iterators are in that weird place where they do exist in imperative languages, but they are very &ldquo;functionally&rdquo; as a concept. Iterators can be very <em>elegant</em> in functional languages, but in some many unabashed imperative languages, they always feel &ldquo;weird&rdquo; somehow <strong>because</strong> they are being unified into a separate construct rather than separating out the parts of it (initialize+iterator+destroy).</p>
+<h2 id="aside-odins-approach">Aside: Odin&rsquo;s Approach</h2>
+<p>As I alluded to previously, in Odin an iterator is just a procedure call where the last value of the multiple return is just a boolean indicating whether to continue or not. And because Odin does not support closures, the equivalent Go <code>Backward</code> iterator in Odin is a little more code to type.</p>
+<p><strong><strong>NOTE:</strong> Before people say &ldquo;that looks even more complex&rdquo;, please continue reading the article. Most Odin iterators are not like this, and I would never recommend writing such an iterator where a trivial for-loop would be preferred for both the reader and the writer of the code.</strong></p>
+<pre><code class="language-odin">// Explicit struct for the state
+Backward_Iterator :: struct($E: typeid) {
+	slice: []E,
+	idx:   int,
+}
+
+// Explicit construction for the iterator
+backward_make :: proc(s: []$E) -&gt; Backward_Iterator(E) {
+	return {slice = s, idx = len(s)-1}
+}
+
+backward_iterate :: proc(it: ^Backward_Iterator($E)) -&gt; (elem: E, idx: int, ok: bool) {
+	if it.idx &gt;= 0 {
+		elem, idx, ok = it.slice[it.idx], it.idx, true
+		it.idx -= 1
+	}
+	return
+}
+
+
+s := []string{&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}
+it := backward_make(s)
+for el, _ in backward_iterate(&amp;it) { // `for el in` could have been written too
+	fmt.print(el, &quot; &quot;)
+}
+// c b a
+</code></pre>
+<p>This does <em>appear to be</em> a lot more complicated that the Go approach because it requires you to write a lot more code. However, it&rsquo;s actually a hell of a lot simpler to understand, comprehend, and even faster to execute. The iterator does not call the for-loop&rsquo;s body, rather the body calls the iterator. I know Cox loves the ability of <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a>, and I do agree it is nice but does not fit well within Odin, especially with the lack of closures (because Odin is a manual memory managed language).</p>
+<p>An &ldquo;iterator&rdquo; is just syntactic sugar for the following:</p>
+<pre><code class="language-odin">for {
+	el, _, ok := backward_iterate(&amp;it)
+	if !ok {
+		break
+	}
+	fmt.print(el, &quot; &quot;)
+}
+
+// With `or_break`
+
+for {
+	el, _ := backward_iterate(&amp;it) or_break
+	fmt.print(el, &quot; &quot;)
+}
+</code></pre>
+<p>Odin&rsquo;s approach is just removing the magic and making it extremely clear what is going on. &ldquo;Construction&rdquo; and &ldquo;destruction&rdquo; must be handled manually with explicit procedures. And that iteration is just a simple procedure which is called each loop. All three constructs are handled separately rather merged into one confusing one like in Go 1.23.</p>
+<p>Odin does not hide the magic, whilst Go&rsquo;s approach is actually very magical. Odin makes you handle the &ldquo;closure-like&rdquo; values manually along with the construction and destruction of the &ldquo;iterator&rdquo; itself.</p>
+<p>Odin&rsquo;s approach also trivially allows you to have as many multiple return values as wanted too! A good example of this is Odin&rsquo;s <code>core:encoding/csv</code> package where the <code>Reader</code> can be treated like an iterator:</p>
+<pre><code class="language-odin">// core:encoding/csv
+iterator_next :: proc(r: ^Reader) -&gt; (record: []string, idx: int, err: Error, more: bool) {...}
+</code></pre>
+<pre><code class="language-odin">// User code
+for record, idx, err in csv.iterator_next(&amp;reader) {
+	...
+}
+</code></pre>
+<h2 id="aside-c-iterators">Aside: C++ Iterators</h2>
+<p>I will try to not get into a huge rant about C++ &ldquo;iterators&rdquo; in this article. C++ iterators are much more than <em>mere iterators</em> whilst at least Go&rsquo;s approach is still a <em>mere iterator</em>. I completely understand why C++ &ldquo;iterators&rdquo; do what they do, but 99.99% of the time I just want a <em>mere iterator</em>; not something that has all of the algebraic properties that allow it to be utilized in more &ldquo;general&rdquo; places.</p>
+<p>For people who don&rsquo;t know C++ very well, an iterator is a custom <code>struct</code>/<code>class</code> which requires it to have overloaded <code>operators</code> on it to make it act like a &ldquo;pointer&rdquo;. Historically, a C++ &ldquo;iterator&rdquo; would look like this:</p>
+<pre><code class="language-cpp">{
+	auto &amp;&amp; __range = range-expression ;
+	auto __begin = begin-expr ;
+	auto __end = end-expr ;
+	for ( ; __begin != __end; ++__begin) {
+		range-declaration = *__begin;
+		loop-statement
+	}
+}
+</code></pre>
+<p>And would be wrapped in a &ldquo;macro&rdquo; before C++11 ranged-for loop syntax (and <code>auto</code>) became a thing.</p>
+<p>The biggest issue is that C++ &ldquo;iterators&rdquo; require you to define 5 different operations at a minimum.</p>
+<p>The following three operator overloads:</p>
+<ul>
+<li><code>operator==</code> or <code>operator!=</code></li>
+<li><code>operator++</code></li>
+<li><code>operator*</code></li>
+</ul>
+<p>Along with two stand-alone procedures or bound methods which return an iterator value:</p>
+<ul>
+<li><code>begin</code></li>
+<li><code>end</code></li>
+</ul>
+<p>If I was to design C++ <em>mere iterators</em>, I would have just add a simple method to a <code>struct</code>/<code>class</code> called <code>iterator_next</code> or something. And that&rsquo;s it. Yes it does mean the other algebraic properties are lost, but I honestly do not need these EVER for any problem I am working on. When I am working on those kinds of problems, they will always be either a contiguous array, or I will implement the algorithm manually because I want to guarantee the performance will be good for that data-structure. However, there is a reason I made my own language (Odin) because I completely disagree with the entire C++ philosophy, and I want to get away from that madness.</p>
+<p>C++ &ldquo;iterators&rdquo; are a hell of a lot more complicated than Go&rsquo;s iterators but they are much more &ldquo;direct&rdquo; with the local operation. At least with Go, you don&rsquo;t need to construct a type with 5 different properties rather</p>
+<h2 id="in-conclusion">In Conclusion</h2>
+<p>I feel like Go&rsquo;s iterators do make sense with the design principles applied to them <strong>BUT</strong> <em>seem</em> antithetical to what most people view Go as being. I know Go &ldquo;has had to&rdquo; get more complex over the years, especially with the introduction of Generics (which I do think are actually well designed, with only a few syntax quibbles), but the introduction of iterators of this ilk <em>feels</em> wrong.</p>
+<p>I think the short of it is that it feels like it goes against the apparent philosophy of Go that many people believe, coupled with it being a very functional way of doing things rather than imperative.</p>
+<p>And because of those reasons, I think that is why people don&rsquo;t like the iterator stuff, even if I completely understand the design choices made. It doesn&rsquo;t &ldquo;feel&rdquo; like what Go original was to many people.</p>
+<p>Maybe the concerns of mine (and others) are overblown and most people will never actually implement them and just use them, and that them being this complicated to implement.</p>
+<p>Second to last controversial take: Maybe Go needed to &ldquo;gate-keep&rdquo; even more and just tell the &ldquo;functional-bros&rdquo; to go away and stop asking for such features which make Go a much more complicated and complex language.</p>
+<p>Last controversial take: if it was me, I would just not have allowed custom iterators into Go whatsoever, but I am not on the Go team (nor do I want to be).</p>
+</description>
     </item>
     
     <item>
@@ -27,7 +222,90 @@ The merged PR for the proposal can be found here: https://github.</description>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/12/15/multiple-return-values-research/</guid>
-      <description>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &amp;ldquo;true&amp;rdquo; multiple return values which are not emulated through tuples. My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) Odin has invented a new kind of type system, something to the akin of polyadic expressions.</description>
+      <description><p>I have recently been thinking about multiple return values as a concept, and wondering if there has been any kind of literature into the topic of &ldquo;true&rdquo; multiple return values which are not emulated through <a href="https://en.wikipedia.org/wiki/Tuple">tuples</a>.
+My current working hypothesis is that I think I have come to the conclusion (unless there is evidence to the contrary) <a href="https://odin-lang.org/">Odin</a> has invented a new kind of type system, something to the akin of <em>polyadic expressions</em>.</p>
+<p>It appears that <a href="https://go.dev/">Go</a> and <a href="https://odin-lang.org/">Odin</a> are the only ones with what I call &ldquo;true&rdquo; multiple return values, <em>but</em> Odin&rsquo;s approach is a lot more sophisticated than Go&rsquo;s and extends the concept further.</p>
+<p>Odin&rsquo;s idea is pretty simple: an expression may have <em>n</em>-values, where <em>n</em> is a natural number <em>≥0</em>. Meaning an expression may have 0, 1, 2, 3, 4, etc values, of which each value has a type, not that each expression has a type. An expression with 0-values has no (final) type to it (not even <code>void</code> like in some languages).</p>
+<p>A way of thinking about this is that Odin is fundamentally a <a href="https://wikipedia.org/wiki/Polyad">polyadic</a> language rather than a <a href="https://wikipedia.org/wiki/Monad_(functional_programming)">monadic</a> language, like pretty much everything else. However most languages seem to be polyadic in one aspect: input parameters to procedures/functions. In most languages, you have multiple (monadic) inputs but only one (monadic) output, e.g. (<code>int foo(int, bool, float);</code>). Odin&rsquo;s approach is to just extend this to the rest of the language&rsquo;s type system, not just procedure inputs.</p>
+<h2 id="emulation-with-tuples-in-other-languages">Emulation with Tuples in Other Languages</h2>
+<p>In languages with <a href="https://wikipedia.org/wiki/Tuple">tuples</a>, they can emulate the ability to have multiple return values, especially if the language has sugar encouraging it.
+Let&rsquo;s take <a href="https://www.python.org/">Python</a> as this basic example where tuples can be used to emulate multiple return values:</p>
+<pre><code class="language-py">def foo():
+    return (1, True, &quot;hellope&quot;) # can also be written without the parentheses, as a form of syntactic &quot;sugar&quot;
+
+(x, y, z) = foo() # explicit tuple syntax with a basic form of pattern matching
+x, y, z = foo() # sugar for the above
+a = foo() # assigning  all the values not a single (monadic) 3-tuple
+</code></pre>
+<p>Other languages may not use tuples to achieve multiple return values; languages such as <a href="https://lisp-lang.org/">Common Lisp</a> and <a href="http://www.lua.org/">Lua</a> do things slightly differently by pushing multiple values BUT the handling of the number of values is handled dynamically rather than statically:</p>
+<pre><code class="language-lua">function foo()
+    return 1, true, &quot;hellope&quot;
+end
+
+x, y, z    = foo() -- same as Python example
+x, y       = foo() -- the string value is dropped/ignore
+x, y, z, w = foo() -- a value for 'w' was never returned therefore it is set to 'nil'
+</code></pre>
+<p>This is similar to <a href="https://lisp-lang.org/learn/functions"><code>values</code></a> in Common Lisp, Scheme, etc, of which it can suffer from exactly the same issues in terms of dropping of value bugs etc, especially due to its dynamic typing approach. A good example of this is to show that <code>(type-of (values x y z))</code> is the same as <code>(type-of x)</code> in Common Lisp.</p>
+<p>However, dynamically typed languages are not my area of research for this specific question, statically and strongly typed ones are. And in that case, all of the languages that allow for something like multiple return values (except for Odin and Go) use tuples. However tuples can still be passed around as a singular/monadic intermediary value. Tuples are effectively a form of monad which wrap values of (possibly) different types (essentially an ad-hoc record/struct type), which some languages may allow for explicit or implicit tuple destruction.</p>
+<h2 id="how-odin-differs">How Odin Differs</h2>
+<p>Odin does differ from Go on multiple return values in one important aspect: Go&rsquo;s approach is a bit of hack which only applies in the context of variable assignments. The following is valid in Odin but <em>not</em> valid in Go:</p>
+<pre><code class="language-go">x, y, z := 1, foo() // assuming 'foo' returns 2 values
+</code></pre>
+<p>The reason being is that Go&rsquo;s approach for multiple returns only works in the context of assignment, and the assignment assumes that there is either N-expressions on the RHS or 1-expression on the RHS to match the N-variables on the LHS. Odin&rsquo;s approach is a little more sophisticated here, the assignment assumes that there are N-values on the RHS for each of the N-variables on the LHS; where the N-values may be made from M-expressions (N ≥ M).</p>
+<p>Another fun thing about Odin because of this fact is that you can do the following (which is also not possible in Go):</p>
+<pre><code class="language-odin">foo :: proc() -&gt; (int, bool, string) { ... }
+bar :: proc(int, bool, string) { ... }
+
+bar(foo())
+</code></pre>
+<p>It also means something like this is possible in Odin:</p>
+<pre><code class="language-odin">x, y, z, w := 1.34, foo() // N-variables on the LHS, N-values on the RHS
+
+blaz :: proc() -&gt; (bool, string) { ... }
+bar(1, blaz())
+</code></pre>
+<p>Internally, Odin&rsquo;s approach could be implemented identically to as if a procedure was an input tuple + an output tuple and then automatically destructed, but semantically Odin does not support first-class tuples. n.b. For this research, implementation details are not of concern, only usage/grammar.</p>
+<h3 id="other-areas-of-use-in-odin">Other Areas of Use In Odin</h3>
+<p>Polyadic expressions are also used in another areas of the Odin programming language. One of the most common is the optional-ok idiom<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<pre><code class="language-odin">m: map[string]int
+x: union{int, bool}
+
+value, ok := m[key] // map access
+
+v, ok := x.(int) // type assertion
+
+// a type switch statement is more commonly seen as more cases may need to be handled
+switch y in x {
+case int:  ...
+case bool: ...
+case:      ... 
+}
+</code></pre>
+<h2 id="is-rob-pike-to-blame">Is Rob Pike to Blame?</h2>
+<p>I am wondering if this approach to multiple return values is all <a href="https://wikipedia.org/wiki/Rob_Pike">Rob Pike</a>&rsquo;s fault. Since the only languages I can find that are like what I speak of are:</p>
+<ul>
+<li><a href="https://swtch.com/~rsc/thread/alef.pdf">Alef</a>, <a href="http://www.vitanuova.com/inferno/papers/limbo.html">Limbo</a>, <a href="https://go.dev/">Go</a> (Rob Pike related, the first two being non-destructing tuples)</li>
+<li><a href="https://odin-lang.org/">Odin</a> (<a href="https://www.gingerbill.org/">me</a>, who has been influenced by many of Pike&rsquo;s languages)</li>
+</ul>
+<p>Alef and Limbo had multiple return values through tuples, but tuples were still not really first-class data types in those languages. In many ways, Alef and Limbo were the main precursors to Go (not just <a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)">Oberon</a> and <a href="https://en.wikipedia.org/wiki/Modula">Modula</a>). Limbo&rsquo;s declaration syntax comes from <a href="https://swtch.com/~rsc/thread/newsqueak.pdf">Newsqueak</a> which is also the precursor to Odin&rsquo;s very own declaration syntax<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>So maybe the reason there is little literature (that I can fine) into this topic is purely because it is limited to languages related-to/influenced-by Rob Pike.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It might be the approach taken by Odin may be extremely unique to Odin, however it is also one of the my favourite things about Odin too. And I am really glad I added it so early on, since it has shown its utility really quickly. Coupled with <a href="https://odin-lang.org/docs/overview/#named-results">named return values</a>, bare <code>return</code> statements, and <a href="https://odin-lang.org/docs/overview/#or_return-statement"><code>or_return</code></a>, it is an absolute pleasure to work with.</p>
+<p>If anyone has any more information about this topic, please feel free to contact me with it!</p>
+<p>P.S. If there is no research done into this area, it is a good sign since there is so much left to discover in Programming Language Theory.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>This is technically 3 different addressing modes depending on the context (<a href="https://github.com/odin-lang/Odin/blob/4423bc0706a6a1a64cf419720fd65bc723fdf58a/src/parser.hpp#L19-L23">map-index, optional-ok, or optional-ok-ptr</a>)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -36,8 +314,103 @@ The merged PR for the proposal can be found here: https://github.</description>
       <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/03/07/untyped-types/</guid>
-      <description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &amp;ldquo;just work&amp;rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
-Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</description>
+      <description><p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> and <a href="https://golang.org/">Go</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
+<ul>
+<li>Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.</li>
+<li>Model-2: Expressions may have a value, not all expressions have a type. Therefore some values may not have a (concrete) type.</li>
+</ul>
+<h2 id="value-models">Value Models</h2>
+<h3 id="model-1">Model-1</h3>
+<p>Model-1 is the more traditional approach in most languages, especially C-like languages. This has the consequence that all literals must have a concrete type associated with them.</p>
+<p>Using C as an example, every number literal has a type, and to change to a specific type requires a suffix:</p>
+<pre><code class="language-c">123    // int
+123.0  // double
+123.0f // float
+123u   // unsigned int
+123l   // long
+123ll  // long long
+123ul  // unsigned long
+123ull // unsigned long long
+</code></pre>
+<h4 id="cs-type-promotion">C&rsquo;s Type Promotion</h4>
+<p>In C, there is a set of rules called the &ldquo;usual arithmetic conversions&rdquo; which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<h3 id="model-2">Model-2</h3>
+<p>Model-2 is quite different and can be very foreign to think about if you are so used to Model-1. Model-2 treats values closer to how most people intuitively think about them. The literal <code>123.0</code> just represents the <em>number</em> one hundred and twenty three. It has no intrinsic type to it, it&rsquo;s just a value. Applying this idea to a programming language, the value literal <code>123.0</code> can be represented by a whole range of different types.</p>
+<p>In Odin, all of these examples will work with the same value literal:</p>
+<pre><code class="language-odin">a: i32 = 123.0;
+b: f32 = 123.0;
+c: f64 = 123.0;
+d: u64 = 123.0;
+// etc
+</code></pre>
+<p>Value literals are not just limited to numbers but work for other kinds of values:</p>
+<pre><code class="language-odin">a: string  = &quot;Hellope!&quot;;
+b: cstring = &quot;Hellope!&quot;;
+c: bool    = true;
+d: b32     = true;
+e: rune    = '\n';
+f: i32     = '\n'; // rune literals can be treated as just numbers
+</code></pre>
+<p>No implicit conversions <em>at runtime</em> have been performed (unlike C) as each value can be represented without truncation.</p>
+<p>A consequence of this model is that constants could have no (concrete) type to them:</p>
+<pre><code class="language-odin">MY_AWESOME_SOCK_COUNT :: 123.0; // named constant without a concrete type
+
+a: i32 = MY_AWESOME_SOCK_COUNT;
+b: f32 = MY_AWESOME_SOCK_COUNT;
+</code></pre>
+<p>In order to get this to &ldquo;feel correct&rdquo; and make it &ldquo;just work&rdquo; leads to a complication in the design of the compiler requiring a big number implementation, since numbers don&rsquo;t have any &ldquo;size&rdquo;/&ldquo;width&rdquo; to them. As a consequence, <code>~0</code> is an error in Odin, whilst it&rsquo;s perfectly valid in C because <code>0</code> has the width of <code>int</code>. In order to achieve the same thing in Odin, a type must be assigned like <code>~u32(0)</code>.</p>
+<h2 id="untyped-types">Untyped Types</h2>
+<p>Odin supports type inference which leads to a interesting question, is the following a valid statement:</p>
+<pre><code class="language-odin">x := 123; // what is the type of 'x'?
+</code></pre>
+<p>There are two solutions to this problem: make this invalid since <code>123</code> has no type, give <code>123</code> a <em>untyped type</em>.</p>
+<p>Untyped types sound like an oxymoron but it is a way to give a <em>default type</em> to a typeless value. The literal <code>123</code> can be assigned the &ldquo;untyped type&rdquo; of &ldquo;untyped integer&rdquo;.</p>
+<pre><code class="language-odin">123       // untyped integer
+123.0     // untyped float
+true      // untyped boolean
+&quot;hellope&quot; // untyped string
+'\n'      // untyped rune
+1i        // untyped complex number
+3j        // untyped quaternion
+5k        // untyped quaternion
+</code></pre>
+<p>Each &ldquo;untyped type&rdquo; can be assigned a <em>default type</em> to which if the value needs to be made concrete at runtime, it will default to that (if possible).</p>
+<pre><code>untyped integer    -&gt; int
+untyped float      -&gt; f64
+untyped boolean    -&gt; bool
+untyped string     -&gt; string
+untyped rune       -&gt; rune
+untyped complex    -&gt; complex128
+untyped quaternion -&gt; quaternion256
+</code></pre>
+<h3 id="comparison-operations-in-odin">Comparison Operations in Odin</h3>
+<p>In Odin, comparison operations will result in the type of the expression to be an &ldquo;untyped boolean&rdquo;. There are two reasons behind this behaviour:</p>
+<ul>
+<li>Allows any comparisons to assign to any boolean type</li>
+<li>Allows the backend to choose the more efficient sized operation if needed, rather than requiring a byte sized operation.</li>
+</ul>
+<h2 id="extra-consequences-of-each-model">Extra Consequences of Each Model</h2>
+<p>For Model-1, the consequence of every expression having a type requires the idea of giving a type to something with no value: <code>void</code>.</p>
+<p>For Model-2, the consequence of some expressions not have a type does not lead a concept of <code>void</code> in the type system. I have noticed this confusion when people ask what the equivalent of <code>void *</code> is in Odin, which is <code>rawptr</code> (a separate specialized pointer type). Another consequence is that it allows for the ability for expressions to have multiple values (not tuples) associated with them, which is how Odin&rsquo;s multiple return values in procedures work.</p>
+<h2 id="advantages-of-each-model">Advantages of Each Model</h2>
+<p>A common question after learning about each model is ask &ldquo;what are the advantages of each model?&rdquo;. Personally, I think this question is actually nonsensical since you cannot compare without context due to each model having different foundational axioms. The advantages completely depend on what you are trying to aim for, the models cannot be compared out of context.</p>
+<p>In Odin and Go, literals are &ldquo;untyped&rdquo; and there are (virtually) no implicit type conversions. The advantage of the untyped literals in this case is that they work for any type that can represent that value (which has no type). This also complements the <a href="https://odin-lang.org/docs/overview/#distinct-types">distinct</a> type systems of both languages.</p>
+<p>In languages with implicit type promotions, literals being typed is less of a (hypothetical) problem. If the rules can be defined without many of the issues from C, then typed literals have little disadvantages to them. Applying typed literals to a distinct type system will cause some problem since explicit casting may be required or defeats the point of distinct typing because implicit casting will be applied.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Most modern C compilers can catch these bugs but that is a patch over a design flaw rather than solution to the underlying problem.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
   </channel>

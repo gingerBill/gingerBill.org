@@ -15,8 +15,26 @@
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/03/10/quine-in-odin/</guid>
-      <description>A Quine in Odin:
-package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `package quineimport &amp;quot;core:fmt&amp;quot;main :: proc() {fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);}s := `;</description>
+      <description><p>A <a href="https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in <a href="/odin">Odin</a>:</p>
+<pre><code class="language-odin">package quine
+
+import &quot;core:fmt&quot;
+
+main :: proc() {
+	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+}
+
+s := `package quine
+
+import &quot;core:fmt&quot;
+
+main :: proc() {
+	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+}
+
+s := `;
+</code></pre>
+</description>
     </item>
     
   </channel>

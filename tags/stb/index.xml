@@ -15,11 +15,41 @@
       <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>/article/2024/04/04/video-that-inspired-odin/</guid>
-      <description>[Originally from a Twitter Thread]
-Original Twitter Post
-Many people may not know this but this video by Sean Barrett @nothings is partially the reason why I made the Odin programming language.
-And I&amp;rsquo;ll explain what insights it gave me in this thread 🧵.
-A lot of these seem &amp;ldquo;so obvious&amp;rdquo; but for some reason it never clicked to me before this video. A lot of the &amp;ldquo;higher level&amp;rdquo; &amp;ldquo;scripting&amp;rdquo; languages are not that much higher level than C.</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1775853386694332461">Original Twitter Post</a></p>
+<p>Many people may not know this but this video by Sean Barrett <a href="https://twitter.com/nothings">@nothings</a> is partially the reason why I made the <a href="https://odin-lang.org/">Odin programming language</a>.</p>
+<div class="youtube">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/eAhWIO1Ra6M" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<p>And I&rsquo;ll explain what insights it gave me in this thread 🧵.</p>
+<p>A lot of these seem &ldquo;so obvious&rdquo; but for some reason it never clicked to me before this video. A lot of the &ldquo;higher level&rdquo; &ldquo;scripting&rdquo; languages are not that much higher level than C. Those languages just have garbage collection and much better standard libraries than C.</p>
+<p>Those languages are &ldquo;easier to use&rdquo; than C just because they have loads of built-in data structures like arrays, hash maps, and built-in syntax for them (how &ldquo;extravagant&rdquo;, I know).</p>
+<p>I was already well aware of the STB libraries that Sean developed, and the single-header-file style too of them (which is mostly a cope for C&rsquo;s flaws), but it never clicked to me that the library that Sean used the most was the <a href="https://github.com/nothings/stb">&ldquo;stb.h&rdquo;</a> one.</p>
+<p>This lead me to organize code I had used in previous projects already and put that into a single and easy to use library which I could use in any of my C projects going forward in 2015/2016: <a href="https://github.com/gingerBill/gb/blob/master/gb.h">https://github.com/gingerBill/gb/blob/master/gb.h</a></p>
+<p>However by around March, I began experimenting with just making an &ldquo;augmented&rdquo; C compiler so that I could add constructs to C which I found to be some of the most annoying things C lacked. The first, and most important, two constructs were:</p>
+<ul>
+<li>Slices</li>
+<li><code>defer</code></li>
+</ul>
+<p>I had already been using <code>defer</code> in C++ for many years already. I really wished the concept was native to C. (My opinion has now changed now for C for many reasons).</p>
+<p>P.S. I wrote an <a href="https://www.gingerbill.org/article/2015/08/19/defer-in-cpp/">article</a> about what I had been doing back in 2015 for defer in C++11</p>
+<p>Eventually I realized I couldn&rsquo;t just add constructs and features to C to &ldquo;improve&rdquo; my personal projects, and that any of my professional projects could not use them either. This then lead me to starting my own compiler to fix those issues I had with C.</p>
+<p>Interestingly, &ldquo;Odin&rdquo; (which was the original codename which just stuck) started life as a Pascal-like language with begin/end too, but I was trying to make it &ldquo;C-like&rdquo; enough for what I wanted. About 3 months later, I had implemented ~70% of Odin; the other ~30% took 7 years.</p>
+<p>Odin wasn&rsquo;t my first programming language that I had designed nor implemented, but it was the first where I actually went &ldquo;you know what?—this will actually be useful for my general needs&rdquo;. And now I use it for my living at <a href="https://jangafx.com/">JangaFX</a>, where all of our products are written in it.</p>
+<p>Other than slices and <code>defer</code>, the other things I did for Odin were to solve a few practical issues I had in C:</p>
+<ul>
+<li>A slice-based <code>string</code> type</li>
+<li>Decent variadic parameters (a slice-based one)</li>
+<li>RTTI (not bug-prone format verbs in printf, and not my janky generated stuff)</li>
+<li>Actual libraries</li>
+</ul>
+<p>I won&rsquo;t discuss the benefits of slices here but I will discuss the latter 3 things of that list.</p>
+<p>In C, pretty much my only use case for variadic parameters were <code>printf</code>-style things. Adding a decent form of that + coupled with RTTI, allowed me to have a runtime-typesafe <code>printf</code>.</p>
+<p>As for &ldquo;actual libraries&rdquo;, they need their own namespace. When the user imports it, he can change import name itself, rather than relying on the library to prefix everything (or C++ namespace) to minimize namespace collisions.</p>
+<p>This eventually lead to Odin&rsquo;s <a href="https://odin-lang.org/docs/overview/#packages">package system</a>.</p>
+<p>I highly recommend everyone to watch <a href="https://www.youtube.com/embed/eAhWIO1Ra6M">this talk</a> by Sean Barrett! It was a huge inspiration for me, and just a general eye-opener for something which should have been obvious to me at the time but wasn&rsquo;t.</p>
+</description>
     </item>
     
   </channel>

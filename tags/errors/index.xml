@@ -15,7 +15,21 @@
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/2/</guid>
-      <description>Notes: Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense Structured Exception Handling Microsoft&amp;rsquo;s SEH Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems. </description>
+      <description><h2 id="notes">Notes:</h2>
+<ul>
+<li><a href="https://www.gingerbill.org/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">Exceptions — And Why Odin Will Never Have Them</a></li>
+<li><a href="https://plato.stanford.edu/entries/essential-accidental/">Essential vs Accidental Properties</a></li>
+<li><a href="https://wikipedia.org/wiki/Exception_handling">Exception handling</a></li>
+<li>I used the term <em>structured exception handling</em> which is different to Microsoft&rsquo;s SEH, I meant <em>structured</em> in the <a href="https://wikipedia.org/wiki/Structured_programming">structured programming sense</a>
+<ul>
+<li><a href="https://wikipedia.org/wiki/Structured_programming#Exception_handling">Structured Exception Handling</a></li>
+<li><a href="https://wikipedia.org/wiki/Microsoft-specific_exception_handling_mechanisms">Microsoft&rsquo;s SEH</a></li>
+</ul>
+</li>
+<li><a href="https://blog.golang.org/error-handling-and-go">Error handling and Go</a></li>
+<li>Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.</li>
+</ul>
+</description>
     </item>
     
   </channel>

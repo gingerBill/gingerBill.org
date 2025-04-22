@@ -15,8 +15,133 @@
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/02/02/structured-control-flow/</guid>
-      <description>Note: This is a &amp;ldquo;brain dump&amp;rdquo; article, and subject to be cleaned up.
-Categories of Structured Control Flow Procedure call foo(123, true) Terminating return Conditional if, if-else, switch Looping for - loop with initial statement, condition, post statement, and body for-in - loop with a value to be iterated over while - loop with condition then body do-while - loop with body then condition Branching break - go to end outside of the control statement continue - skip to the end of a loop fallthrough - merge two switch case bodies, to have multiple entry points to the merged body Labels on other control flow statements Deferred defer/scope(exit) Pseudo/Partial Categories Structured Exception Handling (not specifically Microsoft&amp;rsquo;s SEH try, catch Default (named) return values foo :: proc(x: int) -&amp;gt; (val: int, err: Error) { .</description>
+      <description><p><strong>Note:</strong> This is a &ldquo;brain dump&rdquo; article, and subject to be cleaned up.</p>
+<h2 id="categories-of-structured-control-flow">Categories of Structured Control Flow</h2>
+<ul>
+<li>Procedure call
+<ul>
+<li><code>foo(123, true)</code></li>
+</ul>
+</li>
+<li>Terminating
+<ul>
+<li><code>return</code></li>
+</ul>
+</li>
+<li>Conditional
+<ul>
+<li><code>if</code>, <code>if-else</code>, <code>switch</code></li>
+</ul>
+</li>
+<li>Looping
+<ul>
+<li><code>for</code> - loop with initial statement, condition, post statement, and body</li>
+<li><code>for-in</code> - loop with a value to be iterated over</li>
+<li><code>while</code> - loop with condition then body</li>
+<li><code>do-while</code> - loop with body then condition</li>
+</ul>
+</li>
+<li>Branching
+<ul>
+<li><code>break</code> - go to end outside of the control statement</li>
+<li><code>continue</code> - skip to the end of a loop</li>
+<li><code>fallthrough</code> - merge two switch case bodies, to have multiple entry points to the merged body</li>
+<li>Labels on other control flow statements</li>
+</ul>
+</li>
+<li>Deferred
+<ul>
+<li><code>defer</code>/<code>scope(exit)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="pseudopartial-categories">Pseudo/Partial Categories</h3>
+<ul>
+<li>Structured Exception Handling (not specifically <a href="https://docs.microsoft.com/en-us/cpp/cpp/structured-exception-handling-c-cpp">Microsoft&rsquo;s SEH</a>
+<ul>
+<li><code>try</code>, <code>catch</code></li>
+</ul>
+</li>
+<li>Default (named) return values
+<ul>
+<li><code>foo :: proc(x: int) -&gt; (val: int, err: Error) { ... }</code></li>
+</ul>
+</li>
+<li><code>async</code>/<code>await</code></li>
+<li><code>yield</code>/<code>resume</code></li>
+</ul>
+<h3 id="examples-of-extensions">Examples of Extensions</h3>
+<p>Examples in Odin</p>
+<pre><code class="language-odin">foo :: proc(x: int) -&gt; (val: int, err: Error) {
+	defer if err != nil {
+		// handle clean up
+	}
+
+	if x &gt; 0 {
+		err = .Bad_Error;
+	} else {
+		val = -x*2 + 1;
+	}
+
+	// returns all the named return values without having the manual specify them
+	return;
+}
+</code></pre>
+<pre><code class="language-odin">the_cases: switch x {
+case 1:
+	loop: for y &gt; 0 {
+		do_thing(&amp;y);
+		if y == 3 {
+			break the_cases;
+		} else if y == 2 {
+			continue loop;
+		}
+		do_other_thing(&amp;y);
+	}
+case 2, 3:
+	do_thing(&amp;y);
+	fallthrough;
+case 4:
+	do_other_thing(&amp;y);
+}
+</code></pre>
+<h2 id="categories-of-unstructured-control-flow">Categories of Unstructured Control Flow</h2>
+<ul>
+<li>Procedure call
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Function_Calls">x86: Call instruction</a></li>
+</ul>
+</li>
+<li>Terminating
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Function_Calls">x86: Return instruction</a></li>
+</ul>
+</li>
+<li>Comparison
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Comparison_Instructions">x86: Comparison instructions</a></li>
+</ul>
+</li>
+<li>Jump
+<ul>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Unconditional_Jumps">x86: Unconditional jump instructions</a></li>
+<li><a href="https://en.wikibooks.org/wiki/X86_Assembly/Control_Flow#Jump_Instructions">x86: Conditional jump instructions</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Goto">goto</a></li>
+</ul>
+</li>
+<li>Indirect Jump (goto by value)
+<ul>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc-3.4.0/gcc/Labels-as-Values.html">GNU C: Labels as values (jump tables)</a></li>
+</ul>
+</li>
+<li>Stack Unwinding (exceptions)
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Setjmp.h">longjmp/setjmp</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Interrupt">Interrupts</a></li>
+</ul>
+</li>
+</ul>
+</description>
     </item>
     
   </channel>

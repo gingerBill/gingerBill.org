@@ -15,11 +15,50 @@
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/09/06/value-propagation-experiment-part-2/</guid>
-      <description>**[Originally from a Twitter Thread]**
-I have revisited The Value Propagation Experiment and have come to a different conclusion as to why it failed and how I recovered it.
-The recovery work has been merged into master now with this PR: https://github.com/odin-lang/Odin/pull/1082
-I think there were three things which were confusing which make it look like a failure of an experiment:
-try was a confusing name for what the semantics were.</description>
+      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+<p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
+<p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
+<p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
+<ul>
+<li><code>try</code> was a confusing name for what the semantics were.</li>
+<li><code>try</code> as a prefix was the wrong place.</li>
+<li>Unifying <code>try</code> with <code>try else</code> was a bad idea for many reasons.</li>
+</ul>
+<p>Changes in the PR:</p>
+<ul>
+<li>Built-in <code>or_else</code> procedure became a binary operator instead (meaning it became a keyword).</li>
+<li><code>or_return</code> was added as a keyword.</li>
+<li><code>or_return</code> became a suffix-operator/atom-expression.</li>
+</ul>
+<pre><code class="language-odin">if i, ok = m[&quot;hellope&quot;] !ok { i = 123 }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-odin">i = m[&quot;hellope&quot;] or_else 123
+</code></pre>
+<pre><code class="language-odin">if err = foo(); err != nil { return }
+</code></pre>
+<p>becomes</p>
+<pre><code class="language-od">foo() or_return
+</code></pre>
+<p>Most people understood what the purpose and semantics <code>or_else </code>pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that.</p>
+<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin&rsquo;s core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
+<p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
+<p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
+<p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That&rsquo;s a useful construct for definite.</p>
+<p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of
+<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>&rsquo;s HxA format. <a href="https://github.com/quelsolaar/HxA">https://github.com/quelsolaar/HxA</a></p>
+<p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
+<p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
+<ul>
+<li>Error value propagation <em>ACROSS</em> library boundaries</li>
+<li><em>Degenerate states</em> due to type erasure or automatic inference</li>
+<li>Cultural lack of partial success states</li>
+</ul>
+<p>The most important one is the degenerate state issue, where all values can degenerate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don&rsquo;t handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: &ldquo;error or not&rdquo;. This is now equivalent to a fancy boolean.</p>
+<hr>
+<p>I do hope that this addition of <code>or_return</code> does aid a lot of people when making projects and designing packages.</p>
+<p>It does appear to be very useful already for many of the core library package developers for Odin.</p>
+</description>
     </item>
     
     <item>
@@ -28,11 +67,53 @@ try was a confusing name for what the semantics were.</description>
       <pubDate>Mon, 05 Jul 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/07/05/value-propagation-experiment/</guid>
-      <description>[Originally from a Twitter Thread]
-Part 2 of this Experiment
-The Idea I recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was false or not nil. It was in a similar vein to Rust&amp;rsquo;s try! which became ?, or Zig&amp;rsquo;s try, etc.
-I have now removed it from Odin. But why?
-The Problem The hypothesis was that that this idiom was common:</description>
+      <description><p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
+<h2 id="the-idea">The Idea</h2>
+<p>I recently experimented with adding a feature into <a href="https://odin-lang.org/">Odin</a> which allowed for a way to propagate a value by early returning if that value was <code>false</code> or not <code>nil</code>. It was in a similar vein to Rust&rsquo;s <code>try!</code> which became <a href="https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html"><code>?</code></a>, or Zig&rsquo;s <a href="https://ziglang.org/documentation/master/#try"><code>try</code></a>, etc.</p>
+<p>I have now removed it from Odin. But why?</p>
+<h2 id="the-problem">The Problem</h2>
+<p>The hypothesis was that that this idiom was common:</p>
+<pre><code class="language-odin">x, err := foo();
+if err != nil {
+    return err;
+}
+</code></pre>
+<p>where <code>err</code> may be an enum, a (discriminated) union, or any other kind of value that has <code>nil</code>.</p>
+<p>And replace it with<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<pre><code class="language-c">x := try foo();
+</code></pre>
+<p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. It also fails because Odin (and Go) are languages with multiple return values rather than single-type returns.</p>
+<p>And the more I think about it, the <code>if err != nil { return err }</code> and similar stuff may be the least worst option, and the best in terms of readability.</p>
+<p>It&rsquo;s a question of whether you are optimizing for reading or typing, and in Odin, it has usually been reading.</p>
+<p>And something like <code>x := try foo();</code> instead of <code>x, err := foo(); if err != nil { return err }</code> does reduce typing but <code>try</code> is a lot harder to catch (even with syntax highlighting).</p>
+<p>It happens that Go already declined such a <a href="https://github.com/golang/go/issues/32437#issuecomment-512035919">proposal</a> for numerous reasons. And the research done for this is directly applicable to Odin because both languages share the multiple return value semantics.</p>
+<p>The research has been fruitful however. I did experiment with a <code>try x else y</code> construct which has now become a built-in procedure <code>or_else(x, y)</code> which can be used on things with an optional-ok check e.g. map indices, type assertions</p>
+<pre><code class="language-odin">or_else(m[&quot;hellope&quot;], 123)
+or_else(x.?, true)
+</code></pre>
+<h2 id="degenerate-states">Degenerate States</h2>
+<p>Some people may be a little surprised with my experimentation with this exception-like shorthand with error values. Especially since I wrote an article (which was originally two github comments) titled: <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">Exceptions — And Why Odin Will Never Have Them</a>.</p>
+<p>One thing I did not comment on in the that article is the cause of the problem (other than the cultural issues). My hypothesis is that if you have a degenerate type (<a href="https://en.wikipedia.org/wiki/Type_erasure">type erasure</a> or automatic inference), then if a value can convert to it implicitly (easily), people will (ab)use it.</p>
+<p>So in languages with exceptions, all exception values can degenerate to the &ldquo;base type&rdquo;. In Rust, it can either go to the base trait or be inferred parametrically. In Zig it can either do <code>anyerror</code> or it will infer the error set from usage. Go has the built-in interface type <code>error</code> which acts as the common degenerate value.</p>
+<p>As I discuss in the article, I am not against error value propagation within a library, but I am pretty much always against it <strong><em>across</em></strong> library boundaries. A degenerate state has high entropy and a lack of specific information. And due to this form of type erasure, &ldquo;downcasting&rdquo; (broad use of term) is a way to recover the information, but it assumes implicit information which is not known in the type system itself.</p>
+<p>The other issue when people pass the error up the stack for someone else to handle (something I criticize in the previous article already) is that it&rsquo;s common to see this in many codebases already that have such a type: Go, Rust, and Zig (public) codebases exhibit this a lot.</p>
+<p>And my hypothesis for this phenomenon is due to the very nature of this &ldquo;degenerative type&rdquo;.</p>
+<p>Now a design judgement is to be made when designing a language: is such a concept worth it for the problems it intrinsically has. For Odin, I do not think it was worth it. In Odin, errors are just values, and not something special. For other languages? That&rsquo;s another thing. For Odin, I have found that having an error value type defined per package is absolutely fine (and ergonomic too), and minimizes, but cannot remove, the problem value propagation across library boundaries.</p>
+<h2 id="summary">Summary</h2>
+<p><code>try foo()</code> was a bad idea for Odin consider the rest of its semantics (multiple return values, lack of error value type at the semantics level, optimizes for typing rather than reading)</p>
+<p><code>try x else y</code> has now become <code>or_else(x, y)</code> which is useful.</p>
+<p>n.b. I am not criticizing any particular language&rsquo;s design for doing this, but rather saying that it does not work well for Odin&rsquo;s semantics nor philosophy.</p>
+<p><a href="/article/2021/09/06/value-propagation-experiment-part-2/">Part 2 of this Experiment</a></p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
     <item>
@@ -41,8 +122,127 @@ The Problem The hypothesis was that that this idiom was common:</description>
       <pubDate>Mon, 13 May 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
-      <description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:
-Odin1 Scopes Zig They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</description>
+      <description><p>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:</p>
+<ul>
+<li><a href="https://www.gingerbill.org/odin/">Odin</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
+<li><a href="http://scopes.rocks">Scopes</a></li>
+<li><a href="https://ziglang.org/">Zig</a></li>
+</ul>
+<p>They are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!</p>
+<p>Which brings to me to the latest talk by <a href="https://twitter.com/andy_kelley">Andrew Kelley</a> about his programming language, <a href="https://ziglang.org/">Zig</a>, titled <em><a href="https://chariotsolutions.com/screencast/philly-ete-2019-andrew-kelley-the-road-to-zig-1-0/">The Road to Zig 1.0</a></em>. In this talk, Andrew presents the Zig programming language as a programming language for maintaining robust reusable software with a tour of the unique features of that Zig has. I recommend watching the talk before reading this article to make your own decision about it.</p>
+<div class="youtube">
+	<iframe width="560" height="315" src="https://www.youtube.com/embed/Gv2I7qTux7g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<br>
+<h2 id="opening">Opening</h2>
+<p>The talk opens with the <a href="https://www.xkcd.com/2030/">xkcd comic 2030</a> regarding the fragility and terrifying nature of software compared to engineering disciplines; with Andrew commenting that &ldquo;we can do better than this&rdquo;. I agree with this basic premise however, I do not agree with Andrew&rsquo;s philosophical approach to aid this issue, and in general the entire philosophy behind Zig. Andrew&rsquo;s two key points to improving the problem are:</p>
+<ul>
+<li>Write quality software (compared to writing crappy software)</li>
+<li>Promote code reuse (compared to preventing code reuse)</li>
+</ul>
+<p>From experience of programming and the current programming culture, the second should be rephrased to &ldquo;promote reuse of quality code&rdquo; as with the rise of package managers and library repositories, code is being reused quite a lot, even if that code is not at all robust. This crappy code reuse as resulted in many of the infamous dependency hells<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. Humans are flawed beings and are incentive focused. Unless we have an incentive to do something, we are very unlikely to do it. There are many languages that are striving for robustness in the code, such as Rust and Ada, but to ensure robustness and quality, a robust and quality culture will be required to enforce it.</p>
+<p>Andrew then precedes to talk about many of the things which will prevent software from being widely used:</p>
+<ul>
+<li>Garbage collection</li>
+<li>Automatic heap allocation (which may cause the system to run out of memory)</li>
+<li>If you code is slower than C, it will be rewritten in C</li>
+<li>A lack of C ABI will mean it is not usable by most languages</li>
+<li>Complicated build systems from source</li>
+</ul>
+<p>These points are only mildly related to producing <em>quality software</em> and closer to concerns about performance, ease of use, safety, and compatibility. I appreciate the caveats do not fit on the slide but many of these points do seem to be a completely different issue to the what question of <em>quality software</em>.</p>
+<ul>
+<li>Garbage collection (and automatic memory management in general) has its uses in certain problem domains and in those domains, it does not reduce the quality of that software.</li>
+<li>Automatic heap allocation is more of a problem with the language (and third party code) doing things behind the back of the developer which may have performance implications. I have never had a program cause a system to run out of memory in real software (other than artificial stress tests). If you are working in a low-memory environment, you should be extremely aware of its limitations and plan accordingly<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</li>
+<li>A piece of software doesn&rsquo;t need to be as fast as C to be quality software. If the performance is within a certain margin and/or the performance of your code has little overhead for the problem-at-hand (e.g. a one-off task), then the clarity of the code is much more important than its performance. This is why Python is so popular in the scientific community as prototyping/glue language, with the actual heavy-lifting done by C/FORTRAN bindings to the highly optimized code.</li>
+<li>A lack of C ABI is an issue if you need your software to interface with other software but as I said, this has nothing to do with quality software itself rather compatibility with other software<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>.</li>
+<li>Complicated build systems is mostly a cultural issue where people are either told to use a certain approach or learn about &ldquo;best practices&rdquo;.</li>
+</ul>
+<h2 id="condition-compilation">Condition Compilation</h2>
+<p>After this, Andrew talks about a lot of the issues in C which can cause friction and problems, and how Zig addresses them. Many are simple problems which have been solved by many languages before and after C, and many are core library issues and have nothing to do with the language itself. One of the issues that Andrew covers is conditional compilation and the compile-time system in Zig is used in conjunction with branch/if statements to produce compile-time evaluated clauses. The issue I have with this approach is that run-time evaluated if statements and compile-time evaluated if statements use the exact same syntax:</p>
+<pre><code class="language-zig">if (builtin.os == .windows) {
+	var FT: FILETIME = undefined;
+	GetSystemTimeAsFileTime(&amp;ft);
+	// ...
+} else if (builtin.os == .linux) {
+	var tms: timespec = undefined;
+	clock_gettime(CLOCK_REALTIME, &amp;tms);
+} else {
+	@compileError(&quot;unknown how to get the time&quot;);
+}
+</code></pre>
+<p>A huge issue with this approach is that it is not clear that these clauses will be evaluated at compile-time nor that they will actually produce a scope or not. Odin solves this issue by using a separate keyword, <code>when</code>, to denote a compile-time branching statement:</p>
+<pre><code class="language-odin">when ODIN_OS == &quot;windows&quot; {
+	// ...
+} else when ODIN_OS == &quot;linux&quot; {
+	// ...
+} else {
+	// ...
+}
+</code></pre>
+<p>This <code>when</code> statement is clearer to read and because it is denoted different, it is clear that it has different semantics to an <code>if</code> statement. A <code>when</code> statement in Odin does not produce a new scope for each clause, and only the clause that is true at compile-time will be semantically checked (all clauses are syntactically checked, unlike an <code>#if 0</code> block in C), whilst in an <code>if</code> statement, all clauses are semantically checked.</p>
+<h2 id="error-handling">Error Handling</h2>
+<p>My biggest issue with the design of the Zig language, which is demonstrated in this talk, is that &ldquo;error values&rdquo; are built into the language itself. In a <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">previous article</a>, I discuss the issues with exceptions, error handling, and error propagation. Zig&rsquo;s <em>error</em> types have a similar syntax to exceptions but they do not share the same internals as exceptions in that they are handled as part of the return values rather than through unwinding the stack (or some similar mechanism). Andrew comments that people are lazy (which they are) and will do whatever the default way is, so why not at least get them to handle things &ldquo;correctly?&rdquo; and &ldquo;make handling errors fun&rdquo;.</p>
+<p>Firstly, error handling should not be fun&mdash;it should be painless. It&rsquo;s akin to saying paying taxes should be fun. It will never be fun, but you can remove a lot of the drudge work from it. Secondly, as I previously wrote, my issue with exception-based/exception-like errors is not the syntax but how they encourage error propagation. This encouragement promotes a culture of pass the error up the stack for &ldquo;someone else&rdquo; to handle the error. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don’t pass them up the stack. <em>You make your mess; you clean it.</em></p>
+<p>Error propagation is fine within a library/package/module but you ought not to be encouraging propagation <em>across</em> library boundaries. There are so many issues I have seen in real life, which lead to <em>crappy software</em>, where errors are just left for &ldquo;someone else&rdquo; to handle. Error propagation also has the the tendency to remove information about the type of error as it is reduced to a &ldquo;simpler&rdquo; error type up the stack. If you are designing a language to aid in producing <em>quality software</em>, don&rsquo;t add a core feature to the language which encourages sloppy habits.</p>
+<p>Odin&rsquo;s approach to error handling is to treat errors as nothing special. Error cases are handled like any other piece of code. In conjunction with Odin&rsquo;s multiple return values, enumerations, unions, and many other features, this means the user can return extra information, including <em>error values</em>, alongside the normal return values if wanted and handle them accordingly.</p>
+<h2 id="clean-up-code">Clean-up Code</h2>
+<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++&rsquo;s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>. Zig extends the <code>defer</code> to work with the error system with <code>errdefer</code>, which is a nice and natural extension of this system and is coherent with the rest of the language&rsquo;s design.</p>
+<h2 id="error-sets">Error Sets</h2>
+<p>Errors sets are an interesting concept that extend the error system in Zig. I would personally like to see this feature extended to enumerations too as it seems like a natural extension to the concept of a value set<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. However, it might be better to have a specialized error type than a specialization of a previous error type even if it increases code use (this is of course depends on the situation).</p>
+<h2 id="build-system">Build System</h2>
+<p>The Zig build system is the language itself. <del>It extends the compile-time execution system to call a &ldquo;build&rdquo; function to set up the build requirements. Having the same language be the build-language is very useful and a natural extension of the compile-time execution system. The compile-time execution system itself is already a huge requirement for the language which does complicate things but if that is accepted and desired, this feature is less of an issue.</del></p>
+<p>Update: It appears that the build system is not part of the compile-time system whatsoever. It appears to be apart of the core library rather than a feature of the language itself. This could be easily replicate this in any language however having it part of the core library itself, this means that there is a <em>standard</em> approach to use which nudges it towards being the <em>default</em> approach.</p>
+<p>In Odin, &ldquo;foreign&rdquo; code is handled by the <code>foreign</code> system. Foreign code that is imported is associated with its dependencies, this means that only the dependencies that are used are built against. Coupled with Odin&rsquo;s package system, it helps encapsulate the foreign code along with the Odin code. Odin does not directly import C header file, like Zig, but I found that in practice, you rarely want to use the raw bindings to the C code. From what I know of, how Zig is currently designed, its build system does not allow for this minimal dependency tracking that Odin offers.</p>
+<h2 id="designed-around-llvm">Designed Around LLVM</h2>
+<p>The Zig language is heavily designed around the LLVM ecosystem as a result, relies upon many of its features. I personally see this as vice rather than a virtue. Even though LLVM supports numerous target platforms, it does mean that any issue LLVM has, your language will have it too. Odin uses LLVM as its current backend, but there is work to replace it with a custom backend, and I have personally experienced a huge number of bugs and design flaws which cannot be avoided without removing LLVM itself. LLVM was built to optimize C and C++ and as a result, it is heavily designed around many of the &ldquo;quirks&rdquo; of C. LLVM is a huge dependency which I would rather not have to deal with.</p>
+<p>I will not talk about LLVM any more as it requires another entirely separate article if I was to go into it further.</p>
+<h2 id="summary">Summary</h2>
+<p>Andrew sets out by striving to aid in the production of <em>quality software</em> but does not really address why <em>crappy software</em> is produced in the first place. Many of the features in Zig itself encourage what I see to be poor and lazy practice, especially the error system. Zig is a well designed language but I disagree with many of the design decisions and the fundamental philosophy behind it. I hope Andrew is successful and is continually able to make a living off from Zig as this is a wonderful project.</p>
+<p>If you like the sound of it and want to find out more, please check it out at <a href="https://ziglang.org/">https://ziglang.org/</a>.</p>
+<h2 id="ps-why-odin">P.S. Why Odin?</h2>
+<p>Throughout this article, I have been discussing Zig and its issues. Why do I recommend Odin over Zig?</p>
+<p>Odin is not trying to solve the problem of <em>quality software</em> as that is fundamentally a cultural problem. The Odin programming language is fast, concise, readable, pragmatic, and open sourced. It is designed with the intent of being an alternative to C with the following goals:</p>
+<ul>
+<li>simplicity</li>
+<li>high performance</li>
+<li>built for modern systems</li>
+<li>joy of programming</li>
+</ul>
+<p>I wanted a language that solved many of the issues I had with programming. I wanted the specification of the language to be 100% knowable by a mere mortal. There are probably less than a dozen people in the world that know all of the C++ specification <em>and</em> understand it. Rust is starting to approach that complexity even though it is a new language. Swift already has a lot of baggage as its evolved past from Objective-C and the NeXTstep ecosystem.</p>
+<p>At the turn of 2016, I gave myself a New Year&rsquo;s Resolution to start any new personal programming project in pure C to see what I really needed from a language. It turned out that I needed very little to be very productive. The friction from having to remember many of the features in C++ and other languages reduced my productivity a lot more than I realised. From using pure C for a few months, I noticed that there were features that I wanted to add to C to increase my productivity and reducing errors. These features included <code>defer</code> and tagged-unions. I started creating a metaprogramming tool to augment my C code so I could add these new features. I quickly began to realise that what I wanted was a new language as this endeavour was a dead-end.</p>
+<p>The project started one evening in late July 2016 when I was annoyed with programming in C++ (not a new project). The language began as a Pascal clone (with begin and end and more) but changed quite quickly to become something else.</p>
+<p>Odin borrows heavily from (in order of philosophy and impact): Pascal, C, Go, Oberon. <a href="https://en.wikipedia.org/wiki/Niklaus_Wirth">Niklaus Wirth</a> and <a href="https://en.wikipedia.org/wiki/Rob_Pike">Rob Pike</a> have been the programming language design idols throughout this project. Simplicity was always a deriving force in the design, but as I found very early on, simplicity is complicated.</p>
+<p>The design underwent a lot of revisions and experiments in the very early stages as I did not know what was optimal for increasing my productivity. I knew the basic concepts of what I wanted but that was it. Concepts such as the package system took nearly a year to flesh-out and design as it took a while to discover what were the actual problems with certain approaches.</p>
+<p>At the end of the day, I am a pragmatic man and I do not see the need for type-theory purity if it increases friction in the language.</p>
+<p>If you like the sound of it and want to find out more, please check it out at <a href="https://www.odin-lang.org/">https://www.odin-lang.org/</a> and <a href="https://github.com/odin-lang/Odin">https://github.com/odin-lang/Odin</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>For those who do not know, I am the creator of the <a href="https://www.gingerbill.org/odin/">Odin programming language</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>See the Left-Pad Package causing severe issues across many other piece of code, <a href="https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages">https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>For a possible way to improve the culture, please see the <a href="https://handmade.network/manifesto">Handmade.Network</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>I have discussed this issue before with Andrew and I really do not see this as much of an issue as he does. If you are a desktop machine and run out of memory, don&rsquo;t try to recover from the panic, quit the program or even shut-down the computer. As for other machinery, plan accordingly!&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>And aiding your programming language with interfacing with foreign code and help it get more widely adopted.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p>I talk about the <code>defer</code> statement in a previous <a href="/article/2015/08/19/defer-in-cpp/">article</a>.&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p>It might be incorrect to call it a set as they can only be one of the values in the set of possible values. A union, sum-type, or something similar may be a better name for the concept.&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+</description>
     </item>
     
   </channel>
