@@ -3,27 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Why I Hate Language Benchmarks" />
-<meta property="og:description" content="[Originally from a Twitter Thread]
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Why I Hate Language Benchmarks">
+  <meta name="twitter:description" content="[Originally from a Twitter Thread]
 Original Twitter Post
-I don&rsquo;t know if I have &ldquo;ranted&rdquo; about this here before but:
-I absolutely HATE comparing programming languages with &ldquo;benchmarks&rdquo;.
+I don’t know if I have “ranted” about this here before but:
+I absolutely HATE comparing programming languages with “benchmarks”.
 Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
-Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2024/01/22/comparing-language-benchmarks/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2024-01-22T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-01-22T00:00:00+00:00" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Why I Hate Language Benchmarks"/>
-<meta name="twitter:description" content="[Originally from a Twitter Thread]
-Original Twitter Post
-I don&rsquo;t know if I have &ldquo;ranted&rdquo; about this here before but:
-I absolutely HATE comparing programming languages with &ldquo;benchmarks&rdquo;.
-Language benchmarks rarely ever actually test for anything useful when comparing one language against another. This goes for ANY language.
-Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers."/>
+Even in the best case scenario: you are comparing different compilers for the same language (and the same input). This means that you are just comparing how well the optimizing backends work for those compilers. Comparing different languages is not even in the same category. When comparing languages, you are not just comparing the optimizing backend of the compiler (assuming it even is compiled), but a completely different input. And most benchmarks rarely use the semantically equivalent code to test against. The implementations vary widely. And even in the case where the input is semantically equivalent AND the compiler backends for each language use the same “library” (e.g. LLVM), even then the semantics of each language may not allow for certain passes. LLVM is a good example which assumes C and C&#43;&#43; semantics. If your language does not adhere to C and C&#43;&#43; semantics, then most of the passes in LLVM cannot be used. And some compilers may have different default “flags” too, which makes dumb comparisons rarely equal (e.g. native vs portable microarchitectures).">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -91,7 +79,7 @@ Even in the best case scenario: you are comparing different compilers for the sa
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

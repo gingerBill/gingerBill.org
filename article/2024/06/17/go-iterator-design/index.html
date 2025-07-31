@@ -3,23 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Why People are Angry over Go 1.23 Iterators" />
-<meta property="og:description" content="NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423
-TL;DR It makes Go feel too &ldquo;functional&rdquo; rather than being an unabashed imperative language.
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Why People are Angry over Go 1.23 Iterators">
+  <meta name="twitter:description" content="NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423
+TL;DR It makes Go feel too “functional” rather than being an unabashed imperative language.
 I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.
-The merged PR for the proposal can be found here: https://github." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2024/06/17/go-iterator-design/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2024-06-17T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-06-17T00:00:00+00:00" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Why People are Angry over Go 1.23 Iterators"/>
-<meta name="twitter:description" content="NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423
-TL;DR It makes Go feel too &ldquo;functional&rdquo; rather than being an unabashed imperative language.
-I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.
-The merged PR for the proposal can be found here: https://github."/>
+The merged PR for the proposal can be found here: https://github.com/golang/go/issues/61897">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -113,8 +103,7 @@ for _, el in range Backward(s) {
 </ul>
 <p>As <a href="https://research.swtch.com/">Russ Cox (rsc)</a> explains in the original proposal:</p>
 <blockquote>
-<p>Note regarding push vs pull iterator types: The vast majority of the time, push iterators are more convenient to implement and to use, because setup and teardown can be done around the yield calls rather than having to implement those as separate operations and then expose them to the caller. Direct use (including with a range loop) of the push iterator requires giving up storing any data in control flow, so individual clients may occasionally want a pull iterator instead. Any such code can trivially call Pull and defer stop.</p>
-</blockquote>
+<p>Note regarding push vs pull iterator types: The vast majority of the time, push iterators are more convenient to implement and to use, because setup and teardown can be done around the yield calls rather than having to implement those as separate operations and then expose them to the caller. Direct use (including with a range loop) of the push iterator requires giving up storing any data in control flow, so individual clients may occasionally want a pull iterator instead. Any such code can trivially call Pull and defer stop.</p></blockquote>
 <p>Russ Cox goes into more detail in his article <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a> about why he likes this approach to design.</p>
 <h3 id="more-complex-example">More Complex Example</h3>
 <p><strong>NOTE:</strong> Do not worry about what this actually does, I just wanted to show an example of the clean-up needed with something like <code>defer</code>.</p>
@@ -170,8 +159,7 @@ func Pairs[V any](seq iter.Seq[V]) iter.Seq2[V, V] {
 <p>The approach that Go 1.23 takes seems to go in the face of the <em>apparent</em> philosophy of making Go for the general (frankly mediocre) programmer at Google who doesn&rsquo;t want to (nor can) use a &ldquo;complex&rdquo; language like C++.</p>
 <p>To quote <a href="http://herpolhode.com/rob/">Rob Pike</a>:</p>
 <blockquote>
-<p>The key point here is our programmers are Googlers, they&rsquo;re not researchers. They&rsquo;re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They&rsquo;re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.</p>
-</blockquote>
+<p>The key point here is our programmers are Googlers, they&rsquo;re not researchers. They&rsquo;re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They&rsquo;re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.</p></blockquote>
 <p>I know many people are offended by this comment, but it&rsquo;s <strong>brilliant</strong> language design by understanding who you are designing the language for. It is not insulting, but rather the a matter of fact statement as Go was originally for the people who work(ed) at Google, and similar industries. You might be a &ldquo;better and more capable&rdquo; programmer than the average Googler but that doesn&rsquo;t matter. There is a reason people love Go: it&rsquo;s simple, opinionated, and most people can pick it up very quickly.</p>
 <p>However this iterator design does seem out of character to Go, especially for the someone like proposer Russ Cox (assuming he was <em>actual</em> the original proposer) on the Go team. It makes Go a lot more complicated, and even more &ldquo;magical&rdquo; too. I understand how the iterator system works because I am <em>literally</em> a language design and compiler implementer. It also has the possible issue to it won&rsquo;t be a well performing approach either because of its need for closures and callbacks.</p>
 <p>Maybe the argument for its design is that the <em>average Go programmer</em> is not meant to <strong>implement</strong> iterators but just <strong>use</strong> them. And that the majority of the iterators that people will need will be already available in Go&rsquo;s standard library, or by the third-party package itself. So the onus is put on the package <em>writer</em>, not the package <em>user</em>.</p>
@@ -275,7 +263,7 @@ for record, idx, err in csv.iterator_next(&amp;reader) {
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

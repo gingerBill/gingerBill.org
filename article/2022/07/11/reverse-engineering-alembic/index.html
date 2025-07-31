@@ -3,19 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Reverse Engineering Alembic" />
-<meta property="og:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
-I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2022/07/11/reverse-engineering-alembic/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2022-07-11T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-07-11T00:00:00+00:00" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Reverse Engineering Alembic"/>
-<meta name="twitter:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
-I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate."/>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Reverse Engineering Alembic">
+  <meta name="twitter:description" content="For my work at JangaFX, we require the use of the Alembic interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.
+I spent nearly 4 days trying to get the official Alembic C&#43;&#43; API, https://github.com/alembic/alembic/, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate. After this ordeal I decided to see how difficult it would be to create my own reader, and then writer, for the format from scratch.">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -392,7 +384,7 @@ for sample_index in 0..&lt;num_samples {
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

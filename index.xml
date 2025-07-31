@@ -4,7 +4,7 @@
     <link>/</link>
     <description>Recent content in Home on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Tue, 22 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -12,7 +12,7 @@
     <item>
       <title>Articles</title>
       <link>/article/</link>
-      <pubDate>Tue, 22 Apr 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
       <guid>/article/</guid>
       <description></description>
@@ -35,6 +35,31 @@
       
       <guid>/transcript/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/odin/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/odin/</guid>
+      <description><!DOCTYPE html>
+<html>
+<head>
+	<title>Odin</title>
+	<meta http-equiv="refresh" content="0; URL='https://odin-lang.org'" />
+</head>
+<body>
+
+<script type="text/javascript">
+	window.location = "https://odin-lang.org";
+	window.location.href = "https://odin-lang.org";
+	window.location.assign("https://odin-lang.org");
+	window.location.replace("https://odin-lang.org");
+</script>
+</body>
+</html>
+</description>
     </item>
     
   </channel>

@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>c&#43;&#43;11 on gingerBill</title>
+    <title>C&#43;&#43;11 on gingerBill</title>
     <link>/tags/c&#43;&#43;11/</link>
-    <description>Recent content in c&#43;&#43;11 on gingerBill</description>
+    <description>Recent content in C&#43;&#43;11 on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate>
     
@@ -62,8 +62,7 @@
 <p>Since objects themselves are being treated <em>as if</em> they have behaviour (not just type properties), they are effectively being treated as if they were <em>agents</em> in the program. This mental model has many conclusions, many of which cause issues.</p>
 <p>In my article <a href="https://www.gingerbill.org/article/2020/05/31/progamming-pragmatist-proverbs/"><em>Pragmatism in Programming Proverbs</em></a>, I state:</p>
 <blockquote>
-<p>Object orientated programming is a form of misinterpreted and misapplied Aristotelian Metaphysics applied to a domain it was never meant to model</p>
-</blockquote>
+<p>Object orientated programming is a form of misinterpreted and misapplied Aristotelian Metaphysics applied to a domain it was never meant to model</p></blockquote>
 <p>What I mean by this statement is that <em>artificially</em> conforming any/all relationships between data and types to an artificial hierarchy of <em>agency</em> is a form of naïve-Aristotelian metaphysics. Since there is no actual <em>agency</em> in the programming objects, it is a partial fallacy. When trying to conform a program to have a particular structure when it does not naturally, the absence of a structure in a program is more useful than a bad structure.</p>
 <h3 id="methods">Methods</h3>
 <p>The concept of adding methods to classes/objects has proven useful to many. The real questions are:</p>

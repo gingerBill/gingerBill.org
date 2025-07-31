@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Odin</title>
-	<meta http-equiv="refresh" content="0; URL='https://odin-lang.org'" />
-</head>
-<body>
-
-<script type="text/javascript">
-	window.location = "https://odin-lang.org";
-	window.location.href = "https://odin-lang.org";
-	window.location.assign("https://odin-lang.org");
-	window.location.replace("https://odin-lang.org");
-</script>
-</body>
-</html>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gingerBill</title>
+    <link>/odin/</link>
+    <description>Recent content on gingerBill</description>
+    <language>en-gb</language>
+    
+        <atom:link href="/odin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

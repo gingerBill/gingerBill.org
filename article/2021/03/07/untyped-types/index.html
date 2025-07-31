@@ -3,19 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Untyped Types" />
-<meta property="og:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
-Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2021/03/07/untyped-types/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2021-03-07T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-03-07T00:00:00+00:00" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Untyped Types"/>
-<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &ldquo;just work&rdquo;. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
-Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type."/>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Untyped Types">
+  <meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to “just work”. I was inspired by how both Ada1 and Go2 both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
+Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type. Model-2: Expressions may have a value, not all expressions have a type. Therefore some values may not have a (concrete) type. Value Models Model-1 Model-1 is the more traditional approach in most languages, especially C-like languages. This has the consequence that all literals must have a concrete type associated with them.">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -169,7 +161,7 @@ untyped quaternion -&gt; quaternion256
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

@@ -3,18 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Memory Allocation Strategies - Part 1" />
-<meta property="og:description" content="Thinking About Memory and Allocation" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2019/02/01/memory-allocation-strategies-001/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2019-02-01T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-02-01T00:00:00+00:00" />
-<meta property="og:see_also" content="/article/2021/12/02/memory-allocation-strategies-006/" /><meta property="og:see_also" content="/article/2021/11/30/memory-allocation-strategies-005/" /><meta property="og:see_also" content="/article/2019/02/16/memory-allocation-strategies-004/" /><meta property="og:see_also" content="/article/2019/02/15/memory-allocation-strategies-003/" /><meta property="og:see_also" content="/article/2019/02/08/memory-allocation-strategies-002/" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Memory Allocation Strategies - Part 1"/>
-<meta name="twitter:description" content="Thinking About Memory and Allocation"/>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Memory Allocation Strategies - Part 1">
+  <meta name="twitter:description" content="Thinking About Memory and Allocation">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -83,25 +75,25 @@
 </ul>
 <p>I usually imagine the first two aspects in the following table, for most problem domains, where the percentages signify what proportion of allocations fall into that category:</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:right"></th>
-<th style="text-align:center">Size Known</th>
-<th style="text-align:center">Size Unknown</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right"><strong>Lifetime Known</strong></td>
-<td style="text-align:center">95%</td>
-<td style="text-align:center">~4%</td>
-</tr>
-<tr>
-<td style="text-align:right"><strong>Lifetime Unknown</strong></td>
-<td style="text-align:center">~1%</td>
-<td style="text-align:center">&lt;1%</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: right"></th>
+          <th style="text-align: center">Size Known</th>
+          <th style="text-align: center">Size Unknown</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right"><strong>Lifetime Known</strong></td>
+          <td style="text-align: center">95%</td>
+          <td style="text-align: center">~4%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right"><strong>Lifetime Unknown</strong></td>
+          <td style="text-align: center">~1%</td>
+          <td style="text-align: center">&lt;1%</td>
+      </tr>
+  </tbody>
 </table>
 <p>In the top-left category (Size Known + Lifetime Known), this is the area in which I will be covering the most in this series. Most of the time, you do know the size of the allocation, or the upper bounds at least, and the lifetime of the allocation in question.</p>
 <p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to &ldquo;resize/realloc&rdquo; the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
@@ -163,7 +155,7 @@ Memory within these generations usually get allocated and freed at the same time
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>c on gingerBill</title>
+    <title>C on gingerBill</title>
     <link>/tags/c/</link>
-    <description>Recent content in c on gingerBill</description>
+    <description>Recent content in C on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Fri, 05 Apr 2024 00:00:00 +0000</lastBuildDate>
     
@@ -435,7 +435,7 @@ for sample_index in 0..&lt;num_samples {
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/09/06/value-propagation-experiment-part-2/</guid>
-      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320"><strong>[Originally from a Twitter Thread]</strong></a></p>
 <p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
 <p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
 <p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
@@ -994,8 +994,7 @@ z: My_Int = x; // error, an explicit cast is required
 <p>A lot of C&rsquo;s mistakes are only mistakes in retrospective, but C is still an extremely useful language to use, and I am still extremely productive in it.</p>
 <p>To quote Fred Brooks in his book <em>No Silver Bullet – Essence and Accident in Software Engineering</em>:</p>
 <blockquote>
-<p>There is no single development, in either technology or management technique, which by itself promises even one order of magnitude [tenfold] improvement within a decade in productivity, in reliability, in simplicity.</p>
-</blockquote>
+<p>There is no single development, in either technology or management technique, which by itself promises even one order of magnitude [tenfold] improvement within a decade in productivity, in reliability, in simplicity.</p></blockquote>
 <p>And sadly, this is <em>still</em> true with regards to comparing C to other higher level general purpose languages, as they do not offer an order of magnitude improvement in productivity. C hit a local maximum of productive for which so many still have yet to understand why and learn from.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>

@@ -3,21 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Exceptions --- And Why Odin Will Never Have Them" />
-<meta property="og:description" content="Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Exceptions --- And Why Odin Will Never Have Them">
+  <meta name="twitter:description" content="Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
 Original Comments:
-https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/" /><meta property="article:section" content="article" />
-<meta property="article:published_time" content="2018-09-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2018-09-05T00:00:00+00:00" />
-
-
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Exceptions --- And Why Odin Will Never Have Them"/>
-<meta name="twitter:description" content="Article was originally posted here: https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them
-Original Comments:
-https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go."/>
+https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701 https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626 There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept. Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases. You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it’s structural control flow. Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage. I do hate how most languages handle “errors”. Treat errors like any other piece of code. Handle errors there and then and don’t pass them up the stack. You make your mess; you clean it.">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -85,8 +76,7 @@ I do hate how most languages handle &ldquo;errors&rdquo;. Treat errors like any 
 <hr>
 <p>To expand on what I mean by this statement:</p>
 <blockquote>
-<p>You can the exact same semantics as a try except block by using a switch in statement.</p>
-</blockquote>
+<p>You can the exact same semantics as a try except block by using a switch in statement.</p></blockquote>
 <p>Python:</p>
 <pre><code class="language-python">try:
 	x = foo()
@@ -151,8 +141,7 @@ except SomeError as e:
 <hr>
 <p>I hope this has cleared up a lot of the questions regarding Odin&rsquo;s take on error handling. I think error handling ought to be treated like any other piece of code.</p>
 <blockquote>
-<p>With many rules, there will be unexpected emergent behaviour.</p>
-</blockquote>
+<p>With many rules, there will be unexpected emergent behaviour.</p></blockquote>
 <p>P.S. If you really want &ldquo;exceptions&rdquo;, you can <code>longjmp</code> until the cows come home.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
@@ -166,7 +155,7 @@ except SomeError as e:
 </article>
 </main>
 <footer>
-© 2007–2024 Ginger Bill
+© 2007–2025 Ginger Bill
 </footer>
 </div>
 </body>

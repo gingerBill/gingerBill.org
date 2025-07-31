@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>oss on gingerBill</title>
+    <title>Oss on gingerBill</title>
     <link>/tags/oss/</link>
-    <description>Recent content in oss on gingerBill</description>
+    <description>Recent content in Oss on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Tue, 22 Apr 2025 00:00:00 +0000</lastBuildDate>
     
@@ -40,8 +40,7 @@
 <p>The OSS/FOSS dream is that, a dream that cannot live up to its &ldquo;ideals&rdquo;. For every hypothetical benefit it has, it should be stated that it is a hypothesis and not a theory—theories require evidence to be classed as such. Most of the benefits and freedoms of OSS/FOSS are doubled-edge swords which are also huge attack vectors. Vectors for security, sustainability, maintainability, and redistribution. Most of the industry is based on blind-faith without anyway to verify that blind-trust.</p>
 <p>Regardless of whether I am correctly or incorrectly &ldquo;defining&rdquo; OSS/FOSS to your preferred &ldquo;definition&rdquo;, the multi-order effects are rarely considered. And to bastardize <a href="https://en.wikipedia.org/wiki/Lysander_Spooner">Lysander Spooner</a>:</p>
 <blockquote>
-<p>this much is certain—that it has either authorized such a tech oligarchy as we have had, or has been powerless to prevent it. In either case, it is unfit to exist <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
-</blockquote>
+<p>this much is certain—that it has either authorized such a tech oligarchy as we have had, or has been powerless to prevent it. In either case, it is unfit to exist <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p></blockquote>
 <h2 id="ideals-are-not-principles">Ideals are not Principles</h2>
 <p>All of these lists of ideals of essential freedoms—and I&rsquo;d argue they are not principles in the slightest—have not aided in anything in the long run. To use the <a href="https://en.wikipedia.org/wiki/The_Free_Software_Definition#The_Four_Essential_Freedoms_of_Free_Software">GNU&rsquo;s list</a> for example:</p>
 <h4 id="the-freedom-to-run-the-program-as-you-wish-for-any-purpose-freedom-0">The freedom to run the program as you wish, for any purpose (freedom 0).</h4>

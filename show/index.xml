@@ -30,7 +30,20 @@
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/2/</guid>
-      <description>Notes: Exceptions — And Why Odin Will Never Have Them Essential vs Accidental Properties Exception handling I used the term structured exception handling which is different to Microsoft&amp;rsquo;s SEH, I meant structured in the structured programming sense Structured Exception Handling Microsoft&amp;rsquo;s SEH Error handling and Go Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems. </description>
+      <description>&lt;h2 id=&#34;notes&#34;&gt;Notes:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.gingerbill.org/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/&#34;&gt;Exceptions — And Why Odin Will Never Have Them&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://plato.stanford.edu/entries/essential-accidental/&#34;&gt;Essential vs Accidental Properties&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Exception_handling&#34;&gt;Exception handling&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I used the term &lt;em&gt;structured exception handling&lt;/em&gt; which is different to Microsoft&amp;rsquo;s SEH, I meant &lt;em&gt;structured&lt;/em&gt; in the &lt;a href=&#34;https://wikipedia.org/wiki/Structured_programming&#34;&gt;structured programming sense&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Structured_programming#Exception_handling&#34;&gt;Structured Exception Handling&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Microsoft-specific_exception_handling_mechanisms&#34;&gt;Microsoft&amp;rsquo;s SEH&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.golang.org/error-handling-and-go&#34;&gt;Error handling and Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.&lt;/li&gt;
+&lt;/ul&gt;</description>
       <enclosure url="https://gingerbillshow.com/0002-gb.mp3" type="audio/mpeg" length="28370944" />
       <itunes:author>Ginger Bill</itunes:author>
       <itunes:summary>Episode 2</itunes:summary>
@@ -43,7 +56,29 @@
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/1/</guid>
-      <description>Notes: Schools Procedural/Pragmatist Mathematical/Functional Bodging Business/Managerial Definitions Bodge (British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&amp;rsquo;s alright. https://www.urbandictionary.com/define.php?term=bodge Books and References A Conflict of Visions - Thomas Sowell Fallen human nature Rousseau&amp;rsquo;s theory of human nature </description>
+      <description>&lt;h2 id=&#34;notes&#34;&gt;Notes:&lt;/h2&gt;
+&lt;h3 id=&#34;schools&#34;&gt;Schools&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Procedural/Pragmatist&lt;/li&gt;
+&lt;li&gt;Mathematical/Functional&lt;/li&gt;
+&lt;li&gt;Bodging&lt;/li&gt;
+&lt;li&gt;Business/Managerial&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;definitions&#34;&gt;Definitions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Bodge
+&lt;ul&gt;
+&lt;li&gt;(British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&amp;rsquo;s alright.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.urbandictionary.com/define.php?term=bodge&#34;&gt;https://www.urbandictionary.com/define.php?term=bodge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;books-and-references&#34;&gt;Books and References&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/A_Conflict_of_Visions&#34;&gt;A Conflict of Visions&lt;/a&gt; - &lt;a href=&#34;https://en.wikipedia.org/wiki/Thomas_Sowell&#34;&gt;Thomas Sowell&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Human_nature#Fallen_human_nature&#34;&gt;Fallen human nature&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Jean-Jacques_Rousseau#Theory_of_human_nature&#34;&gt;Rousseau&amp;rsquo;s theory of human nature&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
       <enclosure url="https://gingerbillshow.com/0001-gb.mp3" type="audio/mpeg" length="25925248" />
       <itunes:author>Ginger Bill</itunes:author>
       <itunes:summary>Episode 1</itunes:summary>
@@ -56,7 +91,7 @@
       <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/0/</guid>
-      <description>Introduction to the Ginger Bill Show.</description>
+      <description>&lt;p&gt;Introduction to the Ginger Bill Show.&lt;/p&gt;</description>
       <enclosure url="https://gingerbillshow.com/0000-gb.mp3" type="audio/mpeg" length="2093248" />
       <itunes:author>Ginger Bill</itunes:author>
       <itunes:summary>Episode 0</itunes:summary>

@@ -4,13 +4,22 @@
     <link>/tags/</link>
     <description>Recent content in Tags on gingerBill</description>
     <language>en-gb</language>
-    <lastBuildDate>Tue, 22 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>oss</title>
+      <title>Odin</title>
+      <link>/tags/odin/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/odin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Oss</title>
       <link>/tags/oss/</link>
       <pubDate>Tue, 22 Apr 2025 00:00:00 +0000</pubDate>
       
@@ -19,7 +28,7 @@
     </item>
     
     <item>
-      <title>glsl</title>
+      <title>Glsl</title>
       <link>/tags/glsl/</link>
       <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
       
@@ -28,16 +37,7 @@
     </item>
     
     <item>
-      <title>odin</title>
-      <link>/tags/odin/</link>
-      <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/odin/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>opengl</title>
+      <title>Opengl</title>
       <link>/tags/opengl/</link>
       <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
       
@@ -46,7 +46,7 @@
     </item>
     
     <item>
-      <title>go</title>
+      <title>Go</title>
       <link>/tags/go/</link>
       <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
       
@@ -55,7 +55,7 @@
     </item>
     
     <item>
-      <title>c</title>
+      <title>C</title>
       <link>/tags/c/</link>
       <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
       
@@ -64,7 +64,7 @@
     </item>
     
     <item>
-      <title>strings</title>
+      <title>Strings</title>
       <link>/tags/strings/</link>
       <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
       
@@ -73,7 +73,7 @@
     </item>
     
     <item>
-      <title>stb</title>
+      <title>Stb</title>
       <link>/tags/stb/</link>
       <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
       
@@ -82,7 +82,7 @@
     </item>
     
     <item>
-      <title>benchmark</title>
+      <title>Benchmark</title>
       <link>/tags/benchmark/</link>
       <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
       
@@ -91,7 +91,7 @@
     </item>
     
     <item>
-      <title>comparison</title>
+      <title>Comparison</title>
       <link>/tags/comparison/</link>
       <pubDate>Mon, 22 Jan 2024 00:00:00 +0000</pubDate>
       
@@ -100,7 +100,7 @@
     </item>
     
     <item>
-      <title>alembic</title>
+      <title>Alembic</title>
       <link>/tags/alembic/</link>
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
@@ -118,7 +118,7 @@
     </item>
     
     <item>
-      <title>format</title>
+      <title>Format</title>
       <link>/tags/format/</link>
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
@@ -127,7 +127,7 @@
     </item>
     
     <item>
-      <title>interchange</title>
+      <title>Interchange</title>
       <link>/tags/interchange/</link>
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
@@ -136,7 +136,7 @@
     </item>
     
     <item>
-      <title>reverse engineering</title>
+      <title>Reverse Engineering</title>
       <link>/tags/reverse-engineering/</link>
       <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
       
@@ -145,7 +145,7 @@
     </item>
     
     <item>
-      <title>lisp</title>
+      <title>Lisp</title>
       <link>/tags/lisp/</link>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -154,7 +154,7 @@
     </item>
     
     <item>
-      <title>lua</title>
+      <title>Lua</title>
       <link>/tags/lua/</link>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -163,7 +163,7 @@
     </item>
     
     <item>
-      <title>philosophy</title>
+      <title>Philosophy</title>
       <link>/tags/philosophy/</link>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -172,7 +172,7 @@
     </item>
     
     <item>
-      <title>python</title>
+      <title>Python</title>
       <link>/tags/python/</link>
       <pubDate>Wed, 15 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -181,7 +181,7 @@
     </item>
     
     <item>
-      <title>memory allocation theory odin c</title>
+      <title>Memory Allocation Theory Odin C</title>
       <link>/tags/memory-allocation-theory-odin-c/</link>
       <pubDate>Thu, 02 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -190,7 +190,7 @@
     </item>
     
     <item>
-      <title>rust</title>
+      <title>Rust</title>
       <link>/tags/rust/</link>
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
@@ -199,7 +199,7 @@
     </item>
     
     <item>
-      <title>zig</title>
+      <title>Zig</title>
       <link>/tags/zig/</link>
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
@@ -208,7 +208,7 @@
     </item>
     
     <item>
-      <title>ada</title>
+      <title>Ada</title>
       <link>/tags/ada/</link>
       <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
       
@@ -217,7 +217,7 @@
     </item>
     
     <item>
-      <title>brain dump</title>
+      <title>Brain Dump</title>
       <link>/tags/brain-dump/</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
       
@@ -226,7 +226,7 @@
     </item>
     
     <item>
-      <title>programming</title>
+      <title>Programming</title>
       <link>/tags/programming/</link>
       <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
       
@@ -235,7 +235,7 @@
     </item>
     
     <item>
-      <title>psychology</title>
+      <title>Psychology</title>
       <link>/tags/psychology/</link>
       <pubDate>Mon, 01 Feb 2021 00:00:00 +0000</pubDate>
       
@@ -244,7 +244,7 @@
     </item>
     
     <item>
-      <title>errors</title>
+      <title>Errors</title>
       <link>/tags/errors/</link>
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
@@ -253,7 +253,7 @@
     </item>
     
     <item>
-      <title>podcast</title>
+      <title>Podcast</title>
       <link>/tags/podcast/</link>
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
@@ -262,7 +262,7 @@
     </item>
     
     <item>
-      <title>c&#43;&#43;11</title>
+      <title>C&#43;&#43;11</title>
       <link>/tags/c&#43;&#43;11/</link>
       <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
       
@@ -271,7 +271,7 @@
     </item>
     
     <item>
-      <title>audio</title>
+      <title>Audio</title>
       <link>/tags/audio/</link>
       <pubDate>Sat, 13 Jun 2020 00:00:00 +0000</pubDate>
       
@@ -280,7 +280,7 @@
     </item>
     
     <item>
-      <title>odin quine</title>
+      <title>Odin Quine</title>
       <link>/tags/odin-quine/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       

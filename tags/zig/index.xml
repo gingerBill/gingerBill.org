@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>zig on gingerBill</title>
+    <title>Zig on gingerBill</title>
     <link>/tags/zig/</link>
-    <description>Recent content in zig on gingerBill</description>
+    <description>Recent content in Zig on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Mon, 06 Sep 2021 00:00:00 +0000</lastBuildDate>
     
@@ -15,7 +15,7 @@
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/09/06/value-propagation-experiment-part-2/</guid>
-      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320"><strong>[Originally from a Twitter Thread]</strong></a></p>
 <p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
 <p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
 <p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>

@@ -1,8 +1,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>rust on gingerBill</title>
+    <title>Rust on gingerBill</title>
     <link>/tags/rust/</link>
-    <description>Recent content in rust on gingerBill</description>
+    <description>Recent content in Rust on gingerBill</description>
     <language>en-gb</language>
     <lastBuildDate>Mon, 06 Sep 2021 00:00:00 +0000</lastBuildDate>
     
@@ -15,7 +15,7 @@
       <pubDate>Mon, 06 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/article/2021/09/06/value-propagation-experiment-part-2/</guid>
-      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320">**[Originally from a Twitter Thread]**</a></p>
+      <description><p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320"><strong>[Originally from a Twitter Thread]</strong></a></p>
 <p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
 <p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
 <p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
@@ -169,8 +169,7 @@ or_else(x.?, true)
 <p>Since objects themselves are being treated <em>as if</em> they have behaviour (not just type properties), they are effectively being treated as if they were <em>agents</em> in the program. This mental model has many conclusions, many of which cause issues.</p>
 <p>In my article <a href="https://www.gingerbill.org/article/2020/05/31/progamming-pragmatist-proverbs/"><em>Pragmatism in Programming Proverbs</em></a>, I state:</p>
 <blockquote>
-<p>Object orientated programming is a form of misinterpreted and misapplied Aristotelian Metaphysics applied to a domain it was never meant to model</p>
-</blockquote>
+<p>Object orientated programming is a form of misinterpreted and misapplied Aristotelian Metaphysics applied to a domain it was never meant to model</p></blockquote>
 <p>What I mean by this statement is that <em>artificially</em> conforming any/all relationships between data and types to an artificial hierarchy of <em>agency</em> is a form of naïve-Aristotelian metaphysics. Since there is no actual <em>agency</em> in the programming objects, it is a partial fallacy. When trying to conform a program to have a particular structure when it does not naturally, the absence of a structure in a program is more useful than a bad structure.</p>
 <h3 id="methods">Methods</h3>
 <p>The concept of adding methods to classes/objects has proven useful to many. The real questions are:</p>
