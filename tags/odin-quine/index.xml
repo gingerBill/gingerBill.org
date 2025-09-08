@@ -15,26 +15,7 @@
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/article/2019/03/10/quine-in-odin/</guid>
-      <description><p>A <a href="https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in <a href="/odin">Odin</a>:</p>
-<pre><code class="language-odin">package quine
-
-import &quot;core:fmt&quot;
-
-main :: proc() {
-	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
-}
-
-s := `package quine
-
-import &quot;core:fmt&quot;
-
-main :: proc() {
-	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
-}
-
-s := `;
-</code></pre>
-</description>
+      <description>&lt;p&gt;A &lt;a href=&#34;https://wikipedia.org/wiki/Quine_(computing)&#34;&gt;Quine&lt;/a&gt; in &lt;a href=&#34;/odin&#34;&gt;Odin&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code class=&#34;language-odin&#34;&gt;package quine&#xD;&#xA;&#xD;&#xA;import &amp;quot;core:fmt&amp;quot;&#xD;&#xA;&#xD;&#xA;main :: proc() {&#xD;&#xA;&#x9;fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;s := `package quine&#xD;&#xA;&#xD;&#xA;import &amp;quot;core:fmt&amp;quot;&#xD;&#xA;&#xD;&#xA;main :: proc() {&#xD;&#xA;&#x9;fmt.printf(&amp;quot;%s%c%s%c;\n&amp;quot;, s, 0x60, s, 0x60);&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;s := `;&#xD;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;</description>
     </item>
     
   </channel>

@@ -15,21 +15,7 @@
       <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/2/</guid>
-      <description><h2 id="notes">Notes:</h2>
-<ul>
-<li><a href="https://www.gingerbill.org/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">Exceptions — And Why Odin Will Never Have Them</a></li>
-<li><a href="https://plato.stanford.edu/entries/essential-accidental/">Essential vs Accidental Properties</a></li>
-<li><a href="https://wikipedia.org/wiki/Exception_handling">Exception handling</a></li>
-<li>I used the term <em>structured exception handling</em> which is different to Microsoft&rsquo;s SEH, I meant <em>structured</em> in the <a href="https://wikipedia.org/wiki/Structured_programming">structured programming sense</a>
-<ul>
-<li><a href="https://wikipedia.org/wiki/Structured_programming#Exception_handling">Structured Exception Handling</a></li>
-<li><a href="https://wikipedia.org/wiki/Microsoft-specific_exception_handling_mechanisms">Microsoft&rsquo;s SEH</a></li>
-</ul>
-</li>
-<li><a href="https://blog.golang.org/error-handling-and-go">Error handling and Go</a></li>
-<li>Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.</li>
-</ul>
-</description>
+      <description>&lt;h2 id=&#34;notes&#34;&gt;Notes:&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.gingerbill.org/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/&#34;&gt;Exceptions — And Why Odin Will Never Have Them&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://plato.stanford.edu/entries/essential-accidental/&#34;&gt;Essential vs Accidental Properties&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Exception_handling&#34;&gt;Exception handling&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;I used the term &lt;em&gt;structured exception handling&lt;/em&gt; which is different to Microsoft&amp;rsquo;s SEH, I meant &lt;em&gt;structured&lt;/em&gt; in the &lt;a href=&#34;https://wikipedia.org/wiki/Structured_programming&#34;&gt;structured programming sense&lt;/a&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Structured_programming#Exception_handling&#34;&gt;Structured Exception Handling&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://wikipedia.org/wiki/Microsoft-specific_exception_handling_mechanisms&#34;&gt;Microsoft&amp;rsquo;s SEH&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://blog.golang.org/error-handling-and-go&#34;&gt;Error handling and Go&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Odin is a multi-valued type system, compared to most languages which have singularly-valued type systems.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;</description>
     </item>
     
     <item>
@@ -38,30 +24,7 @@
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/1/</guid>
-      <description><h2 id="notes">Notes:</h2>
-<h3 id="schools">Schools</h3>
-<ul>
-<li>Procedural/Pragmatist</li>
-<li>Mathematical/Functional</li>
-<li>Bodging</li>
-<li>Business/Managerial</li>
-</ul>
-<h3 id="definitions">Definitions</h3>
-<ul>
-<li>Bodge
-<ul>
-<li>(British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&rsquo;s alright.</li>
-<li><a href="https://www.urbandictionary.com/define.php?term=bodge">https://www.urbandictionary.com/define.php?term=bodge</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="books-and-references">Books and References</h3>
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/A_Conflict_of_Visions">A Conflict of Visions</a> - <a href="https://en.wikipedia.org/wiki/Thomas_Sowell">Thomas Sowell</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Human_nature#Fallen_human_nature">Fallen human nature</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Jean-Jacques_Rousseau#Theory_of_human_nature">Rousseau&rsquo;s theory of human nature</a></li>
-</ul>
-</description>
+      <description>&lt;h2 id=&#34;notes&#34;&gt;Notes:&lt;/h2&gt;&#xA;&lt;h3 id=&#34;schools&#34;&gt;Schools&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Procedural/Pragmatist&lt;/li&gt;&#xA;&lt;li&gt;Mathematical/Functional&lt;/li&gt;&#xA;&lt;li&gt;Bodging&lt;/li&gt;&#xA;&lt;li&gt;Business/Managerial&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;definitions&#34;&gt;Definitions&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Bodge&#xA;&lt;ul&gt;&#xA;&lt;li&gt;(British Slang) A quick and dirty job, something done very hastily. Make it look good for the next day or two and if it falls down after that, it&amp;rsquo;s alright.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.urbandictionary.com/define.php?term=bodge&#34;&gt;https://www.urbandictionary.com/define.php?term=bodge&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;books-and-references&#34;&gt;Books and References&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/A_Conflict_of_Visions&#34;&gt;A Conflict of Visions&lt;/a&gt; - &lt;a href=&#34;https://en.wikipedia.org/wiki/Thomas_Sowell&#34;&gt;Thomas Sowell&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Human_nature#Fallen_human_nature&#34;&gt;Fallen human nature&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Jean-Jacques_Rousseau#Theory_of_human_nature&#34;&gt;Rousseau&amp;rsquo;s theory of human nature&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;</description>
     </item>
     
     <item>
@@ -70,8 +33,7 @@
       <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>/show/0/</guid>
-      <description><p>Introduction to the Ginger Bill Show.</p>
-</description>
+      <description>&lt;p&gt;Introduction to the Ginger Bill Show.&lt;/p&gt;&#xA;</description>
     </item>
     
   </channel>
