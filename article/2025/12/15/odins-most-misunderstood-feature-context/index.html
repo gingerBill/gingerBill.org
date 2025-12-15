@@ -77,7 +77,7 @@ The main purpose of the implicit context system is for the ability to intercept 
 <h2 id="what-is-provided-by-the-context">What is Provided by the <code>context</code>?</h2>
 <h3 id="the-allocators">The Allocators</h3>
 <p>There are two allocators on the <code>context.allocator</code> and <code>context.temp_allocator</code>. I expect most people to never use custom allocators whatsoever (which is empirically true), but I do also want to encourage things like using the <code>context.temp_allocator</code> because it allows for many useful benefits, especially those that most people don&rsquo;t even realize are a thing. For many people, they usually just want to do nothing with the <code>context</code> (assuming they know about it) or set the <code>context.allocator</code> to the <code>mem.Tracking_Allocator</code> and be done; that&rsquo;s pretty much it.</p>
-<p>You could argue that it is &ldquo;better&rdquo; to pass allocators around explicitly, but from my own experience in C with this exact interface (made and used well before I even made Odin), I found that I got in a very very lazy habit of not actually passing around allocators properly. This overly explicitness with a generalized interface lead to more allocation bugs than if I had used specific allocators on a per-system basis.</p>
+<p>You could argue that it is &ldquo;better&rdquo; to pass allocators<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> around explicitly, but from my own experience in C with this exact interface (made and used well before I even made Odin), I found that I got in a very very lazy habit of not actually passing around allocators properly. This overly explicitness with a generalized interface lead to more allocation bugs than if I had used specific allocators on a per-system basis.</p>
 <p>When explicit allocators are wanted, you rarely want the generic interface too, and usually a specific allocator instead e.g. <code>virtual.Arena</code>. As I have previously expressed in my <a href="https://www.gingerbill.org/series/memory-allocation-strategies/">Memory Allocation Strategies</a> series, an allocator can be used to represent a specific set of lifetimes for a set of allocations&mdash;arenas being the most common kind but other allocators such as pools, basic free lists, etc may be useful.</p>
 <p>However because most people will still default to a traditional <code>malloc</code>/<code>free</code> style of dynamic memory allocation, having a generic interface which can be overridden/intercepted/tracked is extremely useful to be able to do, especially in third-party libraries/code.</p>
 <p><strong>n.b.</strong> Odin&rsquo;s <code>context.allocator</code> defaults to a heap-like allocator on most platforms, and <code>context.temp_allocator</code> defaults to a growing arena-like allocator.</p>
@@ -128,6 +128,14 @@ The main purpose of the implicit context system is for the ability to intercept 
 <h2 id="conclusion">Conclusion</h2>
 <p>I hope this clarifies a lot of the design rationale behind the implicit <code>context</code> system, and why it exists.</p>
 <p>If you have any more questions, or want me to clarify something further, please feel to contact me!</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>If you want to disallow <code>allocator := context.allocator</code> like defaults in Odin on a per-file basis, you can do so with the get tag <code>#+vet explicit-allocators</code>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
 </article>
 </main>
