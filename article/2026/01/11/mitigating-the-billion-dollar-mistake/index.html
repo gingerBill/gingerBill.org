@@ -132,7 +132,7 @@ Bar b = {};
 grab_data(&amp;f, &amp;b);
 </code></pre>
 <p>This constant syntactic noise can be tiring and detracts from what is actually going on. With the implicit zero initialization that I had in Odin, it has worked out really well. Many might expect it to be confusing, but it isn&rsquo;t and you can rely on it and becomes very natural to use.</p>
-<h2 id="mitigation-with-as-different-paradigm">Mitigation with as Different Paradigm</h2>
+<h2 id="mitigation-with-a-different-paradigm">Mitigation with a Different Paradigm</h2>
 <p>As the creator and main architect of Odin, a lot of Odin&rsquo;s design has been to fix a lot of the problems I and many others faced with C, whilst still not veering too far from the general <em>feel</em> of C. Odin does have <code>nil</code> pointers by default, but in practice they are a very rare problem due numerous features and constructs of the language.</p>
 <p>One of the reasons for <code>NULL</code> pointers in C is caused to due the lack of a proper array type. Odin has proper array types and does not implicitly demote arrays to pointers. Odin has slices which replace a lot of the needs for pointers and pointer arithmetic, and because array types (including slices) are bounds checked, that already solves many of the problems that would have occurred in C with treating pointers as arrays, which may or may not have an associated length to check against.</p>
 <p>Odin also has tagged unions and multiple return values. Tagged unions should be &ldquo;obvious&rdquo; to the people who had be complaining about the initial article, but the use of tagged unions isn&rsquo;t necessarily there to solve the <code>nil</code> pointer problem.</p>
