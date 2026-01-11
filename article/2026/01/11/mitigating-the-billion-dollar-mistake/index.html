@@ -152,7 +152,7 @@ grab_data(&amp;f, &amp;b);
 </ul>
 </li>
 </ul>
-<p>However one of the main reasons why <code>nil</code> pointers are rarely a problem in Odin is because of multiple return values. Multiple return values when used for this manner, are akin (but not semantically equivalent) to something like a <code>Result</code> type in other languages. When a procedure returns a pointer, it is either assumed to be never <code>nil</code> OR accompanied with another value to indicate its validity, commonly in the form of a boolean or <code>enum</code>:</p>
+<p>However one of the main reasons why <code>nil</code> pointers are rarely a problem in Odin is because of multiple return values. Multiple return values when used for this manner, are akin (but not semantically equivalent) to something like a <code>Result</code> type in other languages<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. When a procedure returns a pointer, it is either assumed to be never <code>nil</code> OR accompanied with another value to indicate its validity, commonly in the form of a boolean or <code>enum</code>:</p>
 <pre><code class="language-odin">allocate_something :: proc(...) -&gt; (^T, mem.Allocation_Error) {
 	...
 }
@@ -176,7 +176,7 @@ ptr := allocate_something() or_return
 <li>All bits set (<code>x/0 == ~0</code>)</li>
 <li>The same value (<code>x/0 == x</code>)</li>
 </ul>
-<p>I&rsquo;d argue most people will say &ldquo;trap&rdquo;, even if a lot of modern hardware (e.g. ARM64 and RISC-V) does not trap, and only the x86-related architectures do trap. Odin does currently<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> define the behaviour of division by zero to &ldquo;trap&rdquo; only because of this assumption, but we have considered changing this default behaviour. Odin does allow the programmer to control this behaviour at a global level or on a per-file level basis if they want a different behaviour for division by zero (and consequentially <code>%</code> by zero).</p>
+<p>I&rsquo;d argue most people will say &ldquo;trap&rdquo;, even if a lot of modern hardware (e.g. ARM64 and RISC-V) does not trap, and only the x86-related architectures do trap. Odin does currently<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> define the behaviour of division by zero to &ldquo;trap&rdquo; only because of this assumption, but we have considered changing this default behaviour. Odin does allow the programmer to control this behaviour at a global level or on a per-file level basis if they want a different behaviour for division by zero (and consequentially <code>%</code> by zero).</p>
 <p>But some languages such as <a href="https://tutorial.ponylang.io/expressions/errors.html?h=exception#try-then-blocks">Pony</a>, Coq, Isabelle, etc actually define division by zero of an integer to be <code>0</code>. This is because it can help a lot of <a href="https://xenaproject.wordpress.com/2020/07/05/division-by-zero-in-type-theory-a-faq/">theorem provers</a>.</p>
 <p>But there is the other question of production code. One of the main arguments against NPEs (especially in languages like Java) is that it causes a crash. So in the case of division by zero, do you want this to happen? Or would you prefer all integer division to be explicitly handled, or default to a predictable/useful value, like <code>0</code>?&mdash;which prevents crashing in the first place.</p>
 <h2 id="is-this-experience-or-selection-bias">Is this Experience or Selection Bias?</h2>
@@ -202,7 +202,10 @@ ptr := allocate_something() or_return
 <p>I know typing is never the bottleneck in programming, but the visual noise aspect is a big one when you are trying to <em>scan</em> (not necessarily <em>read</em>) code. I want to see the pattern and not be swamped with syntactic noise.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5">
-<p>At the time of writing, I am not sure which approach is the better one: trap or zero by default, but we allow for all four options in the Odin compiler. Division by zero for floats results in &ldquo;Inf&rdquo; and that&rsquo;s not necessarily as much of a problem in practice, so why would division by zero be as bad?&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>I know a result type is a kind of <em>sum</em> type and multiple return values are more akin to a <em>product</em> type, but how different languages want to be used and expressed, this works out fine in practice for the same kinds of problems. Please don&rsquo;t give me a FP rant.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p>At the time of writing, I am not sure which approach is the better one: trap or zero by default, but we allow for all four options in the Odin compiler. Division by zero for floats results in &ldquo;Inf&rdquo; and that&rsquo;s not necessarily as much of a problem in practice, so why would division by zero be as bad?&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
