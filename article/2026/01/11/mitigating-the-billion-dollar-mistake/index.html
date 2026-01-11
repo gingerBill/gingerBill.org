@@ -104,7 +104,7 @@ Object *value_ptr = NULL;
 <p>but because of the ergonomic pains, can also lead to unwrapping cases, which are <em>practically equivalent</em> to NPEs:</p>
 <pre><code class="language-c">print(x.unwrap().y)
 </code></pre>
-<p>But it can also just be an early-out too like with Odin&rsquo;s <code>or_return</code>:</p>
+<p>At least with an <code>unwrap</code>, it is a little clearer that a panic could happen. But it can also just be an early-out too like with Odin&rsquo;s <code>or_return</code>:</p>
 <pre><code class="language-c">print((try x).y) // returns on x if nil
 </code></pre>
 <p>Version 2 is a bit weirder, since it doesn&rsquo;t remove the concept of <code>null</code> but propagates further up the expression tree.</p>
