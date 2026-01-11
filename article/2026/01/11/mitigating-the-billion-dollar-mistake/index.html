@@ -83,7 +83,7 @@ Object *value_ptr = NULL;
 </code></pre>
 <p>Because you can declare such a thing in a language like Java, then there are three options to try and mitigate this design flaw:</p>
 <ul>
-<li>Allow for <code>null</code> pointers</li>
+<li>Allow for <code>null</code> pointers (and just deal with it)</li>
 <li>All pointers are implicitly maybe types (e.g. <code>Optional&lt;Object&gt;</code> in Java)</li>
 <li>Require all explicit initialization of every element everywhere to assume <code>null</code> cannot happen, along with things like maybe types.</li>
 </ul>
