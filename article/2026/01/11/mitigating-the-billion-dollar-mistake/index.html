@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mitigating the Billion Dollar Mistake">
+  <meta name="twitter:description" content="This article is continuation to: Was it really a Billion Dollar Mistake?.
+After reading a lot of the comments on numerous social media sites on the original article, I think I need to clarify a lot more.
+The main points I wanted to clarify:
+Null pointer dereferences are empirically the easiest class of invalid memory addresses to catch at runtime, and are the least common kind of invalid memory addresses that happen in memory unsafe languages. I do think it was a costly mistake but the “obvious solutions” to the problem are probably just as costly, if not more so, but in very subtle ways which most people neglected to understand in the article. I think that even if Tony Hoare didn’t “invent” NULL pointers, within a couple years someone else would have. I don’t think it’s a “mistake” the programming world was ever going to avoid. I am talking about languages that run on modern systems with virtual memory, not embedded systems where you interact with physical memory directly. Those platforms in my opinion need much different kinds of languages which unfortunately do not exist yet. I was also talking about languages akin to C and Odin, not languages that run on a VM or have “everything be a reference”. Languages where Everything is a Pointer A lot of commentors focused their complaints on languages from their experience from languages like Java/C#/Python/etc and the issues within such languages with null-pointer-exceptions (NPEs). What I think a lot of people seemed to forget is that in those languages, virtually everything is a pointer, unlike in a language like C/Go/Odin which has explicit pointers. When everything is a pointer, it is exponentially more likely that you will hit a pointer that is invalid. And in the case of a managed (garbage collected) language, that invalid pointer will most definitely be a null pointer. This is why I can understand the problem of having null pointers in such languages.">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Mitigating the Billion Dollar Mistake - gingerBill</title>
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="/odin/">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<article class="article-meta">
+<header>
+	<h1>Mitigating the Billion Dollar Mistake</h1>
+	
+	<div class="info">
+		
+		<p>
+		<span class="date">2026-01-11</span>
+		</p>
+	</div>
+</header>
+<p>This article is continuation to: <a href="/article/2026/01/02/was-it-really-a-billion-dollar-mistake/">Was it really a Billion Dollar Mistake?</a>.</p>
+<hr>
+<p>After reading a lot of the comments on numerous social media sites on the <a href="/article/2026/01/02/was-it-really-a-billion-dollar-mistake/">original article</a>, I think I need to clarify <em>a lot</em> more.</p>
+<p>The main points I wanted to clarify:</p>
+<ul>
+<li>Null pointer dereferences are empirically the easiest class of invalid memory addresses to catch at runtime, and are the least common kind of invalid memory addresses that happen in memory unsafe languages.</li>
+<li>I do think it was a <em>costly</em> mistake but the &ldquo;obvious solutions&rdquo; to the problem are probably just as <em>costly</em>, if not more so, but in very subtle ways which most people neglected to understand in the article.</li>
+<li>I think that even if Tony Hoare didn&rsquo;t &ldquo;invent&rdquo; <code>NULL</code> pointers, within a couple years someone else would have. I don&rsquo;t think it&rsquo;s a &ldquo;mistake&rdquo; the programming world was ever going to avoid.</li>
+<li>I am talking about languages that run on modern systems with virtual memory, not embedded systems where you interact with physical memory directly. Those platforms in my opinion need much different kinds of languages which unfortunately do not exist yet.</li>
+<li>I was also talking about languages akin to C and Odin, not languages that run on a VM or have &ldquo;everything be a reference&rdquo;.</li>
+</ul>
+<h2 id="languages-where-everything-is-a-pointer">Languages where Everything is a Pointer</h2>
+<p>A lot of commentors focused their complaints on languages from their experience from languages like Java/C#/Python/etc and the issues within such languages with null-pointer-exceptions (NPEs). What I think a lot of people seemed to forget is that in those languages, virtually <em>everything</em> is a pointer, unlike in a language like C/Go/Odin which has explicit pointers. When everything is a pointer, it is <em>exponentially</em> more likely that you will hit a pointer that is invalid. And in the case of a managed (garbage collected) language, that invalid pointer will most definitely be a null pointer. This is why I can understand the problem of having <code>null</code> pointers in such languages.</p>
+<p>But I think this still missed the point of what I trying to state, that the reason <code>null</code> even exists in those languages is because you can declare a variable without an explicit initialization value:</p>
+<pre><code class="language-java">Object value; // Object is internally a pointer in Java
+
+// which is equivalent to the following in C
+Object *value_ptr = NULL;
+</code></pre>
+<p>Because you can declare such thing in a language like Java, then there are three options to try and mitigate this design flaw:</p>
+<ul>
+<li>Allow for <code>null</code> pointers</li>
+<li>All pointers are implicitly maybe types (e.g. <code>Optional&lt;Object&gt;</code> in Java)</li>
+<li>Require all explicit initialization of every element everywhere to assume <code>null</code> cannot happen, along with things like maybe types.</li>
+</ul>
+<p>Unfortunately existing languages like Java cannot have these problems solved, but newer languages that want to stylize themselves similar to that could solve them. One of the issues is that languages like Java added maybe/option/optional types too late AND it is not the default behaviour.</p>
+<p>The first approach is the current status quo, the second approach keeps the implicit value declarations but adds more checks, whilst the third approach requires doing explicit value declarations.</p>
+<h2 id="mitigations-with-implicit-value-declarations">Mitigations with Implicit Value Declarations</h2>
+<p>The enforcement of maybe types as the default pointer/reference type leads to two possibilities:</p>
+<ol>
+<li>Requiring each reference to be checked if it is <code>null</code>.</li>
+<li>Check if a value is <code>null</code> and propagate that <code>null</code> up the expression tree.</li>
+</ol>
+<p>Version 1 would be something like this:</p>
+<pre><code class="language-rs">if let x {
+    // x is assumed to be not equal to `null` in this case
+    print(x.y)
+}
+</code></pre>
+<p>but because of the ergonomic pains, can also lead to unwrapping cases, which are <em>practically equivalent</em> to NPEs:</p>
+<pre><code class="language-c">print(x.unwrap().y)
+</code></pre>
+<p>But it can also just be an early-out too like with Odin&rsquo;s <code>or_return</code>:</p>
+<pre><code class="language-c">print((try x).y) // returns on x if nil
+</code></pre>
+<p>Version 2 is a bit weirder, since it doesn&rsquo;t remove the concept of <code>null</code> but propagates further up the expression tree.</p>
+<pre><code class="language-cs">a?.b?.c
+// which is equivalent to
+a != null ? (a.b != null ? (a.b.c != null ? a.b.c : null) : null) : null
+</code></pre>
+<p>The first approach is unergonomic to use, especially in a language where virtually <em>everything</em> is a pointer/reference, and with the addition of unwrapping which just panics on <code>null</code>, it&rsquo;s practically reinvented NPEs with more steps. As for the second approach, I&rsquo;d argue is very bug prone if it was the default, since you cannot trivially know where the <code>null</code> arose from since it was just passed up the stack<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>Therefore most people think the third approach to mitigating <code>null</code> pointers is the &ldquo;obvious&rdquo; and &ldquo;trivial&rdquo; approach: <em>explicit individual initialization of every value/element everywhere</em>.</p>
+<h2 id="mitigations-with-explicit-value-declarations">Mitigations with Explicit Value Declarations</h2>
+<p>One thing which I commonly saw was people saying was that I &ldquo;missed the point&rdquo; that null safety is not about protecting from common invalid memory access but rather it&rsquo;s about clarifying the states that a pointer can be in the type system itself, whether it cannot be null or <em>maybe</em> it could be null. I already knew this, and I find it bizarre<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> that people did not understand that from the article.</p>
+<p>The point I was trying to get across which most people seemed to either ignore or not understand was that the approach of requiring <em>explicit initialization of every element everywhere</em> comes with a cost and trade-offs. Most people who bring this up as &ldquo;the solution&rdquo; think there was either no cost or they think the cost is worth it. The former group are just wrong, and the latter group are the point I was focusing the article at in the first place: you don&rsquo;t actually understand the costs fully if you are answering the way that you do. I understand this sounds &ldquo;condescending&rdquo; to some people, but I am not trying to be. The point I am arguing is far from the common view/wisdom, and thus I tried to explain my position. Why would a person listen to someone with a &ldquo;fringe&rdquo; view? &ldquo;Fringe&rdquo; views are typically wrong in other areas of life, so it makes sense to apply that heuristic to the domain of programming too. I don&rsquo;t care if people agree with me or not, rather I wish people actually understand it and then comment.</p>
+<p>But as a systems programmer, I deal with memory all the time, and null pointers are the least common kind of invalid memory that I have to deal with, and the other kinds were not handled by the type system, nor would be handled with solving the problems of null. No, this is not saying &ldquo;well just because you cannot solve problem X with Y, therefore don&rsquo;t solve either&rdquo;, it&rsquo;s saying that they are different problems, and empirically they are just different with different kinds of severity and ways to mitigate them.</p>
+<p>For a managed language like Java, the cost of <em>explicit initialization of every element everywhere</em> is so little in comparison to the rest of the language, that approach is honestly fine. But for a language like the one I have designed and created&mdash;Odin&mdash;the cost of non-zero initialization is extremely costly as things scale.</p>
+<p>This simple/naïve approach looks like this:</p>
+<pre><code class="language-c">Object *x; // ERROR: must be initialized
+Object *x = new_with_constructor(Object); // Correct approach
+</code></pre>
+<p>But if you use a lot of pointers everywhere, the initialization becomes a lot more complex, and non-linear too.</p>
+<p>People argue the need to express a non-nullable pointers, and either version 1 of the previous approach or this explicit approach are effectively the only ways of doing this. You could tell the compiler to assume the pointer is never null (e.g. <code>__attribute__((nonnull))</code> or <code>int foo(char const bar[static 1])</code>), but those are not guarantees in the type system, just you telling the compiler to assume it is never <code>NULL</code>. The non-nullability is not possible outside of those two approaches.</p>
+<p>This was the entire point I was making between the <a href="/article/2026/01/02/was-it-really-a-billion-dollar-mistake/#the-gotcha">Individual-Element Mindset</a> and the <a href="/article/2026/01/02/was-it-really-a-billion-dollar-mistake/#the-grouped-element-mindset">Group-Element Mindset</a> is that the individual-element mindset lends itself well to thinking about individual elements like this. And as such, it doesn&rsquo;t really think about the cost of thinking in individual elements as compounding to something expensive. I&rsquo;ve been in projects where a lot of the time in a program in spent in the destructors/<code>Drop</code> traits of individual elements, when all they are doing is trivial things which could have been trivially done in bulk. Most people don&rsquo;t consider these as &ldquo;costs&rdquo; nor that there are trade-offs to this approach to programming, rather it&rsquo;s &ldquo;just the way it is&rdquo;.</p>
+<p>There is the other aspect where if the explicit initialization is applied to every type, not just ones which contains pointers/references, then it can be less ergonomic to type e.g.</p>
+<pre><code class="language-c">Foo f = {};
+Bar b = {};
+grab_data(&amp;f, &amp;b);
+</code></pre>
+<p>This constant syntactic noise can be tiring and detracts from what is actually going on. With the implicit zero initialization that I had in Odin, it has worked out really well. Many might expect it to be confusing, but it isn&rsquo;t and you can rely on it and becomes very natural to use.</p>
+<h2 id="mitigation-with-as-different-paradigm">Mitigation with as Different Paradigm</h2>
+<p>As the creator and main architect of Odin, a lot of Odin&rsquo;s design has been to fix a lot of the problems I and many others faced with C, whilst still not veering too far from the general <em>feel</em> of C. Odin does have <code>nil</code> pointers by default, but in practice they are a very rare problem due numerous features and constructs of the language.</p>
+<p>One of the reasons for <code>NULL</code> pointers in C is caused to due the lack of a proper array type. Odin has proper array types and does not implicitly demote arrays to pointers. Odin has slices which replace a lot of the needs for pointers and pointer arithmetic, and because array types (including slices) are bounds checked, that already solves many of the problems that would have occurred in C with treating pointers as arrays, which may or may not have an associated length to check against.</p>
+<p>Odin also has tagged unions and multiple return values. Tagged unions should be &ldquo;obvious&rdquo; to the people who had be complaining about the initial article, but the use of tagged unions isn&rsquo;t necessarily there to solve the <code>nil</code> pointer problem.</p>
+<p>Odin&rsquo;s <code>Maybe</code> is an example of a maybe/option type, which is just a built-in discriminated union, with the following definition:</p>
+<pre><code class="language-odin">Maybe :: union($T: typeid) { T }
+</code></pre>
+<p>And due to the design of Odin&rsquo;s <code>union</code>, if a union only has one variant and that variant is any pointer-like type, no explicit tag is stored. The <code>nil</code> state of the pointer-like value also represents the <code>nil</code> state of the <code>union</code>. This means that <code>size_of(Maybe(^T)) == size_of(^T)</code>.</p>
+<p>Another reason why C has problems with <code>NULL</code> pointers is the lack of way to state a parameter to a procedure as being optional. C doesn&rsquo;t have default values for parameters, nor any way in its type system to express this. C&rsquo;s type system is just too poor and too weak. This is why people unfortunately use pointers as a way to do thus, since they can write <code>NULL</code>.</p>
+<p>However, it is rare to see <code>Maybe</code> in Odin code be used to indicate <code>nil</code> pointers except when interfacing with foreign code, or optional parameters to a procedure. This is because the need for a <code>nil</code> pointer itself is quite rare. There are multiple reasons why:</p>
+<ul>
+<li>Odin has slice types</li>
+<li>Odin has multiple return values to allow for out-only parameters, which could be ignored with <code>_</code></li>
+<li>Odin isn&rsquo;t a &ldquo;everything is a pointer&rdquo; kind of language: pointers have to be explicit typed to exist.</li>
+<li>Writing pointer types as value declarations is less common due to type inference
+<ul>
+<li>e.g. <code>p := &amp;x</code> is more much common than: <code>p: ^T; p = &amp;x</code>.</li>
+</ul>
+</li>
+</ul>
+<p>However one of the main reasons why <code>nil</code> pointers are rarely a problem in Odin is because of multiple return values. Multiple return values when used for this manner, are akin (but not semantically equivalent) to something like a <code>Result</code> type in other languages. When a procedure returns a pointer, it is either assumed to be never <code>nil</code> OR accompanied with another value to indicate its validity, commonly in the form of a boolean or <code>enum</code>:</p>
+<pre><code class="language-odin">allocate_something :: proc(...) -&gt; (^T, mem.Allocation_Error) {
+	...
+}
+</code></pre>
+<p>And coupled with the <code>or_*</code> constructs (<code>or_return</code>, <code>or_break</code>, <code>or_continue</code>, <code>or_else</code>), <code>defer</code>, and named return values, a lot of those issues never arise:</p>
+<pre><code class="language-odin">ptr, err := allocate_something()
+if err != nil {
+	return err
+}
+// becomes
+ptr := allocate_something() or_return
+</code></pre>
+<p>Odin is designed around multiple return values rather than <code>Maybe</code>/<code>Result</code> constructs, but this approach does in practice does solve the same kinds of problems.</p>
+<p>Before people go &ldquo;well the assumption is not enforced in the type system&rdquo;, remember where all of this derives from: Odin allows for implicit declarations of variables without an explicit initialization value. And as the designer of Odin, I think enforcing that is both quite a high cost (see the individual-element vs grouped-elements mindsets) and far from the original approach to programming C. I know this is not going to convince people, but it&rsquo;s effectively trying to make someone think like another person, which is not not easy, let alone always possible to do in the first place. And it&rsquo;s not a mere &ldquo;aesthetic preference&rdquo; either. This very little design decision has <em>MASSIVE</em> architectural consequences which lead to numerous performance problems and maintenance costs as a project grows.</p>
+<h2 id="analogies-to-other-panicking-constructs-in-a-language">Analogies to Other Panicking Constructs in a Language</h2>
+<p>Null pointer exceptions (NPEs) are in a category of constructs in a language which I class as &ldquo;panic/trap on failure&rdquo;. What I find interesting is that there are numerous other things in this category, but many people will normally take the a different approach to those constructs compared to NPEs, due to whatever reason.</p>
+<p>The canonical example is integer division by zero. Instinctually, what do you think division by zero of an integer should result it?</p>
+<ul>
+<li>Trap</li>
+<li>Zero (<code>x/0 == 0</code>)</li>
+<li>All bits set (<code>x/0 == ~0</code>)</li>
+<li>The same value (<code>x/0 == x</code>)</li>
+</ul>
+<p>I&rsquo;d argue most people will say &ldquo;trap&rdquo;, even if a lot of modern hardware (e.g. ARM64 and RISC-V) does not trap, and only the x86-related architectures do trap. Odin does currently<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> define the behaviour of division by zero to &ldquo;trap&rdquo; only because of this assumption, but we have considered changing this default behaviour. Odin does allow the programmer to control this behaviour at a global level or on a per-file level basis if they want a different behaviour for division by zero (and consequentially <code>%</code> by zero).</p>
+<p>But some languages such as <a href="https://tutorial.ponylang.io/expressions/errors.html?h=exception#try-then-blocks">Pony</a>, Coq, Isabelle, etc actually define division by zero of an integer to be <code>0</code>. This is because it can help a lot of <a href="https://xenaproject.wordpress.com/2020/07/05/division-by-zero-in-type-theory-a-faq/">theorem provers</a>.</p>
+<p>But there is the other question of production code. One of the main arguments against NPEs (especially in languages like Java) is that it causes a crash. So in the case of division by zero, do you want this to happen? Or would you prefer all integer division to be explicitly handled, or default to a predictable/useful value, like <code>0</code>?&mdash;which prevents crashing in the first place.</p>
+<h2 id="is-this-experience-or-selection-bias">Is this Experience or Selection Bias?</h2>
+<p>Honestly, no. I understand it might be common for beginners to a language like C to have many <code>NULL</code> pointer related problems, but they will also have loads of other problems too. However as you get more competent at programming, that kind of problem is honestly the least of your problems.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I honestly think a lot of this discussion is fundamentally a misunderstanding of different perspectives rather than anything technical. A lot of what some people think are their &ldquo;technical opinions&rdquo; are merely just aesthetic judgements. And to be clear, aesthetic judgements are not bad, but they are not necessarily technical.</p>
+<p>But I&rsquo;d argue most people are not applying their opinions consistently when it comes to the category of &ldquo;panic/trap on failure&rdquo;, and NPEs are no different; they only seem more of a problem to them either because of the existence of the name of the &ldquo;Billion Dollar Mistake&rdquo; or because they encounter it more.</p>
+<p>I know a lot of people view the <em>explicit individual initialization of every element everywhere</em> approach as the &ldquo;obvious solution&rdquo;, as they seem like low-hanging fruit. As a kid, I was told to not pick low-hanging fruit, especially anything below my waist. Just because it looks easy to pick, a lot of it might not be unpicked for a reason. It does not mean that you should or should not pick that fruit, but rather you need to consider the trade-offs.</p>
+<p>If you honestly think the costs of <em>explicit individual initialization of every element everywhere</em> are worth it for the language you are working in or developing, then great! But at least know the trade-offs of that approach. For Odin, I thought it was not worth the cost&mdash;compared to the alternative ways of mitigating the problem empirically.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>This is partially why I do not like exceptions as error handling in many languages. It is not obvious where things are thrown/raised from and they encourage the practice of ignoring them until the latest possible space. I discuss that problem in <a href="/article/2021/09/06/value-propagation-experiment-part-2/">The Value Propagation Experiment Part 2</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I understand what type systems do and their benefits, and it is a little insulting when people assume my knowledge (or lack of) without doing a modicum of review.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>At the time of writing, I am not sure which approach is the better one: trap or zero by default, but we allow for all four options in the Odin compiler. Division by zero for floats results in &ldquo;Inf&rdquo; and that&rsquo;s not necessarily as much of a problem in practice, so why would division by zero be as bad?&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</article>
+</main>
+<footer>
+© 2007–2025 Ginger Bill
+</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
+

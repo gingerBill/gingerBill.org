@@ -1058,9 +1058,9 @@ hljs.registerLanguage("go", function(e) {
 });
 hljs.registerLanguage("odin", function(e) {
     var t = {
-        keyword: "align_of auto_cast bit_field bit_set break case cast const context continue defer distinct do dynamic else enum fallthrough for foreign if import in inline macro map no_inline notin offset_of opaque package proc return size_of struct switch transmute type_of typeid union using when",
+        keyword: "align_of asm auto_cast bit_field bit_set break case cast const context continue defer distinct do dynamic else enum fallthrough for foreign if import in inline macro map matrix no_inline not_in notin offset_of offset_of_by_string opaque or_break or_continue or_else or_return package proc return size_of struct switch transmute type_info_of type_of typeid typeid_of union using when where",
         literal: "true false nil",
-        built_in: "len cap type_info_of, typeid_of swizzle complex real imag conj expand_to_tuple min max abs clamp"
+        built_in: "abs cap clamp complex compress_values conj expand_values imag jmag kmag len max min quaternion raw_data real soa_unzip soa_zip swizzle unreachable"
     };
     return {
         aliases: ["odin", "odinlang", "odin-lang"],

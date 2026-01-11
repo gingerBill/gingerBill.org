@@ -7,7 +7,7 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Was it really a Billion Dollar Mistake?">
   <meta name="twitter:description" content="TL;DR null pointer dereferences are empirically the easiest class of invalid memory addresses to catch at runtime, and are the least common kind of invalid memory addresses that happen in memory unsafe languages. The trivial solutions to remove the “problem” null pointers have numerous trade-offs which are not obvious, and the cause of why people think it is a “problem” comes from a specific kind of individual-element mindset.
-Most people have probably heard of the Billion Dollar Mistake before, which was coined/invented by Tony Hoare: the inventor of null references/pointers.">
+Part Two of this article clarifies a lot more: Mitigating the Billion Dollar Mistake">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -61,6 +61,7 @@ Most people have probably heard of the Billion Dollar Mistake before, which was 
 	</div>
 </header>
 <p><strong>TL;DR</strong> <code>null</code> pointer dereferences are empirically the easiest class of invalid memory addresses to catch at runtime, and are the least common kind of invalid memory addresses that happen in memory unsafe languages. The trivial solutions to remove the &ldquo;problem&rdquo; <code>null</code> pointers have numerous trade-offs which are not obvious, and the cause of why people think it is a &ldquo;problem&rdquo; comes from a specific kind of individual-element mindset.</p>
+<p><strong>Part Two</strong> of this article clarifies a lot more: <a href="/article/2026/01/11/mitigating-the-billion-dollar-mistake/">Mitigating the Billion Dollar Mistake</a></p>
 <hr>
 <p>Most people have probably heard of the <em>Billion Dollar Mistake</em> before, which was coined/invented by <a href="https://en.wikipedia.org/wiki/Tony_Hoare">Tony Hoare</a>: the inventor of null references/pointers.</p>
 <blockquote>
@@ -139,6 +140,7 @@ Most people have probably heard of the Billion Dollar Mistake before, which was 
 <h2 id="conclusion">Conclusion</h2>
 <p><code>null</code> pointer dereferences are empirically the easiest class of invalid memory addresses to catch at runtime, and are the least common kind of invalid memory addresses that happen in memory unsafe languages. And the cause of why people think it is a &ldquo;problem&rdquo; comes from a specific kind of individual-element mindset.</p>
 <p>In statically typed compiled manual-memory managed languages, it&rsquo;s not as much of a problem empirically compared to the set of invalid memory address problems, of which most of them are solved with a different mindset.</p>
+<p><strong>Part Two</strong> of this article clarifies a lot more: <a href="/article/2026/01/11/mitigating-the-billion-dollar-mistake/">Mitigating the Billion Dollar Mistake</a></p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
