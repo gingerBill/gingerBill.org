@@ -64,29 +64,30 @@ add_article :: proc(website: ^Website, url: string, a: Archetype) -> Article {
 }
 
 @(require_results)
-validate_date :: proc(date: string, a: ^Archetype) -> (y, m, d: int, ok: bool) {
-	if date == "" {
-		fmt.eprintln("Date is empty", a)
-		return
-	}
-	if len(date) != 10 || date[4] != '-' || date[7] != '-' {
-		fmt.eprintln("Date not in YYYY-MM-DD format", a)
-		return
-	}
-
-	year  := date[0:4]
-	month := date[5:7]
-	day   := date[8:10]
-
-	y = strconv.parse_int(year)  or_return
-	m = strconv.parse_int(month) or_return
-	d = strconv.parse_int(day)   or_return
-	ok = true
-	return
-}
-
-@(require_results)
 validate_archetype :: proc(a: ^Archetype, arena: ^virtual.Arena) -> bool {
+	@(require_results)
+	validate_date :: proc(date: string, a: ^Archetype) -> (y, m, d: int, ok: bool) {
+		if date == "" {
+			fmt.eprintln("Date is empty", a)
+			return
+		}
+		if len(date) != 10 || date[4] != '-' || date[7] != '-' {
+			fmt.eprintln("Date not in YYYY-MM-DD format", a)
+			return
+		}
+
+		year  := date[0:4]
+		month := date[5:7]
+		day   := date[8:10]
+
+		y = strconv.parse_int(year)  or_return
+		m = strconv.parse_int(month) or_return
+		d = strconv.parse_int(day)   or_return
+		ok = true
+		return
+	}
+
+
 	arena_allocator := virtual.arena_allocator(arena)
 
 	a.year, a.month, a.day = validate_date(a.date, a) or_return
@@ -131,8 +132,6 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 		fmt.wprintfln(w,`<meta name="twitter:description" content="%s">`, summary if summary != "" else v.description)
 	}
 
-// io.write_string(w, `{{ template "_internal/twitter_cards.html" . }}`)
-
 	io.write_string(w, `
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -144,12 +143,9 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 
 `)
 	switch v in info {
-	case Archetype:
-		fmt.wprintf(w, ` <title>%s - gingerBill</title>`+"\n", v.title)
-	case string:
-		fmt.wprintf(w, ` <title>%s</title>`+"\n", v)
-	case:
-		io.write_string(w, ` <title>gingerBill</title>`+"\n")
+	case Archetype: fmt.wprintf    (w, ` <title>%s - gingerBill</title>`+"\n", v.title)
+	case string:    fmt.wprintf    (w, ` <title>%s</title>`+"\n", v)
+	case:           io.write_string(w, ` <title>gingerBill</title>`+"\n")
 	}
 
 	io.write_string(w, `
@@ -183,7 +179,9 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 `)
 }
 
-FOOTER := `</div>
+
+write_footer :: proc(w: io.Writer) {
+	FOOTER :: `</div>
 </body>
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
@@ -240,23 +238,12 @@ FOOTER := `</div>
 </script>
 </html>
 `
-
-write_footer :: proc(w: io.Writer) {
-	year := time.year(time.now())
-	fmt.wprintf(w, `<footer>© 2007–%04d Ginger Bill</footer>`+"\n", year)
+	fmt.wprintf(w, `<footer>© 2007–%04d Ginger Bill</footer>`+"\n", time.year(time.now()))
 	io.write_string(w, FOOTER)
 }
 
 sidenote_md_to_html :: proc(text: string, arena: ^virtual.Arena) -> string {
-	options := cm.Options{.Unsafe}
-
-	parser := cm.parser_new(options)
-	defer cm.parser_free(parser)
-
-	root := cm.parse_document(raw_data(text), len(text), options)
-	defer cm.node_free(root)
-
-	html := string(cm.render_html(root, options))
+	html := cm.markdown_to_html_from_string(text, {.Unsafe})
 	defer cm.free_string(html)
 
 	if html == "" {
@@ -503,15 +490,8 @@ handle_article :: proc(website: ^Website, fi: os.File_Info, arena: ^virtual.Aren
 
 	article = prepass_over_article(article, arena)
 
-	options := cm.Options{.Unsafe}
 
-	parser := cm.parser_new(options)
-	defer cm.parser_free(parser)
-
-	root := cm.parse_document(raw_data(article), len(article), options)
-	defer cm.node_free(root)
-
-	article_html := string(cm.render_html(root, options))
+	article_html := cm.markdown_to_html_from_string(article, {.Unsafe})
 	defer cm.free_string(article_html)
 
 	// TODO(bill): Determine summary from the article

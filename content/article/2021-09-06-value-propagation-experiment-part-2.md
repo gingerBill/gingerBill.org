@@ -53,7 +53,7 @@ if err = foo(); err != nil { return }
 ```
 
 becomes
-```od
+```odin
 foo() or_return
 ```
 
