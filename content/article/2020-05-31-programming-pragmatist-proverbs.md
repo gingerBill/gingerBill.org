@@ -1,7 +1,7 @@
 ---
 {
     "title": "Pragmatism in Programming Proverbs",
-    "slug": "progamming-pragmatist-proverbs",
+    "slug": "programming-pragmatist-proverbs",
     "author": "Ginger Bill",
     "date": "2020-05-31",
     "categories": [
@@ -9,6 +9,9 @@
         "programming languages",
         "pragmatism",
         "proverbs"
+    ],
+    "aliases": [
+        "/article/2020/05/31/progamming-pragmatist-proverbs/"
     ]
 }
 ---
@@ -147,20 +150,15 @@ The following concepts express the school of thought that I subscribe to which I
 
 ### Aristotle
 
-> In every systematic inquiry (methodos) where there are first principles, or causes, or elements, knowledge and science result from acquiring knowledge of these; for we think we know something just in case we acquire knowledge of the primary causes, the primary first principles, all the way to the elements. It is clear, then, that in the science of nature as elsewhere, we should try first to determine questions about the first principles. The naturally proper direction of our road is from things better known and clearer to us, to things that are clearer and better known by nature; for the things known to us are not the same as the things known unconditionally (haplôs). Hence it is necessary for us to progress, following this procedure, from the things that are less clear by nature, but clearer to us, towards things that are clearer and better known by nature.
-* Phys. 184a10–21
+> In every systematic inquiry (methodos) where there are first principles, or causes, or elements, knowledge and science result from acquiring knowledge of these; for we think we know something just in case we acquire knowledge of the primary causes, the primary first principles, all the way to the elements. It is clear, then, that in the science of nature as elsewhere, we should try first to determine questions about the first principles. The naturally proper direction of our road is from things better known and clearer to us, to things that are clearer and better known by nature; for the things known to us are not the same as the things known unconditionally (haplôs). Hence it is necessary for us to progress, following this procedure, from the things that are less clear by nature, but clearer to us, towards things that are clearer and better known by nature. <footer>Phys. 184a10–21</footer>
 
-> Our proper course with this subject as with others will be to present the various views about it, and then, after first reviewing the difficulties they involve, finally to establish if possible all or, if not all, the greater part and the most important of the opinions generally held with respect to these states of mind; since if the discrepancies can be solved, and a residuum of current opinion left standing, the true view will have been sufficiently established.
-* The Nicomachean Ethics
+> Our proper course with this subject as with others will be to present the various views about it, and then, after first reviewing the difficulties they involve, finally to establish if possible all or, if not all, the greater part and the most important of the opinions generally held with respect to these states of mind; since if the discrepancies can be solved, and a residuum of current opinion left standing, the true view will have been sufficiently established. <footer>The Nicomachean Ethics</footer>
 
-> We must consider it, however, in the light not only of our conclusion and our premisses, but also of what is commonly said about it; for with a true view all the facts harmonize, but with a false one they soon clash.
-* The Nicomachean Ethics
+> We must consider it, however, in the light not only of our conclusion and our premisses, but also of what is commonly said about it; for with a true view all the facts harmonize, but with a false one they soon clash. <footer>The Nicomachean Ethics</footer>
 
-> Excellence is never an accident. It is always the result of high intention, sincere effort, and intelligent execution; it represents the wise choice of many alternatives – choice, not chance, determines your destiny.
-* The Nicomachean Ethics
+> Excellence is never an accident. It is always the result of high intention, sincere effort, and intelligent execution; it represents the wise choice of many alternatives – choice, not chance, determines your destiny. <footer>The Nicomachean Ethics</footer>
 
-> The pleasures arising from thinking and learning will make us think and learn all the more.
-* The Nicomachean Ethics 1153a23
+> The pleasures arising from thinking and learning will make us think and learn all the more. <footer>The Nicomachean Ethics 1153a23</footer>
 
 ### William James
 
@@ -198,11 +196,9 @@ The following concepts express the school of thought that I subscribe to which I
 
 ### Fred Brooks
 
-> Show me your flowcharts and conceal your tables, and I shall continue to be mystified. Show me your tables, and I won’t usually need your flowcharts; they’ll be obvious.
-* The Mythical Man-Month: Essays on Software Engineering (1975, 1995)
+> Show me your flowcharts and conceal your tables, and I shall continue to be mystified. Show me your tables, and I won’t usually need your flowcharts; they’ll be obvious. <footer>The Mythical Man-Month: Essays on Software Engineering (1975, 1995)</footer>
 
-> A little retrospection shows that although many fine, useful software systems have been designed by committees and built as part of multipart projects, those software systems that have excited passionate fans are those that are the products of one or a few designing minds, great designers.
-* No Silver Bullet
+> A little retrospection shows that although many fine, useful software systems have been designed by committees and built as part of multipart projects, those software systems that have excited passionate fans are those that are the products of one or a few designing minds, great designers. <footer>No Silver Bullet</footer>
 
 ### C.A.R Hoare
 
@@ -212,8 +208,7 @@ The following concepts express the school of thought that I subscribe to which I
 
 ### Alan C. Kay
 
-> Most ideas come from previous ideas.
-* The Early History Of Smalltalk
+> Most ideas come from previous ideas. <footer>The Early History Of Smalltalk</footer>
 
 ### Rob Pike
 
@@ -230,11 +225,9 @@ The following concepts express the school of thought that I subscribe to which I
 
 ### Niklaus Wirth
 
-> Reliable and transparent programs are usually not in the interest of the designer.
-* A Digital Contrarian Retires (1999)
+> Reliable and transparent programs are usually not in the interest of the designer. <footer>A Digital Contrarian Retires (1999)</footer>
 
-> … we do not consider it as good engineering practice to consume a resource lavishly just because it happens to be cheap
-* Project Oberon
+> … we do not consider it as good engineering practice to consume a resource lavishly just because it happens to be cheap <footer>Project Oberon</footer>
 
 > Increasingly, people seem to interpret complexity as sophistication, which is baffling – the incomprehensible should cause suspicion, not admiration. Possibly this results from the mistaken belief that using a mysterious device confers [extra] power on the user.
 
