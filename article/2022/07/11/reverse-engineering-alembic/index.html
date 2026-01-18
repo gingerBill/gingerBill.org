@@ -71,7 +71,7 @@
 <h3>Ogawa</h3>
 <p>The main format of concern is named <em>Ogawa</em>. It's a little-endian binary format (thank goodness) which was designed to be readable in-place for efficient multi-threaded data reading. This part of the file format is luckily documented <label for="ogawa-spec" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ogawa-spec" class="margin-toggle"></input>
-<span class="sidenote">https://github.com/alembic/alembic/wiki/Ogawa-Specification</span>, and small enough that I could write it in a <a href="https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
+<span class="sidenote"><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a></span>, and small enough that I could write it in a <a href="https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
 <p>Similar to HDF5, Ogawa is a hierarchical data format that is simple to read, but differing from HDF5, it is completely uncompressed.</p>
 <p><strong>Note:</strong> When decoding binary formats, it is very useful if have a <em>hex-viewer</em> to see the bytes in a readable way. On Windows, I would recommend either <a href="https://www.hhdsoftware.com/free-hex-editor">Hex Editor Neo</a> or <a href="https://www.sweetscape.com/010editor/">010 Editor</a>. Even though the Ogawa format is mostly documented on that GitHub Wiki page, I still required a <em>hex-viewer</em> from time to time to ensure everything was laid out as I expected, especially for the more complex embedded data.</p>
 <p>Its header is very simple:</p>
