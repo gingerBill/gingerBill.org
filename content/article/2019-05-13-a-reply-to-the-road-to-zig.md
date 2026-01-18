@@ -28,11 +28,7 @@ They are all very good languages but with entirely different philosophies behind
 
 Which brings to me to the latest talk by [Andrew Kelley](https://twitter.com/andy_kelley) about his programming language, [Zig](https://ziglang.org/), titled _[The Road to Zig 1.0](https://chariotsolutions.com/screencast/philly-ete-2019-andrew-kelley-the-road-to-zig-1-0/)_. In this talk, Andrew presents the Zig programming language as a programming language for maintaining robust reusable software with a tour of the unique features of that Zig has. I recommend watching the talk before reading this article to make your own decision about it.
 
-
-<div class="youtube">
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/Gv2I7qTux7g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+@@youtube:Gv2I7qTux7g
 
 ## Opening
 

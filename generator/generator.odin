@@ -410,39 +410,53 @@ prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 	margin_notes := find_margin_notes(text, arena)
 
 	for len(text) > 0 {
-		i := strings.index(text, "[^")
-		if i < 0 {
-			io.write_string(w, text)
-			break
-		}
+		YOUTUBE_PREFIX :: "@@youtube:"
 
-		io.write_string(w, text[:i])
+		if i := strings.index(text, YOUTUBE_PREFIX); i >= 0 {
+			io.write_string(w, text[:i])
 
-		margin_note_text := text[i+2:]
+			link := text[i:]
+			i = strings.index(link, "\n")
+			if i < 0 { i = len(link) }
+			text = link[i:]
+			link = link[len(YOUTUBE_PREFIX):i]
 
-		i = strings.index(margin_note_text, "]")
-		assert(i > 0, "invalid margin_note syntax")
-		margin_note_label := margin_note_text[:i]
-		if margin_note_text[i+1] == ':' {
-			j := strings.index(margin_note_text, "\n")
-			if j < 0 {
-				j = len(margin_note_text)
-			}
-			text = margin_note_text[j:]
+			io.write_string(w, `<div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/`)
+			io.write_string(w, link)
+			io.write_string(w, `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>`+"\n")
 
-		} else {
-			text = margin_note_text[i+1:]
+			continue
+		} else if i := strings.index(text, "[^"); i >= 0 {
+			io.write_string(w, text[:i])
 
-			for &f in margin_notes {
-				if f.label == margin_note_label {
-					fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label> `, f.label)
-					fmt.wprintf(w, "\n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
-					fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, arena))
+			margin_note_text := text[i+2:]
 
-					break
+			i = strings.index(margin_note_text, "]")
+			assert(i > 0, "invalid margin_note syntax")
+			margin_note_label := margin_note_text[:i]
+			if margin_note_text[i+1] == ':' {
+				j := strings.index(margin_note_text, "\n")
+				if j < 0 {
+					j = len(margin_note_text)
+				}
+				text = margin_note_text[j:]
+
+			} else {
+				text = margin_note_text[i+1:]
+
+				for &f in margin_notes {
+					if f.label == margin_note_label {
+						fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label> `, f.label)
+						fmt.wprintf(w, "\n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
+						fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, arena))
+						break
+					}
 				}
 			}
+			continue
 		}
+		io.write_string(w, text)
+		break
 	}
 
 	return strings.to_string(b)

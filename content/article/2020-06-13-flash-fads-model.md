@@ -20,10 +20,7 @@
 
 Audio Article:
 
-<div class="youtube">
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/GR4kgW1JH1g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+@@youtube:GR4kgW1JH1g
 
 
 

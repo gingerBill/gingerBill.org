@@ -219,13 +219,9 @@ Relative pointers allow for a lot more flexibility compared to "traditional" poi
 ## Relevant Videos
 
 ### Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)
-<div class="youtube">
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/Nsf2_Au6KxU?t=1560" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+
+@@youtube:Nsf2_Au6KxU?t=1560
 
 ### Jonathan Blow - Demo: Relative Pointers
-<div class="youtube">
-	<iframe width="560" height="315" src="https://www.youtube.com/embed/Z0tsNFZLxSU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+
+@@youtube:Z0tsNFZLxSU

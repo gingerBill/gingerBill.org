@@ -96,10 +96,7 @@ I believe this general local based thinking leads to poor architectural decision
 
 A good explanation of this general thinking is presented in this [video with Casey Muratori](https://www.youtube.com/watch?v=xt1KNDmOYqA):
 
-<div class="youtube">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/xt1KNDmOYqA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+@@youtube:xt1KNDmOYqA
 
 
 On this journey/life-cycle, no-one is born knowing how to program: you learn how to do it. And when it comes to programming, you think in stages (at least in my personal experience) that are usually quite consistent in their ordering amongst most people. At some point during this stage of thinking, people reach a point of what I'll dub the _Individual-Element Mindset_. This mindset is when you think of each specific piece of data (element) as having its own _lifetime_. This leads to common approaches of thinking each element having to be constructed/`malloc`ed individually with its own unique lifetime, then it's destructed/`free`d individually (or automatically by a garbage collector).

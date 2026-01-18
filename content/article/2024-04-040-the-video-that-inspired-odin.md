@@ -24,10 +24,7 @@
 Many people may not know this but this video by Sean Barrett [@nothings](https://twitter.com/nothings) is partially the reason why I made the [Odin programming language](https://odin-lang.org/).
 
 
-<div class="youtube">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/eAhWIO1Ra6M" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<br>
+@@youtube:eAhWIO1Ra6M
 
 And I'll explain what insights it gave me in this thread 🧵.
 
