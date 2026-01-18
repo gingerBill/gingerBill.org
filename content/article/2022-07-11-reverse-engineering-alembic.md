@@ -51,7 +51,7 @@ It appears that the vast majority of "Alembic" files are not in the HDF5 format 
 
 The main format of concern is named _Ogawa_. It's a little-endian binary format (thank goodness) which was designed to be readable in-place for efficient multi-threaded data reading. This part of the file format is luckily documented[^ogawa-spec], and small enough that I could write it in a [single tweet](https://twitter.com/TheGingerBill/status/1536484140006227968).
 
-[^ogawa-spec]: https://github.com/alembic/alembic/wiki/Ogawa-Specification
+[^ogawa-spec]: <https://github.com/alembic/alembic/wiki/Ogawa-Specification>
 
 Similar to HDF5, Ogawa is a hierarchical data format that is simple to read, but differing from HDF5, it is completely uncompressed.
 

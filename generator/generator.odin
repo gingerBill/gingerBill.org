@@ -183,11 +183,7 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 `)
 }
 
-write_footer :: proc(w: io.Writer) {
-	year := time.year(time.now())
-	fmt.wprintf(w, `<footer>© 2007–%04d Ginger Bill</footer>`+"\n", year)
-io.write_string(w,
-`</div>
+FOOTER := `</div>
 </body>
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
@@ -243,7 +239,12 @@ io.write_string(w,
   })();
 </script>
 </html>
-`)
+`
+
+write_footer :: proc(w: io.Writer) {
+	year := time.year(time.now())
+	fmt.wprintf(w, `<footer>© 2007–%04d Ginger Bill</footer>`+"\n", year)
+	io.write_string(w, FOOTER)
 }
 
 sidenote_md_to_html :: proc(text: string, arena: ^virtual.Arena) -> string {
@@ -717,7 +718,7 @@ build_series :: proc(website: ^Website, name: string, series: ^Series, arena: ^v
 
 	write_header(w, fmt.aprintf("%s - gingerBill", name, allocator=arena_allocator))
 
-	io.write_string(w, "<h1>Articles</h1>\n\n")
+	fmt.wprintf(w, "<h1>%s&mdash;Article Series</h1>\n\n", series.name)
 
 	slice.sort_by_key(series.articles[:], proc(a: Article) -> string {
 		return a.date
