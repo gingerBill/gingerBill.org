@@ -316,11 +316,9 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 
 	write_footer(w)
 
-	s := strings.to_string(b)
-
 	path := fmt.aprintf(PUBLIC_PREFIX+"/article/%04d/%02d/%02d/%s/index.html", archetype.year, archetype.month, archetype.day, archetype.slug, allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
 	url := path[len(PUBLIC_PREFIX):]
 	article := add_article(website, url, archetype)
@@ -347,7 +345,7 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 		append(&s.articles, article)
 	}
 
-	return os.write_entire_file(path, s) == nil
+	return os.write_entire_file(path, strings.to_string(b)) == nil
 }
 
 
@@ -427,7 +425,8 @@ prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 			io.write_string(w, `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>`+"\n")
 
 			continue
-		} else if i := strings.index(text, "[^"); i >= 0 {
+		}
+		if i := strings.index(text, "[^"); i >= 0 {
 			io.write_string(w, text[:i])
 
 			margin_note_text := text[i+2:]
@@ -562,7 +561,7 @@ build_article_index :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
 
 	path := fmt.aprintf(PUBLIC_PREFIX+"/article/index.html", allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
 	return os.write_entire_file(path, s) == nil
 }
@@ -636,8 +635,7 @@ io.write_string(w,
   </tr>
 </tbody>
 </table>
-`
-)
+`)
 	build_article_listing(website, w, arena)
 
 	write_footer(w)
@@ -646,7 +644,7 @@ io.write_string(w,
 
 	path := fmt.aprintf(PUBLIC_PREFIX+"/index.html", allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
 	return os.write_entire_file(path, s) == nil
 }
@@ -661,13 +659,12 @@ build_404 :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
 
 	write_header(w, "404 - gingerBill")
 
-io.write_string(w,
+io.write_string(w, \
 `<main>
 <h2><span class="ginger">404</span> Page Not Found. That's an error.</h2>
 <p>The page you were looking for has gone walkabouts. Return to the <a href="/">homepage</a>?</p>
 </main>
-`
-)
+`)
 
 	write_footer(w)
 
@@ -675,7 +672,7 @@ io.write_string(w,
 
 	path := fmt.aprintf(PUBLIC_PREFIX+"/404.html", allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
 	return os.write_entire_file(path, s) == nil
 }
@@ -702,10 +699,9 @@ fmt.wprintf(w,
 
 	path := fmt.aprintf("%s%s", PUBLIC_PREFIX, from, allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
-	s := strings.to_string(b)
-	return os.write_entire_file(path, s) == nil
+	return os.write_entire_file(path, strings.to_string(b)) == nil
 }
 
 build_series :: proc(website: ^Website, name: string, series: ^Series, arena: ^virtual.Arena) -> bool {
@@ -723,30 +719,29 @@ build_series :: proc(website: ^Website, name: string, series: ^Series, arena: ^v
 	slice.sort_by_key(series.articles[:], proc(a: Article) -> string {
 		return a.date
 	})
+	{
+		io.write_string(w, `<ul class="articles">`+"\n")
+		defer io.write_string(w, `</ul>`+"\n")
 
-	io.write_string(w, `<ul class="articles">`+"\n")
+		for article in series.articles {
+			io.write_string(w, "\t<li>")
+			defer io.write_string(w, "</li>\n")
 
-	for article in series.articles {
-		io.write_string(w, "\t<li>")
-		fmt.wprintf(w, `<a href="%s">%s</a>`+"\n", article.url, sidenote_md_to_html(article.title, arena))
-		if article.description != "" {
-			fmt.wprintf(w, `<p class="description">%s</p>`+"\n", article.description)
+			fmt.wprintf(w, `<a href="%s">%s</a>`+"\n", article.url, sidenote_md_to_html(article.title, arena))
+			if article.description != "" {
+				fmt.wprintf(w, `<p class="description">%s</p>`+"\n", article.description)
+			}
+			fmt.wprintf(w, `<p class="date">%s</p>`+"\n", article.date)
 		}
-		fmt.wprintf(w, `<p class="date">%s</p>`+"\n", article.date)
-		io.write_string(w, "</li>\n")
 	}
-
-	io.write_string(w, `</ul>`+"\n")
 
 	write_footer(w)
 
-	s := strings.to_string(b)
-
 	path := fmt.aprintf(PUBLIC_PREFIX+"/series/%s/index.html", series.url_name, allocator=arena_allocator)
 	dir, _ := os.split_path(path)
-	err := os.make_directory_all(dir)
+	_ = os.make_directory_all(dir)
 
-	return os.write_entire_file(path, s) == nil
+	return os.write_entire_file(path, strings.to_string(b)) == nil
 }
 
 
