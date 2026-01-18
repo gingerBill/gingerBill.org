@@ -74,7 +74,7 @@ body {
   font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
   /*font-size: 15px;*/
   line-height: 1.5;
-  color: #333;
+  color: #111;
   background-color: var(--off-white);
   margin: 0 auto;
   padding: 0;
@@ -191,14 +191,14 @@ blockquote {
   margin: 1em 1em 1em 1em;
   padding: 0.5em 1em 0.5em 0.5em;
   text-align: justify-all;
-  background-color: #f8f8f0;
   border-radius: 4px;
   font-size: 1.1em;
+  /*background-color: #f8f8f0;*/
 }
 
 @media (prefers-color-scheme: dark) {
   blockquote {
-    background-color: #333;
+    /*background-color: #333;*/
   }
 }
 

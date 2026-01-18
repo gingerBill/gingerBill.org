@@ -56,9 +56,9 @@
 </ul>
 <p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
 Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
-You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it's structural control flow.
+You can the exact same semantics as a try except block by using a switch in statement. The same is true in Go. The difference is that the stack does not need to be unwinded and it’s structural control flow.
 Odin has discriminated unions, enums, bit sets, distinct type definitions, any type, and more. Odin also have multiple return values. Use the type system to your advantage.
-I do hate how most languages handle &quot;errors&quot;. Treat errors like any other piece of code. Handle errors there and then and don't pass them up the stack. You make your mess; you clean it.</p>
+I do hate how most languages handle “errors”. Treat errors like any other piece of code. Handle errors there and then and don’t pass them up the stack. You make your mess; you clean it.</p>
 <hr />
 <p>To expand on what I mean by this statement:</p>
 <blockquote>
@@ -97,8 +97,8 @@ case BazError, PlopError:
 <p>The semantics are very similar in this case however the control flow is completely different. In the exceptions case (shown with Python), you enclose a block of code and catch any exceptions that have been raised. In the return value case (shown with Odin), you test the return value explicitly from the call.
 Exceptions require unwinding the stack; this can be slower <label for="slower" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="slower" class="margin-toggle"></input>
-<span class="sidenote">Theoretically exceptions can be just as fast a return statement because that's effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</span> when an exception happens compared to the fixed small cost of a return value.</p>
-<p>In both cases, a &quot;catch all&quot; is possible:</p>
+<span class="sidenote">Theoretically exceptions can be just as fast a return statement because that’s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</span> when an exception happens compared to the fixed small cost of a return value.</p>
+<p>In both cases, a “catch all” is possible:</p>
 <p>Python:</p>
 <pre><code class="language-python">try:
 	x = foo()
@@ -111,7 +111,7 @@ if err != nil {
 	// An error has happened
 }
 </code></pre>
-<p>One &quot;advantage&quot; many people like with exceptions is the ability to catch any error from a block of code:</p>
+<p>One “advantage” many people like with exceptions is the ability to catch any error from a block of code:</p>
 <pre><code class="language-python">try:
 	x = foo()
 	y = bar(x)
@@ -120,19 +120,19 @@ except SomeError as e:
 	pass
 </code></pre>
 <p>I personally see this as a huge vice, rather than a virtue. From reading the code, you cannot know where the error comes from. Return values are explicit about this and you know exactly what and where has caused the error.</p>
-<p>One of the consequences of exceptions is that errors can be raised anywhere and caught anywhere. This means that the culture of pass the error up the stack for &quot;someone else&quot; to handle. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don't pass them up the stack. You make your mess; you clean it.</p>
-<p>Go's built-in <code>error</code> type has the exact same tendency of people return errors up the stack:</p>
+<p>One of the consequences of exceptions is that errors can be raised anywhere and caught anywhere. This means that the culture of pass the error up the stack for “someone else” to handle. I hate this culture and I do not want to encourage it at the language level. Handle errors there and then and don’t pass them up the stack. You make your mess; you clean it.</p>
+<p>Go’s built-in <code>error</code> type has the exact same tendency of people return errors up the stack:</p>
 <pre><code class="language-go">if err != nil {
 	return nil, err
 }
 </code></pre>
-<p>From what I have read, most people's complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
+<p>From what I have read, most people’s complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
 <hr />
-<p>I hope this has cleared up a lot of the questions regarding Odin's take on error handling. I think error handling ought to be treated like any other piece of code.</p>
+<p>I hope this has cleared up a lot of the questions regarding Odin’s take on error handling. I think error handling ought to be treated like any other piece of code.</p>
 <blockquote>
 <p>With many rules, there will be unexpected emergent behaviour.</p>
 </blockquote>
-<p>P.S. If you really want &quot;exceptions&quot;, you can <code>longjmp</code> until the cows come home.</p>
+<p>P.S. If you really want “exceptions”, you can <code>longjmp</code> until the cows come home.</p>
 </article></main>
 <footer>© 2007–2026 Ginger Bill</footer>
 </div>

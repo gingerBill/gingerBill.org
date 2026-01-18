@@ -74,12 +74,12 @@
 <pre><code class="language-odin">foo() or_return
 </code></pre>
 <p>Most people understood what the purpose and semantics <code>or_else </code>pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that.</p>
-<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin's core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
+<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin’s core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
 <p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
 <p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
-<p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That's a useful construct for definite.</p>
+<p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That’s a useful construct for definite.</p>
 <p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of
-<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>'s HxA format. https://github.com/quelsolaar/HxA</p>
+<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>’s HxA format. https://github.com/quelsolaar/HxA</p>
 <p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
 <p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
 <ul>
@@ -87,7 +87,7 @@
 <li><em>Degenerate states</em> due to type erasure or automatic inference</li>
 <li>Cultural lack of partial success states</li>
 </ul>
-<p>The most important one is the degenerate state issue, where all values can degenerate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don't handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: &quot;error or not&quot;. This is now equivalent to a fancy boolean.</p>
+<p>The most important one is the degenerate state issue, where all values can degenerate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don’t handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: “error or not”. This is now equivalent to a fancy boolean.</p>
 <hr />
 <p>I do hope that this addition of <code>or_return</code> does aid a lot of people when making projects and designing packages.</p>
 <p>It does appear to be very useful already for many of the core library package developers for Odin.</p>

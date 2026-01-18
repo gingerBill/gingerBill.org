@@ -87,8 +87,8 @@
   </tbody>
 </table>
 <p>In the top-left category (Size Known + Lifetime Known), this is the area in which I will be covering the most in this series. Most of the time, you do know the size of the allocation, or the upper bounds at least, and the lifetime of the allocation in question.</p>
-<p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to &quot;resize/realloc&quot; the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
-<p>In the bottom-left category (Size Known + Lifetime Unknown), this is the area in which you may not know how long that memory needs to be around but you do know how much memory is needed. In this case, you could say that the &quot;ownership&quot; of that memory across multiple systems is ill-defined. A common solution for this domain of problems is reference counting or ownership semantics.</p>
+<p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to “resize/realloc” the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
+<p>In the bottom-left category (Size Known + Lifetime Unknown), this is the area in which you may not know how long that memory needs to be around but you do know how much memory is needed. In this case, you could say that the “ownership” of that memory across multiple systems is ill-defined. A common solution for this domain of problems is reference counting or ownership semantics.</p>
 <p>In the bottom-right category (Size Unknown + Lifetime Unknown), this is the area in which you have literally no idea how much memory you need nor how long it will be needed for. In practice, this is quite rare and you <em>ought</em> to try and avoid these situations when possible. However, the general solution for this domain of problems is garbage collection <label for="garbage-collection" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="garbage-collection" class="margin-toggle"></input>
 <span class="sidenote">Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.</span>.</p>
@@ -103,16 +103,16 @@
 <p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p>
 </li>
 <li>
-<p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &quot;cycle&quot; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p>
+<p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the “cycle” and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p>
 </li>
 <li>
 <p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p>
 </li>
 </ul>
 <h2>Memory Hierarchies</h2>
-<p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory --- the human brain can only hold so much.</p>
+<p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory — the human brain can only hold so much.</p>
 <p>The same localist thought process can be applied to the memory-space/size of which I will be discussing in later articles in this series.</p>
-<h1>The Compiler's Knowledge of the Program</h1>
+<h1>The Compiler’s Knowledge of the Program</h1>
 <p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
 <p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems <label for="ownership-systems" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ownership-systems" class="margin-toggle"></input>
