@@ -4,7 +4,7 @@ if [%*] == [] goto error
 
 echo Deploying updates to GitHub...
 
-call W:\Odin\odin generator
+call W:\Odin\odin run generator
 
 call git add .
 git commit -m %1
