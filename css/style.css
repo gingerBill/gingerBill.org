@@ -513,6 +513,7 @@ img[src$='#center'] {
 
 .sidenote-number {
   counter-increment: sidenote-counter;
+  font-size: 0.8em;
 }
 
 .sidenote-number:after,
