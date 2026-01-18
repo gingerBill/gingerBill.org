@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en-gb">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Was it really a Billion Dollar Mistake?">
 <meta name="twitter:description" content="">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
 
  <title>Was it really a Billion Dollar Mistake? - gingerBill</title>
 
-  <link rel="stylesheet" href="/css/normalize.css" />
-  <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="/highlight/style.css" />
-  <script src="/highlight/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/highlight/style.css" />
+	<script src="/highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-    gtag('config', 'UA-67516878-1');
-  </script>
+		gtag('config', 'UA-67516878-1');
+	</script>
 </head>
 <body>
 <div class="wrapper">
 <header>
-  <nav>
-    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-    <ul class="menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/article/">Articles</a></li>
-      <li><a href="https://odin-lang.org">Odin</a></li>
-      <li><a href="/article/index.xml">Subscribe</a></li>
-    </ul>
-  </nav>
+	<nav>
+		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+		<ul class="menu">
+			<li><a href="/">Home</a></li>
+			<li><a href="/article/">Articles</a></li>
+			<li><a href="https://odin-lang.org">Odin</a></li>
+			<li><a href="/article/index.xml">Subscribe</a></li>
+		</ul>
+	</nav>
 </header>
 <main><article class="article-meta">
 <header>
@@ -64,9 +64,11 @@
 <p>If you have ever used pretty much any programming language that deals with memory, you will have encountered <code>null</code> pointers, sometimes referred to as <code>nullptr</code>, <code>NULL</code>, <code>nil</code>, or many other similar names. It is typically used as a pointer/reference that does not refer to a valid object. However another way to think about <code>null</code> is that it is just one of many invalid memory addresses.</p>
 <p>In many memory-managed garbaged collected languages, it will be the most common invalid memory address since it is very difficult to reach other invalid memory states. However, the general criticism of null arises more commonly in systems-level programming languages such as C or <a href="https://odin-lang.org/">Odin</a>, and I am going to argue that in practice, most invalid memory addresses are not null in those languages.</p>
 <p>This issue of null pointers is related to the <a href="https://en.wikipedia.org/wiki/Streetlight_effect">drunkard’s search principle</a> (a drunk man looks for his lost keys at night under a lamppost because he can see in that area). I have found that null pointers are usually very easy to find and fix, especially since most are caused by trivial bugs (usually typos).</p>
-<p>In <em>theory</em>, null is still a perfectly valid memory address, but as a practical matter, we have decided on the convention that null being zero is useful for marking a pointer as unset. Modern platforms reserve the first few pages of (virtual) memory to check for these errors. Typically on all modern systems, that memory address is located at <code>0</code>[^c-null-definition], but it didn't always used to be on all platforms[^weird-null]. Meaning that null is just a kind of sentinel value for memory addresses.</p>
-<p>[^c-null-definition]: <code>#define NULL ((void *)0)</code> in C99, or <code>nullptr</code> in C++11 and C23.</p>
-<p>[^weird-null]: Historically, the <a href="https://c-faq.com/null/machexamp.html">Prime 50, CDC Cyber 180, and some Honeywell-Bull</a> machines all had nonzero null, as might DG Eclipse MV, HP 3000, Lisp Machine, some 64-bit Cray,</p>
+<p>In <em>theory</em>, null is still a perfectly valid memory address, but as a practical matter, we have decided on the convention that null being zero is useful for marking a pointer as unset. Modern platforms reserve the first few pages of (virtual) memory to check for these errors. Typically on all modern systems, that memory address is located at <code>0</code>  <label for="c-null-definition" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="c-null-definition" class="margin-toggle"></input>
+<span class="sidenote"><code>#define NULL ((void *)0)</code> in C99, or <code>nullptr</code> in C++11 and C23.</span>, but it didn't always used to be on all platforms <label for="weird-null" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="weird-null" class="margin-toggle"></input>
+<span class="sidenote">Historically, the <a href="https://c-faq.com/null/machexamp.html">Prime 50, CDC Cyber 180, and some Honeywell-Bull</a> machines all had nonzero null, as might DG Eclipse MV, HP 3000, Lisp Machine, some 64-bit Cray,</span>. Meaning that null is just a kind of sentinel value for memory addresses.</p>
 <p>But the real question of all of this is: if <code>null</code> is generally considered to be a mistake, what is the cause of this mistake and is it actually a problem?</p>
 <h2>The Symptom</h2>
 <p>The problem with a null pointer in practice is not the existence of the null pointer itself, but rather the dereferencing of them causing a runtime panic. As I've previously stated, a null pointer is just one kind of invalid memory address, and in languages like C or Odin, it is much more common to get other kinds of invalid memory addresses which are not solved by removing the symptom of null pointer dereferencing. Other common forms of invalid memory address are use-after-free, incorrect pointer-arithmetic calculations, unmapped memory regions, and many more, which are not trivially solvable in the same way that null pointers could be.</p>
@@ -78,17 +80,20 @@
 <p>The first option is solved in many languages (partially including <a href="https://odin-lang.org/">Odin</a>) with having support for <a href="https://pkg.odin-lang.org/base/builtin/#Maybe">maybe</a>/<a href="https://en.wikipedia.org/wiki/Option_type">option types</a> or nullable types (monads), however I am still not a huge fan of them in practice as I rarely require them in systems-level programming. I know very well this is a <em>&quot;controversial&quot;</em> opinion, but systems-level programming languages deal with memory all the time and can easily get into &quot;unsafe&quot; states on purpose. Restricting this can actually make constructs (like custom allocators) very difficult to implement, along with other things.</p>
 <p>Odin does have <code>Maybe(^T)</code>, and that's fine that it does exist, but it's actually rare it is needed in practice. When it is needed, it's either for documenting foreign code's usage of pointers (i.e. non-Odin code), or it's for things which are not pointers at all (in Odin code). And coupled with many of the other features of Odin (multiple return values, <code>or_return</code> et al, proper array types, etc), a lot of the need disappears in most cases.</p>
 <p>n.b. For the ML/Rust users, Odin's <code>Maybe(^T)</code> is identical to <code>Option&lt;&amp;T&gt;</code> in Rust in terms of semantics and optimizations.</p>
-<p>The second option is a subtle one: it forces a specific style and architectural practices whilst programming. Odin is designed around two things: to be a C alternative which still feels like C whilst programming and &quot;try to make the zero value useful&quot;, and as such, a lot of the constructs in the language and core library have been structured around this. Odin is trying to be a C alternative, and as such it is not trying to change how most C programmers actually program in the first place. This is why you are allowed to declare variables without an explicit initializer, but the difference to that of C is that variables will be zero-initialized by default[^uninitialized].</p>
-<p>[^uninitialized]: You can do <code>x: T = ---</code> to make it uninitialized stack memory, if that is necessary for certain optimizations.</p>
+<p>The second option is a subtle one: it forces a specific style and architectural practices whilst programming. Odin is designed around two things: to be a C alternative which still feels like C whilst programming and &quot;try to make the zero value useful&quot;, and as such, a lot of the constructs in the language and core library have been structured around this. Odin is trying to be a C alternative, and as such it is not trying to change how most C programmers actually program in the first place. This is why you are allowed to declare variables without an explicit initializer, but the difference to that of C is that variables will be zero-initialized by default <label for="uninitialized" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="uninitialized" class="margin-toggle"></input>
+<span class="sidenote">You can do <code>x: T = ---</code> to make it uninitialized stack memory, if that is necessary for certain optimizations.</span>.</p>
 <p>Fundamentally this idea of <em>explicit individual-element based initialization</em> everywhere is a viral concept which does lead to what I think are bad architectural decisions in the long run. Compilers are dumb---they cannot do everything for you, especially know the cost of the architectural decisions throughout your code, which requires knowing the (global) intent of your code. When people argue that a lot of the explicit initialization can be &quot;optimized&quot; out, this is only thinking from a <em>local</em> position of individual-elements, which does total up to being slower in some cases at a more <em>global</em> scale.</p>
 <p>To give an example of what I mean, take <code>make([]Some_Struct, N)</code>. In Odin, it just zeroes the memory because in some cases, it is literally free (i.e. <code>mmap</code> must zero). However, when you need to initialize each value of that slice, you are now turning a O(1) problem into a O(N) problem. And it can get worse if each field in the struct also needs its own form of construction.</p>
 <p>I do not think the <code>nil</code> pointer problem is as much of an empirical problem in practice. I know a lot of people want to &quot;prove&quot; things whenever they can at compile-time, but I still have to test a lot of code in the first place, and for this very very specific example, it is a trivial one to catch.</p>
 <p>And I'd argue a lot (not all) of the <code>NULL</code> pointer problems in C are caused by the lack of a proper array type. C's biggest mistake in my opinion is conflating a pointer with an array. Odin has solved this by having different bounds-checked array types.</p>
-<p>A general habit of people who criticize newer languages is to say the problems exist in C and therefore must exist in this new language, without even doing basic research if that's true in the first place[^tiresome].</p>
-<p>[^tiresome]: If you didn't guess, this is kind of tiresome when I am trying to explain Odin to other people who just want to dismiss it out-right because of some preconceived notion of the problems in C. Most of these people are generally not serious, but they are the loudest on the social media sites.</p>
+<p>A general habit of people who criticize newer languages is to say the problems exist in C and therefore must exist in this new language, without even doing basic research if that's true in the first place <label for="tiresome" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="tiresome" class="margin-toggle"></input>
+<span class="sidenote">If you didn't guess, this is kind of tiresome when I am trying to explain Odin to other people who just want to dismiss it out-right because of some preconceived notion of the problems in C. Most of these people are generally not serious, but they are the loudest on the social media sites.</span>.</p>
 <h2>The &quot;Gotcha&quot;</h2>
-<p>I find this &quot;gotcha&quot; that people bring up[^excuse] is probably one of the most common ones because it <em>seems</em> like an &quot;obvious&quot; and &quot;simple&quot; win, and I'd argue it's the exact opposite of either &quot;simple&quot; and even a &quot;win&quot;. Language design is all about trade-offs and compromises as there is never going to be a perfect language for anyone's problem. Even if you designed the Domain Specific Language (DSL) for your task, you'll still have loads of issues, especially with specific semantics (not just syntax).</p>
-<p>[^excuse]: I find it mainly as a excuse to not try Odin, which is fine, I don't care if you use Odin or not, but be honest that it's just not a language for you rather than finding excuses.</p>
+<p>I find this &quot;gotcha&quot; that people bring up <label for="excuse" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="excuse" class="margin-toggle"></input>
+<span class="sidenote">I find it mainly as a excuse to not try Odin, which is fine, I don't care if you use Odin or not, but be honest that it's just not a language for you rather than finding excuses.</span> is probably one of the most common ones because it <em>seems</em> like an &quot;obvious&quot; and &quot;simple&quot; win, and I'd argue it's the exact opposite of either &quot;simple&quot; and even a &quot;win&quot;. Language design is all about trade-offs and compromises as there is never going to be a perfect language for anyone's problem. Even if you designed the Domain Specific Language (DSL) for your task, you'll still have loads of issues, especially with specific semantics (not just syntax).</p>
 <p>Languages like Rust were designed from day zero around <em>explicit individual-element based initialization</em>, however when designing Odin, from day zero I wanted to still keep the feel of C (along without other design philosophies) so I explicitly wanted implicit zero based initialization (e.g. <code>x: T</code> has zeroed memory). This ever so minor choice might not seem like a big thing to you, but it leads to <em>MASSIVE</em> architectural decisions later on when developing a program.</p>
 <p>Odin could not &quot;just add&quot; non-nil pointers and it be &quot;fine&quot;. It would actually not be Odin any more, and the entire language would not even be a C alternative any more, and feel much more like C++, Rust, or OCaml. Rust and OCaml (which Rust is based off) are different kinds of languages to Odin and their approach does not translate well to what Odin (or C) is trying to do.</p>
 <p>The analogy I like to use is complaining that French cannot do the English equivalent of <a href="https://en.wikipedia.org/wiki/Iambic_pentameter">Iambic Pentameter</a>. Different languages just have different approaches to doing things.</p>
@@ -149,55 +154,55 @@
 </body>
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
-  (function addHeadingLinks(){
-    var article = document.getElementsByClassName('article-meta')[0];
-    var headings = article.querySelectorAll('h1, h2, h3');
-    headings.forEach(function(heading){
-      if (heading.id){
-        var a = document.createElement('a');
-        a.innerHTML = heading.innerHTML;
-        a.href = '#'+heading.id;
-        heading.innerHTML = '';
-        heading.appendChild(a);
-      }
-    });
-  })();
+	(function addHeadingLinks(){
+		var article = document.getElementsByClassName('article-meta')[0];
+		var headings = article.querySelectorAll('h1, h2, h3');
+		headings.forEach(function(heading){
+			if (heading.id){
+				var a = document.createElement('a');
+				a.innerHTML = heading.innerHTML;
+				a.href = '#'+heading.id;
+				heading.innerHTML = '';
+				heading.appendChild(a);
+			}
+		});
+	})();
 
-  const DARK  = '(prefers-color-scheme: dark)';
-  const LIGHT = '(prefers-color-scheme: light)';
+	const DARK  = '(prefers-color-scheme: dark)';
+	const LIGHT = '(prefers-color-scheme: light)';
 
-  function setColourScheme(scheme) {
-    console.log(scheme);
-    if (scheme == 'dark') {
+	function setColourScheme(scheme) {
+		console.log(scheme);
+		if (scheme == 'dark') {
 
-    } else if (scheme == 'light') {
+		} else if (scheme == 'light') {
 
-    }
-  }
+		}
+	}
 
 
-  (function changeStyle(){
-    function detectColourScheme() {
-      if (!window.matchMedia) {
-        return;
-      }
+	(function changeStyle(){
+		function detectColourScheme() {
+			if (!window.matchMedia) {
+				return;
+			}
 
-      function listener({matches, media}) {
-        if (!matches) {
-          return;
-        }
-        if (media == DARK) {
-          setColourScheme('dark');
-        } else if (media == LIGHT) {
-          setColourScheme('light');
-        }
-      }
+			function listener({matches, media}) {
+				if (!matches) {
+					return;
+				}
+				if (media == DARK) {
+					setColourScheme('dark');
+				} else if (media == LIGHT) {
+					setColourScheme('light');
+				}
+			}
 
-      const mqDark  = window.matchMedia(DARK);
-      const mqLight = window.matchMedia(LIGHT);
-      mqDark.addListener(listener);
-      mqLight.addListener(listener);
-    }
-  })();
+			const mqDark  = window.matchMedia(DARK);
+			const mqLight = window.matchMedia(LIGHT);
+			mqDark.addListener(listener);
+			mqLight.addListener(listener);
+		}
+	})();
 </script>
 </html>
