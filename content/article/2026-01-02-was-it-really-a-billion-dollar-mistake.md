@@ -9,7 +9,7 @@
         "programming language theory"
     ],
     "series": [
-        "The Billion Dollar Mistake?",
+        "The Billion Dollar Mistake",
     ]
 }
 ---

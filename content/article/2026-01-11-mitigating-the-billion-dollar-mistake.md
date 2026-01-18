@@ -11,7 +11,7 @@
         "programming languages"
     ],
     "series": [
-        "The Billion Dollar Mistake?",
+        "The Billion Dollar Mistake",
     ]
 }
 ---
