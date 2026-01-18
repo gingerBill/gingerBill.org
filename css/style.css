@@ -455,7 +455,7 @@ article table td, article table th {
 .wrapper {
   display: block;
   padding: 0 1em 1em;
-  max-width: 48em;
+  max-width: 50em;
   margin: 0 auto;
 }
 
