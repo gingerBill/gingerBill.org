@@ -15,7 +15,8 @@ import cm "vendor:commonmark"
 PUBLIC_PREFIX :: "public"
 
 Website :: struct {
-	perm_arena: virtual.Arena,
+	perm_arena:    virtual.Arena,
+	scratch_arena: virtual.Arena,
 
 	articles: [dynamic]Article,
 
@@ -603,23 +604,22 @@ build_series :: proc(website: ^Website, name: string, series: ^Series, arena: ^v
 }
 
 main :: proc() {
-	scratch_arena: virtual.Arena
-	defer virtual.arena_destroy(&scratch_arena)
-
 	website: Website
-	defer delete(website.aliases)
-	defer delete(website.series)
+	website.aliases.allocator = virtual.arena_allocator(&website.perm_arena)
+	website.series.allocator  = virtual.arena_allocator(&website.perm_arena)
+	defer virtual.arena_destroy(&website.perm_arena)
+	defer virtual.arena_destroy(&website.scratch_arena)
 
-	_ = handle_articles(&website, "content/article", &scratch_arena)
+	_ = handle_articles(&website, "content/article", &website.scratch_arena)
 
-	_ = build_home(&website, &scratch_arena)
-	_ = build_404(&website, &scratch_arena)
+	_ = build_home(&website, &website.scratch_arena)
+	_ = build_404(&website, &website.scratch_arena)
 
 	for from, to in website.aliases {
-		_ = build_alias(&website, from, to, &scratch_arena)
+		_ = build_alias(&website, from, to, &website.scratch_arena)
 	}
 
 	for name, series in website.series {
-		_ = build_series(&website, name, series, &scratch_arena)
+		_ = build_series(&website, name, series, &website.scratch_arena)
 	}
 }
