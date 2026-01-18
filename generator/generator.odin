@@ -15,7 +15,7 @@ import cm "vendor:commonmark"
 PUBLIC_PREFIX :: "public"
 
 Website :: struct {
-	arena: virtual.Arena,
+	perm_arena: virtual.Arena,
 
 	articles: [dynamic]Article,
 
@@ -52,7 +52,7 @@ Archetype :: struct {
 }
 
 add_article :: proc(website: ^Website, url: string, a: Archetype) -> Article {
-	arena_allocator := virtual.arena_allocator(&website.arena)
+	arena_allocator := virtual.arena_allocator(&website.perm_arena)
 	a := Article{
 		title       = strings.clone(a.title, arena_allocator),
 		url         = strings.clone(strings.trim_suffix(url, "index.html"), arena_allocator),
@@ -87,10 +87,14 @@ validate_archetype :: proc(a: ^Archetype, arena: ^virtual.Arena) -> bool {
 		return
 	}
 
-
 	arena_allocator := virtual.arena_allocator(arena)
 
-	a.year, a.month, a.day = validate_date(a.date, a) or_return
+	valid_date: bool
+	a.year, a.month, a.day, valid_date = validate_date(a.date, a)
+	if !valid_date {
+		fmt.eprintln("Invalid date", a.date)
+		return false
+	}
 
 	if a.title == "" {
 		fmt.eprintln("Missing title")
@@ -117,13 +121,7 @@ validate_archetype :: proc(a: ^Archetype, arena: ^virtual.Arena) -> bool {
 }
 
 write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: string = "") {
-	io.write_string(w,
-`<!DOCTYPE html>
-<html lang="en-gb">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-`)
+	io.write_string(w, #load("header-01.html", string))
 
 	#partial switch v in info {
 	case Archetype:
@@ -132,114 +130,19 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 		fmt.wprintfln(w,`<meta name="twitter:description" content="%s">`, summary if summary != "" else v.description)
 	}
 
-	io.write_string(w, `
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#da532c">
-	<meta name="theme-color" content="#ffffff">
-
-`)
 	switch v in info {
 	case Archetype: fmt.wprintf    (w, ` <title>%s - gingerBill</title>`+"\n", v.title)
 	case string:    fmt.wprintf    (w, ` <title>%s</title>`+"\n", v)
 	case:           io.write_string(w, ` <title>gingerBill</title>`+"\n")
 	}
 
-	io.write_string(w, `
-	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
-	<link rel="stylesheet" href="/highlight/style.css" />
-	<script src="/highlight/highlight.pack.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		gtag('config', 'UA-67516878-1');
-	</script>
-</head>
-<body>
-<div class="wrapper">
-<header>
-	<nav>
-		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-		<ul class="menu">
-			<li><a href="/">Home</a></li>
-			<li><a href="/article/">Articles</a></li>
-			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
-		</ul>
-	</nav>
-</header>
-`)
+	io.write_string(w, #load("header-02.html", string))
 }
 
 
 write_footer :: proc(w: io.Writer) {
-	FOOTER :: `</div>
-</body>
-<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script>
-	(function addHeadingLinks(){
-		var article = document.getElementsByClassName('article-meta')[0];
-		var headings = article.querySelectorAll('h1, h2, h3');
-		headings.forEach(function(heading){
-			if (heading.id){
-				var a = document.createElement('a');
-				a.innerHTML = heading.innerHTML;
-				a.href = '#'+heading.id;
-				heading.innerHTML = '';
-				heading.appendChild(a);
-			}
-		});
-	})();
-
-	const DARK  = '(prefers-color-scheme: dark)';
-	const LIGHT = '(prefers-color-scheme: light)';
-
-	function setColourScheme(scheme) {
-		console.log(scheme);
-		if (scheme == 'dark') {
-
-		} else if (scheme == 'light') {
-
-		}
-	}
-
-
-	(function changeStyle(){
-		function detectColourScheme() {
-			if (!window.matchMedia) {
-				return;
-			}
-
-			function listener({matches, media}) {
-				if (!matches) {
-					return;
-				}
-				if (media == DARK) {
-					setColourScheme('dark');
-				} else if (media == LIGHT) {
-					setColourScheme('light');
-				}
-			}
-
-			const mqDark  = window.matchMedia(DARK);
-			const mqLight = window.matchMedia(LIGHT);
-			mqDark.addListener(listener);
-			mqLight.addListener(listener);
-		}
-	})();
-</script>
-</html>
-`
 	fmt.wprintf(w, `<footer>© 2007–%04d Ginger Bill</footer>`+"\n", time.year(time.now()))
-	io.write_string(w, FOOTER)
+	io.write_string(w, #load("footer.html", string))
 }
 
 sidenote_md_to_html :: proc(text: string, arena: ^virtual.Arena) -> string {
@@ -311,19 +214,19 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 	article := add_article(website, url, archetype)
 
 	for alias in archetype.aliases {
-		from := strings.clone(alias, virtual.arena_allocator(&website.arena))
-		to   := strings.clone(url, virtual.arena_allocator(&website.arena))
+		from := strings.clone(alias, virtual.arena_allocator(&website.perm_arena))
+		to   := strings.clone(url, virtual.arena_allocator(&website.perm_arena))
 		to = to[:len(to)-len("index.html")]
 		website.aliases[from] = to
 	}
 
 	for series in archetype.series {
 		if series not_in website.series {
-			name := strings.clone(series, virtual.arena_allocator(&website.arena))
+			name := strings.clone(series, virtual.arena_allocator(&website.perm_arena))
 			s := new(Series)
 			s.name = name
 			s.url_name = strings.to_lower(series, arena_allocator)
-			s.url_name, _ = strings.replace_all(s.url_name, " ", "-", virtual.arena_allocator(&website.arena))
+			s.url_name, _ = strings.replace_all(s.url_name, " ", "-", virtual.arena_allocator(&website.perm_arena))
 			website.series[name] = s
 
 		}
@@ -584,45 +487,6 @@ handle_articles :: proc(website: ^Website, path: string, arena: ^virtual.Arena) 
 	return nil
 }
 
-HOME_TEXT :: `<h1 id="contact">Contact Info</h1>
-<table class="gbt2">
-<tbody>
-	<tr><td>  Email:</td><td><a href="#">bill <em>[at]</em> gingerbill <em>[dot]</em> org</a></td></tr>
-	<tr><td>Twitter:</td><td><a href="//twitter.com/TheGingerBill">@TheGingerBill</a></td></tr>
-	<tr><td> GitHub:</td><td><a href="//github.com/gingerBill">github.com/gingerBill</a></td></tr>
-	<tr><td>YouTube:</td><td><a href="//youtube.com/GingerGames">youtube.com/GingerGames</a></td></tr>
-</tbody>
-</table>
-
-<h1 id="public">Public Projects</h1>
-<table class="gbt2">
-<tbody>
-	<tr>
-		<td>
-			<a href="/odin">Odin: Programming Language</a><br>
-			2016–now
-		</td>
-		<td>
-			<p>An open source systems programming language designed for the modern computer and programmer</p><p>
-			</p><p>Odin is fast, concise, readable, and pragmatic. It is designed with the intent of replacing C with the following goals:</p><p>
-			</p>
-			<ul>
-				<li>simplicity</li>
-				<li>high performance</li>
-				<li>built for modern systems</li>
-				<li>joy of programming</li>
-			</ul>
-			<table class="gbt2">
-			<tbody>
-				<tr><td>Website:</td><td><a href="https://odin-lang.org/">odin-lang.org</a></td></tr>
-			</tbody>
-			</table>
-		</td>
-	</tr>
-</tbody>
-</table>
-`
-
 build_home :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
 	arena_temp := virtual.arena_temp_begin(arena)
 	defer virtual.arena_temp_end(arena_temp)
@@ -633,7 +497,7 @@ build_home :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
 
 	write_header(w, "gingerBill")
 
-	io.write_string(w, HOME_TEXT)
+	io.write_string(w, #load("home.html", string))
 
 	build_article_listing(website, w, arena)
 
@@ -658,12 +522,7 @@ build_404 :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
 
 	write_header(w, "404 - gingerBill")
 
-io.write_string(w, \
-`<main>
-<h2><span class="ginger">404</span> Page Not Found. That's an error.</h2>
-<p>The page you were looking for has gone walkabouts. Return to the <a href="/">homepage</a>?</p>
-</main>
-`)
+	io.write_string(w, #load("not-found-404.html", string))
 
 	write_footer(w)
 
@@ -743,26 +602,24 @@ build_series :: proc(website: ^Website, name: string, series: ^Series, arena: ^v
 	return os.write_entire_file(path, strings.to_string(b)) == nil
 }
 
-
 main :: proc() {
-	arena: virtual.Arena
-	defer virtual.arena_destroy(&arena)
+	scratch_arena: virtual.Arena
+	defer virtual.arena_destroy(&scratch_arena)
 
 	website: Website
 	defer delete(website.aliases)
 	defer delete(website.series)
 
-	_ = handle_articles(&website, "content/article", &arena)
+	_ = handle_articles(&website, "content/article", &scratch_arena)
 
-	_ = build_home(&website, &arena)
-	_ = build_404(&website, &arena)
+	_ = build_home(&website, &scratch_arena)
+	_ = build_404(&website, &scratch_arena)
 
 	for from, to in website.aliases {
-		_ = build_alias(&website, from, to, &arena)
+		_ = build_alias(&website, from, to, &scratch_arena)
 	}
 
 	for name, series in website.series {
-		_ = build_series(&website, name, series, &arena)
+		_ = build_series(&website, name, series, &scratch_arena)
 	}
-
 }
