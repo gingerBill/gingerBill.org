@@ -55,7 +55,7 @@ add_article :: proc(website: ^Website, url: string, a: Archetype) -> Article {
 	arena_allocator := virtual.arena_allocator(&website.arena)
 	a := Article{
 		title       = strings.clone(a.title, arena_allocator),
-		url         = strings.clone(url, arena_allocator),
+		url         = strings.clone(strings.trim_suffix(url, "index.html"), arena_allocator),
 		date        = fmt.aprintf("%04d-%02d-%02d", a.year, a.month, a.day, allocator=arena_allocator),
 		description = strings.clone(a.description, arena_allocator),
 	}
