@@ -411,7 +411,8 @@ preprocessor_pass_over_article :: proc(text: string, arena: ^virtual.Arena) -> s
 			}
 		}
 
-		if footnote_index >= 0 {
+		switch {
+		case footnote_index >= 0:
 			i := footnote_index
 			io.write_string(w, text[:i])
 
@@ -441,8 +442,7 @@ preprocessor_pass_over_article :: proc(text: string, arena: ^virtual.Arena) -> s
 				}
 			}
 			continue
-		}
-		if youtube_index >= 0 {
+		case youtube_index >= 0:
 			i := youtube_index
 			io.write_string(w, text[:i])
 
@@ -455,7 +455,6 @@ preprocessor_pass_over_article :: proc(text: string, arena: ^virtual.Arena) -> s
 			io.write_string(w, `<div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/`)
 			io.write_string(w, link)
 			io.write_string(w, `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>`+"\n")
-
 			continue
 		}
 		io.write_string(w, text)
@@ -585,18 +584,7 @@ handle_articles :: proc(website: ^Website, path: string, arena: ^virtual.Arena) 
 	return nil
 }
 
-build_home :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
-	arena_temp := virtual.arena_temp_begin(arena)
-	defer virtual.arena_temp_end(arena_temp)
-	arena_allocator := virtual.arena_allocator(arena)
-
-	b := strings.builder_make(arena_allocator)
-	w := strings.to_writer(&b)
-
-	write_header(w, "gingerBill")
-
-io.write_string(w,
-`<h1 id="contact">Contact Info</h1>
+HOME_TEXT :: `<h1 id="contact">Contact Info</h1>
 <table class="gbt2">
 <tbody>
 	<tr><td>  Email:</td><td><a href="#">bill <em>[at]</em> gingerbill <em>[dot]</em> org</a></td></tr>
@@ -633,7 +621,20 @@ io.write_string(w,
 	</tr>
 </tbody>
 </table>
-`)
+`
+
+build_home :: proc(website: ^Website, arena: ^virtual.Arena) -> bool {
+	arena_temp := virtual.arena_temp_begin(arena)
+	defer virtual.arena_temp_end(arena_temp)
+	arena_allocator := virtual.arena_allocator(arena)
+
+	b := strings.builder_make(arena_allocator)
+	w := strings.to_writer(&b)
+
+	write_header(w, "gingerBill")
+
+	io.write_string(w, HOME_TEXT)
+
 	build_article_listing(website, w, arena)
 
 	write_footer(w)
