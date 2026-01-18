@@ -180,12 +180,12 @@ blockquote, blockquote > p {
 }
 
 blockquote {
-  margin: 1em 1em 1em 2em;
-  font-weight: 2em;
+  margin: 1em 1em 1em 1em;
   padding: 0.5em 1em 0.5em 0.5em;
   text-align: justify-all;
   background-color: #f8f8f0;
   border-radius: 4px;
+  font-size: 1.1em;
 }
 
 @media (prefers-color-scheme: dark) {
