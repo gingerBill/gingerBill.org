@@ -1,0 +1,2132 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Vect",
+				"Vector2"
+			],
+			[
+				"Vector",
+				"Vector2"
+			],
+			[
+				"Vec",
+				"Vector3"
+			],
+			[
+				"len",
+				"length"
+			],
+			[
+				"dep",
+				"depth_buffer"
+			],
+			[
+				"init",
+				"init_framebuffer"
+			],
+			[
+				"load",
+				"load_bitmap_from_file"
+			],
+			[
+				"dst",
+				"dst_color"
+			],
+			[
+				"pi",
+				"pitch"
+			],
+			[
+				"ceil",
+				"ceiling"
+			],
+			[
+				"ce",
+				"ceiling_mode"
+			],
+			[
+				"rend",
+				"render_wall"
+			],
+			[
+				"yt",
+				"ytile"
+			],
+			[
+				"xt",
+				"xtile"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"borr",
+				"border-radius"
+			],
+			[
+				"depth",
+				"depth_clip"
+			],
+			[
+				"vec",
+				"Vector2"
+			],
+			[
+				"ciel",
+				"ceiling_mode"
+			],
+			[
+				"p",
+				"printf	printf …"
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"y_p",
+				"y_pixel0"
+			],
+			[
+				"con",
+				"continue"
+			],
+			[
+				"xi",
+				"x_pixel0"
+			],
+			[
+				"x_",
+				"x_pixel0"
+			],
+			[
+				"r_",
+				"r_sin"
+			],
+			[
+				"vol",
+				"velocity_sideways"
+			],
+			[
+				"xp",
+				"xp0"
+			],
+			[
+				"render",
+				"render_sprite"
+			],
+			[
+				"if",
+				"if	If Condition"
+			],
+			[
+				"yp",
+				"y_pixel0"
+			],
+			[
+				"x_p",
+				"x_pixel0"
+			],
+			[
+				"y_",
+				"y_pixel0"
+			],
+			[
+				"x",
+				"xc"
+			],
+			[
+				"viewp",
+				"viewport_bytes"
+			],
+			[
+				"scre",
+				"screen"
+			],
+			[
+				"main",
+				"main_loop"
+			],
+			[
+				"g_te",
+				"g_terrain_bitmap"
+			],
+			[
+				"bitm",
+				"bitmap_x_offset"
+			],
+			[
+				"bit",
+				"bitmap_x_offset"
+			],
+			[
+				"tt",
+				"ttf_buffer"
+			],
+			[
+				"ttf",
+				"g_ttf_buffer"
+			],
+			[
+				"test",
+				"testArray"
+			],
+			[
+				"pref",
+				"prefixLen"
+			],
+			[
+				"Log",
+				"LogFlag_Date"
+			],
+			[
+				"g_def",
+				"g_defaultLogger"
+			],
+			[
+				"Rand",
+				"Radian"
+			],
+			[
+				"ou",
+				"outTexture"
+			],
+			[
+				"color",
+				"colorTexture"
+			],
+			[
+				"g_w",
+				"g_window"
+			],
+			[
+				"tr",
+				"transform"
+			],
+			[
+				"v_t",
+				"v_tbnMatrix"
+			],
+			[
+				"trans",
+				"transforms"
+			],
+			[
+				"norm",
+				"normalize"
+			],
+			[
+				"g_brick",
+				"g_brickMaterial"
+			],
+			[
+				"g_defa",
+				"g_defaultNormalTexture"
+			],
+			[
+				"normal",
+				"normalize"
+			],
+			[
+				"n",
+				"normalMap"
+			],
+			[
+				"no",
+				"normalize"
+			],
+			[
+				"nom",
+				"normal"
+			],
+			[
+				"nomr",
+				"normalMap"
+			],
+			[
+				"g_bri",
+				"g_brickTexture"
+			],
+			[
+				"defau",
+				"defaultValue"
+			],
+			[
+				"Conf",
+				"ConfigType_Uint"
+			],
+			[
+				"Con",
+				"ConfigType"
+			],
+			[
+				"sec",
+				"sectionName"
+			],
+			[
+				"arg",
+				"argCount"
+			],
+			[
+				"set",
+				"settings"
+			],
+			[
+				"string",
+				"stringMode"
+			],
+			[
+				"strin",
+				"stringMode"
+			],
+			[
+				"strins",
+				"stringsLength"
+			],
+			[
+				"strings",
+				"stringsLength"
+			],
+			[
+				"Confi",
+				"ConfigType_String"
+			],
+			[
+				"COnfi",
+				"ConfigType_Bool"
+			],
+			[
+				"defaul",
+				"defaultAllocator"
+			],
+			[
+				"Co",
+				"ConfigType_Int"
+			],
+			[
+				"Contype_",
+				"ConfigType_Unknown"
+			],
+			[
+				"COnf",
+				"ConfigType"
+			],
+			[
+				"su",
+				"substring"
+			],
+			[
+				"line",
+				"lineNum"
+			],
+			[
+				"INTEN",
+				"INTERNAL"
+			],
+			[
+				"Config",
+				"ConfigType"
+			],
+			[
+				"confi",
+				"configType"
+			],
+			[
+				"COn",
+				"ConfigType"
+			],
+			[
+				"ii",
+				"initializePos"
+			],
+			[
+				"ini",
+				"initializePos"
+			],
+			[
+				"com",
+				"commentPos"
+			],
+			[
+				"allo",
+				"allocated"
+			],
+			[
+				"play",
+				"player"
+			],
+			[
+				"entit",
+				"EntityId"
+			],
+			[
+				"g_wo",
+				"g_world"
+			],
+			[
+				"Ent",
+				"EntitySystem"
+			],
+			[
+				"cStr",
+				"cStrSource"
+			],
+			[
+				"fil",
+				"filename"
+			],
+			[
+				"file",
+				"filePath"
+			],
+			[
+				"inc",
+				"incremental"
+			],
+			[
+				"out",
+				"outExe"
+			],
+			[
+				"pd",
+				"pdbName"
+			],
+			[
+				"compil",
+				"compileFlags"
+			],
+			[
+				"pos",
+				"position"
+			],
+			[
+				"wall",
+				"wallTransform"
+			],
+			[
+				"add",
+				"addComponent"
+			],
+			[
+				"surf",
+				"surfaceTransform"
+			],
+			[
+				"g_ston",
+				"g_stoneMaterial"
+			],
+			[
+				"suf",
+				"surfaceTransform"
+			],
+			[
+				"g_stone",
+				"g_stoneTexture"
+			],
+			[
+				"g_s",
+				"g_stoneMaterial"
+			],
+			[
+				"g_",
+				"g_terrainMaterial"
+			],
+			[
+				"Com",
+				"Component_Name"
+			],
+			[
+				"Enti",
+				"EntityId"
+			],
+			[
+				"tex",
+				"textures"
+			],
+			[
+				"GL_CO",
+				"GL_COLOR_ATTACHMENT2"
+			],
+			[
+				"GL_COLO",
+				"GL_COLOR_ATTACHMENT1"
+			],
+			[
+				"GL_Color",
+				"GL_COLOR_ATTACHMENT0"
+			],
+			[
+				"te",
+				"textures"
+			],
+			[
+				"g",
+				"gbuffer"
+			],
+			[
+				"bi",
+				"bindTexture"
+			],
+			[
+				"dra",
+				"drawBuffers"
+			],
+			[
+				"u_",
+				"u_diffuse"
+			],
+			[
+				"GL_TEXT",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"GL_TE",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"dfe",
+				"defaultScratchAllocator"
+			],
+			[
+				"de",
+				"defaultScratchAllocator"
+			],
+			[
+				"Hea",
+				"HeapAllocator"
+			],
+			[
+				"defa",
+				"defaultScratchAllocator"
+			],
+			[
+				"ali",
+				"align"
+			],
+			[
+				"m_",
+				"m_backing"
+			],
+			[
+				"m_b",
+				"m_begin"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/main.cpp",
+			"settings":
+			{
+				"buffer_size": 114,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "LD33.sublime-project",
+			"settings":
+			{
+				"buffer_size": 207,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/MSBuild/MSBuild.sublime-build",
+					""
+				],
+				[
+					"Packages/MSBuild/MSBuild.sublime-build",
+					"Parallel Build"
+				],
+				[
+					"Packages/MSBuild/MSBuild.sublime-build",
+					"Debug Configuration"
+				],
+				[
+					"Packages/MSBuild/MSBuild.sublime-build",
+					"Release Configuration"
+				]
+			],
+			[
+				"Packages/MSBuild/MSBuild.sublime-build",
+				"Debug Configuration"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 400.0,
+		"last_filter": "clang",
+		"selected_items":
+		[
+			[
+				"clang",
+				"Clang Format: Select Style"
+			],
+			[
+				"js",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacop",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"ssya",
+				"Set Syntax: YAML"
+			],
+			[
+				"ssc++",
+				"Set Syntax: C++11"
+			],
+			[
+				"preu",
+				"Preferences: Settings - User"
+			],
+			[
+				"ssdart",
+				"Set Syntax: Dart"
+			],
+			[
+				"json",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"c++",
+				"Set Syntax: C++11"
+			],
+			[
+				"pacremo",
+				"Package Control: Remove Package"
+			],
+			[
+				"j",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacjs",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"jso",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"keybinu",
+				"Preferences: Key Bindings - User"
+			],
+			[
+				"pacj",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacjso",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"ssC++",
+				"Set Syntax: C++11"
+			],
+			[
+				"pajson",
+				"z:AAAPackageDev: New JSON Syntax Definition"
+			],
+			[
+				"preus",
+				"Preferences: Settings - User"
+			],
+			[
+				"ssini",
+				"Set Syntax: INI"
+			],
+			[
+				"sstext",
+				"Set Syntax: Plain Text"
+			],
+			[
+				"ssjai",
+				"Set Syntax: Jai"
+			],
+			[
+				"repl",
+				"SublimeREPL: Shell"
+			],
+			[
+				"prefu",
+				"Preferences: Settings - User"
+			],
+			[
+				"paco",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"replsh",
+				"SublimeREPL: Shell"
+			],
+			[
+				"ssli",
+				"Set Syntax: Lisp"
+			],
+			[
+				"sse",
+				"Set Syntax: ESSL"
+			],
+			[
+				"pacup",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"pacin",
+				"Package Control: Install Package"
+			],
+			[
+				"ssba",
+				"Set Syntax: Batch File"
+			],
+			[
+				"ssbat",
+				"Set Syntax: Batch File"
+			],
+			[
+				"ssglsl",
+				"Set Syntax: GLSL"
+			],
+			[
+				"pacoop",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"pinc",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"pre",
+				"Preferences: Settings - User"
+			],
+			[
+				"pacins",
+				"Package Control: Install Package"
+			],
+			[
+				"paclst",
+				"Package Control: List Packages"
+			],
+			[
+				"pacrepo",
+				"Package Control: Add Repository"
+			],
+			[
+				"pacrem",
+				"Package Control: Remove Package"
+			],
+			[
+				"pacre",
+				"Package Control: Add Repository"
+			],
+			[
+				"pacadd",
+				"Package Control: Advanced Install Package"
+			],
+			[
+				"conta",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"clangf",
+				"Clang Format: Select Style"
+			],
+			[
+				"ssj",
+				"Set Syntax: JSON"
+			],
+			[
+				"presuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"pref",
+				"Preferences: Settings - User"
+			],
+			[
+				"ssc+",
+				"Set Syntax: C++11"
+			],
+			[
+				"git",
+				"GoSublime: Do a sanity check"
+			],
+			[
+				"gitca",
+				"GitGutter: Compare Against HEAD"
+			],
+			[
+				"pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"packremop",
+				"Package Control: Remove Package"
+			],
+			[
+				"pacl",
+				"Package Control: List Packages"
+			],
+			[
+				"paclis",
+				"Package Control: List Packages"
+			],
+			[
+				"Snippet: ",
+				"Snippet: Context Entry"
+			],
+			[
+				"prefus",
+				"Preferences: Settings - User"
+			],
+			[
+				"presu",
+				"Preferences: Settings - User"
+			],
+			[
+				"shell",
+				"SublimeREPL: Shell"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			],
+			[
+				"linter",
+				"SublimeLinter: Choose Gutter Theme"
+			],
+			[
+				"sublime lin",
+				"SublimeLint: Next Error"
+			],
+			[
+				"prefer",
+				"Preferences: Settings - User"
+			],
+			[
+				"prefuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"ssjo",
+				"Set Syntax: Json Generic Object Elements"
+			],
+			[
+				"ssjson",
+				"Set Syntax: JSON"
+			],
+			[
+				"sssublime",
+				"Set Syntax: Sublime Text Build System"
+			],
+			[
+				"ssjso",
+				"Set Syntax: JSON"
+			],
+			[
+				"colo",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"coloscr",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"pacview",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"markdown",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mult",
+				"Set Syntax: MultiMarkdown"
+			],
+			[
+				"markdow",
+				"Set Syntax: MultiMarkdown"
+			],
+			[
+				"colosc",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"pacremove",
+				"Package Control: Remove Package"
+			],
+			[
+				"sc++",
+				"Set Syntax: C++"
+			],
+			[
+				"packconvert",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"conver",
+				"Build With: Convert to ... - JSON"
+			],
+			[
+				"schols",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"pacviop",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"paccj",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacconj",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacconver",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacjon",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacv",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"packvew",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"jai",
+				"Set Syntax: Jai"
+			],
+			[
+				"ssja",
+				"Set Syntax: jai"
+			],
+			[
+				"schere",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"schemre",
+				"ColorSchemeSelector: Random Color Scheme"
+			],
+			[
+				"schemr",
+				"ColorSchemeSelector: Random Color Scheme"
+			],
+			[
+				"pacinstall",
+				"Package Control: Install Package"
+			],
+			[
+				"preuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"ssxml",
+				"Set Syntax: XML"
+			],
+			[
+				"package control ",
+				"Package Control: Install Package"
+			],
+			[
+				"channel",
+				"ChannelRepositoryTools: Test Default Channel"
+			],
+			[
+				"pacjson",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"",
+				"Clang Format: Format Selection"
+			],
+			[
+				"pacconjs",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"sssnip",
+				"Set Syntax: Sublime Text Snippet (Raw)"
+			],
+			[
+				"aaasni",
+				"z:AAAPackageDev: New Raw Snippet"
+			],
+			[
+				"pacvuew",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"aaa",
+				"z:AAAPackageDev: New Completions File"
+			],
+			[
+				"wrap",
+				"Word Wrap: Toggle"
+			],
+			[
+				"pajs",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"convjso",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"packjson",
+				"z:AAAPackageDev: Convert (YAML, JSON, PList) to…"
+			],
+			[
+				"pacvi",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"acview",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"paview",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"packview",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"pview",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"paci",
+				"Package Control: Install Package"
+			],
+			[
+				"pacvew",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"pacrev",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"packre",
+				"Package Control: Remove Package"
+			],
+			[
+				"so",
+				"Sort Lines"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"convert",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"form",
+				"Clang Format: Format Selection"
+			],
+			[
+				"cla",
+				"Clang Format: Format Selection"
+			],
+			[
+				"clag",
+				"Clang Format: Format Selection"
+			],
+			[
+				"clan",
+				"Clang Format: Select Style"
+			],
+			[
+				"ssin",
+				"Set Syntax: INI"
+			],
+			[
+				"packin",
+				"Package Control: Install Package"
+			],
+			[
+				"converta",
+				"Indentation: Convert to Tabs"
+			]
+		],
+		"width": 590.0
+	},
+	"console":
+	{
+		"height": 179.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2deb499853c4371624f5a07e27c334aa' + 'bf8c4e67d14fb0525ba4f89698a6d7e1'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": false,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/W/LudumDare/LD33"
+	],
+	"file_history":
+	[
+		"/W/LudumDare/LD33/LD33.sublime-project",
+		"/W/LudumDare/LD33/src/math.hpp",
+		"/W/LudumDare/LD33/src/common.hpp",
+		"/W/LudumDare/LD33/.clang-format",
+		"/W/LudumDare/LD33/index.html",
+		"/W/LudumDare/LD33/misc/server.bat",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/C++11/C++11.JSON-tmLanguage",
+		"/W/LudumDare/LD33/src/unity_build.cpp",
+		"/W/emscripten/game_test/src/unity_build.cpp",
+		"/W/emscripten/game_test/src/level.cpp",
+		"/W/emscripten/game_test/src/bitmap.hpp",
+		"/W/emscripten/game_test/src/game.hpp",
+		"/W/emscripten/game_test/src/Level.hpp",
+		"/W/emscripten/game_test/src/game.cpp",
+		"/W/emscripten/game_test/src/bitmap.cpp",
+		"/W/emscripten/game_test/src/common.hpp",
+		"/W/emscripten/game_test/web/index.html",
+		"/W/emscripten/game_test/web/game.js.map",
+		"/W/emscripten/game_test/src/main.cpp",
+		"/W/emscripten/game_test/misc/build.bat",
+		"/W/emscripten/game_test/src/math.hpp",
+		"/W/emscripten/game_test/.clang-format",
+		"/C/Users/Bill/Downloads/PoC_source/src/com/mojang/escape/gui/Bitmap3D.java",
+		"/C/Users/Bill/Downloads/PoC_source/src/com/mojang/escape/gui/Sprite.java",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/W/emscripten/game_test/web/test.txt",
+		"/W/emscripten/game_test/src/stb_image.h",
+		"/W/Dunjun/include/Dunjun/Graphics/Image.hpp",
+		"/W/Dunjun/src/Dunjun/Graphics/Image.cpp",
+		"/W/Dunjun/external/SDL2-2.0.3/include/SDL/SDL_main.h",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/Dart/Dart.tmLanguage",
+		"/W/Dunjun/include/Dunjun/Core/ContainerTypes.hpp",
+		"/W/Dunjun/include/Dunjun/Core/StringFunctions.hpp",
+		"/W/Dunjun/src/Game.cpp",
+		"/W/Dunjun/include/Dunjun/Core/Array.hpp",
+		"/W/Dunjun/include/Dunjun/Core/String.hpp",
+		"/W/Dunjun/include/Dunjun/Core/Allocator.hpp",
+		"/W/Dunjun/data/settings.fred",
+		"/W/Dunjun/include/Dunjun/Window/Input.hpp",
+		"/W/Dunjun/include/Dunjun/Common.hpp",
+		"/W/Dunjun/src/Dunjun/Core/Logger.cpp",
+		"/W/Dunjun/src/UnityBuild.cpp",
+		"/W/Dunjun/misc/build.bat",
+		"/W/Dunjun/src/Dunjun/Core/ConfigFile.cpp",
+		"/W/Dunjun/src/Dunjun/Core/StringFunctions.cpp",
+		"/W/Dunjun/include/Dunjun/Core/HashMap.hpp",
+		"/W/Dunjun/include/Dunjun/Core/Queue.hpp",
+		"/W/Dunjun/src/Dunjun/Core/String.cpp",
+		"/W/Dunjun/misc/shell.bat",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/User/Dunjun.sublime-build",
+		"/W/Dunjun/include/Dunjun/Core/Logger.hpp",
+		"/W/Dunjun/include/Dunjun/Config.hpp",
+		"/W/Dunjun/data/shaders/geometryPass.frag.glsl",
+		"/W/Dunjun/data/shaders/geometryPass.vert.glsl",
+		"/W/Dunjun/src/Dunjun/RenderSystem.cpp",
+		"/W/Dunjun/src/Dunjun/World.cpp",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/C++/C.tmLanguage",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/W/Dunjun/external/SDL2-2.0.3/include/SDL/SDL_gamecontroller.h",
+		"/W/Dunjun/src/Dunjun/Window/Input.cpp",
+		"/W/Dunjun/src/Dunjun/Window/Window.cpp",
+		"/W/Dunjun/src/Dunjun/Core/Time.cpp",
+		"/W/Dunjun/include/Dunjun/Core/Clock.hpp",
+		"/W/Dunjun/include/Dunjun/World.hpp",
+		"/W/Dunjun/include/Dunjun/Types.hpp",
+		"/W/Dunjun/src/Dunjun/Graphics/Mesh.cpp",
+		"/W/Dunjun/include/Dunjun/Graphics/Mesh.hpp",
+		"/W/Dunjun/include/Dunjun/Math/Types.hpp",
+		"/W/Dunjun/include/Dunjun/Graphics/Vertex.hpp",
+		"/W/Dunjun/data/shaders/Material.head.glsl",
+		"/W/Dunjun/include/Dunjun/Graphics/Material.hpp",
+		"/W/Dunjun/include/Dunjun/Graphics/Camera.hpp",
+		"/W/Dunjun/include/Dunjun/RenderSystem.hpp",
+		"/W/Dunjun/data/shaders/Lighting.head.glsl",
+		"/W/Dunjun/src/Dunjun/Graphics/Texture.cpp",
+		"/W/Dunjun/include/Dunjun/Core/ConfigFile.hpp",
+		"/W/Dunjun/include/Dunjun/Core/Strconv.hpp",
+		"/W/Dunjun/include/Dunjun/Window/Window.hpp",
+		"/W/Dunjun/include/Dunjun/Window.hpp",
+		"/W/Dunjun/include/Dunjun/Window/VideoMode.hpp",
+		"/W/Dunjun/src/main.cpp",
+		"/W/Dunjun/include/Dunjun/Game.hpp",
+		"/W/Dunjun/src/Dunjun/Core/Strconv.cpp",
+		"/C/Users/Bill/Downloads/imgui-demo-binaries-20150716/imgui.ini",
+		"/C/Program Files (x86)/Microsoft Visual Studio 12.0/VC/vcvarsall.bat",
+		"/C/Program Files (x86)/Microsoft Visual Studio 12.0/VC/bin/amd64/vcvars64.bat",
+		"/W/Dunjun/src/Dunjun/Game.cpp",
+		"/W/Dunjun/src/Dunjun/Graphics/ShaderProgram.cpp",
+		"/W/Dunjun/Dunjun.sublime-project",
+		"/C/Program Files (x86)/Steam/steamapps/common/Skyrim/VeryHigh.ini",
+		"/W/Dunjun/data/config.fred",
+		"/W/Dunjun/include/Dunjun/Core/Murmur.hpp",
+		"/W/Dunjun/include/Dunjun/Core/Fred.hpp",
+		"/W/Dunjun/todo/Todo - Engine.md",
+		"/W/Dunjun/external/glew-1.12.0/TODO.txt",
+		"/W/Dunjun/include/Dunjun/Graphics/RenderTexture.hpp",
+		"/W/Dunjun/include/Dunjun/Entity.hpp",
+		"/W/Dunjun/data/shaders/common.head.glsl",
+		"/W/Dunjun/include/Dunjun/Graphics/ShaderProgram.hpp",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/JaiLang/Jai.tmLanguage",
+		"/W/Dunjun/src/Dunjun/SceneGraph.cpp",
+		"/W/Dunjun/src/Dunjun/Entity.cpp",
+		"/W/Dunjun/external/SDL2-2.0.3/include/SDL/close_code.h",
+		"/W/Dunjun/external/SDL2-2.0.3/include/SDL/begin_code.h",
+		"/W/Dunjun/external/SDL2-2.0.3/include/SDL/SDL_messagebox.h",
+		"/W/handmade/misc/.emacs",
+		"/W/Dunjun/src/Dunjun/Window/VideoMode.cpp",
+		"/W/Dunjun/tests/Unit_Tests.cpp",
+		"/W/Dunjun/include/Dunjun/Graphics/Lighting.hpp",
+		"/W/Dunjun/include/Dunjun/Core/TickCounter.hpp",
+		"/W/Dunjun/include/Dunjun/Core/Time.hpp",
+		"/W/Dunjun/ReadMe.md",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/C++11/C++11.tmLanguage",
+		"/W/Dunjun/misc/buildt.bat",
+		"/W/Dunjun/src/test.cpp",
+		"/W/Dunjun/misc/debug.bat",
+		"/W/Dunjun/include/Dunjun/ResourceHolders.hpp",
+		"/W/Dunjun/include/Dunjun/Core/FileSystem.hpp",
+		"/W/Dunjun/src/Dunjun/Core/FileSystem.cpp",
+		"/W/Dunjun/misc/run.bat",
+		"/W/handmade/code/build.bat",
+		"/C/Program Files (x86)/Microsoft Visual Studio 12.0/VC/vcEmptyTestProject.vsz",
+		"/W/Dunjun/misc/clean.bat",
+		"/W/Dunjun/misc/build-vc.bat",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/Batch File/Batch File.tmLanguage",
+		"/W/Dunjun/src/Dunjun/Graphics/GBuffer.cpp",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/OpenGL Shading Language (GLSL)/GLSL.tmLanguage",
+		"/C/Users/Bill/AppData/Roaming/Sublime Text 3/Packages/Shader Syntax (GLSL HLSL Cg)/OpenGL SL.tmLanguage"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 118.0,
+		"where_history":
+		[
+			"W:\\Dunjun\\include,W:\\Dunjun\\src",
+			"",
+			"SDL",
+			"W:\\Dunjun\\include,W:\\Dunjun\\src",
+			"W:/Dunjun/src;W:/Dunjun/include",
+			"W:\\Dunjun\\src;W:\\Dunjun\\include",
+			"src;include",
+			"",
+			"W:\\Dunjun\\include,W:\\Dunjun\\src",
+			"W:\\Dunjun\\include",
+			"W:\\Dunjun\\src",
+			"C:\\Users\\Bill\\Downloads\\builtin_shaders\\CGIncludes"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"f32",
+			"Vector2",
+			"Vector3",
+			"Vector2",
+			"zz/camera.fov",
+			"height",
+			"auto& display = ",
+			"struct ",
+			"game.",
+			"Game::",
+			"Game*",
+			"camera",
+			"game->",
+			"keys",
+			"camera",
+			"level",
+			"this->",
+			"void",
+			"game.",
+			"game, ",
+			"Game& game",
+			"INTERNAL ",
+			"fb.",
+			"width",
+			"fb.",
+			"game",
+			"game.",
+			"Game",
+			"game",
+			"game, ",
+			"game.",
+			"INTERNAL ",
+			"fb.",
+			"GLOBAL ",
+			"= {",
+			"Color",
+			"constexpr",
+			"0xff",
+			"{0xff",
+			"0xff",
+			"0,",
+			"255",
+			"0",
+			"rgba",
+			"u32",
+			"f32 *",
+			");",
+			"u8",
+			"-1",
+			"1",
+			"0",
+			"depth",
+			"TILE_SIZE * ",
+			"render_world",
+			"floors",
+			"world",
+			"/ TILE_SIZE",
+			">=",
+			"||",
+			"32",
+			"xtex",
+			"y",
+			" &",
+			"s32",
+			"x",
+			"button",
+			"black",
+			"far_depth",
+			"clear_depth_buffers",
+			"game.",
+			"apply_post_fx",
+			"480px",
+			"512px",
+			"854px",
+			"const",
+			"640",
+			"* dt",
+			"TAU / 4",
+			"8",
+			"1",
+			"pixels",
+			"memory",
+			"depth",
+			"10000",
+			"0.001f",
+			"depth_clip",
+			"zz",
+			"y_pixel",
+			"x_pixel",
+			"x_",
+			"v1",
+			"v0",
+			"x0",
+			"f32",
+			"Vector",
+			"tan",
+			"atan",
+			"(0.5f + camera.pitch)",
+			"camera.pitch",
+			"ame.display, game.camera,",
+			"Game& game, Framebuffer& display, const Camera& camera,",
+			"width",
+			"game,",
+			"Math",
+			"inv_fov",
+			"fov",
+			"inv_fov",
+			"rot_x",
+			"rot_z",
+			"player",
+			"player.head_tilt",
+			"Render",
+			"player.position.y",
+			"player.position.x",
+			"eye_level",
+			"camera",
+			"position",
+			"eye_level",
+			"player.",
+			"player.rotation",
+			"player",
+			"head_tilt",
+			"display.view_height",
+			"terrain",
+			"6",
+			"r_sin",
+			"r_cos",
+			"r_sin"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"u8x8",
+			"ContainerTypes.hpp",
+			"/Core/",
+			"_CORE_",
+			"<Dunjun/Graphics/Types.hpp>",
+			"Color{255, 255, 255, 255}",
+			"#ifndef",
+			"#pragma once\n#ifndef DUNJUN",
+			"Dunjun/Types.hpp",
+			"size(",
+			"panic",
+			"#include <Dunjun/System/Types.hpp>",
+			"\\\\",
+			"emplace_back",
+			"Window::getHandle()",
+			".vertices.append(",
+			".vertices.emplace_back("
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 114,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								76,
+								76
+							]
+						],
+						"settings":
+						{
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/C++11/C++11.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "LD33.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								200,
+								200
+							]
+						],
+						"settings":
+						{
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.9o://W:\\Dunjun\\include\\Dunjun\\Math\\Functions":
+	{
+		"height": 140.0
+	},
+	"output.9o://W:\\Dunjun\\src\\Dunjun":
+	{
+		"height": 140.0
+	},
+	"output.9o://W:\\Dunjun\\src\\Dunjun\\Level":
+	{
+		"height": 110.0
+	},
+	"output.9o://W:\\Dunjun\\src\\Dunjun\\Scene":
+	{
+		"height": 140.0
+	},
+	"output.GoSublime-output":
+	{
+		"height": 110.0
+	},
+	"output.clang":
+	{
+		"height": 55.0
+	},
+	"output.dart.analyzer":
+	{
+		"height": 92.0
+	},
+	"output.exec":
+	{
+		"height": 282.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.package_dev":
+	{
+		"height": 106.0
+	},
+	"pinned_build_system": "Packages/User/Dunjun.sublime-build",
+	"project": "LD33.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"b",
+				"src\\bitmap.hpp"
+			],
+			[
+				"game",
+				"src\\game.hpp"
+			],
+			[
+				"lee",
+				"src\\Level.hpp"
+			],
+			[
+				"leve",
+				"src\\level.cpp"
+			],
+			[
+				"bit",
+				"src\\bitmap.hpp"
+			],
+			[
+				"le",
+				"src\\level.cpp"
+			],
+			[
+				"ga",
+				"src\\game.hpp"
+			],
+			[
+				"bi",
+				"src\\bitmap.hpp"
+			],
+			[
+				"com",
+				"src\\common.hpp"
+			],
+			[
+				"mai",
+				"src\\main.cpp"
+			],
+			[
+				"bitc",
+				"src\\bitmap.cpp"
+			],
+			[
+				"gam",
+				"src\\game.hpp"
+			],
+			[
+				"main",
+				"src\\main.cpp"
+			],
+			[
+				"inde",
+				"web\\index.html"
+			],
+			[
+				"g",
+				"src\\game.hpp"
+			],
+			[
+				"map",
+				"web\\game.js.map"
+			],
+			[
+				"ma",
+				"src\\main.cpp"
+			],
+			[
+				"comm",
+				"src\\common.hpp"
+			],
+			[
+				"bim",
+				"src\\bitmap.cpp"
+			],
+			[
+				"mat",
+				"src\\math.hpp"
+			],
+			[
+				"math",
+				"src\\math.hpp"
+			],
+			[
+				"min",
+				"src\\main.cpp"
+			],
+			[
+				"m",
+				"src\\main.cpp"
+			],
+			[
+				"bic",
+				"src\\bitmap.cpp"
+			],
+			[
+				"mah",
+				"src\\math.hpp"
+			],
+			[
+				"imagec",
+				"src\\Dunjun\\Graphics\\Image.cpp"
+			],
+			[
+				"textuc",
+				"src\\Dunjun\\Graphics\\Texture.cpp"
+			],
+			[
+				"image",
+				"include\\Dunjun\\Graphics\\Image.hpp"
+			],
+			[
+				"textru",
+				"include\\Dunjun\\Graphics\\Texture.hpp"
+			],
+			[
+				"iamge",
+				"include\\Dunjun\\Graphics\\Image.hpp"
+			],
+			[
+				"trut",
+				"external\\stb-master\\include\\stb\\stb_truetype.h"
+			],
+			[
+				"gamec",
+				"src\\Game.cpp"
+			],
+			[
+				"string",
+				"include\\Dunjun\\Core\\String.hpp"
+			],
+			[
+				"contain",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"arra",
+				"include\\Dunjun\\Core\\Array.hpp"
+			],
+			[
+				"strinf",
+				"include\\Dunjun\\Core\\StringFunctions.hpp"
+			],
+			[
+				"cont",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"hash",
+				"include\\Dunjun\\Core\\HashMap.hpp"
+			],
+			[
+				"queu",
+				"include\\Dunjun\\Core\\Queue.hpp"
+			],
+			[
+				"array",
+				"include\\Dunjun\\Core\\Array.hpp"
+			],
+			[
+				"strinc",
+				"src\\Dunjun\\Core\\String.cpp"
+			],
+			[
+				"container",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"input",
+				"include\\Dunjun\\Window\\Input.hpp"
+			],
+			[
+				"sett",
+				"data\\settings.fred"
+			],
+			[
+				"confi",
+				"src\\Dunjun\\Core\\ConfigFile.cpp"
+			],
+			[
+				"alloca",
+				"include\\Dunjun\\Core\\Allocator.hpp"
+			],
+			[
+				"strinfun",
+				"include\\Dunjun\\Core\\StringFunctions.hpp"
+			],
+			[
+				"continer",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"stringc",
+				"src\\Dunjun\\Core\\String.cpp"
+			],
+			[
+				"contin",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"shell",
+				"misc\\shell.bat"
+			],
+			[
+				"buid",
+				"misc\\build.bat"
+			],
+			[
+				"unit",
+				"src\\UnityBuild.cpp"
+			],
+			[
+				"striugn",
+				"src\\Dunjun\\Core\\StringFunctions.cpp"
+			],
+			[
+				"log",
+				"include\\Dunjun\\Core\\Logger.hpp"
+			],
+			[
+				"config",
+				"include\\Dunjun\\Config.hpp"
+			],
+			[
+				"build",
+				"src\\UnityBuild.cpp"
+			],
+			[
+				"inpuh",
+				"include\\Dunjun\\Window\\Input.hpp"
+			],
+			[
+				"wind",
+				"src\\Dunjun\\Window\\Window.cpp"
+			],
+			[
+				"inpc",
+				"src\\Dunjun\\Window\\Input.cpp"
+			],
+			[
+				"timc",
+				"src\\Dunjun\\Core\\Time.cpp"
+			],
+			[
+				"tim",
+				"src\\Dunjun\\Core\\Time.cpp"
+			],
+			[
+				"time",
+				"src\\Dunjun\\Core\\Time.cpp"
+			],
+			[
+				"clock",
+				"include\\Dunjun\\Core\\Clock.hpp"
+			],
+			[
+				"winc",
+				"src\\Dunjun\\Window\\Window.cpp"
+			],
+			[
+				"renderss",
+				"src\\Dunjun\\RenderSystem.cpp"
+			],
+			[
+				"worl",
+				"include\\Dunjun\\World.hpp"
+			],
+			[
+				"wor",
+				"src\\Dunjun\\World.cpp"
+			],
+			[
+				"setti",
+				"data\\settings.fred"
+			],
+			[
+				"type",
+				"include\\Dunjun\\Types.hpp"
+			],
+			[
+				"ty",
+				"include\\Dunjun\\Types.hpp"
+			],
+			[
+				"mathtyp",
+				"include\\Dunjun\\Math\\Types.hpp"
+			],
+			[
+				"meshc",
+				"src\\Dunjun\\Graphics\\Mesh.cpp"
+			],
+			[
+				"verte",
+				"include\\Dunjun\\Graphics\\Vertex.hpp"
+			],
+			[
+				"mesh",
+				"include\\Dunjun\\Graphics\\Mesh.hpp"
+			],
+			[
+				"geom",
+				"data\\shaders\\geometryPass.frag.glsl"
+			],
+			[
+				"head",
+				"data\\shaders\\Material.head.glsl"
+			],
+			[
+				"render",
+				"src\\Dunjun\\RenderSystem.cpp"
+			],
+			[
+				"materi",
+				"include\\Dunjun\\Graphics\\Material.hpp"
+			],
+			[
+				"ge",
+				"data\\shaders\\geometryPass.vert.glsl"
+			],
+			[
+				"camer",
+				"include\\Dunjun\\Graphics\\Camera.hpp"
+			],
+			[
+				"wo",
+				"src\\Dunjun\\World.cpp"
+			],
+			[
+				"rende",
+				"src\\Dunjun\\RenderSystem.cpp"
+			],
+			[
+				"settin",
+				"data\\settings.fred"
+			],
+			[
+				"gmae",
+				"src\\Game.cpp"
+			],
+			[
+				"ligh",
+				"data\\shaders\\Lighting.head.glsl"
+			],
+			[
+				"teru",
+				"src\\Dunjun\\Graphics\\Texture.cpp"
+			],
+			[
+				"winh",
+				"include\\Dunjun\\Window\\Window.hpp"
+			],
+			[
+				"winod",
+				"include\\Dunjun\\Window\\Window.hpp"
+			],
+			[
+				"win",
+				"include\\Dunjun\\Window.hpp"
+			],
+			[
+				"conf",
+				"include\\Dunjun\\Core\\ConfigFile.hpp"
+			],
+			[
+				"video",
+				"include\\Dunjun\\Window\\VideoMode.hpp"
+			],
+			[
+				"windwo",
+				"include\\Dunjun\\Window\\Window.hpp"
+			],
+			[
+				"strc",
+				"src\\Dunjun\\Core\\Strconv.cpp"
+			],
+			[
+				"strcon",
+				"include\\Dunjun\\Core\\Strconv.hpp"
+			],
+			[
+				"bu",
+				"misc\\build.bat"
+			],
+			[
+				"imag",
+				"src\\Dunjun\\Graphics\\Image.cpp"
+			],
+			[
+				"pro",
+				"Dunjun.sublime-project"
+			],
+			[
+				"strin",
+				"include\\Dunjun\\Core\\String.hpp"
+			],
+			[
+				"uni",
+				"src\\UnityBuild.cpp"
+			],
+			[
+				"bui",
+				"src\\UnityBuild.cpp"
+			],
+			[
+				"hahsm",
+				"include\\Dunjun\\Core\\HashMap.hpp"
+			],
+			[
+				"strings",
+				"src\\Dunjun\\Core\\StringFunctions.cpp"
+			],
+			[
+				"mur",
+				"include\\Dunjun\\Core\\Murmur.hpp"
+			],
+			[
+				"types",
+				"include\\Dunjun\\Core\\ContainerTypes.hpp"
+			],
+			[
+				"shadc",
+				"src\\Dunjun\\Graphics\\ShaderProgram.cpp"
+			],
+			[
+				"todo",
+				"todo\\Todo - Engine.md"
+			],
+			[
+				"world",
+				"include\\Dunjun\\World.hpp"
+			],
+			[
+				"glsl",
+				"data\\shaders\\Lighting.head.glsl"
+			],
+			[
+				"cstr",
+				"src\\Dunjun\\Core\\String.cpp"
+			],
+			[
+				"shader",
+				"include\\Dunjun\\Graphics\\ShaderProgram.hpp"
+			],
+			[
+				"enti",
+				"include\\Dunjun\\Entity.hpp"
+			],
+			[
+				"stri",
+				"include\\Dunjun\\Core\\String.hpp"
+			],
+			[
+				"allo",
+				"include\\Dunjun\\Core\\Allocator.hpp"
+			],
+			[
+				"inc",
+				"src\\Dunjun\\Window\\Input.cpp"
+			],
+			[
+				"scengr",
+				"src\\Dunjun\\SceneGraph.cpp"
+			],
+			[
+				"entic",
+				"src\\Dunjun\\Entity.cpp"
+			],
+			[
+				"ent",
+				"include\\Dunjun\\Entity.hpp"
+			],
+			[
+				"close",
+				"external\\SDL2-2.0.3\\include\\SDL\\close_code.h"
+			],
+			[
+				"begin",
+				"external\\SDL2-2.0.3\\include\\SDL\\begin_code.h"
+			],
+			[
+				"begi",
+				"external\\SDL2-2.0.3\\include\\SDL\\begin_code.h"
+			],
+			[
+				"sdl_me",
+				"external\\SDL2-2.0.3\\include\\SDL\\SDL_messagebox.h"
+			],
+			[
+				"enc",
+				"src\\Dunjun\\Entity.cpp"
+			],
+			[
+				"uit",
+				"tests\\Unit_Tests.cpp"
+			],
+			[
+				"woc",
+				"src\\Dunjun\\World.cpp"
+			],
+			[
+				"wr",
+				"include\\Dunjun\\World.hpp"
+			],
+			[
+				"mater",
+				"include\\Dunjun\\Graphics\\Material.hpp"
+			],
+			[
+				"tick",
+				"include\\Dunjun\\Core\\TickCounter.hpp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 400.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 326.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 214.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 4
+	}
+}

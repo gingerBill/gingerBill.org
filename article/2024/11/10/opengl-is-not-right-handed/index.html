@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenGL is not Right-Handed">
+<meta name="twitter:description" content="">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+ <title>OpenGL is not Right-Handed - gingerBill</title>
+
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="https://odin-lang.org">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+<main><article class="article-meta">
+<header>
+<h1>OpenGL is not Right-Handed</h1>
+
+<div class="info">
+<p><span class="date">2024-11-10</span></p>
+</div>
+</header>
+<p>The original Twitter thread: https://x.com/TheGingerBill/status/1508833104567414785</p>
+<hr />
+<p>I have a huge gripe when I read articles/tutorials on OpenGL: most people have no idea what they are talking about when it comes to coordinate systems and matrices.</p>
+<p>Specifically: OpenGL is <strong>NOT</strong> right-handed; the confusion over column-major &quot;matrices&quot;.</p>
+<p>Let's clear up the first point. Many people will say OpenGL uses a right-handed coordinate system. Loads of articles/tutorials will keep repeating the view that OpenGL uses a right-handed coordinate system. So the question is, why do people think this?</p>
+<p>Modern OpenGL only knows about the <em>Normalized Device Coordinates (NDC)</em>, which is treated as if it is a left-handed 3D coordinate space. This means that OpenGL &quot;is&quot; left-handed, not right-handed as many articles will tell you.</p>
+<p>The origin of &quot;right-handed&quot; comes from the fixed-function days, where Z entries in the functions <code>glOrtho</code> and <code>glFrustum</code> were negated, which flips the handedness. Back in those days, it forced users to pretty much had to use a right-handed world space coordinate system.
+The Z-axis flip is to convert from the <em>conventional</em> world/entity space to the left handed Normalized Device Coordinates (NDC). And modern OpenGL only knowns the NDC.</p>
+<p><img src="/images/proj_to_ndc.jpg" alt="image" /></p>
+<h2>So why has this false idea persisted?</h2>
+<ul>
+<li>It <strong>&quot;was&quot;</strong> true.</li>
+<li>It distinguishes it from Direct3D.</li>
+<li>People just repeat things w/o understanding it.</li>
+<li>Most who use OpenGL don't really know anything about the GPU nor what the NDC is.</li>
+</ul>
+<p><strong>PLEASE READ THE SPEC BEFORE MAKING TUTORIALS!</strong></p>
+<p>Now for the <strong>&quot;column-major&quot;</strong> part.</p>
+<p>This part is actually overloaded and means two things: what is the default vector kind (column-vector vs row-vector), and what is the internal memory layout of a matrix (array-of-column-vectors vs array-of-row-vectors).</p>
+<p>A good article on this has been written by <a href="https://x.com/rygorous">@rygorous</a> regarding this so I won't repeat it too much. <a href="https://fgiesen.wordpress.com/2012/02/12/row-major-vs-column-major-row-vectors-vs-column-vectors/">Row major vs. column major, row vectors vs. column vectors</a>.</p>
+<p>It works because (A B)^T = B^T A^T (where T is the transpose). But where does this difference in convention come from? My best hypothesis is the physics vs mathematics distinction (just like everything else). In physics you default to using column-vectors and in mathematics you default to using row-vectors. It's just a convention.</p>
+<p>It's just another distinction between OpenGL and Direct3D which makes very little difference at the end of the day, especially since in both GLSL and HLSL, you can specify whether a matrix is <code>row_major</code> or <code>column_major</code> if necessary.</p>
+<p>I personally prefer column-vectors because of my background in physics but all that is important is that you are consistent/coherent in your codebase, and make sure that all conventions are make extremely clear: handedness, axis direction, &quot;Euler&quot;-angle conventions, units, etc.</p>
+<p>GLSL also doesn't help it in that the matrix types are written &quot;backwards&quot; to most other conventions. <code>mat2x3</code> in GLSL means a 3 row by 2 column matrix.</p>
+<p>GLSL does not work for this well known mnemonic:</p>
+<ul>
+<li>(A, B) x (B, C) = (A, C)</li>
+<li>e.g. (3 by 4) x (4 by 1) = (3 by 1)</li>
+</ul>
+<p>Then there is the other related issue of having matrices that are stored in the array-of-column-vector layout: many programming languages don't have a built-in concept of a matrix &amp; an array-of-row-vectors will be easier to write as an array-of-column-vectors because it is text.</p>
+<p>It is common to write a matrix in a language like the following <code>float x[3][3] = {...};</code> and if you are trying to adhere to &quot;column-major&quot; memory layout, then you will have to write it down transposed compared to how you would write it down on paper.</p>
+<p>The <a href="https://odin-lang.org/">Odin</a> programming language has both built-in array programming (vectors &amp; swizzling) and matrices, and as a result, this textual issue is completely removed! It even allows you to treat vectors as if they are column-vectors or row-vectors, and things will &quot;just work&quot;! You can even specify the memory layout of the matrices if needed too with <code>#column_major matrix[R, C]T</code> (the default) or <code>#row_major matrix[R, C]T</code>.</p>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>

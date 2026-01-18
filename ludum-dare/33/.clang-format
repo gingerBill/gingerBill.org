@@ -1,0 +1,41 @@
+{
+    ColumnLimit: 0,
+    TabWidth: 4,
+    IndentWidth: 4, # 1 tab
+    UseTab: ForIndentation,
+    BreakBeforeBraces: Linux,
+    PointerBindsToType: true,
+    ###
+    AlwaysBreakAfterDefinitionReturnType: true,
+    AlwaysBreakTemplateDeclarations: true,
+    AlwaysBreakBeforeMultilineStrings: true,
+    IndentFunctionDeclarationAfterType: false,
+    #
+    AccessModifierOffset: -4, # 1 tab
+    AlignAfterOpenBracket: true,
+    AlignConsecutiveAssignments: true,
+    AlignTrailingComments: true,
+    #
+    AllowShortBlocksOnASingleLine: false,
+    AllowShortIfStatementsOnASingleLine: false,
+    AllowShortLoopsOnASingleLine: false,
+    #
+    BreakConstructorInitializersBeforeComma: true,
+    ConstructorInitializerIndentWidth: 0,
+    #
+    IndentCaseLabels: false,
+    #
+    MaxEmptyLinesToKeep: 1,
+    NamespaceIndentation: None,
+    #
+    SpaceBeforeAssignmentOperators: true,
+    SpaceInEmptyParentheses: false,
+    SpacesBeforeTrailingComments: 1,
+    SpacesInAngles: false,
+    SpacesInCStyleCastParentheses: false,
+    SpacesInParentheses: false,
+    SpacesInSquareBrackets: false,
+    #
+    Cpp11BracedListStyle: true,
+    Standard: Cpp11,
+}

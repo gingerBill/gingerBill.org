@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Memory Allocation Strategies - Part 1">
+<meta name="twitter:description" content="Thinking About Memory and Allocation">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+ <title>Memory Allocation Strategies - Part 1 - gingerBill</title>
+
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="https://odin-lang.org">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+<main><article class="article-meta">
+<header>
+<h1>Memory Allocation Strategies - Part 1</h1>
+
+<h2>Thinking About Memory and Allocation</h2>
+
+<div class="info">
+<p><span class="series">Series:</span> <a href="/series/memory-allocation-strategies">Memory Allocation Strategies</a></p>
+<p><span class="date">2019-02-01</span></p>
+</div>
+</header>
+<p>Memory allocation seems to be something many people struggle with. Many languages try to automatically handle memory for you using different strategies: garbage collection (GC), automatic reference counting (ARC), resource acquisition is initialization (RAII), and ownership semantics. However, trying to abstract away memory allocation comes at a higher cost than most people realize.</p>
+<p>Most people are taught to think of memory in terms of the stack and the heap, where the stack is automatically grown for a procedure call, and the heap is some magical thing that you can use to get memory that needs to live longer than the stack. This dualistic approach to memory is the wrong way to think about it. It gives the programmer the mental model that the stack is a special form of memory <label for="stack-pointer" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="stack-pointer" class="margin-toggle"></input>
+<span class="sidenote">Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.</span> and that the heap is magical in nature.</p>
+<p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
+<p><img src="/images/memory-allocation-strategies/virtual_memory.svg#center" alt="Virtual Memory" /></p>
+<h1>Thinking About Allocation</h1>
+<p>When it comes to allocation, there are three main aspects to think about</p>
+<ul>
+<li>The size of the allocation</li>
+<li>The lifetime of that memory</li>
+<li>The usage of that memory</li>
+</ul>
+<p>I usually imagine the first two aspects in the following table, for most problem domains, where the percentages signify what proportion of allocations fall into that category:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: right"></th>
+          <th style="text-align: center">Size Known</th>
+          <th style="text-align: center">Size Unknown</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right"><strong>Lifetime Known</strong></td>
+          <td style="text-align: center">95%</td>
+          <td style="text-align: center">~4%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right"><strong>Lifetime Unknown</strong></td>
+          <td style="text-align: center">~1%</td>
+          <td style="text-align: center">&lt;1%</td>
+      </tr>
+  </tbody>
+</table>
+<p>In the top-left category (Size Known + Lifetime Known), this is the area in which I will be covering the most in this series. Most of the time, you do know the size of the allocation, or the upper bounds at least, and the lifetime of the allocation in question.</p>
+<p>In the top-right category (Size Unknown + Lifetime Known), this is the area in which you may not know how much memory you require but you do know how long you will be using it. The most common examples of this are loading a file into memory at runtime and populating a hash table of unknown size. You may not know the amount of memory you will need a priori and as a result, you may need to &quot;resize/realloc&quot; the memory in order to fit all the data required. In C, <code>malloc</code> et al is a solution to this domain of problems.</p>
+<p>In the bottom-left category (Size Known + Lifetime Unknown), this is the area in which you may not know how long that memory needs to be around but you do know how much memory is needed. In this case, you could say that the &quot;ownership&quot; of that memory across multiple systems is ill-defined. A common solution for this domain of problems is reference counting or ownership semantics.</p>
+<p>In the bottom-right category (Size Unknown + Lifetime Unknown), this is the area in which you have literally no idea how much memory you need nor how long it will be needed for. In practice, this is quite rare and you <em>ought</em> to try and avoid these situations when possible. However, the general solution for this domain of problems is garbage collection <label for="garbage-collection" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="garbage-collection" class="margin-toggle"></input>
+<span class="sidenote">Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.</span>.</p>
+<p>Please note that in domain specific areas, these percentages will be completely different. For instance, a web server that may be handling an unknown amount of requests may require a form of garbage collection if the memory is limited or it may be cheaper to just buy more memory.</p>
+<h1>Generations of Lifetimes</h1>
+<p>For the common category, the general approach that I take is to think about memory lifetimes in terms of generations. An <em>allocation generation</em> is a way to organize memory lifetimes into a hierarchical structure <label for="generation-cut-and-dry" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="generation-cut-and-dry" class="margin-toggle"></input>
+<span class="sidenote">These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).</span>.</p>
+<p>Memory within these generations usually get allocated and freed at the same time (born, live, and die together).</p>
+<ul>
+<li>
+<p><strong>Permanent Allocation</strong>: Memory that is never freed until the end of the program. This memory is persistent during program lifetime.</p>
+</li>
+<li>
+<p><strong>Transient Allocation</strong>: Memory that has a cycle-based lifetime. This memory only persists for the &quot;cycle&quot; and is freed at the end of this cycle. An example of a cycle could be a frame within a graphical program (e.g. a game) or an update loop.</p>
+</li>
+<li>
+<p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p>
+</li>
+</ul>
+<h2>Memory Hierarchies</h2>
+<p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory --- the human brain can only hold so much.</p>
+<p>The same localist thought process can be applied to the memory-space/size of which I will be discussing in later articles in this series.</p>
+<h1>The Compiler's Knowledge of the Program</h1>
+<p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
+<p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems <label for="ownership-systems" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="ownership-systems" class="margin-toggle"></input>
+<span class="sidenote">I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>.</span>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
+<h1>Coming Next</h1>
+<p>In this series, I will discuss the different kinds of memory models and allocation strategies that can be used. These are the topics that will be covered:</p>
+<ul>
+<li>Sequential (Contiguous) Allocations</li>
+<li>Virtual Memory</li>
+<li>Out of Order Allocators and Fragmentation</li>
+<li><code>malloc</code></li>
+<li>Hierarchies of Allocators</li>
+<li>Automatic Lifetime Allocations</li>
+<li>Allocation Grouping and Mental Models</li>
+</ul>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="String Type Distinctions">
+<meta name="twitter:description" content="">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+ <title>String Type Distinctions - gingerBill</title>
+
+  <link rel="stylesheet" href="/css/normalize.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/highlight/style.css" />
+  <script src="/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-67516878-1');
+  </script>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <nav>
+    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/article/">Articles</a></li>
+      <li><a href="https://odin-lang.org">Odin</a></li>
+      <li><a href="/article/index.xml">Subscribe</a></li>
+    </ul>
+  </nav>
+</header>
+<main><article class="article-meta">
+<header>
+<h1>String Type Distinctions</h1>
+
+<div class="info">
+<p><span class="date">2024-04-05</span></p>
+</div>
+</header>
+<p><strong>[Originally from a Twitter Thread]</strong></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1542603515054497792">Original Twitter Post</a></p>
+<p>One thing many languages &amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:</p>
+<ol>
+<li>string value (<code>string</code> or <code>char const *</code>)</li>
+<li>string builder (<code>strings.Builder</code> or <code>realloc+snprintf</code>)</li>
+<li>Backing buffer for a string (<code>[]byte</code> or <code>char *</code>)</li>
+</ol>
+<p>They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.</p>
+<p>They have different use cases which don't actually overlap in practice. Most of the issues with strings come from trying to merge concepts into one.</p>
+<p>In <a href="https://odin-lang.org/">Odin</a>, the distinction between a string value and byte array is very important. <code>string</code> is semantically a string and not an array of 8-bit unsigned integers. There is an implied character encoding (UTF-8) as part of the value. <code>string</code> is also an immutable value in Odin.</p>
+<p>Having a string be immutable allows for a lot of optimizations, but in practice, you never want to mutate the string value itself once it has been created. And when you do mutate it, it most definitely a bug.</p>
+<p>This is why it is important to make a distinction between #1 and #3 and separate the concepts.</p>
+<p>Another way to conceptualize the ideas is as the following:</p>
+<ul>
+<li>(3) is the &quot;backing data&quot;, an arena of sorts (fixed or dynamic)</li>
+<li>(2) are the operations on that buffer (fixed or dynamic)</li>
+<li>(1) is the final value that points to (3) and produced by (2)</li>
+</ul>
+<p>Coupled with Run-Time Type Information (RTTI), having a distinction between []byte and string allows for a lot of really decent (de)serialization tooling, especially for &quot;magical&quot; printing (e.g. fmt.println).</p>
+<p>P.S. Even C makes a distinction between a string an array of integers</p>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+</div>
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+  (function addHeadingLinks(){
+    var article = document.getElementsByClassName('article-meta')[0];
+    var headings = article.querySelectorAll('h1, h2, h3');
+    headings.forEach(function(heading){
+      if (heading.id){
+        var a = document.createElement('a');
+        a.innerHTML = heading.innerHTML;
+        a.href = '#'+heading.id;
+        heading.innerHTML = '';
+        heading.appendChild(a);
+      }
+    });
+  })();
+
+  const DARK  = '(prefers-color-scheme: dark)';
+  const LIGHT = '(prefers-color-scheme: light)';
+
+  function setColourScheme(scheme) {
+    console.log(scheme);
+    if (scheme == 'dark') {
+
+    } else if (scheme == 'light') {
+
+    }
+  }
+
+
+  (function changeStyle(){
+    function detectColourScheme() {
+      if (!window.matchMedia) {
+        return;
+      }
+
+      function listener({matches, media}) {
+        if (!matches) {
+          return;
+        }
+        if (media == DARK) {
+          setColourScheme('dark');
+        } else if (media == LIGHT) {
+          setColourScheme('light');
+        }
+      }
+
+      const mqDark  = window.matchMedia(DARK);
+      const mqLight = window.matchMedia(LIGHT);
+      mqDark.addListener(listener);
+      mqLight.addListener(listener);
+    }
+  })();
+</script>
+</html>
