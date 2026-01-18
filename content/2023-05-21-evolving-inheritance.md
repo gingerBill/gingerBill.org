@@ -19,8 +19,8 @@ tags:
 
 I've spoken aboat Object Oriented Programming (OOP) before in a few articles[^fatal-flaw]&nbsp;[^pragmatism]. There are numerous issues with the entire paradigm, but this article will be focusing on what is commonly considered the canonical case for inheritance and showing it does not need to be, nor preferred to be, structured in the traditional memory layout.
 
-[^fatal-flaw]: https://www.gingerbill.org/article/2020/06/21/the-ownership-semantics-flaw/#foundations-of-the-object-orientation-paradigm
-[^pragmatism]: https://www.gingerbill.org/article/2020/05/31/progamming-pragmatist-proverbs/#experimentation-and-emergence
+[^fatal-flaw]: <https://www.gingerbill.org/article/2020/06/21/the-ownership-semantics-flaw/#foundations-of-the-object-orientation-paradigm>
+[^pragmatism]: <https://www.gingerbill.org/article/2020/05/31/progamming-pragmatist-proverbs/#experimentation-and-emergence>
 
 In this article, I will be us ARM64 assembly as it is a lot easier to read than AMD64/x86 assembly (AT&T or Intel) and simpler than worrying about SysV ABI madness too.
 

@@ -18,7 +18,7 @@
 }
 ---
 
-**Originally from replies to a Twitter thread: https://x.com/TheGingerBill/status/1914389352416993395**
+**Originally from replies to a Twitter thread: <https://x.com/TheGingerBill/status/1914389352416993395>**
 
 **This is not a structured argument against FOSS/OSS but my uncommon thoughts on the topic.**
 

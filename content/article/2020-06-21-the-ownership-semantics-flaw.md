@@ -54,18 +54,18 @@ Most traditional OOP languages are based around the concept of _inheritance_, a 
 
 In recent times, _inheritance_ has been falling out of fashion in favour of _composition_[^composition-over-inheritance]. This is mostly due to the issue of conforming a _class_ to a strict (singular) hierarchy of agency when in reality, things can belong to many (if not infinite) categories and hierarchies, as well as another aspect which I will be discussing throughout this article.
 
-[^composition-over-inheritance]: https://en.wikipedia.org/wiki/Composition_over_inheritance
+[^composition-over-inheritance]: <https://en.wikipedia.org/wiki/Composition_over_inheritance>
 
 There are many criticisms of OOP[^brian-will-oop][^stepanov-oop][^rob-pike-oop-1][^rob-pike-oop-2][^cat-v-oop][^cat-v-joe-armstrong-oop] but my general criticism is that by placing emphasis on trying to solve problem in the type system, it shifts focus from the data structures and algorithms, [the core of what a program fundamentally is](/article/2020/05/31/progamming-pragmatist-proverbs/#the-concept-of-programming).
 
-[^brian-will-oop]: https://www.youtube.com/watch?v=QM1iUe6IofM
-[^stepanov-oop]: http://www.stlport.org/resources/StepanovUSA.html
-[^rob-pike-oop-1]: https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D
-[^rob-pike-oop-2]: https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html
-[^cat-v-oop]: http://harmful.cat-v.org/software/OO_programming/
-[^cat-v-joe-armstrong-oop]: http://harmful.cat-v.org/software/OO_programming/why_oo_sucks
+[^brian-will-oop]: <https://www.youtube.com/watch?v=QM1iUe6IofM>
+[^stepanov-oop]: <http://www.stlport.org/resources/StepanovUSA.html>
+[^rob-pike-oop-1]: <https://groups.google.com/forum/#!topic/comp.os.plan9/VUUznNK2t4Q%5B151-175%5D>
+[^rob-pike-oop-2]: <https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html>
+[^cat-v-oop]: <http://harmful.cat-v.org/software/OO_programming/>
+[^cat-v-joe-armstrong-oop]: <http://harmful.cat-v.org/software/OO_programming/why_oo_sucks>
 
-[^loadsaclasses]: https://web.archive.org/web/20180829092402/http://csis.pace.edu/~bergin/patterns/ppoop.html
+[^loadsaclasses]: <https://web.archive.org/web/20180829092402/http://csis.pace.edu/~bergin/patterns/ppoop.html>
 
 Since objects themselves are being treated _as if_ they have behaviour (not just type properties), they are effectively being treated as if they were _agents_ in the program. This mental model has many conclusions, many of which cause issues.
 
