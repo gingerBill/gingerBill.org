@@ -54,6 +54,10 @@
   text-shadow: none;
 }
 
+:root {
+  --off-white: #fffff8;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -69,8 +73,8 @@ body {
   font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
   /*font-size: 15px;*/
   line-height: 1.5;
-  color: #111;
-  background-color: #fffff8;
+  color: #333;
+  background-color: var(--off-white);
   margin: 0 auto;
   padding: 0;
 
@@ -499,6 +503,8 @@ img[src$='#center'] {
   margin: 0 auto;
   max-width: 100%;
   height: auto;
+  background-color: var(--off-white);
+  padding: 4px 8px;
 }
 
 .sidenote,
