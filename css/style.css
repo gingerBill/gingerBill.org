@@ -257,7 +257,7 @@ h2 {
 
 
 .article-meta h1 {
-  font-size: 3em;
+  font-size: 2.75em;
 }
 
 
@@ -455,7 +455,7 @@ article table td, article table th {
 .wrapper {
   display: block;
   padding: 0 1em 1em;
-  max-width: 50em;
+  max-width: 48em;
   margin: 0 auto;
 }
 
