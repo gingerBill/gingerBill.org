@@ -22,9 +22,7 @@
 
 Most people have probably heard of the _Billion Dollar Mistake_ before, which was coined/invented by [Tony Hoare](https://en.wikipedia.org/wiki/Tony_Hoare): the inventor of null references/pointers.
 
-> I call it my billion-dollar mistake. It was the invention of the null reference in 1965. At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W). My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler. But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement. This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
-
-<p style="text-align:right">&mdash; Tony Hoare, 2009</p>
+> I call it my billion-dollar mistake. It was the invention of the null reference in 1965. At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W). My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler. But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement. This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years. <footer>Tony Hoare, 2009</footer>
 
 One thing I'd like to remark is that a Billion Dollars over a forty years over an entire industry is literally nothing, and close to a rounding error. I assume the number is just hyperbole, and not a real estimate, since there are loads of software industries today which make much more expensive mistakes than this one. However, I would still like to discuss this "problem" onwards.
 
