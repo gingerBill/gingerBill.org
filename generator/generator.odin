@@ -172,7 +172,7 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<li><a href="/article/index.xml">Subscribe</a></li>
+			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
 		</ul>
 	</nav>
 </header>
