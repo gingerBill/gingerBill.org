@@ -32,7 +32,7 @@ In many memory-managed garbaged collected languages, it will be the most common 
 
 This issue of null pointers is related to the [drunkard’s search principle](https://en.wikipedia.org/wiki/Streetlight_effect) (a drunk man looks for his lost keys at night under a lamppost because he can see in that area). I have found that null pointers are usually very easy to find and fix, especially since most are caused by trivial bugs (usually typos).
 
-In _theory_, null is still a perfectly valid memory address, but as a practical matter, we have decided on the convention that null being zero is useful for marking a pointer as unset. Modern platforms reserve the first few pages of (virtual) memory to check for these errors. Typically on all modern systems, that memory address is located at `0`[^c-null-definition], but it didn't always used to be on all platforms[^weird-null]. Meaning that null is just a kind of sentinel value for memory addresses.
+In _theory_, null is still a perfectly valid memory address, but as a practical matter, we have decided on the convention that null being zero is useful for marking a pointer as unset. Modern platforms reserve the first few pages of (virtual) memory to check for these errors. Typically on all modern systems, that memory address is located at `0` [^c-null-definition], but it didn't always used to be on all platforms[^weird-null]. Meaning that null is just a kind of sentinel value for memory addresses.
 
 [^c-null-definition]: `#define NULL ((void *)0)` in C99, or `nullptr` in C++11 and C23.
 

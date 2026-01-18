@@ -121,8 +121,8 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 `<!DOCTYPE html>
 <html lang="en-gb">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 `)
 
 	#partial switch v in info {
@@ -133,13 +133,13 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 	}
 
 	io.write_string(w, `
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="msapplication-TileColor" content="#da532c">
+	<meta name="theme-color" content="#ffffff">
 
 `)
 	switch v in info {
@@ -149,32 +149,32 @@ write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: stri
 	}
 
 	io.write_string(w, `
-  <link rel="stylesheet" href="/css/normalize.css" />
-  <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="/highlight/style.css" />
-  <script src="/highlight/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/highlight/style.css" />
+	<script src="/highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-    gtag('config', 'UA-67516878-1');
-  </script>
+		gtag('config', 'UA-67516878-1');
+	</script>
 </head>
 <body>
 <div class="wrapper">
 <header>
-  <nav>
-    <h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
-    <ul class="menu">
-      <li><a href="/">Home</a></li>
-      <li><a href="/article/">Articles</a></li>
-      <li><a href="https://odin-lang.org">Odin</a></li>
-      <li><a href="/article/index.xml">Subscribe</a></li>
-    </ul>
-  </nav>
+	<nav>
+		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+		<ul class="menu">
+			<li><a href="/">Home</a></li>
+			<li><a href="/article/">Articles</a></li>
+			<li><a href="https://odin-lang.org">Odin</a></li>
+			<li><a href="/article/index.xml">Subscribe</a></li>
+		</ul>
+	</nav>
 </header>
 `)
 }
@@ -185,56 +185,56 @@ write_footer :: proc(w: io.Writer) {
 </body>
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
-  (function addHeadingLinks(){
-    var article = document.getElementsByClassName('article-meta')[0];
-    var headings = article.querySelectorAll('h1, h2, h3');
-    headings.forEach(function(heading){
-      if (heading.id){
-        var a = document.createElement('a');
-        a.innerHTML = heading.innerHTML;
-        a.href = '#'+heading.id;
-        heading.innerHTML = '';
-        heading.appendChild(a);
-      }
-    });
-  })();
+	(function addHeadingLinks(){
+		var article = document.getElementsByClassName('article-meta')[0];
+		var headings = article.querySelectorAll('h1, h2, h3');
+		headings.forEach(function(heading){
+			if (heading.id){
+				var a = document.createElement('a');
+				a.innerHTML = heading.innerHTML;
+				a.href = '#'+heading.id;
+				heading.innerHTML = '';
+				heading.appendChild(a);
+			}
+		});
+	})();
 
-  const DARK  = '(prefers-color-scheme: dark)';
-  const LIGHT = '(prefers-color-scheme: light)';
+	const DARK  = '(prefers-color-scheme: dark)';
+	const LIGHT = '(prefers-color-scheme: light)';
 
-  function setColourScheme(scheme) {
-    console.log(scheme);
-    if (scheme == 'dark') {
+	function setColourScheme(scheme) {
+		console.log(scheme);
+		if (scheme == 'dark') {
 
-    } else if (scheme == 'light') {
+		} else if (scheme == 'light') {
 
-    }
-  }
+		}
+	}
 
 
-  (function changeStyle(){
-    function detectColourScheme() {
-      if (!window.matchMedia) {
-        return;
-      }
+	(function changeStyle(){
+		function detectColourScheme() {
+			if (!window.matchMedia) {
+				return;
+			}
 
-      function listener({matches, media}) {
-        if (!matches) {
-          return;
-        }
-        if (media == DARK) {
-          setColourScheme('dark');
-        } else if (media == LIGHT) {
-          setColourScheme('light');
-        }
-      }
+			function listener({matches, media}) {
+				if (!matches) {
+					return;
+				}
+				if (media == DARK) {
+					setColourScheme('dark');
+				} else if (media == LIGHT) {
+					setColourScheme('light');
+				}
+			}
 
-      const mqDark  = window.matchMedia(DARK);
-      const mqLight = window.matchMedia(LIGHT);
-      mqDark.addListener(listener);
-      mqLight.addListener(listener);
-    }
-  })();
+			const mqDark  = window.matchMedia(DARK);
+			const mqLight = window.matchMedia(LIGHT);
+			mqDark.addListener(listener);
+			mqLight.addListener(listener);
+		}
+	})();
 </script>
 </html>
 `
@@ -273,7 +273,7 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 		defer io.write_string(w, `</header>`+"\n")
 
 		io.write_string(w, "<h1>")
-		io.write_string(w, archetype.title)
+		io.write_string(w, sidenote_md_to_html(archetype.title, arena))
 		io.write_string(w, "</h1>\n\n")
 
 		if archetype.description != "" {
@@ -339,7 +339,7 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 /*
 	Handle Margin Notes
 */
-prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
+preprocessor_pass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 	Margin_Note :: struct {
 		label: string,
 		desc:  string,
@@ -395,25 +395,24 @@ prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 
 	margin_notes := find_margin_notes(text, arena)
 
+	margin_notes_used := 0
+
 	for len(text) > 0 {
 		YOUTUBE_PREFIX :: "@@youtube:"
 
-		if i := strings.index(text, YOUTUBE_PREFIX); i >= 0 {
-			io.write_string(w, text[:i])
+		footnote_index := strings.index(text, "[^")
+		youtube_index := strings.index(text, YOUTUBE_PREFIX)
 
-			link := text[i:]
-			i = strings.index(link, "\n")
-			if i < 0 { i = len(link) }
-			text = link[i:]
-			link = link[len(YOUTUBE_PREFIX):i]
-
-			io.write_string(w, `<div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/`)
-			io.write_string(w, link)
-			io.write_string(w, `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>`+"\n")
-
-			continue
+		if footnote_index >= 0 && youtube_index >= 0 {
+			if youtube_index < footnote_index {
+				footnote_index = -1
+			} else {
+				youtube_index = -1
+			}
 		}
-		if i := strings.index(text, "[^"); i >= 0 {
+
+		if footnote_index >= 0 {
+			i := footnote_index
 			io.write_string(w, text[:i])
 
 			margin_note_text := text[i+2:]
@@ -433,6 +432,7 @@ prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 
 				for &f in margin_notes {
 					if f.label == margin_note_label {
+						margin_notes_used += 1
 						fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label> `, f.label)
 						fmt.wprintf(w, "\n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
 						fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, arena))
@@ -442,9 +442,27 @@ prepass_over_article :: proc(text: string, arena: ^virtual.Arena) -> string {
 			}
 			continue
 		}
+		if youtube_index >= 0 {
+			i := youtube_index
+			io.write_string(w, text[:i])
+
+			link := text[i:]
+			i = strings.index(link, "\n")
+			if i < 0 { i = len(link) }
+			text = link[i:]
+			link = link[len(YOUTUBE_PREFIX):i]
+
+			io.write_string(w, `<div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/`)
+			io.write_string(w, link)
+			io.write_string(w, `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>`+"\n")
+
+			continue
+		}
 		io.write_string(w, text)
 		break
 	}
+
+	fmt.assertf(margin_notes_used == len(margin_notes), "%v vs %v %v", margin_notes_used, len(margin_notes), margin_notes)
 
 	return strings.to_string(b)
 }
@@ -488,7 +506,7 @@ handle_article :: proc(website: ^Website, fi: os.File_Info, arena: ^virtual.Aren
 
 	article := strings.trim_space(text[archetype_end+len(archetype_end_text):])
 
-	article = prepass_over_article(article, arena)
+	article = preprocessor_pass_over_article(article, arena)
 
 
 	article_html := cm.markdown_to_html_from_string(article, {.Unsafe})
@@ -581,38 +599,38 @@ io.write_string(w,
 `<h1 id="contact">Contact Info</h1>
 <table class="gbt2">
 <tbody>
-  <tr><td>  Email:</td><td><a href="#">bill <em>[at]</em> gingerbill <em>[dot]</em> org</a></td></tr>
-  <tr><td>Twitter:</td><td><a href="//twitter.com/TheGingerBill">@TheGingerBill</a></td></tr>
-  <tr><td> GitHub:</td><td><a href="//github.com/gingerBill">github.com/gingerBill</a></td></tr>
-  <tr><td>YouTube:</td><td><a href="//youtube.com/GingerGames">youtube.com/GingerGames</a></td></tr>
+	<tr><td>  Email:</td><td><a href="#">bill <em>[at]</em> gingerbill <em>[dot]</em> org</a></td></tr>
+	<tr><td>Twitter:</td><td><a href="//twitter.com/TheGingerBill">@TheGingerBill</a></td></tr>
+	<tr><td> GitHub:</td><td><a href="//github.com/gingerBill">github.com/gingerBill</a></td></tr>
+	<tr><td>YouTube:</td><td><a href="//youtube.com/GingerGames">youtube.com/GingerGames</a></td></tr>
 </tbody>
 </table>
 
 <h1 id="public">Public Projects</h1>
 <table class="gbt2">
 <tbody>
-  <tr>
-    <td>
-      <a href="/odin">Odin: Programming Language</a><br>
-      2016–now
-    </td>
-    <td>
-      <p>An open source systems programming language designed for the modern computer and programmer</p><p>
-      </p><p>Odin is fast, concise, readable, and pragmatic. It is designed with the intent of replacing C with the following goals:</p><p>
-      </p>
-      <ul>
-        <li>simplicity</li>
-        <li>high performance</li>
-        <li>built for modern systems</li>
-        <li>joy of programming</li>
-      </ul>
-      <table class="gbt2">
-      <tbody>
-        <tr><td>Website:</td><td><a href="https://odin-lang.org/">odin-lang.org</a></td></tr>
-      </tbody>
-      </table>
-    </td>
-  </tr>
+	<tr>
+		<td>
+			<a href="/odin">Odin: Programming Language</a><br>
+			2016–now
+		</td>
+		<td>
+			<p>An open source systems programming language designed for the modern computer and programmer</p><p>
+			</p><p>Odin is fast, concise, readable, and pragmatic. It is designed with the intent of replacing C with the following goals:</p><p>
+			</p>
+			<ul>
+				<li>simplicity</li>
+				<li>high performance</li>
+				<li>built for modern systems</li>
+				<li>joy of programming</li>
+			</ul>
+			<table class="gbt2">
+			<tbody>
+				<tr><td>Website:</td><td><a href="https://odin-lang.org/">odin-lang.org</a></td></tr>
+			</tbody>
+			</table>
+		</td>
+	</tr>
 </tbody>
 </table>
 `)
@@ -668,13 +686,13 @@ build_alias :: proc(website: ^Website, from, to: string, arena: ^virtual.Arena) 
 fmt.wprintf(w,
 `<!DOCTYPE html>
 <html lang="en-gb">
-  <head>
-    <title>{0:s}</title>
-    <link rel="canonical" href="{0:s}">
-    <meta name="robots" content="noindex">
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url={0:s}">
-  </head>
+	<head>
+		<title>{0:s}</title>
+		<link rel="canonical" href="{0:s}">
+		<meta name="robots" content="noindex">
+		<meta charset="utf-8">
+		<meta http-equiv="refresh" content="0; url={0:s}">
+	</head>
 </html>`, to)
 
 	path := fmt.aprintf("%s%s", PUBLIC_PREFIX, from, allocator=arena_allocator)
