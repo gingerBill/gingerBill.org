@@ -36,27 +36,28 @@
   font-display: swap;
 }
 
+:root {
+  --off-white: #fffff8;
+}
+
 ::-webkit-selection {
   background-color: #fd8000;
-  color: #333;
+  color: #000;
   text-shadow: none;
 }
 
 ::-moz-selection {
   background-color: #fd8000;
-  color: #333;
+  color: #000;
   text-shadow: none;
 }
 
 ::selection {
   background-color: #fd8000;
-  color: #333;
+  color: #000;
   text-shadow: none;
 }
 
-:root {
-  --off-white: #fffff8;
-}
 
 * {
   margin: 0;
