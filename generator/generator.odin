@@ -147,7 +147,7 @@ write_footer :: proc(w: io.Writer) {
 }
 
 sidenote_md_to_html :: proc(text: string, arena: ^virtual.Arena) -> string {
-	html := cm.markdown_to_html_from_string(text, {.Unsafe})
+	html := cm.markdown_to_html_from_string(text, {.Unsafe, .Smart})
 	defer cm.free_string(html)
 
 	if html == "" {
@@ -412,7 +412,7 @@ handle_article :: proc(website: ^Website, fi: os.File_Info, arena: ^virtual.Aren
 	article = preprocessor_pass_over_article(article, arena)
 
 
-	article_html := cm.markdown_to_html_from_string(article, {.Unsafe})
+	article_html := cm.markdown_to_html_from_string(article, {.Unsafe, .Smart})
 	defer cm.free_string(article_html)
 
 	// TODO(bill): Determine summary from the article
