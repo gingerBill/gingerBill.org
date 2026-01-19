@@ -38,8 +38,44 @@ escape_html :: proc{
 
 @(private="file")
 escape_href :: proc(state: ^Render_State, link: string) {
-	// TODO(bill): correct URLs
-	strings.write_string(state.w, link)
+	@(static, rodata)
+	href_safe := [?]byte{
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+		0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	}
+
+	x := transmute([]byte)link
+
+	for c in x {
+		if href_safe[c] != 0 {
+			strings.write_byte(state.w, c)
+			continue
+		}
+
+		switch c {
+		case '&':
+			strings.write_string(state.w, "&amp;")
+		case '\'':
+			strings.write_string(state.w, "&#39;")
+
+		case:
+			hex_chars := "0123456789ABCDEF"
+			hex: [3]byte
+			hex[0] = '%'
+			hex[1] = hex_chars[(c>>4) & 0xf]
+			hex[2] = hex_chars[c & 0xf]
+			strings.write_bytes(state.w, hex[:])
+		}
+	}
 }
 
 
@@ -51,9 +87,6 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 	}
 
 	assert(node != nil)
-
-	start_heading: [3]byte = "<h0"
-	end_heading:   [4]byte = "</h0"
 
 	entering := ev_type == .Enter
 
@@ -119,7 +152,10 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 
 
 	case .Heading:
-		 if entering {
+		start_heading: [3]byte = "<h0"
+		end_heading:   [4]byte = "</h0"
+
+		if entering {
 		 	cr(state)
 		 	level := int(node.as.heading.level)
 		 	start_heading[2] = byte('0' + level)
