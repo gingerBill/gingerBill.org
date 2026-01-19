@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-gb">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#da532c">
-	<meta name="theme-color" content="#ffffff"><meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="The Value Propagation Experiment">
-<meta name="twitter:description" content="">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="The Value Propagation Experiment" />
+<meta name="twitter:description" content="[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust’s  which became , or Zig’s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with   The concept of try worked by popping off the end value in a mult..." />
  <title>The Value Propagation Experiment - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-gb">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#da532c">
-	<meta name="theme-color" content="#ffffff"><meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="String Type Distinctions">
-<meta name="twitter:description" content="">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="String Type Distinctions" />
+<meta name="twitter:description" content="[Originally from a Twitter Thread]Original Twitter PostOne thing many languages &amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:string value ( or )string builder ( or )Backing buffer for a string ( or )They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.They have different use cases which don’t actually overlap in practice. Most of the issues with strings come from trying to merge concepts into one.In Odin, the distinction betw..." />
  <title>String Type Distinctions - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
