@@ -17,8 +17,7 @@ Render_State :: struct {
 }
 
 escape_html_bytes :: proc(state: ^Render_State, data: []byte) {
-	res, _ := entity.escape_html(string(data))
-	strings.write_string(state.w, res)
+	escape_html_string(state, string(data))
 }
 
 escape_html_string :: proc(state: ^Render_State, data: string) {
@@ -310,7 +309,7 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 
 
 render_html :: proc(arena: ^virtual.Arena, article: string) -> string {
-	options := cm.Options{.Unsafe, .Smart}
+	options := CMARK_OPTIONS
 
 	p := cm.parser_new(options)
 	defer cm.parser_free(p)
@@ -369,48 +368,30 @@ render_summary_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Ev
 	switch node.type {
 	case .None:
 		// ignore
-
 	case .Document: // .First_Block
 		// ignore
-
-	case .Block_Quote:
-
-	case .List:
-
-	case .Item:
-
-	case .Heading:
-
-	case .Code_Block:
-
-	case .HTML_Block:
-
-	case .Custom_Block:
-
-	case .Thematic_Break: // .Last_Block
-
-	case .Paragraph:
+	case .Block_Quote,
+	     .List,
+	     .Item,
+	     .Heading,
+	     .Code_Block,
+	     .HTML_Block,
+	     .Custom_Block,
+	     .Thematic_Break, // .Last_Block
+	     .Paragraph,
+	     .Code,
+	     .HTML_Inline,
+	     .Custom_Inline,
+	     .Strong,
+	     .Emph,
+	     .Link,
+	     .Image: // .Last_Inline
+		// ignore
 
 	case .Text: // .First_Inline
 		escape_html(state, node.data[:node.len])
-
 	case .Line_Break, .Soft_Break:
 		strings.write_byte(state.w, ' ')
-
-	case .Code:
-
-	case .HTML_Inline:
-
-	case .Custom_Inline:
-
-	case .Strong:
-
-	case .Emph:
-
-	case .Link:
-
-	case .Image: // .Last_Inline
-
 	case:
 		panic("unhandled node")
 
@@ -420,7 +401,7 @@ render_summary_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Ev
 
 
 render_summary :: proc(arena: ^virtual.Arena, article: string) -> string {
-	options := cm.Options{.Unsafe, .Smart}
+	options := CMARK_OPTIONS - {.Smart}
 
 	p := cm.parser_new(options)
 	defer cm.parser_free(p)

@@ -7,13 +7,18 @@ import "core:time"
 import "core:slice"
 import "core:strings"
 import "core:strconv"
+import "core:unicode"
+import "core:unicode/utf8"
 import "core:encoding/json"
+import "core:encoding/entity"
 import "core:mem/virtual"
 import os "core:os/os2"
 
 import cm "vendor:commonmark"
 
 PUBLIC_PREFIX :: "public"
+
+CMARK_OPTIONS :: cm.Options{.Unsafe, .Smart}
 
 Website :: struct {
 	perm_arena:    virtual.Arena,
@@ -34,6 +39,8 @@ Article :: struct {
 	url:         string,
 	date:        string,
 	description: string,
+
+	summary: string,
 }
 
 Series :: struct {
@@ -56,13 +63,14 @@ Archetype :: struct {
 	year, month, day: int `json:"-"`,
 }
 
-add_article :: proc(website: ^Website, url: string, a: Archetype) -> Article {
+add_article :: proc(website: ^Website, url: string, a: Archetype, summary: string) -> Article {
 	allocator := website.perm_allocator
 	a := Article{
 		title       = strings.clone(a.title, allocator),
 		url         = strings.clone(strings.trim_suffix(url, "index.html"), allocator),
 		date        = fmt.aprintf("%04d-%02d-%02d", a.year, a.month, a.day, allocator=allocator),
 		description = strings.clone(a.description, allocator),
+		summary     = strings.clone(summary, allocator),
 	}
 	append(&website.articles, a)
 	return a
@@ -160,7 +168,7 @@ write_footer :: proc(w: io.Writer) {
 }
 
 sidenote_md_to_html :: proc(text: string, allocator: runtime.Allocator) -> string {
-	html := cm.markdown_to_html_from_string(text, {.Unsafe, .Smart})
+	html := cm.markdown_to_html_from_string(text, CMARK_OPTIONS)
 	defer cm.free_string(html)
 
 	if html == "" {
@@ -223,7 +231,7 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 	_ = os.make_directory_all(dir)
 
 	url := path[len(PUBLIC_PREFIX):]
-	article := add_article(website, url, archetype)
+	article := add_article(website, url, archetype, summary)
 
 	for alias in archetype.aliases {
 		from := strings.clone(alias, website.perm_allocator)
@@ -422,7 +430,6 @@ handle_article :: proc(website: ^Website, fi: os.File_Info) -> bool {
 
 	article_html := render_html(&website.scratch_arena, article)
 
-	// TODO(bill): Determine summary from the article
 	summary := render_summary(&website.scratch_arena, article)
 
 	return build_article(website, fi, archetype, article_html, summary)
@@ -473,6 +480,125 @@ build_article_index :: proc(website: ^Website) -> bool {
 	return os.write_entire_file(path, s) == nil
 }
 
+
+@(require_results)
+build_rss_feed :: proc(website: ^Website) -> bool {
+	arena_temp := virtual.arena_temp_begin(&website.scratch_arena)
+	defer virtual.arena_temp_end(arena_temp)
+
+	b := strings.builder_make(website.scratch_allocator)
+	w := strings.to_writer(&b)
+
+	{
+		io.write_string(w, `<?xml version="1.0" encoding="UTF-8" ?>`+"\n")
+		io.write_string(w, `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`+"\n")
+		defer io.write_string(w, `</rss>`+"\n")
+
+		io.write_string(w, "<channel>\n")
+		defer io.write_string(w, "</channel>\n")
+
+		io.write_string(w, "\t<atom:link href=\"https://www.gingerbill.org/article/index.xml\" rel=\"self\" type=\"application/rss+xml\" />\n")
+
+		io.write_string(w, "\t<title>gingerBill - Articles</title>\n")
+		io.write_string(w, "\t<link>https://www.gingerbill.org/article/</link>\n")
+		io.write_string(w, "\t<description>Articles by gingerBill</description>\n")
+
+		slice.sort_by_key(website.articles[:], proc(a: Article) -> string {
+			return a.date
+		})
+		#reverse for article in website.articles {
+			io.write_string(w, "\t<item>\n")
+			defer io.write_string(w, "\t</item>\n")
+
+
+			io.write_string(w, "\t\t<title>")
+			title := strings.trim_space(article.title)
+			title, _ = strings.replace_all(title, "&mdash;", "", website.scratch_allocator)
+			title, _ = strings.replace_all(title, "&nbsp;", "", website.scratch_allocator)
+			io.write_string(w, title)
+			io.write_string(w, "</title>\n")
+			io.write_string(w, "\t\t<link>")
+			io.write_string(w, "https://www.gingerbill.org")
+			io.write_string(w, article.url)
+			io.write_string(w, "</link>\n")
+
+			io.write_string(w, "<guid>")
+			io.write_string(w, "https://www.gingerbill.org")
+			io.write_string(w, article.url)
+			io.write_string(w, "</guid>\n")
+
+			io.write_string(w, "\t\t<description>")
+
+			if article.description != "" {
+				io.write_string(w, article.description)
+			} else {
+				summary := article.summary
+				summary = summary[:min(len(summary), 4*140)]
+
+				new_summary := make([]byte, len(summary))
+				dst := 0
+				for src := 0; src < len(summary); /**/ {
+					r, w := utf8.decode_rune(summary[src:]); src += w
+
+					switch r {
+					case '“': new_summary[dst] = '"';  dst += 1
+					case '”': new_summary[dst] = '"';  dst += 1
+					case '’': new_summary[dst] = '\''; dst += 1
+					case '&':
+						r, w = utf8.decode_rune(summary[src:]); src += w
+						switch {
+						case strings.has_prefix(summary[src:], "mdash"):
+							src += 6
+						case strings.has_prefix(summary[src:], "ndash"):
+							src += 6
+						case:
+							for src+1 < len(summary) {
+								src += 1
+								if summary[src] == ';' {
+									break
+								}
+							}
+						}
+
+					case:
+						if r == 0 {
+							continue
+						}
+						if unicode.is_print(r) {
+							new_summary[dst] = byte(r)
+							dst += 1
+						}
+					}
+				}
+
+				// summary, _ = strings.replace_all(summary, "￿?", "", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "&mdash;", "", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "&mdash;", "", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "&nbsp;", "", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "&#34;", "\"", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "&#39;", "\'", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "“", "\"", website.scratch_allocator)
+				// summary, _ = strings.replace_all(summary, "”", "\"", website.scratch_allocator)
+
+
+				io.write_string(w, string(new_summary[:dst]))
+				if dst != len(article.summary) {
+					io.write_string(w, "...")
+				}
+			}
+			io.write_string(w, "</description>\n")
+		}
+
+	}
+
+
+	path := fmt.aprintf(PUBLIC_PREFIX+"/article/index.xml", allocator=website.scratch_allocator)
+	dir, _ := os.split_path(path)
+	_ = os.make_directory_all(dir)
+
+	return os.write_entire_file(path, strings.to_string(b)) == nil
+}
+
 @(require_results)
 handle_articles :: proc(website: ^Website, path: string) -> os.Error {
 	defer virtual.arena_free_all(&website.scratch_arena)
@@ -489,6 +615,9 @@ handle_articles :: proc(website: ^Website, path: string) -> os.Error {
 	}
 
 	_ = build_article_index(website)
+
+	_ = build_rss_feed(website)
+
 
 	return nil
 }
