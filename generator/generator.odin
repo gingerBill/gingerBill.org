@@ -124,13 +124,24 @@ validate_archetype :: proc(a: ^Archetype, allocator: runtime.Allocator) -> bool 
 }
 
 write_header :: proc(w: io.Writer, info: union{Archetype, string}, summary: string = "") {
+	original_summary := summary
+	summary := summary
+	MAX_SUMMARY_SIZE :: 140*4
+	summary = summary[:min(len(summary), MAX_SUMMARY_SIZE)]
+
 	io.write_string(w, #load("header-01.html", string))
 
 	#partial switch v in info {
 	case Archetype:
-		fmt.wprintfln(w,`<meta name="twitter:card" content="summary">`)
-		fmt.wprintfln(w,`<meta name="twitter:title" content="%s">`, v.title)
-		fmt.wprintfln(w,`<meta name="twitter:description" content="%s">`, summary if summary != "" else v.description)
+		desc := v.description if v.description != "" else summary
+
+		fmt.wprintfln(w, `<meta name="twitter:card" content="summary" />`)
+		fmt.wprintfln(w, `<meta name="twitter:title" content="%s" />`, v.title)
+		fmt.wprintf(w, `<meta name="twitter:description" content="%s`, desc)
+		if desc == summary && len(summary) != len(original_summary) {
+			fmt.wprintf(w, `...`)
+		}
+		fmt.wprintfln(w, `" />`)
 	}
 
 	switch v in info {
@@ -412,7 +423,7 @@ handle_article :: proc(website: ^Website, fi: os.File_Info) -> bool {
 	article_html := render_html(&website.scratch_arena, article)
 
 	// TODO(bill): Determine summary from the article
-	summary := ""
+	summary := render_summary(&website.scratch_arena, article)
 
 	return build_article(website, fi, archetype, article_html, summary)
 }

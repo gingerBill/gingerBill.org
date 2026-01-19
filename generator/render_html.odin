@@ -12,31 +12,25 @@ import cm "vendor:commonmark"
 Render_State :: struct {
 	w:       ^strings.Builder,
 	plain:   ^cm.Node,
-	options: cm.Options,
 
 	heading_count: int,
 }
 
-@(private="file")
 escape_html_bytes :: proc(state: ^Render_State, data: []byte) {
 	res, _ := entity.escape_html(string(data))
 	strings.write_string(state.w, res)
 }
 
-@(private="file")
 escape_html_string :: proc(state: ^Render_State, data: string) {
 	res, _ := entity.escape_html(data)
 	strings.write_string(state.w, res)
 }
 
-@(private="file")
 escape_html :: proc{
 	escape_html_bytes,
 	escape_html_string,
 }
 
-
-@(private="file")
 escape_href :: proc(state: ^Render_State, link: string) {
 	@(static, rodata)
 	href_safe := [?]byte{
@@ -328,7 +322,7 @@ render_html :: proc(arena: ^virtual.Arena, article: string) -> string {
 
 	buf := strings.builder_make()
 
-	state := Render_State{&buf, nil, options, 0}
+	state := Render_State{&buf, nil, 0}
 
 	iter := cm.iter_new(root)
 	defer cm.iter_free(iter)
@@ -341,6 +335,116 @@ render_html :: proc(arena: ^virtual.Arena, article: string) -> string {
 
 		curr := cm.iter_get_node(iter)
 		render_html_node(&state, curr, ev_type)
+	}
+
+	return strings.to_string(buf)
+}
+
+
+render_summary_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event_Type) -> bool {
+	cr :: proc(state: ^Render_State) {
+		if len(state.w.buf) > 0 && state.w.buf[len(state.w.buf)-1] != '\n' {
+			strings.write_byte(state.w, '\n')
+		}
+	}
+
+	assert(node != nil)
+
+	entering := ev_type == .Enter
+
+	if state.plain == node {
+		state.plain = nil
+	}
+
+	if state.plain != nil {
+		#partial switch node.type {
+		case .Text, .Code, .HTML_Inline:
+			escape_html(state, node.data[:node.len])
+		case .Line_Break, .Soft_Break:
+			strings.write_byte(state.w, ' ')
+		}
+		return true
+	}
+
+	switch node.type {
+	case .None:
+		// ignore
+
+	case .Document: // .First_Block
+		// ignore
+
+	case .Block_Quote:
+
+	case .List:
+
+	case .Item:
+
+	case .Heading:
+
+	case .Code_Block:
+
+	case .HTML_Block:
+
+	case .Custom_Block:
+
+	case .Thematic_Break: // .Last_Block
+
+	case .Paragraph:
+
+	case .Text: // .First_Inline
+		escape_html(state, node.data[:node.len])
+
+	case .Line_Break, .Soft_Break:
+		strings.write_byte(state.w, ' ')
+
+	case .Code:
+
+	case .HTML_Inline:
+
+	case .Custom_Inline:
+
+	case .Strong:
+
+	case .Emph:
+
+	case .Link:
+
+	case .Image: // .Last_Inline
+
+	case:
+		panic("unhandled node")
+
+	}
+	return true
+}
+
+
+render_summary :: proc(arena: ^virtual.Arena, article: string) -> string {
+	options := cm.Options{.Unsafe, .Smart}
+
+	p := cm.parser_new(options)
+	defer cm.parser_free(p)
+
+	root := cm.parse_document(raw_data(article), len(article), options)
+	defer cm.node_free(root)
+
+	context.allocator = virtual.arena_allocator(arena)
+
+	buf := strings.builder_make()
+
+	state := Render_State{&buf, nil, 0}
+
+	iter := cm.iter_new(root)
+	defer cm.iter_free(iter)
+
+	for {
+		ev_type := cm.iter_next(iter)
+		if ev_type == .Done {
+			break
+		}
+
+		curr := cm.iter_get_node(iter)
+		render_summary_node(&state, curr, ev_type)
 	}
 
 	return strings.to_string(buf)
