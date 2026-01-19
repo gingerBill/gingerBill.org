@@ -48,8 +48,8 @@
 <p><span class="date">2015-08-19</span></p>
 </div>
 </header>
-<p>One of my favourite things about <a href=">https://golang.org/">Go</a> is the <code>defer</code> statement. The <code>defer</code> statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
-<p>Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href=">http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.</p>
+<p>One of my favourite things about <a href="https://golang.org/">Go</a> is the <code>defer</code> statement. The <code>defer</code> statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
+<p>Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href="http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.</p>
 <h2 id="heading-2-1">C++11 Implementation</h2/>
 <pre><code class="cpp">template &lt;typename F&gt;
 struct privDefer {
@@ -127,8 +127,8 @@ func someFunc() {
 <p>There are numerous other implementations of this too and I have linked to these below.</p>
 <h2 id="heading-2-4">Other Implementations</h2/>
 <ul>
-<li><a href=">http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a></li>
-<li><a href=">http://kri.gs/2013/01/20/defer-cpp/">~~Kristoffer Grönlund~~</a> (Page is missing)</li>
+<li><a href="http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a></li>
+<li><a href="http://kri.gs/2013/01/20/defer-cpp/">~~Kristoffer Grönlund~~</a> (Page is missing)</li>
 </ul>
 <h2 id="heading-2-5">Caveat</h2/>
 <p>Because the <code>defer</code> statement is called at the end of scope rather than function return, a Go programmer for example would do something like this:</p>

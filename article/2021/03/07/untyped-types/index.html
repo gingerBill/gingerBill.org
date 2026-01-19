@@ -48,9 +48,9 @@
 <p><span class="date">2021-03-07</span></p>
 </div>
 </header>
-<p>When I was designing the constant value system in <a href=">https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to “just work”. I was inspired by how both <a href=">https://www.adacore.com/about-ada">Ada</a> <label for="ada-constant" class="margin-toggle sidenote-number"></label>
+<p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to “just work”. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a> <label for="ada-constant" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ada-constant" class="margin-toggle"></input>
-<span class="sidenote">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</span> and <a href=">https://golang.org/">Go</a> <label for="go-constants" class="margin-toggle sidenote-number"></label>
+<span class="sidenote">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</span> and <a href="https://golang.org/">Go</a> <label for="go-constants" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="go-constants" class="margin-toggle"></input>
 <span class="sidenote">I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a></span> both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
 <ul>
@@ -134,7 +134,7 @@ untyped quaternion -&gt; quaternion256
 <p>For Model-2, the consequence of some expressions not have a type does not lead a concept of <code>void</code> in the type system. I have noticed this confusion when people ask what the equivalent of <code>void *</code> is in Odin, which is <code>rawptr</code> (a separate specialized pointer type). Another consequence is that it allows for the ability for expressions to have multiple values (not tuples) associated with them, which is how Odin’s multiple return values in procedures work.</p>
 <h2 id="heading-2-7">Advantages of Each Model</h2/>
 <p>A common question after learning about each model is ask “what are the advantages of each model?”. Personally, I think this question is actually nonsensical since you cannot compare without context due to each model having different foundational axioms. The advantages completely depend on what you are trying to aim for, the models cannot be compared out of context.</p>
-<p>In Odin and Go, literals are “untyped” and there are (virtually) no implicit type conversions. The advantage of the untyped literals in this case is that they work for any type that can represent that value (which has no type). This also complements the <a href=">https://odin-lang.org/docs/overview/#distinct-types">distinct</a> type systems of both languages.</p>
+<p>In Odin and Go, literals are “untyped” and there are (virtually) no implicit type conversions. The advantage of the untyped literals in this case is that they work for any type that can represent that value (which has no type). This also complements the <a href="https://odin-lang.org/docs/overview/#distinct-types">distinct</a> type systems of both languages.</p>
 <p>In languages with implicit type promotions, literals being typed is less of a (hypothetical) problem. If the rules can be defined without many of the issues from C, then typed literals have little disadvantages to them. Applying typed literals to a distinct type system will cause some problem since explicit casting may be required or defeats the point of distinct typing because implicit casting will be applied.</p>
 </article></main>
 <footer>© 2007–2026 Ginger Bill</footer>

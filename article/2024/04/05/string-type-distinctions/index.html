@@ -49,7 +49,7 @@
 </div>
 </header>
 <p><strong>[Originally from a Twitter Thread]</strong></p>
-<p><a href=">https://twitter.com/TheGingerBill/status/1542603515054497792">Original Twitter Post</a></p>
+<p><a href="https://twitter.com/TheGingerBill/status/1542603515054497792">Original Twitter Post</a></p>
 <p>One thing many languages &amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:</p>
 <ol>
 <li>string value (<code>string</code> or <code>char const *</code>)</li>
@@ -58,7 +58,7 @@
 </ol>
 <p>They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.</p>
 <p>They have different use cases which don’t actually overlap in practice. Most of the issues with strings come from trying to merge concepts into one.</p>
-<p>In <a href=">https://odin-lang.org/">Odin</a>, the distinction between a string value and byte array is very important. <code>string</code> is semantically a string and not an array of 8-bit unsigned integers. There is an implied character encoding (UTF-8) as part of the value. <code>string</code> is also an immutable value in Odin.</p>
+<p>In <a href="https://odin-lang.org/">Odin</a>, the distinction between a string value and byte array is very important. <code>string</code> is semantically a string and not an array of 8-bit unsigned integers. There is an implied character encoding (UTF-8) as part of the value. <code>string</code> is also an immutable value in Odin.</p>
 <p>Having a string be immutable allows for a lot of optimizations, but in practice, you never want to mutate the string value itself once it has been created. And when you do mutate it, it most definitely a bug.</p>
 <p>This is why it is important to make a distinction between #1 and #3 and separate the concepts.</p>
 <p>Another way to conceptualize the ideas is as the following:</p>

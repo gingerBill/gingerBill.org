@@ -48,11 +48,11 @@
 <p><span class="date">2018-09-05</span></p>
 </div>
 </header>
-<p>Article was originally posted here: <a href=">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
+<p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them">https://odin.handmade.network/blogs/p/3372-exceptions_-_and_why_odin_will_never_have_them</a></p>
 <p>Original Comments:</p>
 <ul>
-<li><a href=">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701</a></li>
-<li><a href=">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626</a></li>
+<li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701">https://github.com/odin-lang/Odin/issues/256#issuecomment-418073701</a></li>
+<li><a href="https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626">https://github.com/odin-lang/Odin/issues/256#issuecomment-418289626</a></li>
 </ul>
 <p>There will never be software exceptions in the traditional sense. I hate the entire philosophy behind the concept.
 Go does have exceptions with the defer, panic, recover approach. They are weird on purpose. Odin could have something similar for exceptional cases.
@@ -126,7 +126,7 @@ except SomeError as e:
 	return nil, err
 }
 </code></pre>
-<p>From what I have read, most people’s complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href=">https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
+<p>From what I have read, most people’s complaints about the Go error handling system is the if err != nil, and not the return nil, err aspect. Another complain people have is that this idiom is repeated a lot, that the Go team think it is necessary to add a construct to the language reduce typing in the draft <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling-overview.md">Go 2 proposal</a>.</p>
 <hr />
 <p>I hope this has cleared up a lot of the questions regarding Odin’s take on error handling. I think error handling ought to be treated like any other piece of code.</p>
 <blockquote>

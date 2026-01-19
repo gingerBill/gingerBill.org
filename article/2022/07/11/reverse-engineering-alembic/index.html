@@ -48,15 +48,15 @@
 <p><span class="date">2022-07-11</span></p>
 </div>
 </header>
-<p>For my work at <a href=">https://jangafx.com/">JangaFX</a>, we require the use of the <a href=">http://www.alembic.io/">Alembic</a> interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.</p>
-<p>I spent nearly 4 days trying to get the official Alembic C++ API, <a href=">https://github.com/alembic/alembic/">https://github.com/alembic/alembic/</a>, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate. After this ordeal I decided to see how difficult it would be to create my own reader, and then writer, for the format from scratch.</p>
+<p>For my work at <a href="https://jangafx.com/">JangaFX</a>, we require the use of the <a href="http://www.alembic.io/">Alembic</a> interchange file format. We have been using other libraries which wrap reading the Alembic file format but because it is not the native library, it has numerous issues due to the generic interface.</p>
+<p>I spent nearly 4 days trying to get the official Alembic C++ API, <a href="https://github.com/alembic/alembic/">https://github.com/alembic/alembic/</a>, to compile correctly and then use the API itself. Numerous times the compilation would get corrupted (it compiled but none of the tests even ran) and when I got it work (on another machine), the API itself was a labyrinth to navigate. After this ordeal I decided to see how difficult it would be to create my own reader, and then writer, for the format from scratch.</p>
 <p>I don’t really like to “reinvent the wheel” when I don’t have to, but in this case, the C++ API was an absolute nightmare and I’ve spent more time trying to get that to work rather than actually solving the problem I had.</p>
 <p>Making my own library for Alembic turned out to be a little more work than I expected. Even though it is an “open source” format, it is effectively completely undocumented, and the bits that are documented refer mostly to specific (not all of them) schemas rather than the internal format.</p>
 <p>This article will be a basic document of the internals of the Alembic file format.</p>
 <h2 id="heading-2-1">What Actually is Alembic?</h2/>
-<p>Through my journey into “discovering” the Alembic format, I found out that <em>Alembic</em> is not actually a file format but masquerades as one. It is in fact two file formats with different memory layouts which can be determined based on the <a href=">https://en.wikipedia.org/wiki/List_of_file_signatures">magic file signature</a>:</p>
+<p>Through my journey into “discovering” the Alembic format, I found out that <em>Alembic</em> is not actually a file format but masquerades as one. It is in fact two file formats with different memory layouts which can be determined based on the <a href="https://en.wikipedia.org/wiki/List_of_file_signatures">magic file signature</a>:</p>
 <ul>
-<li><a href=">https://www.hdfgroup.org/">HDF5</a></li>
+<li><a href="https://www.hdfgroup.org/">HDF5</a></li>
 <li>Ogawa <label for="ogawa-flavour" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ogawa-flavour" class="margin-toggle"></input>
 <span class="sidenote">Technically it’s Ogawa-Flavour Alembic with its own specific meta-schema, of which I will get to that later in the article.</span></li>
@@ -67,9 +67,9 @@
 <h3 id="heading-3-3">Ogawa</h3/>
 <p>The main format of concern is named <em>Ogawa</em>. It’s a little-endian binary format (thank goodness) which was designed to be readable in-place for efficient multi-threaded data reading. This part of the file format is luckily documented <label for="ogawa-spec" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ogawa-spec" class="margin-toggle"></input>
-<span class="sidenote"><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a></span>, and small enough that I could write it in a <a href=">https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
+<span class="sidenote"><a href="https://github.com/alembic/alembic/wiki/Ogawa-Specification">https://github.com/alembic/alembic/wiki/Ogawa-Specification</a></span>, and small enough that I could write it in a <a href="https://twitter.com/TheGingerBill/status/1536484140006227968">single tweet</a>.</p>
 <p>Similar to HDF5, Ogawa is a hierarchical data format that is simple to read, but differing from HDF5, it is completely uncompressed.</p>
-<p><strong>Note:</strong> When decoding binary formats, it is very useful if have a <em>hex-viewer</em> to see the bytes in a readable way. On Windows, I would recommend either <a href=">https://www.hhdsoftware.com/free-hex-editor">Hex Editor Neo</a> or <a href=">https://www.sweetscape.com/010editor/">010 Editor</a>. Even though the Ogawa format is mostly documented on that GitHub Wiki page, I still required a <em>hex-viewer</em> from time to time to ensure everything was laid out as I expected, especially for the more complex embedded data.</p>
+<p><strong>Note:</strong> When decoding binary formats, it is very useful if have a <em>hex-viewer</em> to see the bytes in a readable way. On Windows, I would recommend either <a href="https://www.hhdsoftware.com/free-hex-editor">Hex Editor Neo</a> or <a href="https://www.sweetscape.com/010editor/">010 Editor</a>. Even though the Ogawa format is mostly documented on that GitHub Wiki page, I still required a <em>hex-viewer</em> from time to time to ensure everything was laid out as I expected, especially for the more complex embedded data.</p>
 <p>Its header is very simple:</p>
 <pre><code class="odin">MAGIC :: &#34;Ogawa&#34;
 
@@ -103,7 +103,7 @@ Data :: struct {
 <p>This basic file format is very simple to read but it has zero semantic information to make it useful for something like an interchange format. The semantic structure is what I am calling the <em>Meta-Schema for Alembic</em>.</p>
 <h2 id="heading-2-4">The Meta-Schema of Alembic on top of Ogawa</h2/>
 <p>To begin decoding the format, I created a basic Ogawa to JSON viewer to see the tree structure of the file format. As I began to understand more of the format, the JSON structure became much more complex but richer in semantic data.</p>
-<p><strong>Note:</strong> I highly recommend converting any hierarchical format into something like JSON just as a debug view alone, since there are many tools such as <a href=">https://dadroit.com/">Dadroit</a> that allow for easy viewing. But if you want to make your own format and viewer with your own tools, go ahead!</p>
+<p><strong>Note:</strong> I highly recommend converting any hierarchical format into something like JSON just as a debug view alone, since there are many tools such as <a href="https://dadroit.com/">Dadroit</a> that allow for easy viewing. But if you want to make your own format and viewer with your own tools, go ahead!</p>
 <p>After a bit of exploring, the meta-schema begins with the following data for the root group:</p>
 <ul>
 <li>6 children minimum
@@ -143,7 +143,7 @@ Time_Samples :: struct #packed {
 <p>This memory needs to be read in order in order to determine the number of samples.</p>
 <h3 id="heading-3-6">Metadata</h3/>
 <p>All metadata is stored as a string. Each entry is a key and value separated by the ASCII character <code>=</code>, and each entry is separated by <code>;</code>. Deserializing this is a very simple operation to do in most languages.
-These strings are <em>NOT</em> <strong>NUL</strong> terminated like in C because they are bounded by a length that usually prefixes it. As I am using <a href=">https://odin-lang.org/">Odin</a>, its <code>string</code> type is length-bounded making this process a lot easier to use compared to C.</p>
+These strings are <em>NOT</em> <strong>NUL</strong> terminated like in C because they are bounded by a length that usually prefixes it. As I am using <a href="https://odin-lang.org/">Odin</a>, its <code>string</code> type is length-bounded making this process a lot easier to use compared to C.</p>
 <p>The indexed metadata is only stored at the root group (child <code>5</code>) and referenced elsewhere by index.</p>
 <p>Each value is stored in contiguous memory:</p>
 <pre><code class="odin">// Pseudo-Odin
@@ -287,7 +287,7 @@ Property_Header_Inline :: struct #packed {
 }
 </code></pre>
 <p>The data for each sample contains both the key/hash of the data and the <em>uncompressed</em> data.
-The hash is stored at the beginning; is represented as a 16-byte (128 bit) <a href=">http://burtleburtle.net/bob/hash/spooky.html">SpookyHash</a>.
+The hash is stored at the beginning; is represented as a 16-byte (128 bit) <a href="http://burtleburtle.net/bob/hash/spooky.html">SpookyHash</a>.
 The data after that is stored after this hash.</p>
 <pre><code class="odin">num_samples := u32(p.next_sample_index)
 for sample_index in 0..&lt;num_samples {
@@ -358,7 +358,7 @@ for sample_index in 0..&lt;num_samples {
 <p>Speaking of the offset-based file formats, one potential issue for malicious files is form cycles in the hierarchy, which could cause many readers to crash.</p>
 <p>I am not sure why Spooky-Hash was used. It is not really an easy hashing algorithm to implement (~330 LOC of Odin) and not necessarily better than other hashes out there. It is also not that commonly used compared to simpler (and maybe better) hashes.</p>
 <h2 id="heading-2-12">In Sum</h2/>
-<p>After a lot of work, I got a fully functioning Alembic reader and writer that was ~2000 LOC of Odin (including the necessary schemas we required at <a href=">https://jangafx.com/">JangaFX</a>). This is a hell of a lot smaller and simpler than the official Alembic C++ API for the same amount of functionality.</p>
+<p>After a lot of work, I got a fully functioning Alembic reader and writer that was ~2000 LOC of Odin (including the necessary schemas we required at <a href="https://jangafx.com/">JangaFX</a>). This is a hell of a lot smaller and simpler than the official Alembic C++ API for the same amount of functionality.</p>
 </article></main>
 <footer>© 2007–2026 Ginger Bill</footer>
 </div>

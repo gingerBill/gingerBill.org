@@ -48,10 +48,10 @@
 <p><span class="date">2024-06-17</span></p>
 </div>
 </header>
-<p><em>NOTE: This is based on, but completely rewritten, from a Twitter post: <a href=">https://x.com/TheGingerBill/status/1802645945642799423">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
+<p><em>NOTE: This is based on, but completely rewritten, from a Twitter post: <a href="https://x.com/TheGingerBill/status/1802645945642799423">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
 <p><strong>TL;DR</strong> It makes Go <em>feel</em> too “functional” rather than being an unabashed imperative language.</p>
-<p>I recently saw a post on <a href=">https://x.com/ohmypy/status/1801180323406844062">Twitter</a> showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.</p>
-<p>The <em>merged PR</em> for the proposal can be found here: <a href=">https://github.com/golang/go/issues/61897">https://github.com/golang/go/issues/61897</a></p>
+<p>I recently saw a post on <a href="https://x.com/ohmypy/status/1801180323406844062">Twitter</a> showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.</p>
+<p>The <em>merged PR</em> for the proposal can be found here: <a href="https://github.com/golang/go/issues/61897">https://github.com/golang/go/issues/61897</a></p>
 <p>It has a in-depth explanation of the design explaining why certain approaches were chosen instead, so I do recommend reading it if you are familiar with Go.</p>
 <p>Here is the example from the original Tweet I found:</p>
 <pre><code class="go">func Backward[E any](s []E) func(func(int, E) bool) {
@@ -86,11 +86,11 @@ for _, el in range Backward(s) {
 <li>Allow for clean-up with <code>defer</code></li>
 <li>Reduce data being stored outside of the control flow</li>
 </ul>
-<p>As <a href=">https://research.swtch.com/">Russ Cox (rsc)</a> explains in the original proposal:</p>
+<p>As <a href="https://research.swtch.com/">Russ Cox (rsc)</a> explains in the original proposal:</p>
 <blockquote>
 <p>Note regarding push vs pull iterator types: The vast majority of the time, push iterators are more convenient to implement and to use, because setup and teardown can be done around the yield calls rather than having to implement those as separate operations and then expose them to the caller. Direct use (including with a range loop) of the push iterator requires giving up storing any data in control flow, so individual clients may occasionally want a pull iterator instead. Any such code can trivially call Pull and defer stop.</p>
 </blockquote>
-<p>Russ Cox goes into more detail in his article <a href=">https://research.swtch.com/pcdata">Storing Data in Control Flow</a> about why he likes this approach to design.</p>
+<p>Russ Cox goes into more detail in his article <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a> about why he likes this approach to design.</p>
 <h3 id="heading-3-1">More Complex Example</h3/>
 <p><strong>NOTE:</strong> Do not worry about what this actually does, I just wanted to show an example of the clean-up needed with something like <code>defer</code>.</p>
 <p>An example from the original PR shows an example of a much more complex approach requiring clean-up where values which are <em>pulled</em> directly:</p>
@@ -112,7 +112,7 @@ func Pairs[V any](seq iter.Seq[V]) iter.Seq2[V, V] {
 </code></pre>
 <h2 id="heading-2-2">An Alternative Pseudo-Proposal (State Machine)</h2/>
 <p><strong>NOTE:</strong> I am not suggesting Go does this whatsoever.</p>
-<p>When designing <a href=">https://odin-lang.org/">Odin</a>, I wanted the ability for the user to design their own kind of “iterators”, but have them be very simple; in fact, just normal procedures. I didn’t want to add a special construct to the language just for this—this would complicate the language too much which is what I wanted to minimize in Odin.</p>
+<p>When designing <a href="https://odin-lang.org/">Odin</a>, I wanted the ability for the user to design their own kind of “iterators”, but have them be very simple; in fact, just normal procedures. I didn’t want to add a special construct to the language just for this—this would complicate the language too much which is what I wanted to minimize in Odin.</p>
 <p>One possible pseudo-proposal I could give for Go iterators would look like the following:</p>
 <pre><code class="go">func Backward[E any](s []E) func() (int, E, bool) {
 	i := len(s)-1
@@ -143,7 +143,7 @@ func Pairs[V any](seq iter.Seq[V]) iter.Seq2[V, V] {
 <p>n.b. The typeclass/interface route would not work in Go because this would not be an orthogonal design concept and actually be more confusing than necessary—this is why I did not originally propose it. Different languages have different requirements as to what works in them.</p>
 <h2 id="heading-2-3">Go’s Apparent Philosophy</h2/>
 <p>The approach that Go 1.23 takes seems to go in the face of the <em>apparent</em> philosophy of making Go for the general (frankly mediocre) programmer at Google who doesn’t want to (nor can) use a “complex” language like C++.</p>
-<p>To quote <a href=">http://herpolhode.com/rob/">Rob Pike</a>:</p>
+<p>To quote <a href="http://herpolhode.com/rob/">Rob Pike</a>:</p>
 <blockquote>
 <p>The key point here is our programmers are Googlers, they’re not researchers. They’re typically, fairly young, fresh out of school, probably learned Java, maybe learned C or C++, probably learned Python. They’re not capable of understanding a brilliant language but we want to use them to build good software. So, the language that we give them has to be easy for them to understand and easy to adopt.</p>
 </blockquote>
@@ -183,7 +183,7 @@ for el, _ in backward_iterate(&amp;it) { // `for el in` could have been written 
 }
 // c b a
 </code></pre>
-<p>This does <em>appear to be</em> a lot more complicated that the Go approach because it requires you to write a lot more code. However, it’s actually a hell of a lot simpler to understand, comprehend, and even faster to execute. The iterator does not call the for-loop’s body, rather the body calls the iterator. I know Cox loves the ability of <a href=">https://research.swtch.com/pcdata">Storing Data in Control Flow</a>, and I do agree it is nice but does not fit well within Odin, especially with the lack of closures (because Odin is a manual memory managed language).</p>
+<p>This does <em>appear to be</em> a lot more complicated that the Go approach because it requires you to write a lot more code. However, it’s actually a hell of a lot simpler to understand, comprehend, and even faster to execute. The iterator does not call the for-loop’s body, rather the body calls the iterator. I know Cox loves the ability of <a href="https://research.swtch.com/pcdata">Storing Data in Control Flow</a>, and I do agree it is nice but does not fit well within Odin, especially with the lack of closures (because Odin is a manual memory managed language).</p>
 <p>An “iterator” is just syntactic sugar for the following:</p>
 <pre><code class="odin">for {
 	el, _, ok := backward_iterate(&amp;it)

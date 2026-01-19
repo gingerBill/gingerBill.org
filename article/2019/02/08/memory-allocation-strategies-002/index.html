@@ -58,7 +58,7 @@
 <input type="checkbox" id="other-data" class="margin-toggle"></input>
 <span class="sidenote">Other data may stored such as the offset of the beginning of the previous allocation or allocation count.</span>.</p>
 <p><img src="/images/memory-allocation-strategies/linear_allocator.svg#center" alt="Linear Allocator Layout" /></p>
-<p>To allocate some memory from the arena, it is as simple as moving the offset (or pointer) forward. In <a href=">https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p>To allocate some memory from the arena, it is as simple as moving the offset (or pointer) forward. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
 <p><img src="/images/memory-allocation-strategies/linear_allocator_alloc.svg#center" alt="Linear Allocator Alloc" /></p>
 <p>Due to being the simplest allocator possible, the arena allocator does not allow the user to free certain blocks of memory. The memory is usually freed all at once.</p>
 <h2 id="heading-2-3">Basic Implementation</h2/>
@@ -91,9 +91,9 @@ void *arena_alloc(size_t size) {
 <p>Modern computer architectures will always read memory at its “word size” (4 bytes on a 32 bit machine, 8 bytes on a 64 bit machine). If you have an unaligned memory access (on a processor that allows for that), the processor will have to read multiple “words”. This means that an unaligned memory access <em>may</em> be much slower than an aligned memory access.
 I will not write too much about memory alignment in this series. If you would like to learn more, I recommend the following articles:</p>
 <ul>
-<li><a href=">https://developer.ibm.com/technologies/systems/articles/pa-dalign/">IBM - Data alignment: Straighten up and fly right</a></li>
-<li><a href=">http://igoro.com/archive/gallery-of-processor-cache-effects/">Gallery of Processor Cache Effects</a></li>
-<li><a href=">http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html">x86 Protected Mode Basics</a></li>
+<li><a href="https://developer.ibm.com/technologies/systems/articles/pa-dalign/">IBM - Data alignment: Straighten up and fly right</a></li>
+<li><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">Gallery of Processor Cache Effects</a></li>
+<li><a href="http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html">x86 Protected Mode Basics</a></li>
 </ul>
 <h2 id="heading-2-5">Aligning a Memory Address</h2/>
 <p>On virtually all architectures, the amount of bytes that something must be aligned by must be a power of two (1, 2, 4, 8, 16, etc). This means we should create procedure to assert that the alignment is a power of two:</p>
@@ -238,8 +238,8 @@ Arena a = {0};
 arena_init(&amp;a, backing_buffer, 256);
 </code></pre>
 <h1 id="heading-1-12">Conclusion</h1/>
-<p>You have now implemented your very first custom allocator! The full source code is <a href=">/code/memory-allocation-strategies/part002.c">available here</a>.</p>
-<p>In the next article, I will be talking about the basic evolution of the <em>arena allocator</em> in to a <a href=">/article/2019/02/15/memory-allocation-strategies-003/"><em>stack allocator</em></a>.</p>
+<p>You have now implemented your very first custom allocator! The full source code is <a href="/code/memory-allocation-strategies/part002.c">available here</a>.</p>
+<p>In the next article, I will be talking about the basic evolution of the <em>arena allocator</em> in to a <a href="/article/2019/02/15/memory-allocation-strategies-003/"><em>stack allocator</em></a>.</p>
 <h1 id="heading-1-13">Extra Features</h1/>
 <p>One extra feature you could add is a temporary arena memory <em>savepoint</em>. This is extremely useful for when you just want to use some memory in an arena for a very short period and then reset to the previously saved point.</p>
 <pre><code class="c">typedef struct Temp_Arena_Memory Temp_Arena_Memory;

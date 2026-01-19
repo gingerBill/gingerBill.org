@@ -52,7 +52,7 @@
 </div>
 </header>
 <h1 id="heading-1-1">Pool-Based Allocation</h1/>
-<p>In the previous article, we looked at the <a href=">/article/2019/02/15/memory-allocation-strategies-003/">stack allocator</a>, which was the natural evolution of the <a href=">/article/2019/02/08/memory-allocation-strategies-002/">linear/arena allocator</a>. In this article, I will cover the fixed-sized <em>pool allocator</em>.</p>
+<p>In the previous article, we looked at the <a href="/article/2019/02/15/memory-allocation-strategies-003/">stack allocator</a>, which was the natural evolution of the <a href="/article/2019/02/08/memory-allocation-strategies-002/">linear/arena allocator</a>. In this article, I will cover the fixed-sized <em>pool allocator</em>.</p>
 <p>A pool allocator is a bit different from the previous allocation strategies that I have covered. A pool splits the supplied backing buffer into <em>chunks</em> of equal size and keeps track of which of the chunks are free. When an allocation is wanted, a free chunk is given. When a chunk is wanted to be freed, it adds that chunk to the list of free chunks.</p>
 <p>Pool allocators are extremely useful when you need to allocate chunks of memory of the same size which need are created and destroy dynamically, especially in a random order. Pools also have the benefit that arenas and stacks have in that they provide very little fragmentation and allocate/free in constant time <em><strong>O(1)</strong></em>.</p>
 <p>Pool allocators are usually used to allocate <em>groups</em> of “things” at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
@@ -63,14 +63,14 @@
 <p><img src="/images/memory-allocation-strategies/pool_allocator.svg#center" alt="Pool Allocator Layout" /></p>
 <p>The question is how are these allocations and frees determined? And how do they provide very little fragmentation with allocations that can be made in any order?</p>
 <h2 id="heading-2-3">Free Lists</h2/>
-<p>A <a href=">https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href=">https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
+<p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_list.svg#center" alt="Pool Allocator List" /></p>
 <p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk <label for="free-chunk" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="free-chunk" class="margin-toggle"></input>
 <span class="sidenote">If there is not an available free chunk, it will point to nothing (<code>NULL</code>).</span>.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg#center" alt="Pool Allocator List In-Place" /></p>
 <h2 id="heading-2-4">Allocate and Free</h2/>
-<p>To allocate a chunk, just pop off the head (first element) from the free list. In <a href=">https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
+<p>To allocate a chunk, just pop off the head (first element) from the free list. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_alloc.svg#center" alt="Pool Allocator Alloc" /></p>
 <p><strong>Note</strong>: The free list does not need to be ordered as its order is determined by how chunks are allocated and freed.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_alloc_unordered.svg#center" alt="Pool Allocator Alloc Unordered" /></p>
@@ -189,8 +189,8 @@ void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
 }
 </code></pre>
 <h1 id="heading-1-11">Conclusion</h1/>
-<p>The pool allocator is a very useful allocator for when you need to allocator “things” in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href=">/code/memory-allocation-strategies/part004.c">available here</a>.</p>
-<p>In the next article, I will discuss <a href=">/article/2021/11/30/memory-allocation-strategies-005/">free list memory allocators</a>.</p>
+<p>The pool allocator is a very useful allocator for when you need to allocator “things” in <em>chunks</em> and the things within those chunks share the same lifetime. The full source code is <a href="/code/memory-allocation-strategies/part004.c">available here</a>.</p>
+<p>In the next article, I will discuss <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list memory allocators</a>.</p>
 </article></main>
 <footer>© 2007–2026 Ginger Bill</footer>
 </div>
