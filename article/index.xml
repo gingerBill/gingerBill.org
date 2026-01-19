@@ -9,7 +9,7 @@
 		<title>The Only Two Markup Languages</title>
 		<link>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</link>
 <guid>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</guid>
-		<description>There are only two families of proper arbitrary markup languages: TeX and SGML;  I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986.. By arbitrary, I mean the grammar specifically, and how it can be used mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic-makeover o...</description>
+		<description>There are only two families of proper arbitrary markup languages: TeX and SGML  I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986.. By arbitrary, I mean the grammar specifically, and how it can be used mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic-makeover of TeX...</description>
 	</item>
 	<item>
 		<title>Mitigating the Billion Dollar Mistake</title>
@@ -33,7 +33,7 @@
 		<title>Package Managers are Evil</title>
 		<link>https://www.gingerbill.org/article/2025/09/08/package-managers-are-evil/</link>
 <guid>https://www.gingerbill.org/article/2025/09/08/package-managers-are-evil/</guid>
-		<description>n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil;  The term "evil" is being used partially hyperbolic to make a point..To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing w...</description>
+		<description>n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil  The term "evil" is being used partially hyperbolic to make a point..To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong ...</description>
 	</item>
 	<item>
 		<title>If Odin Had Macros</title>
@@ -45,7 +45,7 @@
 		<title>Unstructured Thoughts on the Problems of OSS/FOSS</title>
 		<link>https://www.gingerbill.org/article/2025/04/22/unstructured-thoughts-on-oss/</link>
 <guid>https://www.gingerbill.org/article/2025/04/22/unstructured-thoughts-on-oss/</guid>
-		<description>Originally from replies to a Twitter thread: https://x.com/TheGingerBill/status/1914389352416993395This is not a structured argument against FOSS/OSS but my uncommon thoughts on the topic.I am not sure if I agree [that FOSS/OSS derives from the same thinking process as the ideology of communism], but I understand the sentiment. The fundamental issue is that software is trivially copyable. I have loads of issues with FOSS and OSS;  I am making a distinction between OSS (Open Source Software) and FOSS (Free [and] Open Source Software) in this article...</description>
+		<description>Originally from replies to a Twitter thread: https://x.com/TheGingerBill/status/1914389352416993395This is not a structured argument against FOSS/OSS but my uncommon thoughts on the topic.I am not sure if I agree [that FOSS/OSS derives from the same thinking process as the ideology of communism], but I understand the sentiment. The fundamental issue is that software is trivially copyable. I have loads of issues with FOSS and OSS  I am making a distinction between OSS (Open Source Software) and FOSS (Free [and] Open Source Software) in this article but ...</description>
 	</item>
 	<item>
 		<title>OpenGL is not Right-Handed</title>
@@ -117,13 +117,13 @@
 		<title>The Value Propagation Experiment</title>
 		<link>https://www.gingerbill.org/article/2021/07/05/value-propagation-experiment/</link>
 <guid>https://www.gingerbill.org/article/2021/07/05/value-propagation-experiment/</guid>
-		<description>[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust;s  which became , or Zig;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with;  The concept of try worked by popping off the end value ...</description>
+		<description>[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust;s  which became , or Zig;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with  The concept of try worked by popping off the end value in a ...</description>
 	</item>
 	<item>
 		<title>Untyped Types</title>
 		<link>https://www.gingerbill.org/article/2021/03/07/untyped-types/</link>
 <guid>https://www.gingerbill.org/article/2021/03/07/untyped-types/</guid>
-		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both Ada;  https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go;  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages....</description>
+		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both Ada  https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: E...</description>
 	</item>
 	<item>
 		<title>Structured Control Flow (Brain Dump)</title>
@@ -171,7 +171,7 @@
 		<title>A Reply to _The Road to Zig 1.0_</title>
 		<link>https://www.gingerbill.org/article/2019/05/13/a-reply-to-the-road-to-zig/</link>
 <guid>https://www.gingerbill.org/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
-		<description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:Odin;  For those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy bette...</description>
+		<description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:Odin  For those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!Whi...</description>
 	</item>
 	<item>
 		<title>A Quine in Odin</title>
