@@ -48,21 +48,21 @@
 <p><span class="date">2019-03-10</span></p>
 </div>
 </header>
-<p>A <a href="https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in <a href="/odin">Odin</a>:</p>
-<pre><code class="language-odin">package quine
+<p>A <a href=">https://wikipedia.org/wiki/Quine_(computing)">Quine</a> in <a href=">/odin">Odin</a>:</p>
+<pre><code class="odin">package quine
 
-import &quot;core:fmt&quot;
+import &#34;core:fmt&#34;
 
 main :: proc() {
-	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+	fmt.printf(&#34;%s%c%s%c;\n&#34;, s, 0x60, s, 0x60);
 }
 
 s := `package quine
 
-import &quot;core:fmt&quot;
+import &#34;core:fmt&#34;
 
 main :: proc() {
-	fmt.printf(&quot;%s%c%s%c;\n&quot;, s, 0x60, s, 0x60);
+	fmt.printf(&#34;%s%c%s%c;\n&#34;, s, 0x60, s, 0x60);
 }
 
 s := `;

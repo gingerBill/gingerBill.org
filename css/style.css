@@ -301,6 +301,17 @@ h1 a {
 .article-meta h1 a:hover, .article-meta h2 a:hover, .article-meta h3 a:hover {
   color: #fd8000;
 }
+@media (prefers-color-scheme: dark) {
+  .article-meta h1 a, .article-meta h2 a, .article-meta h3 a {
+    color: #ddd;
+  }
+}
+
+.article-meta h1 a:hover:before, .article-meta h2 a:hover:before, .article-meta h3 a:hover:before {
+  content: '§ ';
+  margin-left: -0.75em;
+  display:inline;
+}
 
 
 ul, ol {

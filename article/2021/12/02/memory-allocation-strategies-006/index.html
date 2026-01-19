@@ -51,35 +51,35 @@
 <p><span class="date">2021-12-02</span></p>
 </div>
 </header>
-<h1>Buddy Memory Allocation</h1>
-<p>In the previous article, we discussed the <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list allocator</a> and how it is commonly implemented with a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#linked-list-approach">linked list</a> or a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#red-black-tree-approach">red-black tree</a>. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.</p>
-<p>In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get <em>best-fit</em> as a consequence. One of the big problems with free lists is that they are <em>very</em> susceptible to <a href="https://wikipedia.org/wiki/Fragmentation_(computing)">internal memory fragmentation</a> due to allocations being of any size. If we still require the properties of free lists but want to reduce internal memory fragmentation, the <a href="https://wikipedia.org/wiki/Buddy_memory_allocation">Buddy algorithm</a> <label for="wikipedia-warning" class="margin-toggle sidenote-number"></label>
+<h1 id="heading-1-1">Buddy Memory Allocation</h1/>
+<p>In the previous article, we discussed the <a href=">/article/2021/11/30/memory-allocation-strategies-005/">free list allocator</a> and how it is commonly implemented with a <a href=">https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#linked-list-approach">linked list</a> or a <a href=">https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#red-black-tree-approach">red-black tree</a>. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.</p>
+<p>In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get <em>best-fit</em> as a consequence. One of the big problems with free lists is that they are <em>very</em> susceptible to <a href=">https://wikipedia.org/wiki/Fragmentation_(computing)">internal memory fragmentation</a> due to allocations being of any size. If we still require the properties of free lists but want to reduce internal memory fragmentation, the <a href=">https://wikipedia.org/wiki/Buddy_memory_allocation">Buddy algorithm</a> <label for="wikipedia-warning" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="wikipedia-warning" class="margin-toggle"></input>
 <span class="sidenote">The Wikipedia article is not that easy to understand, especially from the basic table diagram given in the <em>Example</em> section. (Accessed 2021-12-01)</span> works in a similar principle.</p>
-<h1>The Algorithm</h1>
+<h1 id="heading-1-2">The Algorithm</h1/>
 <p>The <em>Buddy Algorithm</em> assumes that the backing memory block is a power-of-two in bytes. When an allocation is requested, the allocator looks for a block whose size is at least the size of the requested allocation (similar to a free list). If the requested allocation size is less than half of the block, it is split into two (left and right), and the two resulting blocks are called “buddies” <label for="buddies-joke" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="buddies-joke" class="margin-toggle"></input>
 <span class="sidenote">Just like Jackie Chan and Chris Tucker in <a href="https://www.imdb.com/title/tt0120812/">Rush Hour</a>.</span>. If this requested allocation size is still less than half the size of the left buddy, the buddy block is recursively split until the resulting buddy is as small as possible to fit the requested allocation size.</p>
-<p>When a block is released, we can try to performance coalescence on buddies (contiguous neighbouring blocks). Similar to <a href="/article/2021/11/30/memory-allocation-strategies-005/#free-and-coalescence">free lists</a>, there are particular conditions that are needed. Coalescence cannot be performed if a block is has no (free) buddy, the block is still in use, or the buddy block is partially used.</p>
+<p>When a block is released, we can try to performance coalescence on buddies (contiguous neighbouring blocks). Similar to <a href=">/article/2021/11/30/memory-allocation-strategies-005/#free-and-coalescence">free lists</a>, there are particular conditions that are needed. Coalescence cannot be performed if a block is has no (free) buddy, the block is still in use, or the buddy block is partially used.</p>
 <p><img src="/images/memory-allocation-strategies/buddy_allocator.svg#center" alt="Buddy Allocator Splitting Algorithm" /></p>
-<h1>The Implementation</h1>
-<h2>Buddy Block Data Structure</h2>
+<h1 id="heading-1-3">The Implementation</h1/>
+<h2 id="heading-2-4">Buddy Block Data Structure</h2/>
 <p>Each block in the buddy allocator will have a header (similar to our free list in the previous article) which stores information about it <em>inline</em>. It stores its size and whether it is free.</p>
-<pre><code class="language-c">typedef struct Buddy_Block Buddy_Block;
+<pre><code class="c">typedef struct Buddy_Block Buddy_Block;
 struct Buddy_Block { // Allocation header (metadata)
     size_t size; 
     bool   is_free;
 };
 </code></pre>
 <p>We do not need store a pointer to the next buddy block as we can calculate it directly from the stored size.</p>
-<pre><code class="language-c">Buddy_Block *buddy_block_next(Buddy_Block *block) {
+<pre><code class="c">Buddy_Block *buddy_block_next(Buddy_Block *block) {
     return (Buddy_Block *)((char *)block + block-&gt;size);
 }
 </code></pre>
 <p>n.b. Many implementations of a buddy allocator use a doubly linked list here and store explicit pointers, which allows for easier coalescence of neighbouring buddies and forward and backwards traversal. However this does add an extra cost of increasing the size of the allocation header for the memory block.</p>
-<h2>Recursive Split</h2>
+<h2 id="heading-2-5">Recursive Split</h2/>
 <p>As described above, to get the best fitting block a recursive splitting algorithm is required. We need to continually split a block until it is the optimal size for the allocation of the requested size.</p>
-<pre><code class="language-c">Buddy_Block *buddy_block_split(Buddy_Block *block, size_t size) {
+<pre><code class="c">Buddy_Block *buddy_block_split(Buddy_Block *block, size_t size) {
     if (block != NULL &amp;&amp; size != 0) {
         // Recursive split
         while (size &lt; block-&gt;size) {
@@ -99,13 +99,13 @@ struct Buddy_Block { // Allocation header (metadata)
     return NULL;
 }
 </code></pre>
-<h2>Finding the Best Block</h2>
+<h2 id="heading-2-6">Finding the Best Block</h2/>
 <p>Searching for a free block that matches the requested allocation size can be achieved by traversing an (implicit) linked list bounded by <code>head</code> and <code>tail</code> pointers <label for="tail-definition" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="tail-definition" class="margin-toggle"></input>
 <span class="sidenote">The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block.</span>. If a block for the requested allocation size cannot be found, but there is a larger free block, the above splitting algorithm is used. If there is no free block available, the following procedure with return <code>NULL</code> to represent that the allocator is (possibly) out of memory <label for="oom-caveat" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="oom-caveat" class="margin-toggle"></input>
 <span class="sidenote">The allocator may have enough memory left but none of it is contiguous due to too much internal fragmentation.</span>.</p>
-<pre><code class="language-c">Buddy_Block *buddy_block_find_best(Buddy_Block *head, Buddy_Block *tail, size_t size) {
+<pre><code class="c">Buddy_Block *buddy_block_find_best(Buddy_Block *head, Buddy_Block *tail, size_t size) {
     // Assumes size != 0
     
     Buddy_Block *best_block = NULL;
@@ -113,12 +113,12 @@ struct Buddy_Block { // Allocation header (metadata)
     Buddy_Block *buddy = buddy_block_next(block); // Right Buddy
      
     // The entire memory section between head and tail is free, 
-    // just call 'buddy_block_split' to get the allocation
+    // just call &#39;buddy_block_split&#39; to get the allocation
     if (buddy == tail &amp;&amp; block-&gt;is_free) {
         return buddy_block_split(block, size);
     }
     
-    // Find the block which is the 'best_block' to requested allocation sized
+    // Find the block which is the &#39;best_block&#39; to requested allocation sized
     while (block &lt; tail &amp;&amp; buddy &lt; tail) { // make sure the buddies are within the range
         // If both buddies are free, coalesce them together
         // NOTE: this is an optimization to reduce fragmentation
@@ -146,7 +146,7 @@ struct Buddy_Block { // Allocation header (metadata)
         if (buddy-&gt;is_free &amp;&amp; size &lt;= buddy-&gt;size &amp;&amp;
             (best_block == NULL || buddy-&gt;size &lt; best_block-&gt;size)) { 
             // If each buddy are the same size, then it makes more sense 
-            // to pick the buddy as it &quot;bounces around&quot; less
+            // to pick the buddy as it &#34;bounces around&#34; less
             best_block = buddy;
         }
         
@@ -164,7 +164,7 @@ struct Buddy_Block { // Allocation header (metadata)
     }
     
     if (best_block != NULL) {
-        // This will handle the case if the 'best_block' is also the perfect fit
+        // This will handle the case if the &#39;best_block&#39; is also the perfect fit
         return buddy_block_split(best_block, size);
     }
     
@@ -175,10 +175,10 @@ struct Buddy_Block { // Allocation header (metadata)
 <p>This algorithm can suffer from undue internal fragmentation. As an exercise for the reader, you can coalesce on neighbouring free buddies <label for="malkovich" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="malkovich" class="margin-toggle"></input>
 <span class="sidenote">All becoming a single buddy, trying to be someone else: https://www.imdb.com/title/tt0120601/</span> as you iterate.</p>
-<h2>Initialization</h2>
+<h2 id="heading-2-7">Initialization</h2/>
 <p>Initialization of the buddy allocator itself is relatively simple. The allocator itself stores three pieces of information: the <code>head</code> block (same the backing memory data), a sentinel pointer <code>tail</code> which represents the upper memory boundary of the backing memory data (<code>(char *)head + size)</code>, which means it is not a “real” block), and the alignment for each allocation. The procedure <code>buddy_allocator_init</code> below does some minor checks for the data itself with <code>assert</code>ions.</p>
 <p>n.b. This implementation of a buddy allocator does require that all allocations must have the same alignment in order to simplify the code a lot. Buddy allocators are usually a single strategy as part of a more complicated allocator and thus the assumption of alignment is less of an issue in practice.</p>
-<pre><code class="language-c">typedef struct Buddy_Allocator Buddy_Allocator;
+<pre><code class="c">typedef struct Buddy_Allocator Buddy_Allocator;
 struct Buddy_Allocator {
     Buddy_Block *head; // same pointer as the backing memory data
     Buddy_Block *tail; // sentinel pointer representing the memory boundary
@@ -187,15 +187,15 @@ struct Buddy_Allocator {
 
 void buddy_allocator_init(Buddy_Allocator *b, void *data, size_t size, size_t alignment) {
     assert(data != NULL);
-    assert(is_power_of_two(size) &amp;&amp; &quot;size is not a power-of-two&quot;);
-    assert(is_power_of_two(alignment) &amp;&amp; &quot;alignment is not a power-of-two&quot;);
+    assert(is_power_of_two(size) &amp;&amp; &#34;size is not a power-of-two&#34;);
+    assert(is_power_of_two(alignment) &amp;&amp; &#34;alignment is not a power-of-two&#34;);
     
     // The minimum alignment depends on the size of the `Buddy_Block` header
     assert(is_power_of_two(sizeof(Buddy_Block)) == 0);
     if (alignment &lt; sizeof(Buddy_Block)) {
         alignment = sizeof(Buddy_Block);
     }
-    assert((uintptr_t)data % alignment == 0 &amp;&amp; &quot;data is not aligned to minimum alignment&quot;);
+    assert((uintptr_t)data % alignment == 0 &amp;&amp; &#34;data is not aligned to minimum alignment&#34;);
     
     b-&gt;head          = (Buddy_Block *)data;
     b-&gt;head-&gt;size    = size;
@@ -207,9 +207,9 @@ void buddy_allocator_init(Buddy_Allocator *b, void *data, size_t size, size_t al
     b-&gt;alignment = alignment;
 }
 </code></pre>
-<h2>Allocation</h2>
+<h2 id="heading-2-8">Allocation</h2/>
 <p>Allocation is relatively straightforward since we have set everything else up already now. We first need increase requested allocation size to a fit the header and align forward before we find a best fitting block. If one is found, we then need to offset from the header to the usable data. If a block cannot be found, we can keep coalescing any free blocks until we cannot coalesce any more and then try to look for a usable block again. If not block is found, we return <code>NULL</code> to signify that we are out of memory with this particular allocator.</p>
-<pre><code class="language-c">size_t buddy_block_size_required(Buddy_Allocator *b, size_t size) {
+<pre><code class="c">size_t buddy_block_size_required(Buddy_Allocator *b, size_t size) {
     size_t actual_size = b-&gt;alignment;
     
     size += sizeof(Buddy_Block);
@@ -282,9 +282,9 @@ void *buddy_allocator_alloc(Buddy_Allocator *b, size_t size) {
 </code></pre>
 <p>The general time-complexity of this allocation algorithm is <em><strong>O(N)</strong></em> on average but a space complexity of <em><strong>O(log N)</strong></em>.</p>
 <p>n.b. As buddy allocators are still susceptible to internal fragmentation; it is less than a normal free list allocator but because of the power-of-two restriction, it is less severe in practice.</p>
-<h2>Freeing Memory</h2>
+<h2 id="heading-2-9">Freeing Memory</h2/>
 <p>Freeing memory is very trivial with this algorithm since all we need to do is mark the header (which is stored before the passed pointer) as being free.</p>
-<pre><code class="language-c">void buddy_allocator_free(Buddy_Allocator *b, void *data) {
+<pre><code class="c">void buddy_allocator_free(Buddy_Allocator *b, void *data) {
     if (data != NULL) {
         Buddy_Block *block;
         
@@ -300,7 +300,7 @@ void *buddy_allocator_alloc(Buddy_Allocator *b, size_t size) {
 }
 </code></pre>
 <p>The general time-complexity of freeing memory is <em><strong>O(1)</strong></em>. If you wanted to, <code>buddy_block_coalescence</code> could be performed straight after this free to aid in minimizing internal fragmentation.</p>
-<h1>Conclusion</h1>
+<h1 id="heading-1-10">Conclusion</h1/>
 <p>The buddy allocator is a powerful allocator and a conceptually simple algorithm but implementing it efficiently is a lot harder than all of the previous allocators that have been discussed in this series.</p>
 <p>In the next set of articles, I will discuss the a lot about virtual memory; how it works, how we can utilize it, and its benefits.</p>
 </article></main>

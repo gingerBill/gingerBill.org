@@ -57,7 +57,7 @@
 <span class="sidenote">Most architectures have register dedicated as a pointer to the stack, that is added because it is used frequently and pragmatically makes sense to do so.</span> and that the heap is magical in nature.</p>
 <p>Modern operating systems virtualize memory on a per-process basis. This means that the addresses used within your program/process are specific to that program/process only. Due to operating systems virtualizing the memory space for us, this allows us to think about memory in a completely different way. Memory is not longer this dualistic model of <em>the stack</em> and <em>the heap</em> but rather a monistic model where everything is virtual memory. Some of that virtual address space is reserved for procedure stack frames, some of it is reserved for things required by the operating system, and the rest we can use for whatever we want. This may sound similar to original dualistic model that I stated previously, however, the biggest difference is realizing that the memory is virtually-mapped and linear, and that you can split that linear memory space in sections.</p>
 <p><img src="/images/memory-allocation-strategies/virtual_memory.svg#center" alt="Virtual Memory" /></p>
-<h1>Thinking About Allocation</h1>
+<h1 id="heading-1-1">Thinking About Allocation</h1/>
 <p>When it comes to allocation, there are three main aspects to think about</p>
 <ul>
 <li>The size of the allocation</li>
@@ -93,7 +93,7 @@
 <input type="checkbox" id="garbage-collection" class="margin-toggle"></input>
 <span class="sidenote">Garbage collection is one of the only terms in computers science where the term actually reflects its real world counter part.</span>.</p>
 <p>Please note that in domain specific areas, these percentages will be completely different. For instance, a web server that may be handling an unknown amount of requests may require a form of garbage collection if the memory is limited or it may be cheaper to just buy more memory.</p>
-<h1>Generations of Lifetimes</h1>
+<h1 id="heading-1-2">Generations of Lifetimes</h1/>
 <p>For the common category, the general approach that I take is to think about memory lifetimes in terms of generations. An <em>allocation generation</em> is a way to organize memory lifetimes into a hierarchical structure <label for="generation-cut-and-dry" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="generation-cut-and-dry" class="margin-toggle"></input>
 <span class="sidenote">These generations are not cut-and-dry and allocations can span across this spectrum of lifetimes (like in real life).</span>.</p>
@@ -109,15 +109,15 @@
 <p><strong>Scratch/Temporary Allocation</strong>: Short lived, quick memory that I just want to allocate and forget about. A common case for this is when I want to generate a string and output it to a log.</p>
 </li>
 </ul>
-<h2>Memory Hierarchies</h2>
+<h2 id="heading-2-3">Memory Hierarchies</h2/>
 <p>As I previously stated, the monistic model of memory is the preferred model of memory (on modern systems). This generational approach to memory orders the lifetime of memory in a hierarchical fashion. You could still have pseudo-permanent memory within a transient allocator or a scratch allocator, as the difference is thinking about the relative usage of that memory with respect to its lifetime. Thinking locally about how memory is used aids with conceptualizing and managing memory — the human brain can only hold so much.</p>
 <p>The same localist thought process can be applied to the memory-space/size of which I will be discussing in later articles in this series.</p>
-<h1>The Compiler’s Knowledge of the Program</h1>
+<h1 id="heading-1-4">The Compiler’s Knowledge of the Program</h1/>
 <p>In languages with automatic memory management, many people assume that the compiler knows a lot about the usage and lifetimes of your program. <strong>This is false</strong>. You know much more about your program than the compiler could ever know. In the case of languages with ownership semantics (e.g. Rust, C++11), the language may aid you in certain cases, but it struggles to know (if it is at all possible) when it should pre-allocate or free in bulk. This is compiler ignorance can lead to a lot of performance issues.</p>
 <p>My personal issue with regards to ownership semantics is that it naturally focuses on the ownership of single objects rather than in systems <label for="ownership-systems" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ownership-systems" class="margin-toggle"></input>
 <span class="sidenote">I know in languages such as Rust, you can describe the lifetime of an object to be linked to a system however, with the memory allocation strategies I will be discussing later, the Rust code that would be required pretty much acts as if you will bypass the ownership semantics entirely and have a liberal use of <code>unsafe</code>.</span>. Such languages also have the tendency to couple the concept of ownership with the concept of lifetime, which are not necessarily linked.</p>
-<h1>Coming Next</h1>
+<h1 id="heading-1-5">Coming Next</h1/>
 <p>In this series, I will discuss the different kinds of memory models and allocation strategies that can be used. These are the topics that will be covered:</p>
 <ul>
 <li>Sequential (Contiguous) Allocations</li>

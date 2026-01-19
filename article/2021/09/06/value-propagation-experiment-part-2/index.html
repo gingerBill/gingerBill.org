@@ -48,9 +48,9 @@
 <p><span class="date">2021-09-06</span></p>
 </div>
 </header>
-<p><a href="https://twitter.com/TheGingerBill/status/1427226906538168320"><strong>[Originally from a Twitter Thread]</strong></a></p>
-<p>I have revisited <a href="/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
-<p>The recovery work has been merged into master now with this PR: <a href="https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
+<p><a href=">https://twitter.com/TheGingerBill/status/1427226906538168320"><strong>[Originally from a Twitter Thread]</strong></a></p>
+<p>I have revisited <a href=">/article/2021/07/05/value-propagation-experiment/">The Value Propagation Experiment</a> and have come to a different conclusion as to why it failed and how I recovered it.</p>
+<p>The recovery work has been merged into master now with this PR: <a href=">https://github.com/odin-lang/Odin/pull/">https://github.com/odin-lang/Odin/pull/</a>1082</p>
 <p>I think there were three things which were confusing which make it look like a failure of an experiment:</p>
 <ul>
 <li><code>try</code> was a confusing name for what the semantics were.</li>
@@ -63,23 +63,23 @@
 <li><code>or_return</code> was added as a keyword.</li>
 <li><code>or_return</code> became a suffix-operator/atom-expression.</li>
 </ul>
-<pre><code class="language-odin">if i, ok = m[&quot;hellope&quot;] !ok { i = 123 }
+<pre><code class="odin">if i, ok = m[&#34;hellope&#34;] !ok { i = 123 }
 </code></pre>
 <p>becomes</p>
-<pre><code class="language-odin">i = m[&quot;hellope&quot;] or_else 123
+<pre><code class="odin">i = m[&#34;hellope&#34;] or_else 123
 </code></pre>
-<pre><code class="language-odin">if err = foo(); err != nil { return }
+<pre><code class="odin">if err = foo(); err != nil { return }
 </code></pre>
 <p>becomes</p>
-<pre><code class="language-odin">foo() or_return
+<pre><code class="odin">foo() or_return
 </code></pre>
 <p>Most people understood what the purpose and semantics <code>or_else </code>pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that.</p>
-<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin’s core library), this was true. However it was false for many codebases, including the new <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
-<p>In the <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
+<p>Another aspect which I stated in the original article was that I thought the construct was not as common as I originally thought. And for my codebases (including most of Odin’s core library), this was true. However it was false for many codebases, including the new <a href=">https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a>.</p>
+<p>In the <a href=">https://github.com/odin-lang/Odin/tree/master/core/math/big">core:math/big</a> package alone, or_return was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
 <p>The more C-like a library is in terms of design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it.</p>
 <p>When this correction was made, there were 350+ instances of <code>or_return</code> in a ~3900 LOC is ~9% of (non-blank) lines of code. That’s a useful construct for definite.</p>
 <p>Another (smaller) package that found or_return useful was the new core:encoding/hxa, which is an Odin native implementation of
-<a href="http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>’s HxA format. https://github.com/quelsolaar/HxA</p>
+<a href=">http://www.quelsolaar.com/ministry_of_flat/">@quelsolaar</a>’s HxA format. https://github.com/quelsolaar/HxA</p>
 <p>The entire implementation for reading and writing is 500 LOC, of which there are 32 <code>or_return</code>s.</p>
 <p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
 <ul>

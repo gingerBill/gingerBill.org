@@ -48,10 +48,10 @@
 <p><span class="date">2015-08-19</span></p>
 </div>
 </header>
-<p>One of my favourite things about <a href="https://golang.org/">Go</a> is the <code>defer</code> statement. The <code>defer</code> statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
-<p>Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href="http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.</p>
-<h2>C++11 Implementation</h2>
-<pre><code class="language-cpp">template &lt;typename F&gt;
+<p>One of my favourite things about <a href=">https://golang.org/">Go</a> is the <code>defer</code> statement. The <code>defer</code> statement pushes a function call onto a list; the list of saved calls in called when the function returns.</p>
+<p>Imitating this is C++ is impossible. Instead of calling when the function calls, you can call at the end of scope; this is a better approach for C++. This is similar to how <a href=">http://dlang.org/statement.html#ScopeGuardStatement">D has scope(exit)</a>.</p>
+<h2 id="heading-2-1">C++11 Implementation</h2/>
+<pre><code class="cpp">template &lt;typename F&gt;
 struct privDefer {
 	F f;
 	privDefer(F f) : f(f) {}
@@ -68,12 +68,12 @@ privDefer&lt;F&gt; defer_func(F f) {
 #define DEFER_3(x)    DEFER_2(x, __COUNTER__)
 #define defer(code)   auto DEFER_3(_defer_) = defer_func([&amp;](){code;})
 </code></pre>
-<h2>Explanation</h2>
+<h2 id="heading-2-2">Explanation</h2/>
 <p>One of the most common examples for this in Go is files.</p>
-<pre><code class="language-go">import &quot;os&quot;
+<pre><code class="go">import &#34;os&#34;
 
 func someFunc() {
-	file, err := os.Open(&quot;filename.ext&quot;, os.O_RDONLY, 0)
+	file, err := os.Open(&#34;filename.ext&#34;, os.O_RDONLY, 0)
 	if err != nil {
 		// handle error
 		return
@@ -85,8 +85,8 @@ func someFunc() {
 }
 </code></pre>
 <p>In C/C++, before every return, <code>fclose</code> must be called.</p>
-<pre><code class="language-cpp">void some_func(void) {
-	FILE *file = fopen(&quot;filename.ext&quot;, &quot;rb&quot;);
+<pre><code class="cpp">void some_func(void) {
+	FILE *file = fopen(&#34;filename.ext&#34;, &#34;rb&#34;);
 	if (file == NULL) {
 		// handle error
 		return;
@@ -103,9 +103,9 @@ func someFunc() {
 }
 </code></pre>
 <p>You may say that RAII in C++ solves this issue but this would require a class wrapper. <code>defer</code> allows for the same thing as RAII but without manually creating a wrapper type. Also, <code>defer</code> conceptually links the creation with the destruction without hiding it.</p>
-<h2>Examples In C++ Code</h2>
-<pre><code class="language-cpp">void some_func(void) {
-	FILE *file = fopen(&quot;filename.ext&quot;, &quot;rb&quot;);
+<h2 id="heading-2-3">Examples In C++ Code</h2/>
+<pre><code class="cpp">void some_func(void) {
+	FILE *file = fopen(&#34;filename.ext&#34;, &#34;rb&#34;);
 	if (file == NULL)
 		return;
 	defer (fclose(file));
@@ -116,8 +116,8 @@ func someFunc() {
 	defer (deallocate(buffer));
 
 	defer ({
-		printf(&quot;You can even defer &quot;);
-		printf(&quot;an entire block too!&quot;);
+		printf(&#34;You can even defer &#34;);
+		printf(&#34;an entire block too!&#34;);
 	});
 
 	// Do whatever...
@@ -125,17 +125,17 @@ func someFunc() {
 </code></pre>
 <p>I use this regularly within C++ code as it is very useful when dealing with C code bases.</p>
 <p>There are numerous other implementations of this too and I have linked to these below.</p>
-<h2>Other Implementations</h2>
+<h2 id="heading-2-4">Other Implementations</h2/>
 <ul>
-<li><a href="http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a></li>
-<li><a href="http://kri.gs/2013/01/20/defer-cpp/">~~Kristoffer Grönlund~~</a> (Page is missing)</li>
+<li><a href=">http://the-witness.net/news/2012/11/scopeexit-in-c11/">Ignacio Castaño</a></li>
+<li><a href=">http://kri.gs/2013/01/20/defer-cpp/">~~Kristoffer Grönlund~~</a> (Page is missing)</li>
 </ul>
-<h2>Caveat</h2>
+<h2 id="heading-2-5">Caveat</h2/>
 <p>Because the <code>defer</code> statement is called at the end of scope rather than function return, a Go programmer for example would do something like this:</p>
-<pre><code class="language-c">void another_func(void) {
+<pre><code class="c">void another_func(void) {
 	for (int i = 0; i &lt; 4; i++)
-		defer (printf(&quot; %d&quot;, i));
-	printf(&quot; Hello&quot;);
+		defer (printf(&#34; %d&#34;, i));
+	printf(&#34; Hello&#34;);
 }
 </code></pre>
 <p>to return <code> Hello 3 2 1 0</code>. However, it will return <code> 0 1 2 3 Hello</code>. I personally prefer the scope behaviour but that is just a matter of opinion.</p>

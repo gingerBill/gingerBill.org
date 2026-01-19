@@ -48,7 +48,7 @@
 <p><span class="date">2018-03-12</span></p>
 </div>
 </header>
-<p>Article was originally posted here: <a href="https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations">https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations</a></p>
+<p>Article was originally posted here: <a href=">https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations">https://odin.handmade.network/blogs/p/2994-on_the_aesthetics_of_the_syntax_of_declarations</a></p>
 <p>n.b. This is a philosophical article and not a technical article. There are no correct answers to the questions that I will pose – only compromises.</p>
 <p>I’m considering what the “best” declaration syntax would be. Historically, there have been two categories: which I will call qualifier-focused and type-focused.
 An example of qualifier-focused would be the Pascal family. An example of type-focused would be the C family. Odin, like Jai, have been experimenting with an name-focused declaration syntax. These categories place emphasis on different aspects of the declarations.</p>
@@ -59,37 +59,37 @@ An example of qualifier-focused would be the Pascal family. An example of type-f
 </ul>
 <p>Some languages have a hybrid approach to the syntax of declarations. Python uses a form of name-focused for general variable declaration but qualifier-focused for function, class, and import declarations. Most modern derivatives of the C family may use type-focused for most declarations but use qualifier-focused for import declarations.</p>
 <p>There are some issue regarding all three approaches.</p>
-<h2>Qualifier-Focused</h2>
+<h2 id="heading-2-1">Qualifier-Focused</h2/>
 <ul>
 <li>Most forms of qualifier-focused require numerous keywords to specify the kind of declaration</li>
 <li>Qualifier-focused adds verbosity to the syntax due to the extra keywords</li>
 <li>Qualifier-focused declarations have a tendency to make you define all declarations at the top of a scope and/or group declarations together of the same kind together. This nudges the programmers to not intermingle declarations and assignments. Depending on the views of programmer, this can be viewed as a positive aspect.</li>
 </ul>
-<h2>Type-Focused</h2>
+<h2 id="heading-2-2">Type-Focused</h2/>
 <ul>
 <li>Every declaration must be associated with a type and thus be part of the type system. This is one of the reasons why <code>void</code> is in C. If a function must specify the return type, the solution to this is to create a “non-type”, i.e. <code>void</code>. Having a <code>void</code> type does cause issues in the type system in general but I will not consider those in this article.</li>
 <li>In the case of C++ and others, type inference must be done through a form of qualifier-focused (e.g. <code>auto</code> or <code>var</code>)</li>
 </ul>
-<h2>Name-Focused</h2>
+<h2 id="heading-2-3">Name-Focused</h2/>
 <ul>
 <li>Name-focused has three aspects to the declaration, the left hand side (lhs), the right hand side (rhs), and the middle part. The lhs aspect are the names of the entities to be declared whilst the rhs aspect of the declaration are forms of expressions. This means that all declarations must be a declaration of an expression. This does mean that all declarations must be assigned with a form of expression. The middle part denotes the type which could be optional.</li>
 <li>In a self-contained language, having only expression assigned declarations is not a problem. The difficulty comes from interfacing with foreign code, such as C, and having a consistent syntax. In C, there are two forms of function declarations: function prototypes and full functions with bodies. A function prototype is not a form of expression. A function with a body which can be thought of a named lambda function.</li>
 <li>An inconsistency with name-focused is with variable declarations without an assignment (<code>x: int;</code>). It is implied that the declaration has an implicit rhs expression, the zero/default value. It is also implied that the declaration must be a variable declaration (and not a constant declaration).</li>
 </ul>
-<h2>On the Aesthetics of Qualifier-Focused</h2>
+<h2 id="heading-2-4">On the Aesthetics of Qualifier-Focused</h2/>
 <p>I will be open, I have a minor bias towards qualifier-focused due to Pascal being one of my very first languages. So when I started creating Odin, the language that I am designing and making, I started with a very Pascal syntax (including <code>begin</code> and <code>end</code>) but when the language became “public”, the syntax changed to be closer to that of Jonathan Blow’s language, Jai. I was intrigued by the idea of the name-focused syntax with its very elegant approach to type inference. However, I have had doubts about the syntax for quite a while. At one point, I struggled to find a solution to the issue of foreign procedures and foreign variables. Originally, I solved the issue for foreign procedures with replacing the procedure body with a <code>#foreign</code> tag. However, this approach cannot be applied to a foreign variable declaration and still be consistent. On an impulsive whim, I switched the entire declaration syntax to a Go-like qualifier-focused style for 2 weeks. (I have done this switch twice.) The solution to the foreign entities was to have a procedure lambda without a body by replacing the body with <code>---</code> and surrounding all foreign declarations in a <code>foreign</code> block. In Odin, a procedure without a body cannot be distinguished from a procedure type and thus there needed to be a way to specify a procedure literal/lambda without a body.</p>
-<pre><code class="language-odin">foreign my_lib {
+<pre><code class="odin">foreign my_lib {
     some_var: i32;
-    amazing_foo :: proc &quot;c&quot; (a, b: i32, c: f32) -&gt; rawptr ---;
+    amazing_foo :: proc &#34;c&#34; (a, b: i32, c: f32) -&gt; rawptr ---;
 }
 </code></pre>
 <p>There are two reasons for this conflict that I have between qualifier-focused and name-focused. The first is that name-focused is elegant and terse to write compared to qualifier-focused. The second is the “ugliness” of qualifier-focused with conjunction with other forms of statements.</p>
 <p>Qualifier-focused looks “ugly” when it is combined with control statements:</p>
-<pre><code class="language-go">for var x = 0; x &lt; 10; x += 1 {
+<pre><code class="go">for var x = 0; x &lt; 10; x += 1 {
 }
 </code></pre>
 <p>The two keywords together in the <code>for var</code> block looks “dense and wrong” to me and makes reading the construct much more difficult. However, placing an open parenthesis in between the keywords reduces some of this “density”:</p>
-<pre><code class="language-go">for (var x = 0; x &lt; 10; x += 1) {
+<pre><code class="go">for (var x = 0; x &lt; 10; x += 1) {
 }
 </code></pre>
 <p>It does look slightly better but it is still “dense”. These parentheses make it less “ugly” for some reason and it’s not self apparent as to why the separation between the two words by punctuation improves matters.</p>

@@ -48,7 +48,7 @@
 <p><span class="date">2020-05-17</span></p>
 </div>
 </header>
-<h2>Absolute Pointers</h2>
+<h2 id="heading-2-1">Absolute Pointers</h2/>
 <p>Pointers are a value type in programming languages that store a memory address. A pointer <em>references</em> a location in memory, and obtaining the value stored at this location in memory is known as <em>dereferencing</em> a pointer.
 Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</p>
 <p>When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call this form of pointer an <em>absolute</em> pointer. On most modern machines with virtualized memory, this is rarely the case any more, and for good reasons <label for="good-reasons" class="margin-toggle sidenote-number"></label>
@@ -57,7 +57,7 @@ Pointers are part and parcel of using languages like C, and are an extremely pow
 <input type="checkbox" id="not-discuss-virtual-memory" class="margin-toggle"></input>
 <span class="sidenote">I will not discuss how virtual memory works or its benefits in this article.</span>. In a sense, these pointers that belong to virtualized memory spaces can be classed as a form of <em>relative</em> pointer.</p>
 <p>At the end of the day, a pointer can be treated/encoded as if it was an integer of some form. Knowing this fact is extremely useful, not just with pointer arithmetic in C/C++, but also relative pointers.</p>
-<h2>Varieties of Relative Pointers</h2>
+<h2 id="heading-2-2">Varieties of Relative Pointers</h2/>
 <p>In general, there are four forms of relative pointers:</p>
 <ul>
 <li>Virtual memory pointers—relative to the virtualized memory space</li>
@@ -65,9 +65,9 @@ Pointers are part and parcel of using languages like C, and are an extremely pow
 <li>Offset pointers—relative to an explicitly defined base, such as the beginning of a file</li>
 <li>Self-Relative/Auto-Relative pointers—relative to its own memory address</li>
 </ul>
-<h2>Global-Based Pointers</h2>
-<p>MSVC supports a non-official extension to C and C++, <a href="https://docs.microsoft.com/en-us/cpp/cpp/based-pointers-cpp"><em>based pointers</em></a>, which allows the user to declare pointers based on pointers. They can be declared using the <code>__based</code> keyword.</p>
-<pre><code class="language-c">void *global_buffer;
+<h2 id="heading-2-3">Global-Based Pointers</h2/>
+<p>MSVC supports a non-official extension to C and C++, <a href=">https://docs.microsoft.com/en-us/cpp/cpp/based-pointers-cpp"><em>based pointers</em></a>, which allows the user to declare pointers based on pointers. They can be declared using the <code>__based</code> keyword.</p>
+<pre><code class="c">void *global_buffer;
 
 struct Linked_List {
 	struct Linked_List __based(global_buffer) *next;
@@ -76,7 +76,7 @@ struct Linked_List {
 </code></pre>
 <p>The size of a based pointer is still the same size as a regular pointer, but now the value it points to <em>relative</em> to that value.</p>
 <p>This form of relative pointers is useful but because it is based on a globally defined variable, it muddles the type system by coupling it with values which means it cannot be applied as generally. Based pointers can also be replicated in C++ through the use of templates and operator overloading, it also has the advantage of allowing the size of the user defined based pointer to be a different size to a regular pointer:</p>
-<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+<pre><code class="c">template &lt;typename Elem, typename Integer_Base&gt;
 struct Based_Pointer {
 	static void *base = ...;
 	Integer_Base offset;
@@ -94,11 +94,11 @@ struct Based_Pointer {
 	}
 };
 </code></pre>
-<h2>Offset Pointers</h2>
+<h2 id="heading-2-4">Offset Pointers</h2/>
 <p>Another approach which is very similar to based pointers but the base is not explicitly defined by the type itself, which I will refer to as <em>offset pointers</em>. I use this approach a lot when designing file formats, which has the base being the start of the file. I originally learnt about this trick from reading the Quake source code for the MD2/MD3/MD4 file formats which used this trick a lot, especially for <em>relative arrays</em>.</p>
 <p>This shows one of the main advantages of relative pointers: serializeability. This means that the data structure can be <code>memcpy</code>’d and still be valid.</p>
 <p>Offset pointers can also be replicated in C++ through the use of templates. Similar to the previous user-defined based pointers above, the size of the underlying integer can be any size. One of the cool tricks here is that the data structure’s fields do not contain any type information about what data type it pointers but rather that data type is encoded in the constant parameters of the templated data structure.</p>
-<pre><code class="language-c">template &lt;typename T&gt;
+<pre><code class="c">template &lt;typename T&gt;
 struct Offset_Pointer {
 	uint32_t offset;
 };
@@ -121,7 +121,7 @@ T *get_array(void *base, Offset_Array&lt;T&gt; array, uint32_t *length) {
 }
 </code></pre>
 <p>The same form of data structure can be implemented in Odin too:</p>
-<pre><code class="language-odin">Offset_Pointer :: struct(T: typeid) {
+<pre><code class="odin">Offset_Pointer :: struct(T: typeid) {
 	offset: u32,
 }
 
@@ -141,16 +141,16 @@ get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
 }
 </code></pre>
 <p>In the above cases, the <code>offset</code> represents the number of bytes away from the <em>base</em>. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems.</p>
-<h2>Self-Relative Pointers</h2>
+<h2 id="heading-2-5">Self-Relative Pointers</h2/>
 <p>The last approach is to define the base to be the memory address of the offset itself.</p>
-<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language <label for="first-language" class="margin-toggle sidenote-number"></label>
+<p>This approach has been used at <a href=">https://www.youtube.com/watch?v=Nsf2_Au6KxU&feature=youtu.be&t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language <label for="first-language" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="first-language" class="margin-toggle"></input>
-<span class="sidenote">Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.</span> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
+<span class="sidenote">Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.</span> <a href=">https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href=">https://odin-lang.org/">Odin</a>.</p>
 <p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>’d and still be (mostly) valid.</p>
 <p>One issue with self-relative pointers is that for the value itself to be valid, it must be in an addressable memory space (i.e. must be an l-value and not in a register). If a language containing such a concept wanted to ensure the validity of such a data type, any other data type that contains it would also have to be addressable to. This adds a form of virality to the type system, adding a new concept of addressability to the type system directly. However, even if this was enforced, there are cases when a self-relative pointer in non-addressable memory could be perfectly valid.</p>
 <p>Another issue is that smaller base integer types for the internal offset value means that they can only be valid over a smaller range than regular pointers.</p>
 <p>Relative pointers can be implemented in C++ with the use of templates and operator overloading</p>
-<pre><code class="language-c">template &lt;typename Elem, typename Integer_Base&gt;
+<pre><code class="c">template &lt;typename Elem, typename Integer_Base&gt;
 struct Relative_Pointer {
 	Integer_Base offset;
 
@@ -170,8 +170,8 @@ struct Relative_Pointer {
 <p>In the above cases, the <code>offset</code> represents the number of bytes away from its own memory address. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems. I personally find this approach less useful in practice even if a stride of greater than 1 does give a larger range to work with in theory (<code>stride*size_of(Elem_Type)</code> bytes).</p>
 <p>It should also be noted that this implementation of a relative pointer does treat the <code>0</code> value as a sentinel value similar to regular pointers.</p>
 <p><em>Relatively</em> recently, I added self-relative pointers to Odin because I found a decent use case for them compared to just using (explicit) offset pointers. I also extended the concept of relative pointers to relative slices too, similar to the <em>offset array</em> example from above.</p>
-<pre><code class="language-odin">relative_data_types :: proc() {
-	fmt.println(&quot;#relative data types&quot;);
+<pre><code class="odin">relative_data_types :: proc() {
+	fmt.println(&#34;#relative data types&#34;);
 
 	x: int = 123;
 	ptr: #relative(i16) ^int;
@@ -193,19 +193,19 @@ struct Relative_Pointer {
 }
 </code></pre>
 <p>Due to the fact that the underlying base integer of a self relative pointer can be specified by the programmer, it can be exploited for a lot of useful purposes. One basic example could be having a very small linked list where the next item in the list is defined to be within a certain range. This means you could defined a relative pointer to be stored in a single byte if necessary:</p>
-<pre><code class="language-odin">Node :: struct {
+<pre><code class="odin">Node :: struct {
 	data: u8,
 	next: #relative(i8) ^Node,
 }
 #assert(size_of(Node) == 2);
 </code></pre>
-<h2>Summary</h2>
+<h2 id="heading-2-6">Summary</h2/>
 <p>Relative pointers allow for a lot more flexibility compared to “traditional” pointers, and a godsend with regards to serialization. They do have many advantages and disadvantages compared to “traditional” pointers, and the programmer must be absolutely aware of them before using them. Relative pointers can be easily serialized making them ideal for file formats, and relative pointers can be as small as they need to be rather than taking up the same size of a regular pointer (e.g. on 64-bit platforms, a pointer is 64 bits which might be a lot more than the user requires for a specific problem).</p>
-<h2>Relevant Videos</h2>
-<h3>Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)</h3>
+<h2 id="heading-2-7">Relevant Videos</h2/>
+<h3 id="heading-3-8">Sergiy Migdalskiy - Performance Optimization, SIMD and Cache (at 26 minutes)</h3/>
 <div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/Nsf2_Au6KxU?t=1560
 " frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>
-<h3>Jonathan Blow - Demo: Relative Pointers</h3>
+<h3 id="heading-3-9">Jonathan Blow - Demo: Relative Pointers</h3/>
 <div class="youtube"><iframe width="560" height="315" src="https://www.youtube.com/embed/Z0tsNFZLxSU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><br>
 </article></main>
 <footer>© 2007–2026 Ginger Bill</footer>
