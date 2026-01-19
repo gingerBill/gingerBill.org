@@ -241,7 +241,7 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 
 	case .Link:
 		if entering {
-			strings.write_string(state.w, "<a href=\">")
+			strings.write_string(state.w, "<a href=\"")
 			if node.as.link.url != nil {
 				escape_href(state, string(node.as.link.url))
 			}
