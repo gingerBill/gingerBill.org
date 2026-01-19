@@ -143,7 +143,7 @@ get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
 <p>In the above cases, the <code>offset</code> represents the number of bytes away from the <em>base</em>. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems.</p>
 <h2 id="heading-2-5">Self-Relative Pointers</h2/>
 <p>The last approach is to define the base to be the memory address of the offset itself.</p>
-<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&feature=youtu.be&t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language <label for="first-language" class="margin-toggle sidenote-number"></label>
+<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language <label for="first-language" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="first-language" class="margin-toggle"></input>
 <span class="sidenote">Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.</span> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
 <p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>’d and still be (mostly) valid.</p>
