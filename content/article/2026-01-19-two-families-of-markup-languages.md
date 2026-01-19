@@ -65,7 +65,7 @@ SGML wrapping syntax also has the flaw of allowing for overlapping hierarchies:
 
 TeX syntax does not have this problem as it only uses generic brackets/braces. I cannot think of a case when overlapping hierarchies this is desired---in fact HTML parsers have to mitigate for this possible typo.
 
-Real life TeX syntaxes do have their own edge cases which deviate from the general markup syntax[^tex-cheatsheet], but this is more to do with wanting to express mathematical formulations in real text rather than.
+Real life TeX syntaxes do have their own edge cases, deviating from the general markup syntax[^tex-cheatsheet], but this is more to do with wanting to express mathematical formulations in real text rather than keep to a syntactic "purity".
 
 [^tex-cheatsheet]: If you want a good example of this, I recommend reading this wonderful [Cheatsheet](https://quickref.me/latex.html#supported-functions) to see the numerous syntactic exceptions which exist for practical pragmatic purposes, even if that means the syntax parser is now hell of a lot more complex.
 
