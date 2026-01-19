@@ -409,22 +409,7 @@ handle_article :: proc(website: ^Website, fi: os.File_Info) -> bool {
 	article = preprocessor_pass_over_article(website, article)
 
 
-	article_html: string
-	defer cm.free_string(article_html)
-
-
-	{
-		options := cm.Options{.Unsafe, .Smart}
-
-		p := cm.parser_new(options)
-		defer cm.parser_free(p)
-
-		root := cm.parse_document(raw_data(article), len(article), options)
-		defer cm.node_free(root)
-
-		article_html = string(cm.render_html(root, options))
-	}
-
+	article_html := render_html(&website.scratch_arena, article)
 
 	// TODO(bill): Determine summary from the article
 	summary := ""
