@@ -37,7 +37,7 @@ The SGML family:
 ```
 
 
-This does mean I am excluding things like [Markdown](https://daringfireball.net/projects/markdown/)[^what-i-use], [troff](https://troff.org/), [IBM's GML](https://en.wikipedia.org/wiki/IBM_Generalized_Markup_Language), [Wiki](https://en.wikipedia.org/wiki/Wiki), etc. The reason for this exclusion is because they are neither _arbitrary_ nor _proper_. They have procedural semantic meaning to their syntax and it cannot be arbitrarily extended.
+This does mean I am excluding things like [Markdown](https://daringfireball.net/projects/markdown/)[^what-i-use], [troff](https://troff.org/), [IBM's GML](https://en.wikipedia.org/wiki/IBM_Generalized_Markup_Language), [Wiki](https://en.wikipedia.org/wiki/Wiki), [Emacs Org-Mode](https://orgmode.org/worg/org-syntax.html) etc. The reason for this exclusion is because they are neither _arbitrary_ nor _proper_. They have procedural semantic meaning to their syntax and it cannot be arbitrarily extended.
 
 [^what-i-use]: I use a variant of Markdown to write these articles. I use a custom extension of Commonmark which I've added the ability to write these margin-notes and some other things like trivial YouTube video embedded.
 
@@ -88,7 +88,7 @@ YAML is also a monstrosity and should never be used by anyone for any reason. It
 
 [Odin](https://odin-lang.org/)[^my-language] is not a markup language, but I deliberately designed three distinct extension mechanisms so the language can grow in the future without forcing new foundational syntax. I achieve this with attributes on declarations, struct tag fields, and directives. These three different constructs have different syntaxes because they reflect different semantic meaning.
 
-[^my-language]: The general purpose programming that I have created. Which I hope most people who read my articles know this already.
+[^my-language]: The general purpose programming language that I have created. Which I hope most people who read my articles know this already.
 
 Attributes can be applied to any declaration and have the following syntax:
 
