@@ -106,4 +106,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
     color: #8ac;
     font-weight: bold;
   }
+
+  .hljs-tag,
+  .hljs-name,
+  .hljs-attribute {
+    color: #8c7;
+  }
 }

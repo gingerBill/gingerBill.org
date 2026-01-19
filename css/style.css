@@ -401,6 +401,7 @@ p code, li code {
   padding: 1px 3px;
   color: #333;
   background-color: #f7f7f7;
+  font-size: 0.85em!important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -505,15 +506,14 @@ img[src$='#center'] {
   clear: right;
   margin-right: -45%;
   width: 40%;
-  margin-top: 0.3em;
-  margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0.5em;
   vertical-align: baseline;
   position: relative;
 }
 
 .sidenote-number {
   counter-increment: sidenote-counter;
-  font-size: 0.8em;
 }
 
 .sidenote-number:after,
@@ -526,12 +526,16 @@ img[src$='#center'] {
   content: counter(sidenote-counter);
   top: -0.5em;
   left: 0.1em;
+  margin-left: -0.2em;
+  margin-right: -0.1em;
+  font-size: 0.8em;
 }
 
 .sidenote:before {
   content: counter(sidenote-counter) " ";
   top: -0.5em;
   color: #fd8000;
+  font-size: 0.8em;
 }
 
 input.margin-toggle {
