@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="A Reply to _The Road to Zig 1.0_" />
-<meta name="twitter:description" content="It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:Odin   For those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!Whi..." />
+<meta name="twitter:description" content="It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:Odin�&nbsp;  For those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy bette..." />
  <title>A Reply to _The Road to Zig 1.0_ - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -50,7 +50,7 @@
 </header>
 <p>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:</p>
 <ul>
-<li><a href="https://www.gingerbill.org/odin/">Odin</a> <label for="odin-lang-creator" class="margin-toggle sidenote-number"></label>
+<li><a href="https://www.gingerbill.org/odin/">Odin</a>�&nbsp;<label for="odin-lang-creator" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="odin-lang-creator" class="margin-toggle"></input>
 <span class="sidenote">For those who do not know, I am the creator of the <a href="https://www.gingerbill.org/odin/">Odin programming language</a>.</span></li>
 <li><a href="http://scopes.rocks">Scopes</a></li>
@@ -66,10 +66,10 @@
 <li>Write quality software (compared to writing crappy software)</li>
 <li>Promote code reuse (compared to preventing code reuse)</li>
 </ul>
-<p>From experience of programming and the current programming culture, the second should be rephrased to “promote reuse of quality code” as with the rise of package managers and library repositories, code is being reused quite a lot, even if that code is not at all robust. This crappy code reuse as resulted in many of the infamous dependency hells <label for="left-pad" class="margin-toggle sidenote-number"></label>
+<p>From experience of programming and the current programming culture, the second should be rephrased to “promote reuse of quality code” as with the rise of package managers and library repositories, code is being reused quite a lot, even if that code is not at all robust. This crappy code reuse as resulted in many of the infamous dependency hells�&nbsp;<label for="left-pad" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="left-pad" class="margin-toggle"></input>
 <span class="sidenote">See the Left-Pad Package causing severe issues across many other piece of code, <a href="https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages">https://en.wikipedia.org/wiki/Npm_(software)#Notable_breakages</a>.</span>.</p>
-<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming <label for="handmade-manifesto" class="margin-toggle sidenote-number"></label>
+<p>However, my biggest gripe is the first point: write quality software. I wholeheartedly believe that writing quality software is not due to the issues of the programming language but the lack of incentives to make quality software and general culture around programming�&nbsp;<label for="handmade-manifesto" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="handmade-manifesto" class="margin-toggle"></input>
 <span class="sidenote">For a possible way to improve the culture, please see the <a href="https://handmade.network/manifesto">Handmade.Network</a></span>. Humans are flawed beings and are incentive focused. Unless we have an incentive to do something, we are very unlikely to do it. There are many languages that are striving for robustness in the code, such as Rust and Ada, but to ensure robustness and quality, a robust and quality culture will be required to enforce it.</p>
 <p>Andrew then precedes to talk about many of the things which will prevent software from being widely used:</p>
@@ -83,11 +83,11 @@
 <p>These points are only mildly related to producing <em>quality software</em> and closer to concerns about performance, ease of use, safety, and compatibility. I appreciate the caveats do not fit on the slide but many of these points do seem to be a completely different issue to the what question of <em>quality software</em>.</p>
 <ul>
 <li>Garbage collection (and automatic memory management in general) has its uses in certain problem domains and in those domains, it does not reduce the quality of that software.</li>
-<li>Automatic heap allocation is more of a problem with the language (and third party code) doing things behind the back of the developer which may have performance implications. I have never had a program cause a system to run out of memory in real software (other than artificial stress tests). If you are working in a low-memory environment, you should be extremely aware of its limitations and plan accordingly <label for="lack-of-memory" class="margin-toggle sidenote-number"></label>
+<li>Automatic heap allocation is more of a problem with the language (and third party code) doing things behind the back of the developer which may have performance implications. I have never had a program cause a system to run out of memory in real software (other than artificial stress tests). If you are working in a low-memory environment, you should be extremely aware of its limitations and plan accordingly�&nbsp;<label for="lack-of-memory" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="lack-of-memory" class="margin-toggle"></input>
 <span class="sidenote">I have discussed this issue before with Andrew and I really do not see this as much of an issue as he does. If you are a desktop machine and run out of memory, don’t try to recover from the panic, quit the program or even shut-down the computer. As for other machinery, plan accordingly!</span>.</li>
 <li>A piece of software doesn’t need to be as fast as C to be quality software. If the performance is within a certain margin and/or the performance of your code has little overhead for the problem-at-hand (e.g. a one-off task), then the clarity of the code is much more important than its performance. This is why Python is so popular in the scientific community as prototyping/glue language, with the actual heavy-lifting done by C/FORTRAN bindings to the highly optimized code.</li>
-<li>A lack of C ABI is an issue if you need your software to interface with other software but as I said, this has nothing to do with quality software itself rather compatibility with other software <label for="c-abi-aid-pl" class="margin-toggle sidenote-number"></label>
+<li>A lack of C ABI is an issue if you need your software to interface with other software but as I said, this has nothing to do with quality software itself rather compatibility with other software�&nbsp;<label for="c-abi-aid-pl" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="c-abi-aid-pl" class="margin-toggle"></input>
 <span class="sidenote">And aiding your programming language with interfacing with foreign code and help it get more widely adopted.</span>.</li>
 <li>Complicated build systems is mostly a cultural issue where people are either told to use a certain approach or learn about “best practices”.</li>
@@ -121,11 +121,11 @@
 <p>Error propagation is fine within a library/package/module but you ought not to be encouraging propagation <em>across</em> library boundaries. There are so many issues I have seen in real life, which lead to <em>crappy software</em>, where errors are just left for “someone else” to handle. Error propagation also has the the tendency to remove information about the type of error as it is reduced to a “simpler” error type up the stack. If you are designing a language to aid in producing <em>quality software</em>, don’t add a core feature to the language which encourages sloppy habits.</p>
 <p>Odin’s approach to error handling is to treat errors as nothing special. Error cases are handled like any other piece of code. In conjunction with Odin’s multiple return values, enumerations, unions, and many other features, this means the user can return extra information, including <em>error values</em>, alongside the normal return values if wanted and handle them accordingly.</p>
 <h2 id="heading-2-4">Clean-up Code</h2/>
-<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++‘s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type <label for="previous-defer" class="margin-toggle sidenote-number"></label>
+<p>One feature that both Odin and Zig share is <code>defer</code>. A <code>defer</code> statement <em>defers</em> a statement until the end of scope. I think this concept is much more powerful and versatile than C++‘s RAII concept as it conceptually links the creation with the destruction without hiding it nor tying it to a type�&nbsp;<label for="previous-defer" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="previous-defer" class="margin-toggle"></input>
 <span class="sidenote">I talk about the <code>defer</code> statement in a previous <a href="/article/2015/08/19/defer-in-cpp/">article</a>.</span>. Zig extends the <code>defer</code> to work with the error system with <code>errdefer</code>, which is a nice and natural extension of this system and is coherent with the rest of the language’s design.</p>
 <h2 id="heading-2-5">Error Sets</h2/>
-<p>Errors sets are an interesting concept that extend the error system in Zig. I would personally like to see this feature extended to enumerations too as it seems like a natural extension to the concept of a value set <label for="set-union" class="margin-toggle sidenote-number"></label>
+<p>Errors sets are an interesting concept that extend the error system in Zig. I would personally like to see this feature extended to enumerations too as it seems like a natural extension to the concept of a value set�&nbsp;<label for="set-union" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="set-union" class="margin-toggle"></input>
 <span class="sidenote">It might be incorrect to call it a set as they can only be one of the values in the set of possible values. A union, sum-type, or something similar may be a better name for the concept.</span>. However, it might be better to have a specialized error type than a specialization of a previous error type even if it increases code use (this is of course depends on the situation).</p>
 <h2 id="heading-2-6">Build System</h2/>

@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Untyped Types" />
-<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to “just work”. I was inspired by how both Ada   https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go   I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: Expre..." />
+<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &#34;just work&#34;. I was inspired by how both Ada�&nbsp;  https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go�&nbsp;  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages...." />
  <title>Untyped Types - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -48,9 +48,9 @@
 <p><span class="date">2021-03-07</span></p>
 </div>
 </header>
-<p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to “just work”. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a> <label for="ada-constant" class="margin-toggle sidenote-number"></label>
+<p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to “just work”. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a>�&nbsp;<label for="ada-constant" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ada-constant" class="margin-toggle"></input>
-<span class="sidenote">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</span> and <a href="https://golang.org/">Go</a> <label for="go-constants" class="margin-toggle sidenote-number"></label>
+<span class="sidenote">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</span> and <a href="https://golang.org/">Go</a>�&nbsp;<label for="go-constants" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="go-constants" class="margin-toggle"></input>
 <span class="sidenote">I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a></span> both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
 <ul>
@@ -71,7 +71,7 @@
 123ull // unsigned long long
 </code></pre>
 <h4>C’s Type Promotion</h4/>
-<p>In C, there is a set of rules called the “usual arithmetic conversions” which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined <label for="modern-compilers" class="margin-toggle sidenote-number"></label>
+<p>In C, there is a set of rules called the “usual arithmetic conversions” which are a form of implicit type promotion. Due to this concept, most people who do not realize that literals have specific types have had little issue in practice due to these implicit conversions. However, these implicit conversions may leads to many bugs, crashes, and other problems relating to portability when integers of different sizes and signedness are combined�&nbsp;<label for="modern-compilers" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="modern-compilers" class="margin-toggle"></input>
 <span class="sidenote">Most modern C compilers can catch these bugs but that is a patch over a design flaw rather than solution to the underlying problem.</span>.</p>
 <h3 id="heading-3-3">Model-2</h3/>

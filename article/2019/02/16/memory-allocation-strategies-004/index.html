@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -57,7 +57,7 @@
 <p>Pool allocators are extremely useful when you need to allocate chunks of memory of the same size which need are created and destroy dynamically, especially in a random order. Pools also have the benefit that arenas and stacks have in that they provide very little fragmentation and allocate/free in constant time <em><strong>O(1)</strong></em>.</p>
 <p>Pool allocators are usually used to allocate <em>groups</em> of “things” at once which share the same lifetime. An example could be within a game that creates and destroys entities in batches where each entity within a batch share the same lifetime.</p>
 <h1 id="heading-1-2">Basic Logic</h1/>
-<p>A pool allocator takes a backing buffer and divides that buffer into pools/slots/bins/chunks <label for="terms" class="margin-toggle sidenote-number"></label>
+<p>A pool allocator takes a backing buffer and divides that buffer into pools/slots/bins/chunks�&nbsp;<label for="terms" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="terms" class="margin-toggle"></input>
 <span class="sidenote">What’s in a name? That which we call a rose. By any other name would smell as sweet. <a href="https://www.owleyes.org/text/romeo-and-juliet/read/act-ii-scene-ii">Romeo and Juliet (II, ii, 1-2)</a></span> of all the same size.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator.svg#center" alt="Pool Allocator Layout" /></p>
@@ -65,7 +65,7 @@
 <h2 id="heading-2-3">Free Lists</h2/>
 <p>A <a href="https://wikipedia.org/wiki/Free_list">free list</a> is a data structure that internally stores a <a href="https://wikipedia.org/wiki/Linked_list">linked-list</a> of the free slots/chunks within the memory buffer. The nodes of the list are stored in-place as this means that there does not need to be another data structure (e.g. array, list, etc) to keep track of the free slots. The data is <em>only</em> stored <em>within</em> the backing buffer of the pool allocator.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_list.svg#center" alt="Pool Allocator List" /></p>
-<p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk <label for="free-chunk" class="margin-toggle sidenote-number"></label>
+<p>The general approach is to store a header at the beginning of the chunk (not before the chunk like with the stack allocator) which <em>points</em> to the next available free chunk�&nbsp;<label for="free-chunk" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="free-chunk" class="margin-toggle"></input>
 <span class="sidenote">If there is not an available free chunk, it will point to nothing (<code>NULL</code>).</span>.</p>
 <p><img src="/images/memory-allocation-strategies/pool_allocator_list_inplace.svg#center" alt="Pool Allocator List In-Place" /></p>

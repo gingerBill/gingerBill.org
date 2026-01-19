@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -70,7 +70,7 @@
 <li>Store the previous offset</li>
 <li>Store the size of the allocation</li>
 </ul>
-<p>In this article, I will cover the first two approaches, the first of which I will refer to as a <em>loose stack</em> or <em>small stack</em> as it stores very little information in the header. The third approach is useful if you want to query the size of an allocation dynamically <label for="third-approach" class="margin-toggle sidenote-number"></label>
+<p>In this article, I will cover the first two approaches, the first of which I will refer to as a <em>loose stack</em> or <em>small stack</em> as it stores very little information in the header. The third approach is useful if you want to query the size of an allocation dynamically�&nbsp;<label for="third-approach" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="third-approach" class="margin-toggle"></input>
 <span class="sidenote">I rarely need this as I usually track the size of the allocation manually.</span>.</p>
 <h1 id="heading-1-4">Implementation of the Loose/Small Stack Allocator</h1/>
@@ -210,7 +210,7 @@ void *stack_alloc(Stack *s, size_t size) {
 }
 </code></pre>
 <h2 id="heading-2-9">Resize</h2/>
-<p>Resizing an allocation is sometimes useful in an stack allocator. As we don’t store the previous offset for this particular version, we will just reallocate new memory if there needs to be a change in allocation size <label for="resize-homework" class="margin-toggle sidenote-number"></label>
+<p>Resizing an allocation is sometimes useful in an stack allocator. As we don’t store the previous offset for this particular version, we will just reallocate new memory if there needs to be a change in allocation size�&nbsp;<label for="resize-homework" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="resize-homework" class="margin-toggle"></input>
 <span class="sidenote">It is an exercise for the reader to figure out how to make this more efficient by not allocating more memory if it is was the previous allocation.</span>.</p>
 <pre><code class="c">void *stack_resize_align(Stack *s, void *ptr, size_t old_size, size_t new_size, size_t alignment) {
@@ -271,7 +271,7 @@ struct Stack {
 	size_t curr_offset;
 };
 </code></pre>
-<p>This new header is a lot larger compared to the simple padding approach <label for="large-header" class="margin-toggle sidenote-number"></label>
+<p>This new header is a lot larger compared to the simple padding approach�&nbsp;<label for="large-header" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="large-header" class="margin-toggle"></input>
 <span class="sidenote">You can reduce the size of the header by using smaller integers but this does reduce the size of the allocations that can be used.</span>, but it does mean that LIFO for frees can be enforced. There only needs to be a few adjustments to the code. The resize procedure is left as an exercise for the reader.</p>
 <h3 id="heading-3-12"><code>stack_alloc_align</code></h3/>
@@ -305,7 +305,7 @@ s-&gt;curr_offset = s-&gt;prev_offset;
 s-&gt;prev_offset = header-&gt;prev_offset;
 </code></pre>
 <h1 id="heading-1-14">Comments and Conclusion</h1/>
-<p>The stack allocator is the first of many allocators that will use the concept of a <em>header</em> for allocations. In this basic form of a stack allocator, unless you want the LIFO behaviour enforced, I would personally recommend using an arena allocator with the <code>Temp_Arena_Memory</code> construct instead. However if you require something like C++’s constructors and destructors, a stack allocator will be more friendly to that framework (RAII) <label for="placement-new" class="margin-toggle sidenote-number"></label>
+<p>The stack allocator is the first of many allocators that will use the concept of a <em>header</em> for allocations. In this basic form of a stack allocator, unless you want the LIFO behaviour enforced, I would personally recommend using an arena allocator with the <code>Temp_Arena_Memory</code> construct instead. However if you require something like C++’s constructors and destructors, a stack allocator will be more friendly to that framework (RAII)�&nbsp;<label for="placement-new" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="placement-new" class="margin-toggle"></input>
 <span class="sidenote"><a href="https://wikipedia.org/wiki/Placement_syntax">https://wikipedia.org/wiki/Placement_syntax</a></span>.</p>
 <p>You can extend the stack allocator even further by having two different offsets: one that starts at the beginning and increments forwards, and another that starts at the end and increments backwards. This is called a double-ended stack and allows for the maximization of memory usage whilst keeping fragmentation extremely low (as long as the offset never overlap).</p>

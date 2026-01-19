@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Package Managers are Evil" />
-<meta name="twitter:description" content="n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil   The term “evil” is being used partially hyperbolic to make a point..To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong ..." />
+<meta name="twitter:description" content="n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil�&nbsp;  The term “evil” is being used partially hyperbolic to make a point..To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing w..." />
  <title>Package Managers are Evil - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -49,7 +49,7 @@
 </div>
 </header>
 <p><strong>n.b. This is a written version of a dialogue from a YouTube video: <a href="https://www.youtube.com/watch?v=tXJfS6jI9Z0&amp;t=3860s">2 Language Creators vs 2 Idiots | The Standup</a></strong></p>
-<p>Package managers (for programming languages) are evil <label for="hyperbole" class="margin-toggle sidenote-number"></label>
+<p>Package managers (for programming languages) are evil�&nbsp;<label for="hyperbole" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="hyperbole" class="margin-toggle"></input>
 <span class="sidenote">The term “evil” is being used partially hyperbolic to make a point.</span>.</p>
 <p>To start, I need to make a few distinctions between concepts a lot of programmers mix up:</p>
@@ -59,7 +59,7 @@
 <li>Build Systems</li>
 <li>Package Managers</li>
 </ul>
-<p>These are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong with repositories, as that’s how a lot of people discover new packages—a search engine, something I think everyone uses on a daily basis <label for="bad-search-engines" class="margin-toggle sidenote-number"></label>
+<p>These are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong with repositories, as that’s how a lot of people discover new packages—a search engine, something I think everyone uses on a daily basis�&nbsp;<label for="bad-search-engines" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="bad-search-engines" class="margin-toggle"></input>
 <span class="sidenote">I primarily use <a href="http://duckduckgo.com/">DuckDuckGo</a>, but I also use Google and many others because they are pretty much all bad.</span>. Build systems are usually language dependent/specific, and for Odin I have tried minimize the need for a build system entirely (at least as a separate thing) where most projects will build with <code>odin build .</code>, which works due to the linking information being defined in the source code itself with the <code>foreign</code> system. This leaves <em>package managers</em>; what do they do?</p>
 <h2 id="heading-2-1">What do package managers do?</h2/>
@@ -71,13 +71,13 @@
 <p>Most package managers usually have to define what a package is, because the language itself does not have a well defined concept of a package in the language. JavaScript is great example of this as there are multiple different package managers for the language (<code>npm</code> being one of the most popular), but because each package manager defines the concept of a package differently, it results in the need for a <strong>package manager manager</strong>. Yes… this is a real thing.</p>
 <p>This is why I am saying it is <em>evil</em>, as it will send you to hell quicker.</p>
 <h2 id="heading-2-3">Mitigations in some languages</h2/>
-<p>When using some languages, such as Go, most people don’t seem to need many third-party packages even though Go has a built-in package manager. The entrance to hell seems too far and hard to get to <label for="prime" class="margin-toggle sidenote-number"></label>
+<p>When using some languages, such as Go, most people don’t seem to need many third-party packages even though Go has a built-in package manager. The entrance to hell seems too far and hard to get to�&nbsp;<label for="prime" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="prime" class="margin-toggle"></input>
-<span class="sidenote">This sentence is a quote from ThePrimeagen from that video.</span>. The reason such languages don’t fall into this trap as quickly is that those languages have a really good core/standard library—batteries included. When using Go for example, you don’t need any third-party libraries to make a web server, Go has it all there and you are done. Go even has Go compiler built into the standard library; in fact it has two, a <a href="https://github.com/golang/go/tree/master/src/go">high level one</a> for tooling and one which is the <a href="https://github.com/golang/go/tree/master/src/cmd/compile">actual compiler itself</a> <label for="klingon" class="margin-toggle sidenote-number"></label>
+<span class="sidenote">This sentence is a quote from ThePrimeagen from that video.</span>. The reason such languages don’t fall into this trap as quickly is that those languages have a really good core/standard library—batteries included. When using Go for example, you don’t need any third-party libraries to make a web server, Go has it all there and you are done. Go even has Go compiler built into the standard library; in fact it has two, a <a href="https://github.com/golang/go/tree/master/src/go">high level one</a> for tooling and one which is the <a href="https://github.com/golang/go/tree/master/src/cmd/compile">actual compiler itself</a>�&nbsp;<label for="klingon" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="klingon" class="margin-toggle"></input>
 <span class="sidenote">ThePrimeagen mentioned the “Klingon Approach” as a joke. This refers to Klingons (a species of humanoids in Star Trek) which have redundant organs. A very nerdy joke.</span>.</p>
 <h2 id="heading-2-4">The meaning of dependency</h2/>
-<p>In real life, when you have a dependency, you are responsible for it <label for="jose" class="margin-toggle sidenote-number"></label>
+<p>In real life, when you have a dependency, you are responsible for it�&nbsp;<label for="jose" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="jose" class="margin-toggle"></input>
 <span class="sidenote">This comment was from José Valim (the creator of the <a href="https://en.wikipedia.org/wiki/Elixir_(programming_language)">Elixir</a> programming language) and this was a very good point which I wanted to add to this article.</span>. If the thing that is dependent on you does something wrong, like a child or business, you might end up in jail, as you are responsible for that. Package dependencies are not that far different but people trust them with little-to-no verification. And when something goes wrong, you are on the hook to maintain it. It is a thing you should worry about and take care of.</p>
 <p>A common thing that people bring up about package managers are security risks. There are indeed serious problems, especially when you blindly trust things you have just randomly started depending from off the internet. However for my needs, those are not even the biggest worries for what I work on, but they might be for you! For me at work, we use currently use <a href="https://www.libsdl.org/">SDL2</a> for our windowing stuff at work, and we have found a huge amount of bugs and we hate it to the point that I/we will probably write our own window and input handling system from scratch for each Operating System we target. At least it is our code and we can depend on it and correct it when things go wrong; we are not having an extra dependency. I know SDL2 is used by millions of people, but we keep hitting all of the bugs. “But it’s great though!”. <a href="(https://www.libsdl.org/)">SDL3</a> might fix it all but the time to integrate SDL3 would be the same time I could write it from scratch.</p>

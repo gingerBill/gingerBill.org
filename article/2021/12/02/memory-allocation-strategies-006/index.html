@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -53,11 +53,11 @@
 </header>
 <h1 id="heading-1-1">Buddy Memory Allocation</h1/>
 <p>In the previous article, we discussed the <a href="/article/2021/11/30/memory-allocation-strategies-005/">free list allocator</a> and how it is commonly implemented with a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#linked-list-approach">linked list</a> or a <a href="https://www.gingerbill.org/article/2021/11/30/memory-allocation-strategies-005/#red-black-tree-approach">red-black tree</a>. In this article, the Buddy Algorithm and how it applies to memory allocation strategies.</p>
-<p>In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get <em>best-fit</em> as a consequence. One of the big problems with free lists is that they are <em>very</em> susceptible to <a href="https://wikipedia.org/wiki/Fragmentation_(computing)">internal memory fragmentation</a> due to allocations being of any size. If we still require the properties of free lists but want to reduce internal memory fragmentation, the <a href="https://wikipedia.org/wiki/Buddy_memory_allocation">Buddy algorithm</a>¬†<label for="wikipedia-warning" class="margin-toggle sidenote-number"></label>
+<p>In the previous article, the red black tree approach was briefly discussed as a way to improve the time complexity for searching for a free memory block, and get <em>best-fit</em> as a consequence. One of the big problems with free lists is that they are <em>very</em> susceptible to <a href="https://wikipedia.org/wiki/Fragmentation_(computing)">internal memory fragmentation</a> due to allocations being of any size. If we still require the properties of free lists but want to reduce internal memory fragmentation, the <a href="https://wikipedia.org/wiki/Buddy_memory_allocation">Buddy algorithm</a>¬&nbsp;<label for="wikipedia-warning" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="wikipedia-warning" class="margin-toggle"></input>
 <span class="sidenote">The Wikipedia article is not that easy to understand, especially from the basic table diagram given in the <em>Example</em> section. (Accessed 2021-12-01)</span> works in a similar principle.</p>
 <h1 id="heading-1-2">The Algorithm</h1/>
-<p>The <em>Buddy Algorithm</em> assumes that the backing memory block is a power-of-two in bytes. When an allocation is requested, the allocator looks for a block whose size is at least the size of the requested allocation (similar to a free list). If the requested allocation size is less than half of the block, it is split into two (left and right), and the two resulting blocks are called ‚Äúbuddies‚Äù¬†<label for="buddies-joke" class="margin-toggle sidenote-number"></label>
+<p>The <em>Buddy Algorithm</em> assumes that the backing memory block is a power-of-two in bytes. When an allocation is requested, the allocator looks for a block whose size is at least the size of the requested allocation (similar to a free list). If the requested allocation size is less than half of the block, it is split into two (left and right), and the two resulting blocks are called ‚Äúbuddies‚Äù¬&nbsp;<label for="buddies-joke" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="buddies-joke" class="margin-toggle"></input>
 <span class="sidenote">Just like Jackie Chan and Chris Tucker in <a href="https://www.imdb.com/title/tt0120812/">Rush Hour</a>.</span>. If this requested allocation size is still less than half the size of the left buddy, the buddy block is recursively split until the resulting buddy is as small as possible to fit the requested allocation size.</p>
 <p>When a block is released, we can try to performance coalescence on buddies (contiguous neighbouring blocks). Similar to <a href="/article/2021/11/30/memory-allocation-strategies-005/#free-and-coalescence">free lists</a>, there are particular conditions that are needed. Coalescence cannot be performed if a block is has no (free) buddy, the block is still in use, or the buddy block is partially used.</p>
@@ -100,9 +100,9 @@ struct Buddy_Block { // Allocation header (metadata)
 }
 </code></pre>
 <h2 id="heading-2-6">Finding the Best Block</h2/>
-<p>Searching for a free block that matches the requested allocation size can be achieved by traversing an (implicit) linked list bounded by <code>head</code> and <code>tail</code> pointers¬†<label for="tail-definition" class="margin-toggle sidenote-number"></label>
+<p>Searching for a free block that matches the requested allocation size can be achieved by traversing an (implicit) linked list bounded by <code>head</code> and <code>tail</code> pointers¬&nbsp;<label for="tail-definition" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="tail-definition" class="margin-toggle"></input>
-<span class="sidenote">The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block.</span>. If a block for the requested allocation size cannot be found, but there is a larger free block, the above splitting algorithm is used. If there is no free block available, the following procedure with return <code>NULL</code> to represent that the allocator is (possibly) out of memory¬†<label for="oom-caveat" class="margin-toggle sidenote-number"></label>
+<span class="sidenote">The tail is just <code>(Buddy_Block *)((char *)data + size)</code> of the backing memory buffer, representing a sentinel value of the memory boundary, it is not a true block.</span>. If a block for the requested allocation size cannot be found, but there is a larger free block, the above splitting algorithm is used. If there is no free block available, the following procedure with return <code>NULL</code> to represent that the allocator is (possibly) out of memory¬&nbsp;<label for="oom-caveat" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="oom-caveat" class="margin-toggle"></input>
 <span class="sidenote">The allocator may have enough memory left but none of it is contiguous due to too much internal fragmentation.</span>.</p>
 <pre><code class="c">Buddy_Block *buddy_block_find_best(Buddy_Block *head, Buddy_Block *tail, size_t size) {
@@ -172,7 +172,7 @@ struct Buddy_Block { // Allocation header (metadata)
     return NULL;
 }
 </code></pre>
-<p>This algorithm can suffer from undue internal fragmentation. As an exercise for the reader, you can coalesce on neighbouring free buddies¬†<label for="malkovich" class="margin-toggle sidenote-number"></label>
+<p>This algorithm can suffer from undue internal fragmentation. As an exercise for the reader, you can coalesce on neighbouring free buddies¬&nbsp;<label for="malkovich" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="malkovich" class="margin-toggle"></input>
 <span class="sidenote">All becoming a single buddy, trying to be someone else: https://www.imdb.com/title/tt0120601/</span> as you iterate.</p>
 <h2 id="heading-2-7">Initialization</h2/>

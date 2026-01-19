@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -63,7 +63,7 @@
 <h2 id="heading-2-2">What is Provided by the <code>context</code>?</h2/>
 <h3 id="heading-3-3">The Allocators</h3/>
 <p>There are two allocators on the <code>context.allocator</code> and <code>context.temp_allocator</code>. I expect most people to never use custom allocators whatsoever (which is empirically true), but I do also want to encourage things like using the <code>context.temp_allocator</code> because it allows for many useful benefits, especially those that most people don’t even realize are a thing. For many people, they usually just want to do nothing with the <code>context</code> (assuming they know about it) or set the <code>context.allocator</code> to the <code>mem.Tracking_Allocator</code> and be done; that’s pretty much it.</p>
-<p>You could argue that it is “better” to pass allocators <label for="explicit-allocators" class="margin-toggle sidenote-number"></label>
+<p>You could argue that it is “better” to pass allocators�&nbsp;<label for="explicit-allocators" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="explicit-allocators" class="margin-toggle"></input>
 <span class="sidenote">If you want to disallow <code>allocator := context.allocator</code> like defaults in Odin on a per-file basis, you can do so with the get tag <code>#+vet explicit-allocators</code>.</span> around explicitly, but from my own experience in C with this exact interface (made and used well before I even made Odin), I found that I got in a very very lazy habit of not actually passing around allocators properly. This overly explicitness with a generalized interface lead to more allocation bugs than if I had used specific allocators on a per-system basis.</p>
 <p>When explicit allocators are wanted, you rarely want the generic interface too, and usually a specific allocator instead e.g. <code>virtual.Arena</code>. As I have previously expressed in my <a href="https://www.gingerbill.org/series/memory-allocation-strategies/">Memory Allocation Strategies</a> series, an allocator can be used to represent a specific set of lifetimes for a set of allocations—arenas being the most common kind but other allocators such as pools, basic free lists, etc may be useful.</p>

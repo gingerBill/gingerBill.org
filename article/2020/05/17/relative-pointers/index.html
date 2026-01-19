@@ -37,7 +37,7 @@
 			<li><a href="/">Home</a></li>
 			<li><a href="/article/">Articles</a></li>
 			<li><a href="https://odin-lang.org">Odin</a></li>
-			<!--<li><a href="/article/index.xml">Subscribe</a></li>-->
+			<li><a href="/article/index.xml">Subscribe</a></li>
 		</ul>
 	</nav>
 </header><main><article class="article-meta">
@@ -51,9 +51,9 @@
 <h2 id="heading-2-1">Absolute Pointers</h2/>
 <p>Pointers are a value type in programming languages that store a memory address. A pointer <em>references</em> a location in memory, and obtaining the value stored at this location in memory is known as <em>dereferencing</em> a pointer.
 Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.</p>
-<p>When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call this form of pointer an <em>absolute</em> pointer. On most modern machines with virtualized memory, this is rarely the case any more, and for good reasons <label for="good-reasons" class="margin-toggle sidenote-number"></label>
+<p>When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call this form of pointer an <em>absolute</em> pointer. On most modern machines with virtualized memory, this is rarely the case any more, and for good reasons�&nbsp;<label for="good-reasons" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="good-reasons" class="margin-toggle"></input>
-<span class="sidenote">Virtualized memory has many security, safety, and practical benefits.</span>. In the case of virtualized memory spaces, these pointers do not refer to a physical memory address but rather an alias to a physical memory address, in which usually the operating system handles on a per page basis <label for="not-discuss-virtual-memory" class="margin-toggle sidenote-number"></label>
+<span class="sidenote">Virtualized memory has many security, safety, and practical benefits.</span>. In the case of virtualized memory spaces, these pointers do not refer to a physical memory address but rather an alias to a physical memory address, in which usually the operating system handles on a per page basis�&nbsp;<label for="not-discuss-virtual-memory" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="not-discuss-virtual-memory" class="margin-toggle"></input>
 <span class="sidenote">I will not discuss how virtual memory works or its benefits in this article.</span>. In a sense, these pointers that belong to virtualized memory spaces can be classed as a form of <em>relative</em> pointer.</p>
 <p>At the end of the day, a pointer can be treated/encoded as if it was an integer of some form. Knowing this fact is extremely useful, not just with pointer arithmetic in C/C++, but also relative pointers.</p>
@@ -143,7 +143,7 @@ get_array :: proc(base: rawptr, array: $A/Offset_Array($T)) -&gt; []T {
 <p>In the above cases, the <code>offset</code> represents the number of bytes away from the <em>base</em>. It could be used to represent the number of typed-units instead, but this may require that the base pointer is correctly aligned to the referenced type on some systems.</p>
 <h2 id="heading-2-5">Self-Relative Pointers</h2/>
 <p>The last approach is to define the base to be the memory address of the offset itself.</p>
-<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language <label for="first-language" class="margin-toggle sidenote-number"></label>
+<p>This approach has been used at <a href="https://www.youtube.com/watch?v=Nsf2_Au6KxU&amp;feature=youtu.be&amp;t=1560">Valve</a>, and in some programming languages such as Jonathan Blow’s programming language�&nbsp;<label for="first-language" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="first-language" class="margin-toggle"></input>
 <span class="sidenote">Jai is also the first language I have seen implement self-relative pointers as part of the type system directly.</span> <a href="https://youtu.be/Z0tsNFZLxSU">Jai</a> and my own language <a href="https://odin-lang.org/">Odin</a>.</p>
 <p>As with <em>offset pointer</em>, self-relative pointers have a similar main advantage: serializeability. This means that the data structure can be <code>memcpy</code>’d and still be (mostly) valid.</p>
