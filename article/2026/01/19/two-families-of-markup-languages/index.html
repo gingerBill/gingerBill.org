@@ -95,7 +95,7 @@
 <h2 id="heading-2-4">Lisp is not an Arbitrary Proper Markup Language</h2/>
 <p>Unfortunately, I do not class <label for="s-expressions" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="s-expressions" class="margin-toggle"></input>
-<span class="sidenote">This section was not here originally but I wanted to clarify why I don’t think they could be the third family is the class of <em>arbitrary proper markup languages</em>.</span> Lisp/s-expression style stuff as being an <em>arbitrary proper markup language</em>, at least by default. The main reason is that you cannot just “markup” pre-existing plain text with it that easily, you effectively have to restructure the text completely for it work. At best you’d need to add a second syntax to make it clear what are the attributes vs what is the plain-text.</p>
+<span class="sidenote">This section was not here originally but I wanted to clarify why I don’t think they could be the third family in the class of <em>arbitrary proper markup languages</em>.</span> Lisp/s-expression style stuff as being an <em>arbitrary proper markup language</em>, at least by default. The main reason is that you cannot just “markup” pre-existing plain text with it that easily, you effectively have to restructure the text completely for it work. At best you’d need to add a second syntax to make it clear what are the attributes vs what is the plain-text.</p>
 <p><a href="https://github.com/weavejester/hiccup">Hiccup</a> is a common syntax for generating HTML in the <a href="https://clojure.org/">Clojure</a> ecosystem, which does “solve” the “proper” aspect by having attribute syntax:</p>
 <pre><code class="clojure">[:span {:attrib &#34;value&#34;} &#34;wrapped text&#34;]
 </code></pre>
