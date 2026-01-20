@@ -54,7 +54,9 @@ In the two languages, they both have means of using their specific symbols that 
 
 [^html-entities]: For a minimal syntax to prevent escaping issues in an SGML-like language, you need 5 escaped entities: <br>` & → &amp;`, `' → &apos; or &#39;`, `< → &lt;`, `> → &gt;`, and `" → &quot; or &#34;`. However there are literally thousands of XML/HTML entities out there, and supporting them correctly has been "fun" for [packages](https://pkg.odin-lang.org/core/encoding/entity/) in Odin.
 
-There is also the second aspect that the TeX family of syntaxes are much easier parse than the SGML family. I've written both before and the SGML syntax requires an order of magnitude more code to write, because of the named blocks for wrapping.
+There is also the second aspect that the TeX family of syntaxes are much easier parse[^tex-easier-to-parse] than the SGML family. I've written both before and the SGML syntax requires an order of magnitude more code to write, because of the named blocks for wrapping.
+
+[^tex-easier-to-parse]: Note I am saying the "TeX Family" and not actual TeX itself. I know how insane TeX is and I did not want to get into how its context-sensitive its grammar really is. I just wanted to focus on the _arbitrary proper markup syntax_ of it in isolation rather than the semantics of a specific language in the "TeX Family".
 
 SGML wrapping syntax also has the flaw of allowing for overlapping hierarchies:
 
