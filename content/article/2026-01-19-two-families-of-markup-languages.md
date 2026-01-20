@@ -65,9 +65,10 @@ SGML wrapping syntax also has the flaw of allowing for overlapping hierarchies:
 <a><b>text</a></b>
 ```
 
-TeX syntax does not have this problem as it only uses generic brackets/braces. I cannot think of a case when overlapping hierarchies[^overlapping-hierarchies] this is desired---in fact HTML parsers have to mitigate for this possible typo.
+TeX syntax does not have this problem as it only uses generic brackets/braces. I cannot think of a case when overlapping hierarchies[^overlapping-hierarchies] this is desired---in fact HTML parsers have to mitigate for this possible typo. A SGML derivative could remove the overlapping hierarchy syntax flaw by having `</>` be the delimiter.
 
 [^overlapping-hierarchies]: By this, I mean purely the syntax, and not the concept of an overlapping hierarchy, which can exist in things like marking up [Bibles](https://en.wikipedia.org/wiki/Overlapping_markup).
+
 
 Real life TeX syntaxes do have their own edge cases, deviating from the general markup syntax[^tex-cheatsheet], but this is more to do with wanting to express mathematical formulations in real text rather than keep to a syntactic "purity".
 
