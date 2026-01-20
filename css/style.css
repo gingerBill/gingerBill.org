@@ -287,10 +287,10 @@ h1 code, h2 code {
 
 
 main p {
-  text-align: justify;
-  text-justify: inter-word;
-  word-wrap: inter-word;
-  overflow-wrap: inter-word;
+       text-align: justify;
+     text-justify: inter-word;
+        word-wrap: inter-word;
+    overflow-wrap: inter-word;
   -webkit-hyphens: auto;
      -moz-hyphens: auto;
           hyphens: auto;
