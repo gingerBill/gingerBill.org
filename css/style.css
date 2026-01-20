@@ -72,14 +72,32 @@ html {
 body {
   /*font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";*/
   font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-  /*font-size: 15px;*/
+  font-size: 15px;
   line-height: 1.5;
   color: #111;
   background-color: var(--off-white);
   margin: 0 auto;
   padding: 0;
 
+  width:        87.5%;
+  padding-left: 12.5%;
+  max-width:    1200px;
+
   counter-reset: sidenote-counter;
+}
+
+main {
+  width: 60%;
+}
+@media only screen and (max-width: 1200px) {
+  body {
+    width:         84%;
+    padding-left:  8%;
+    padding-right: 8%;
+  }
+  main {
+    width: 100%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -192,7 +210,7 @@ blockquote {
   padding: 0.5em 1em 0.5em 0.5em;
   text-align: justify-all;
   border-radius: 4px;
-  font-size: 1.1em;
+  font-size: 18px;
   /*background-color: #f8f8f0;*/
 }
 
@@ -340,36 +358,6 @@ ul.sub-articles li {
   margin-bottom: 0;
 }
 
-nav#TableOfContents ul {
-  list-style-type: none !important;
-  margin-bottom: 0;
-}
-nav#TableOfContents > ul {
-  margin-left: 0;
-  margin-bottom: 2em;
-}
-
-nav#TableOfContents > ul > li > ul {
-  -webkit-column-count: 3;
-     -moz-column-count: 3;
-          column-count: 3;
-     -moz-column-fill:  auto;
-          column-fill:  auto;
-}
-@media only screen and (max-width: 800px) {
-  nav#TableOfContents > ul > li > ul {
-    -webkit-column-count: 2;
-       -moz-column-count: 2;
-            column-count: 2;
-  }
-}
-
-
-nav#TableOfContents > ul > li > ul {
-  margin-left: 0;
-}
-
-
 
 h3 > time {
   color: #666;
@@ -435,8 +423,8 @@ p code, li code {
 
 article table {
   border: 1px solid #c6cbd1;
-  border-collapse: collapse;
-  border-spacing: 0;
+  border-collapse: collapse
+;  border-spacing: 0;
   margin-bottom: 1em;
 }
 article table tr {
@@ -461,14 +449,15 @@ article table td, article table th {
 }
 
 .wrapper {
-  display: block;
+  /*display: block;
   padding: 0 1em 1em;
   max-width: 48em;
-  margin: 0 auto;
+  margin*/: 0 auto;
 }
 
 
 .gbt2 {
+  max-width: 800px;
   margin: 0 0 0.5em;
   padding: 0;
   text-align: justify;
@@ -564,7 +553,7 @@ label.margin-toggle:not(.sidenote-number) {
   display: none;
 }
 
-@media only screen and (max-width: 1400px) {
+@media only screen and (max-width: 1200px) {
   label.margin-toggle:not(.sidenote-number) {
     display: inline;
   }
