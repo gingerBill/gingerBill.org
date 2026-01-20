@@ -81,7 +81,7 @@
 </code></pre>
 <p>TeX syntax does not have this problem as it only uses generic brackets/braces. I cannot think of a case when overlapping hierarchies <label for="overlapping-hierarchies" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="overlapping-hierarchies" class="margin-toggle"></input>
-<span class="sidenote">By this, I mean purely the syntax, and not the concept of an overlapping hierarchy, which can exist in things like marking up <a href="https://en.wikipedia.org/wiki/Overlapping_markup">Bibles</a>.</span> this is desired—in fact HTML parsers have to mitigate for this possible typo.</p>
+<span class="sidenote">By this, I mean purely the syntax, and not the concept of an overlapping hierarchy, which can exist in things like marking up <a href="https://en.wikipedia.org/wiki/Overlapping_markup">Bibles</a>.</span> this is desired—in fact HTML parsers have to mitigate for this possible typo. A SGML derivative could remove the overlapping hierarchy syntax flaw by having <code>&lt;/&gt;</code> be the delimiter.</p>
 <p>Real life TeX syntaxes do have their own edge cases, deviating from the general markup syntax <label for="tex-cheatsheet" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="tex-cheatsheet" class="margin-toggle"></input>
 <span class="sidenote">If you want a good example of this, I recommend reading this wonderful <a href="https://quickref.me/latex.html#supported-functions">Cheatsheet</a> to see the numerous syntactic exceptions which exist for practical pragmatic purposes, even if that means the syntax parser is now hell of a lot more complex.</span>, but this is more to do with wanting to express mathematical formulations in real text rather than keep to a syntactic “purity”.</p>
