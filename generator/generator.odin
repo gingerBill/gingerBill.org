@@ -566,7 +566,7 @@ build_rss_feed :: proc(website: ^Website) -> bool {
 				case .December:  io.write_string(w, "Dec ")
 				}
 
-				fmt.wprintf(w, "%04 09:00:00 +0000", year)
+				fmt.wprintf(w, "%04d 09:00:00 +0000", year)
 
 			}
 			io.write_string(w, "</pubDate>\n")
