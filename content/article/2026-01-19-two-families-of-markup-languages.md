@@ -13,10 +13,9 @@
 
 There are only two families of _proper arbitrary_ markup languages: [TeX](https://tug.org/) and [SGML](https://en.wikipedia.org/wiki/Standard_Generalized_Markup_Language)[^sgml-link]. By _arbitrary_, I mean the grammar specifically, and how it can be used _mark_ arbitrary plain text with information. And by _proper_, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic-makeover of TeX or SGML.
 
-## The Two Families
-
 [^sgml-link]: I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: [ISO 8879:1986](https://www.iso.org/standard/16387.html).
 
+## The Two Families
 
 The TeX family:
 

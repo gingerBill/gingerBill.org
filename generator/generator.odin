@@ -40,6 +40,8 @@ Article :: struct {
 	date:        string,
 	description: string,
 
+	year, month, day: int,
+
 	summary: string,
 }
 
@@ -71,6 +73,9 @@ add_article :: proc(website: ^Website, url: string, a: Archetype, summary: strin
 		date        = fmt.aprintf("%04d-%02d-%02d", a.year, a.month, a.day, allocator=allocator),
 		description = strings.clone(a.description, allocator),
 		summary     = strings.clone(summary, allocator),
+		year        = a.year,
+		month       = a.month,
+		day         = a.day,
 	}
 	append(&website.articles, a)
 	return a
@@ -522,10 +527,50 @@ build_rss_feed :: proc(website: ^Website) -> bool {
 			io.write_string(w, article.url)
 			io.write_string(w, "</link>\n")
 
-			io.write_string(w, "<guid>")
+			io.write_string(w, "\t\t<guid>")
 			io.write_string(w, "https://www.gingerbill.org")
 			io.write_string(w, article.url)
 			io.write_string(w, "</guid>\n")
+
+			io.write_string(w, "\t\t<pubDate>")
+			{
+				year, m, d := article.year, article.month, article.day
+				t, _ := time.components_to_time(year, m, d, 9, 0, 0, 0)
+				day := time.weekday(t)
+				mon := time.month(t)
+
+				switch day {
+				case .Sunday:    io.write_string(w, "Sun, ")
+				case .Monday:    io.write_string(w, "Mon, ")
+				case .Tuesday:   io.write_string(w, "Tue, ")
+				case .Wednesday: io.write_string(w, "Wed, ")
+				case .Thursday:  io.write_string(w, "Thu, ")
+				case .Friday:    io.write_string(w, "Fri, ")
+				case .Saturday:  io.write_string(w, "Sat, ")
+				}
+
+				fmt.wprintf(w, "%02d ", d)
+
+				switch mon {
+				case .January:   io.write_string(w, "Jan ")
+				case .February:  io.write_string(w, "Feb ")
+				case .March:     io.write_string(w, "Mar ")
+				case .April:     io.write_string(w, "Apr ")
+				case .May:       io.write_string(w, "May ")
+				case .June:      io.write_string(w, "Jun ")
+				case .July:      io.write_string(w, "Jul ")
+				case .August:    io.write_string(w, "Aug ")
+				case .September: io.write_string(w, "Sep ")
+				case .October:   io.write_string(w, "Oct ")
+				case .November:  io.write_string(w, "Nov ")
+				case .December:  io.write_string(w, "Dec ")
+				}
+
+				fmt.wprintf(w, "%04 09:00:00 +0000", year)
+
+			}
+			io.write_string(w, "</pubDate>\n")
+
 
 			io.write_string(w, "\t\t<description>")
 
