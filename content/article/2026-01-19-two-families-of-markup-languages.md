@@ -98,7 +98,7 @@ Unfortunately, I do not class[^s-expressions] Lisp/s-expression style stuff as b
 [:span {:attrib "value"} "wrapped text"]
 ```
 
-However it is still not an "arbitrary" markup language due not being able to wrap pre-existing plain text. I think the entire motivation behind the original markup languages too: marking up pre-existing plain text documents. Rather than starting from the "markup" language and adding text. This latter form is probably closer to just a structured text format rather than a markup language.
+However it is still not an "arbitrary" markup language due not being able to wrap pre-existing plain text. I think the entire motivation behind the original markup languages too: marking up pre-existing plain text documents. Rather than starting from the "markup" language and adding text. This latter form is probably closer to just a structured text format rather than a markup language. Because of my clarification, S-expressions are a form of object notation, similar to JSON.
 
 A very minor but other obvious thing is the use of parentheses `()` is a bad choice since they are commonly used within plain text, but if you just swapped it for `[]` or `{}`, it would be fine, and most people would still recognize the s-expression nature. And the need for something like backticks <code>`</code> to wrap the text might need to be there to remove the ambiguity.
 
