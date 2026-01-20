@@ -44,7 +44,7 @@ For example in Markdown, `[text](link)` has a very specific intrinsic semantic m
 
 For other similar markup languages, things like [BBCode](https://en.wikipedia.org/wiki/BBCode) I am classing as part of the the SGML family, and [Scribe](https://en.wikipedia.org/wiki/Scribe_(markup_language)) as part of the TeX family. BBCode is effectively a near-subset of XHTML but uses `[]` instead of `<>`.
 
-Scribe's syntax is effectively to TeX but there is no need for the `{}` and either requires paired blocks (e.g. `@Begin(Quotation)` and `@End(Quotation)`) or adding the plain text as part of the attributes (e.g. `@Foo(tag=bar, title="The Title")`). This is why I think Scribe's syntax is fundamentally flawed because of the lack of `{}`-like wrapping ability, compared to actual TeX.
+Scribe's syntax is effectively in the family of TeX but there is no need for the `{}` and either requires paired blocks (e.g. `@Begin(Quotation)` and `@End(Quotation)`) or adding the plain text as part of the attributes (e.g. `@Foo(tag=bar, title="The Title")`). This is why I think Scribe's syntax is fundamentally flawed because of the lack of `{}`-like wrapping ability, compared to actual TeX.
 
 
 ## Edge Cases of the Syntaxes
