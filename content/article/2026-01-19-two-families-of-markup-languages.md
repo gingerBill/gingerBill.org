@@ -83,7 +83,7 @@ I'd also argue other languages like [YAML](https://yaml.org/) or [TOML](https://
 
 **n.b.** I am still not sure why people think XML is a "human readable" language, and keep repeating this adage. Yes it is "readable" but it is not quickly comprehendible. Please use nearly anything but XML for a configuration language. [INI](https://en.wikipedia.org/wiki/INI_file) is honestly still good for most people's needs.
 
-YAML is also a monstrosity and should never be used by anyone for any reason. It's nigh-impossible to write a parser for it and has too many syntactical ambiguities. It has lead to numerous infamous situations such as [The Norway Problem](https://hitchdev.com/strictyaml/why/implicit-typing-removed/)[^just-say-no]. Also fun fact, YAML is actually a supset of JSON which all valid JSON documents are also valid YAML documents. This is beyond cursed, but as this is not an article on YAML, I will stop with my micro-rant here.
+YAML is also a monstrosity and should never be used by anyone for any reason. It's nigh-impossible to write a parser for it and has too many syntactical ambiguities. It has lead to numerous infamous situations such as [The Norway Problem](https://hitchdev.com/strictyaml/why/implicit-typing-removed/)[^just-say-no]. Also fun fact, YAML is actually a superset of JSON which all valid JSON documents are also valid YAML documents. This is beyond cursed, but as this is not an article on YAML, I will stop with my micro-rant here.
 
 [^just-say-no]: Just say Norway to YAML.
 
