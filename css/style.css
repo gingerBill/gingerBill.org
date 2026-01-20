@@ -547,6 +547,7 @@ img[src$='#center'] {
   top: -0.5em;
   color: #fd8000;
   font-size: 0.8em;
+  margin-left: -0.75em!important;
 }
 
 input.margin-toggle {

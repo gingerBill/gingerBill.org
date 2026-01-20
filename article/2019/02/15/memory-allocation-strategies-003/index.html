@@ -46,7 +46,7 @@
 
 <h2>Stack Allocators</h2>
 
-<div class="info">
+<div class="info" id="article-info">
 <p><span class="series">Series:</span> <a href="/series/memory-allocation-strategies">Memory Allocation Strategies</a></p>
 <p><span class="date">2019-02-15</span></p>
 </div>
@@ -317,11 +317,11 @@ s-&gt;prev_offset = header-&gt;prev_offset;
 <script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script>
 	(function addHeadingLinks(){
-		var article = document.getElementsByClassName('article-meta')[0];
-		var headings = article.querySelectorAll('h1, h2, h3');
+		let article = document.getElementsByClassName('article-meta')[0];
+		let headings = article.querySelectorAll('h1, h2, h3');
 		headings.forEach(function(heading){
-			if (heading.id){
-				var a = document.createElement('a');
+			if (heading.id) {
+				let a = document.createElement('a');
 				a.innerHTML = heading.innerHTML;
 				a.href = '#'+heading.id;
 				heading.innerHTML = '';
