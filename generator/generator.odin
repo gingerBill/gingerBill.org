@@ -210,7 +210,7 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 			io.write_string(w, "</h2>\n\n")
 		}
 
-		io.write_string(w, `<div class="info">`+"\n")
+		io.write_string(w, `<div class="info" id="article-info">`+"\n")
 		defer io.write_string(w, `</div>`+"\n")
 
 		for series in archetype.series {
@@ -226,7 +226,6 @@ build_article :: proc(website: ^Website, fi: os.File_Info, archetype: Archetype,
 	}
 
 	io.write_string(w, html)
-
 	io.write_string(w, `</article></main>`+"\n")
 
 	write_footer(w)
@@ -566,7 +565,7 @@ build_rss_feed :: proc(website: ^Website) -> bool {
 				case .December:  io.write_string(w, "Dec ")
 				}
 
-				fmt.wprintf(w, "%04 09:00:00 +0000", year)
+				fmt.wprintf(w, "%04d 09:00:00 +0000", year)
 
 			}
 			io.write_string(w, "</pubDate>\n")
