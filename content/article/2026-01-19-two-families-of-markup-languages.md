@@ -90,7 +90,7 @@ YAML is also a monstrosity and should never be used by anyone for any reason. It
 
 Unfortunately, I do not class[^s-expressions] Lisp/s-expression style stuff as being an _arbitrary proper markup language_, at least by default. The main reason is that you cannot just "markup" pre-existing plain text with it that easily, you effectively have to restructure the text completely for it work. At best you'd need to add a second syntax to make it clear what are the attributes vs what is the plain-text.
 
-[^s-expressions]: This section was not here originally but I wanted to clarify why I don't think they could be the third family is the class of _arbitrary proper markup languages_.
+[^s-expressions]: This section was not here originally but I wanted to clarify why I don't think they could be the third family in the class of _arbitrary proper markup languages_.
 
 [Hiccup](https://github.com/weavejester/hiccup) is a common syntax for generating HTML in the [Clojure](https://clojure.org/) ecosystem, which does "solve" the "proper" aspect by having attribute syntax:
 
