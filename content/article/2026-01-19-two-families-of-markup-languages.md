@@ -81,6 +81,32 @@ YAML is also a monstrosity and should never be used by anyone for any reason. It
 
 [^just-say-no]: Just say Norway to YAML.
 
+## Lisp is not an Arbitrary Proper Markup Language
+
+Unfortunately, I do not class[^s-expressions] Lisp/s-expression style stuff as being an _arbitrary proper markup language_, at least by default. The main reason is that you cannot just "markup" pre-existing plain text with it that easily, you effectively have to restructure the text completely for it work. At best you'd need to add a second syntax to make it clear what are the attributes vs what is the plain-text.
+
+[^s-expressions]: This section was not here originally but I wanted to clarify why I don't think they could be the third family is the class of _arbitrary proper markup languages_.
+
+[Hiccup](https://github.com/weavejester/hiccup) is a common syntax for generating HTML in the [Clojure](https://clojure.org/) ecosystem, which does "solve" the "proper" aspect by having attribute syntax:
+
+```clojure
+[:span {:attrib "value"} "wrapped text"]
+```
+
+However it is still not an "arbitrary" markup language due not being able to wrap pre-existing plain text. I think the entire motivation behind the original markup languages too: marking up pre-existing plain text documents. Rather than starting from the "markup" language and adding text. This latter form is probably closer to just a structured text format rather than a markup language.
+
+A very minor but other obvious thing is the use of parentheses `()` is a bad choice since they are commonly used within plain text, but if you just swapped it for `[]` or `{}`, it would be fine, and most people would still recognize the s-expression nature. And the need for something like backticks <code>`</code> to wrap the text might need to be there to remove the ambiguity.
+
+Using quotes `"` are also another aspect which make it not arbitrary. However I'd argue that quotes are very common in some European languages, and thus would require a lot of corrections. One of the benefits to both TeX and SGML is that they "start" with symbols which are not commonly used in every day text. Backslash `\` seems to only exist since the dawn of computers and is never seen in actual text before (making it a near perfect choice) and less/greater-than (`<` `>`) are rarely used outside of mathematical texts making it also a good option too to use.
+
+**n.b.** I am not saying you cannot have different syntaxes that work and have them be used for structured formatting, rather I don't class them as "arbitrary proper markup languages".
+
+
+### Plain Text as a Pseudo-Grammar
+
+In a weird way, plain text kind of does have a sort of pseudo-grammar that people assume of it and it is because of whitespace. Newlines are treated special kind of whitespace (usually multiple newlines signify a paragraph break) and general spaces are only separating other "things" (other characters).
+
+For many people, the amount of spaces used is just for "alignment" or "stylization" and doesn't have any procedural semantic meaning. This assumption is why an arbitrary (not necessarily proper) markup language can exist.
 
 
 ## Applying this to Odin
@@ -118,6 +144,7 @@ The last is the directive syntax. It's general syntax looks like this:
 ```
 
 And these can be either standalone, or applied to expressions, types, or statements. They are not applied to declarations to keep a distinct semantic meaning. These are all forms of a kind of semantic mark-up, but they exist as an escape hatch for future (or generally present) needs where the syntax might have been limiting. Attributes and directives are both TeX like whilst struct field tags are only a kind of "attribute syntax".
+
 
 ## Conclusion
 

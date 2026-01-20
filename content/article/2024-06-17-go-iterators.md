@@ -15,13 +15,13 @@
 }
 ---
 
-_NOTE: This is based on, but completely rewritten, from a Twitter post: <https://x.com/TheGingerBill/status/1802645945642799423>_
+_NOTE: This is based on, but completely rewritten, from a Twitter post:<br><https://x.com/TheGingerBill/status/1802645945642799423>_
 
-**TL;DR** It makes Go _feel_ too "functional" rather than being an unabashed imperative language.
+**TL;DR**: It makes Go _feel_ too "functional" rather than being an unabashed imperative language.
 
 I recently saw a post on [Twitter](https://x.com/ohmypy/status/1801180323406844062) showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.
 
-The _merged PR_ for the proposal can be found here: <https://github.com/golang/go/issues/61897>
+The _merged PR_ for the proposal can be found here:<br><https://github.com/golang/go/issues/61897>
 
 It has a in-depth explanation of the design explaining why certain approaches were chosen instead, so I do recommend reading it if you are familiar with Go.
 

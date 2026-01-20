@@ -21,7 +21,7 @@
 
 When I was designing the constant value system in [Odin](https://odin-lang.org/), I wanted literals (especially numbers) to "just work". I was inspired by how both [Ada](https://www.adacore.com/about-ada)[^ada-constant] and [Go](https://golang.org/)[^go-constants] both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.
 
-[^ada-constant]: https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html
+[^ada-constant]: [Ada Style Guide For Naming Conventions](https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html)
 [^go-constants]: I highly recommend reading the article regarding how Go implements its constant value system <https://blog.golang.org/constants>
 
 * Model-1: Expressions have a type, not all expressions may have a value. Therefore all values must have a type.
