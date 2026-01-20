@@ -73,7 +73,7 @@
 		<link>https://www.gingerbill.org/article/2024/06/17/go-iterator-design/</link>
 		<guid>https://www.gingerbill.org/article/2024/06/17/go-iterator-design/</guid>
 		<pubDate>Mon, 17 Jun %!(NO VERB) 09:00:00 +0000%!(EXTRA 2024)</pubDate>
-		<description>NOTE: This is based on, but completely rewritten, from a Twitter post: https://x.com/TheGingerBill/status/1802645945642799423TL;DR It makes Go feel too ;functional; rather than being an unabashed imperative language.I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.The merged PR for the proposal can be found here: https://github.com/golang/go/issues/61897It has a in-depth expla...</description>
+		<description>NOTE: This is based on, but completely rewritten, from a Twitter post:https://x.com/TheGingerBill/status/1802645945642799423TL;DR: It makes Go feel too ;functional; rather than being an unabashed imperative language.I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.The merged PR for the proposal can be found here:https://github.com/golang/go/issues/61897It has a in-depth explan...</description>
 	</item>
 	<item>
 		<title>String Type Distinctions</title>
@@ -143,7 +143,7 @@
 		<link>https://www.gingerbill.org/article/2021/03/07/untyped-types/</link>
 		<guid>https://www.gingerbill.org/article/2021/03/07/untyped-types/</guid>
 		<pubDate>Sun, 07 Mar %!(NO VERB) 09:00:00 +0000%!(EXTRA 2021)</pubDate>
-		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both Ada  https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: E...</description>
+		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both Ada  Ada Style Guide For Naming Conventions and Go  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: Expressions have a type, not all expressi...</description>
 	</item>
 	<item>
 		<title>Structured Control Flow (Brain Dump)</title>

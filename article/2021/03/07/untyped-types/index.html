@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Untyped Types" />
-<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &#34;just work&#34;. I was inspired by how both Ada   https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html and Go   I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: E..." />
+<meta name="twitter:description" content="When I was designing the constant value system in Odin, I wanted literals (especially numbers) to &#34;just work&#34;. I was inspired by how both Ada   Ada Style Guide For Naming Conventions and Go   I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: Expressions have a type, not all expressi..." />
  <title>Untyped Types - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -50,7 +50,7 @@
 </header>
 <p>When I was designing the constant value system in <a href="https://odin-lang.org/">Odin</a>, I wanted literals (especially numbers) to “just work”. I was inspired by how both <a href="https://www.adacore.com/about-ada">Ada</a> <label for="ada-constant" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="ada-constant" class="margin-toggle"></input>
-<span class="sidenote">https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html</span> and <a href="https://golang.org/">Go</a> <label for="go-constants" class="margin-toggle sidenote-number"></label>
+<span class="sidenote"><a href="https://www.adaic.org/resources/add_content/docs/95style/html/sec_3/3-2-6.html">Ada Style Guide For Naming Conventions</a></span> and <a href="https://golang.org/">Go</a> <label for="go-constants" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="go-constants" class="margin-toggle"></input>
 <span class="sidenote">I highly recommend reading the article regarding how Go implements its constant value system <a href="https://blog.golang.org/constants">https://blog.golang.org/constants</a></span> both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.</p>
 <ul>
@@ -154,43 +154,6 @@ untyped quaternion -&gt; quaternion256
 				heading.appendChild(a);
 			}
 		});
-	})();
-
-	const DARK  = '(prefers-color-scheme: dark)';
-	const LIGHT = '(prefers-color-scheme: light)';
-
-	function setColourScheme(scheme) {
-		console.log(scheme);
-		if (scheme == 'dark') {
-
-		} else if (scheme == 'light') {
-
-		}
-	}
-
-
-	(function changeStyle(){
-		function detectColourScheme() {
-			if (!window.matchMedia) {
-				return;
-			}
-
-			function listener({matches, media}) {
-				if (!matches) {
-					return;
-				}
-				if (media == DARK) {
-					setColourScheme('dark');
-				} else if (media == LIGHT) {
-					setColourScheme('light');
-				}
-			}
-
-			const mqDark  = window.matchMedia(DARK);
-			const mqLight = window.matchMedia(LIGHT);
-			mqDark.addListener(listener);
-			mqLight.addListener(listener);
-		}
 	})();
 </script>
 </html>

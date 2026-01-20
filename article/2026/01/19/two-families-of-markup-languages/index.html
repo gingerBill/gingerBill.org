@@ -89,7 +89,21 @@
 <p>YAML is also a monstrosity and should never be used by anyone for any reason. It’s nigh-impossible to write a parser for it and has too many syntactical ambiguities. It has lead to numerous infamous situations such as <a href="https://hitchdev.com/strictyaml/why/implicit-typing-removed/">The Norway Problem</a> <label for="just-say-no" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="just-say-no" class="margin-toggle"></input>
 <span class="sidenote">Just say Norway to YAML.</span>. Also fun fact, YAML is actually a supset of JSON which all valid JSON documents are also valid YAML documents. This is beyond cursed, but as this is not an article on YAML, I will stop with my micro-rant here.</p>
-<h2 id="heading-2-4">Applying this to Odin</h2/>
+<h2 id="heading-2-4">Lisp is not an Arbitrary Proper Markup Language</h2/>
+<p>Unfortunately, I do not class <label for="s-expressions" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="s-expressions" class="margin-toggle"></input>
+<span class="sidenote">This section was not here originally but I wanted to clarify why I don’t think they could be the third family is the class of <em>arbitrary proper markup languages</em>.</span> Lisp/s-expression style stuff as being an <em>arbitrary proper markup language</em>, at least by default. The main reason is that you cannot just “markup” pre-existing plain text with it that easily, you effectively have to restructure the text completely for it work. At best you’d need to add a second syntax to make it clear what are the attributes vs what is the plain-text.</p>
+<p><a href="https://github.com/weavejester/hiccup">Hiccup</a> is a common syntax for generating HTML in the <a href="https://clojure.org/">Clojure</a> ecosystem, which does “solve” the “proper” aspect by having attribute syntax:</p>
+<pre><code class="clojure">[:span {:attrib &#34;value&#34;} &#34;wrapped text&#34;]
+</code></pre>
+<p>However it is still not an “arbitrary” markup language due not being able to wrap pre-existing plain text. I think the entire motivation behind the original markup languages too: marking up pre-existing plain text documents. Rather than starting from the “markup” language and adding text. This latter form is probably closer to just a structured text format rather than a markup language.</p>
+<p>A very minor but other obvious thing is the use of parentheses <code>()</code> is a bad choice since they are commonly used within plain text, but if you just swapped it for <code>[]</code> or <code>{}</code>, it would be fine, and most people would still recognize the s-expression nature. And the need for something like backticks <code>`</code> to wrap the text might need to be there to remove the ambiguity.</p>
+<p>Using quotes <code>&#34;</code> are also another aspect which make it not arbitrary. However I’d argue that quotes are very common in some European languages, and thus would require a lot of corrections. One of the benefits to both TeX and SGML is that they “start” with symbols which are not commonly used in every day text. Backslash <code>\</code> seems to only exist since the dawn of computers and is never seen in actual text before (making it a near perfect choice) and less/greater-than (<code>&lt;</code> <code>&gt;</code>) are rarely used outside of mathematical texts making it also a good option too to use.</p>
+<p><strong>n.b.</strong> I am not saying you cannot have different syntaxes that work and have them be used for structured formatting, rather I don’t class them as “arbitrary proper markup languages”.</p>
+<h3 id="heading-3-5">Plain Text as a Pseudo-Grammar</h3/>
+<p>In a weird way, plain text kind of does have a sort of pseudo-grammar that people assume of it and it is because of whitespace. Newlines are treated special kind of whitespace (usually multiple newlines signify a paragraph break) and general spaces are only separating other “things” (other characters).</p>
+<p>For many people, the amount of spaces used is just for “alignment” or “stylization” and doesn’t have any procedural semantic meaning. This assumption is why an arbitrary (not necessarily proper) markup language can exist.</p>
+<h2 id="heading-2-6">Applying this to Odin</h2/>
 <p><a href="https://odin-lang.org/">Odin</a> <label for="my-language" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="my-language" class="margin-toggle"></input>
 <span class="sidenote">The general purpose programming language that I have created. Which I hope most people who read my articles know this already.</span> is not a markup language, but I deliberately designed three distinct extension mechanisms so the language can grow in the future without forcing new foundational syntax. I achieve this with attributes on declarations, struct tag fields, and directives. These three different constructs have different syntaxes because they reflect different semantic meaning.</p>
@@ -110,7 +124,7 @@
 #key(args)
 </code></pre>
 <p>And these can be either standalone, or applied to expressions, types, or statements. They are not applied to declarations to keep a distinct semantic meaning. These are all forms of a kind of semantic mark-up, but they exist as an escape hatch for future (or generally present) needs where the syntax might have been limiting. Attributes and directives are both TeX like whilst struct field tags are only a kind of “attribute syntax”.</p>
-<h2 id="heading-2-5">Conclusion</h2/>
+<h2 id="heading-2-7">Conclusion</h2/>
 <p>Most of the papers <label for="papers-coombs" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="papers-coombs" class="margin-toggle"></input>
 <span class="sidenote">Coombs, James H.; Renear, Allen H.; DeRose, Steven J. (November 1987). <a href="https://xml.coverpages.org/coombs.html">“Markup Systems and the Future of Scholary Text Processing”</a></span> <label for="papers-bray" class="margin-toggle sidenote-number"></label>
@@ -135,43 +149,6 @@
 				heading.appendChild(a);
 			}
 		});
-	})();
-
-	const DARK  = '(prefers-color-scheme: dark)';
-	const LIGHT = '(prefers-color-scheme: light)';
-
-	function setColourScheme(scheme) {
-		console.log(scheme);
-		if (scheme == 'dark') {
-
-		} else if (scheme == 'light') {
-
-		}
-	}
-
-
-	(function changeStyle(){
-		function detectColourScheme() {
-			if (!window.matchMedia) {
-				return;
-			}
-
-			function listener({matches, media}) {
-				if (!matches) {
-					return;
-				}
-				if (media == DARK) {
-					setColourScheme('dark');
-				} else if (media == LIGHT) {
-					setColourScheme('light');
-				}
-			}
-
-			const mqDark  = window.matchMedia(DARK);
-			const mqLight = window.matchMedia(LIGHT);
-			mqDark.addListener(listener);
-			mqLight.addListener(listener);
-		}
 	})();
 </script>
 </html>
