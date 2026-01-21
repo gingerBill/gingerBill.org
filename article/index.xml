@@ -10,7 +10,7 @@
 		<link>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</link>
 		<guid>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</guid>
 		<pubDate>Mon, 19 Jan 2026 09:00:00 +0000</pubDate>
-		<description>There are only two families of proper arbitrary markup languages: TeX and SGML  I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986.. By arbitrary, I mean the grammar specifically, and how it can be used to mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic-makeover of ...</description>
+		<description>There are only two families of proper arbitrary markup languages: TeX and SGML  I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986.. By arbitrary, I mean the grammar specifically, and how it can be used to mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic makeover of ...</description>
 	</item>
 	<item>
 		<title>Mitigating the Billion Dollar Mistake</title>
