@@ -11,7 +11,7 @@
 }
 ---
 
-There are only two families of _proper arbitrary_ markup languages: [TeX](https://tug.org/) and [SGML](https://en.wikipedia.org/wiki/Standard_Generalized_Markup_Language)[^sgml-link]. By _arbitrary_, I mean the grammar specifically, and how it can be used to _mark_ arbitrary plain text with information. And by _proper_, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic-makeover of TeX or SGML.
+There are only two families of _proper arbitrary_ markup languages: [TeX](https://tug.org/) and [SGML](https://en.wikipedia.org/wiki/Standard_Generalized_Markup_Language)[^sgml-link]. By _arbitrary_, I mean the grammar specifically, and how it can be used to _mark_ arbitrary plain text with information. And by _proper_, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic makeover of TeX or SGML.
 
 [^sgml-link]: I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: [ISO 8879:1986](https://www.iso.org/standard/16387.html).
 
@@ -54,7 +54,7 @@ In the two languages, they both have means of using their specific symbols that 
 
 [^html-entities]: For a minimal syntax to prevent escaping issues in an SGML-like language, you need 5 escaped entities: <br>` & → &amp;`, `' → &apos; or &#39;`, `< → &lt;`, `> → &gt;`, and `" → &quot; or &#34;`. However there are literally thousands of XML/HTML entities out there, and supporting them correctly has been "fun" for [packages](https://pkg.odin-lang.org/core/encoding/entity/) in Odin.
 
-There is also the second aspect that the TeX family of syntaxes are much easier parse than the SGML family. I've written both before and the SGML syntax requires an order of magnitude more code to write, because of the named blocks for wrapping.
+There is also the second aspect that the TeX family of syntaxes are much easier parse than the SGML family. I've written both before and the SGML syntax requires a bit more code to write, because of the named blocks for wrapping and the entity escaping (especially if you want to handle _all_ of the XML/HTML entities, of which there are thousands of them).
 
 To clarify, I am saying the "TeX Family" and not actual TeX itself. I know how insane TeX is and I did not want to get into how context-sensitive its grammar really is. I just wanted to focus on the _arbitrary proper markup syntax_ of it in isolation rather than the semantics of a specific language in the "TeX Family".
 
