@@ -139,4 +139,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
     color: #4d7;
   }
 
+  .hljs-string,
+  .hljs-doctag {
+    color: #f45;
+  }
 }
