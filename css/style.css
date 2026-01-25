@@ -296,6 +296,11 @@ main p {
           hyphens: auto;
 }
 
+a.direct {
+  overflow-wrap: anywhere;
+}
+
+
 main p:not(:last-child) {
   margin: 0 0 1em;
 }

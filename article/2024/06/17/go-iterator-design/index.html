@@ -48,10 +48,10 @@
 <p><span class="date">2024-06-17</span></p>
 </div>
 </header>
-<p><em>NOTE: This is based on, but completely rewritten, from a Twitter post:<br><a href="https://x.com/TheGingerBill/status/1802645945642799423">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
+<p><em>NOTE: This is based on, but completely rewritten, from a Twitter post:<br><a href="https://x.com/TheGingerBill/status/1802645945642799423" class="direct">https://x.com/TheGingerBill/status/1802645945642799423</a></em></p>
 <p><strong>TL;DR</strong>: It makes Go <em>feel</em> too “functional” rather than being an unabashed imperative language.</p>
 <p>I recently saw a post on <a href="https://x.com/ohmypy/status/1801180323406844062">Twitter</a> showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.</p>
-<p>The <em>merged PR</em> for the proposal can be found here:<br><a href="https://github.com/golang/go/issues/61897">https://github.com/golang/go/issues/61897</a></p>
+<p>The <em>merged PR</em> for the proposal can be found here:<br><a href="https://github.com/golang/go/issues/61897" class="direct">https://github.com/golang/go/issues/61897</a></p>
 <p>It has a in-depth explanation of the design explaining why certain approaches were chosen instead, so I do recommend reading it if you are familiar with Go.</p>
 <p>Here is the example from the original Tweet I found:</p>
 <pre><code class="go">func Backward[E any](s []E) func(func(int, E) bool) {

@@ -95,7 +95,7 @@ if condition do { thing(); } // not allowed
 <pre><code>a %  b = a - trunc(a/b) * b
 a %% b = a - floor(a/b) * b
 </code></pre>
-<p>See the following for more information: <a href="https://wikipedia.org/wiki/Modulo_operation">https://wikipedia.org/wiki/Modulo_operation</a></p>
+<p>See the following for more information: <a href="https://wikipedia.org/wiki/Modulo_operation" class="direct">https://wikipedia.org/wiki/Modulo_operation</a></p>
 <h2 id="heading-2-5">Leading zero for octal</h2/>
 <p>I agree C’s octal notation has many issues, and this has its routes back when bytes were not always a multiple of 8 bits. This is why Odin uses <code>0o777</code> to denote a number as octal; it is more consistent with other numeric bases too: <code>0b</code> for binary, <code>0o</code> for octal, <code>0d</code> for explicit decimal, <code>0z</code> for dozenal, <code>0x</code> for hexadecimal.</p>
 <h2 id="heading-2-6">No power operator</h2/>
@@ -106,7 +106,7 @@ a %% b = a - floor(a/b) * b
 </ul>
 <h2 id="heading-2-7">C-style for loops</h2/>
 <p>I agree that 90% of the time you just want a <code>for in</code> style loop. However C-style <code>for</code> loops do have their uses and getting rid of them entirely is not a great idea.</p>
-<p>If you would like to see Odin’s approach to loops, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#for-statement">https://odin-lang.org/docs/overview/#for-statement</a>.</p>
+<p>If you would like to see Odin’s approach to loops, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#for-statement" class="direct">https://odin-lang.org/docs/overview/#for-statement</a>.</p>
 <h2 id="heading-2-8">Switch with default fallthrough</h2/>
 <p>I personally use <code>switch</code> statement as the equivalent of a jump-table and/or if-else chain. For this reason, I usually want each case to have a <code>break</code> at the end and for each case to be a separate scope too. This is why in Odin I added an explicit <code>fallthrough</code> statement and made each case its own scope.</p>
 <p>I also extended the <code>switch</code> statement to properly understand:</p>
@@ -118,7 +118,7 @@ a %% b = a - floor(a/b) * b
 <li>Multiple cases</li>
 </ul>
 <p><code>switch</code> statements in Odin require all cases of <code>enum</code> and <code>union</code> to be handled by default unless explicitly specified with <code>#partial switch</code>.</p>
-<p>If you would like to see Odin’s approach to switch statements, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#switch-statement">https://odin-lang.org/docs/overview/#switch-statement</a>.</p>
+<p>If you would like to see Odin’s approach to switch statements, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#switch-statement" class="direct">https://odin-lang.org/docs/overview/#switch-statement</a>.</p>
 <h2 id="heading-2-9">Type first</h2/>
 <p>C’s “type first” was a weird design decision. It was meant to expression that the type declaration is the same as how it is used in an expression. For this reason, C has given us some of the most “wonderful” declarations:</p>
 <pre><code class="c">int *x[3];   // array 3 of pointer to int
@@ -170,7 +170,7 @@ y: Int_Alias = x; // fine
 
 z: My_Int = x; // error, an explicit cast is required
 </code></pre>
-<p>If you would like to see Odin’s approach to <code>distinct</code> types, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#distinct-types">https://odin-lang.org/docs/overview/#distinct-types</a>.</p>
+<p>If you would like to see Odin’s approach to <code>distinct</code> types, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#distinct-types" class="direct">https://odin-lang.org/docs/overview/#distinct-types</a>.</p>
 <h2 id="heading-2-11">Integer division</h2/>
 <p>I disagree with this conclusion here regarding integer division. I guess dimensional analysis is baked into me as I don’t usually want an expression to change the types based on the operator. If I have two integers of the same type and use an operator on them, I expect the result to be of the same type, not a new one.</p>
 <pre><code class="odin">z := x / y;
@@ -190,7 +190,7 @@ z: My_Int = x; // error, an explicit cast is required
 <h2 id="heading-2-15">Single return and out parameters</h2/>
 <p>Multiple results are a godsend to use in Odin. They allow for numerous things where passing pointers were originally needed. In Odin, if a pointer is passed to a procedure now, it is usually implies an “in-out” parameter, coupled with the Odin’s calling convention allowing certain parameters to be passed by pointer implicitly to improve performance (equivalent to an implicit <code>T const &amp;</code> in C++).</p>
 <p>Multiple results allow for named results which allows for a form of auto-documentation.</p>
-<p>If you would like to see Odin’s approach to multiple results, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#multiple-results">https://odin-lang.org/docs/overview/#multiple-results</a>.</p>
+<p>If you would like to see Odin’s approach to multiple results, I recommend reading the overview for them at <a href="https://odin-lang.org/docs/overview/#multiple-results" class="direct">https://odin-lang.org/docs/overview/#multiple-results</a>.</p>
 <h2 id="heading-2-16">Silent errors</h2/>
 <p>As many know, I am not a fan of exception-style error handling, which I expressed in my <a href="/article/2018/09/05/exceptions-and-why-odin-will-never-have-them/">article on exceptions</a>.</p>
 <p>With Odin’s multiple results, strong type system, and <code>enum</code>s &amp; <code>union</code>s, error handling is a lot nice to deal with.</p>
