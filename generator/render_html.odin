@@ -278,6 +278,14 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 				strings.write_string(state.w, "\" title=\"")
 				escape_html(state, string(node.as.link.title))
 			}
+
+			if node.first_child != nil && node.first_child.type == .Text {
+				text := string(node.first_child.data[:node.first_child.len])
+				if text == string(node.as.link.url) {
+					strings.write_string(state.w, "\" class=\"direct")
+				}
+			}
+
 			strings.write_string(state.w, "\">")
 		} else {
 			strings.write_string(state.w, "</a>")
