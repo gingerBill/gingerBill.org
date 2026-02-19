@@ -113,7 +113,25 @@ proc bar() -&gt; i32 {
 </code></pre>
 <p>Another option is to do something like automatic semicolon insertion (ASI) based on a set of rules. Unfortunately, a lot of people’s first experience with this kind of approach is JavaScript and its really poor implementation of it, which means people usually just write semicolons regardless to remove the possible mistakes. However there are languages that have relatively sane approaches to ASI such as Go, Python, and Odin.</p>
 <p>Go’s approach is purely a lexical rule, which does mean you are forced to do things like trailing commas in lists that span multiple lines. However this is probably not just done for simplicity but also to enforce a code styling.</p>
-<p>Python and Odin’s approach is both a lexical rule + syntactical rule. Odin’s lexical rule is very similar to Go’s but with the added syntactical rules, it makes it a lot less annoying to use and allows for more code styling options. The rules that Odin does (which is very similar to Python) is to ignore newline-based “semicolons” within brackets (<code>( )</code> and <code>[ ]</code>, and <code>{ }</code> used as an expression or record block).</p>
+<p>Python and Odin’s approach is both a lexical rule + syntactical rule. Odin’s lexical rule is very similar to Go’s but with the added syntactical rules, it makes it a lot less annoying to use and allows for more code styling options. Odin’s rules, which are very similar to Python’s, are to ignore newline-based “semicolons” within brackets (<code>( )</code> and <code>[ ]</code>, and <code>{ }</code> used as an expression or record block).</p>
+<p>To allow for things like Allman braces, Odin allows for extra single newline in many places in its grammar, but only an extra single newline. This is to get around certain ambiguities between declaration a procedure type and a procedure literal:</p>
+<pre><code class="odin">a_type :: proc()
+
+a_procedure_declaration :: proc() {
+
+}
+
+another_procedure_declaration :: proc()
+{
+
+}
+
+another_type :: proc() // note the extra newline separating the signature from a `{`
+
+{ // this is just a block
+
+}
+</code></pre>
 <h2 id="heading-2-3">First Exposure Bias</h2/>
 <p>How is it that people literally choose a language purely on the most minute syntax issues rather than on the (denotational or operational) semantics? Or do most people not actually “program” but just “pattern match” syntax together and <em>hope</em> it works?</p>
 <p>Maybe I don’t need to be as cynical and it is a lot simpler than all of that: <strong>first exposure bias</strong>. It’s the tendency for an individual to develop a <em>preference</em> simply because they became familiar with it first, rather that it be a rational choice from a plethora of options. People keep to what they are familiar with, which can be rational. But saying they don’t like something without even trying it, is a bit irrational.</p>
