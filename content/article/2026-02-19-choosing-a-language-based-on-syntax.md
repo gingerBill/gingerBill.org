@@ -20,7 +20,7 @@ The general categories of declarations can be classified as the following:
 * `name: type = value`---name-focused
 * `var name type = value`---qualifier-focused
 
-When designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a language its "character. I do not get this train of thought in the slightest[^compiler-bias].
+When designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a language its "character". I do not get this train of thought in the slightest[^compiler-bias].
 
 [^compiler-bias]: I probably do have a bias in that I know how compilers work, but even when I didn't understand, I chose languages based on my need, not on whether they "looked good".
 
