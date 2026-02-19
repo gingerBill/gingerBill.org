@@ -40,6 +40,7 @@ I wrote an article in 2018[^old-article] about the different families of declara
 ```odin
 // Actual Odin
 x: i32 = 123
+y := 123 // inferred type
 FOO :: "some constant"
 bar :: proc() -> i32 {
     return 123
@@ -50,6 +51,7 @@ to this:
 ```pascal
 // Qualifier focused
 var x i32 = 123
+var y = 123 // inferred type
 const FOO = "some constant"
 proc bar() -> i32 {
     return 123
