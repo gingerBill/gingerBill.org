@@ -97,8 +97,28 @@ Another option is to do something like automatic semicolon insertion (ASI) based
 
 Go's approach is purely a lexical rule, which does mean you are forced to do things like trailing commas in lists that span multiple lines. However this is probably not just done for simplicity but also to enforce a code styling.
 
-Python and Odin's approach is both a lexical rule + syntactical rule. Odin's lexical rule is very similar to Go's but with the added syntactical rules, it makes it a lot less annoying to use and allows for more code styling options. The rules that Odin does (which is very similar to Python) is to ignore newline-based "semicolons" within brackets (`( )` and `[ ]`, and `{ }` used as an expression or record block).
+Python and Odin's approach is both a lexical rule + syntactical rule. Odin's lexical rule is very similar to Go's but with the added syntactical rules, it makes it a lot less annoying to use and allows for more code styling options. Odin's rules, which are very similar to Python's, are to ignore newline-based "semicolons" within brackets (`( )` and `[ ]`, and `{ }` used as an expression or record block).
 
+To allow for things like Allman braces, Odin allows for extra single newline in many places in its grammar, but only an extra single newline. This is to get around certain ambiguities between declaration a procedure type and a procedure literal:
+
+```odin
+a_type :: proc()
+
+a_procedure_declaration :: proc() {
+
+}
+
+another_procedure_declaration :: proc()
+{
+
+}
+
+another_type :: proc() // note the extra newline separating the signature from a `{`
+
+{ // this is just a block
+
+}
+```
 
 ## First Exposure Bias
 
