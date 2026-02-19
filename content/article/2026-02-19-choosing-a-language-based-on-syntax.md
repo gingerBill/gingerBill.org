@@ -14,7 +14,7 @@
 
 I am still perplexed by how people judge a language purely by its **_declaration_** syntax, and will decide whether to use the language purely based on whether they like that aspect or not.
 
-The general categories of declarations cam be classified as the following:
+The general categories of declarations can be classified as the following:
 
 * `type name = value`---type-focused
 * `name: type = value`---name-focused
