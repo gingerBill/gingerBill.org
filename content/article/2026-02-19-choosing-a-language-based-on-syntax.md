@@ -186,3 +186,5 @@ If a person complains about the general category (not the specifics) of a syntax
 I think a lot of the reasons people judge languages based on such "minor" syntactic decisions is probably because they don't have much experience with other programming languages. I've found that as people become more experienced with programming and other programming languages, this sentiment disappears entirely and people just focus on programming. The syntax is just there for reading, not for "appreciating".
 
 Look for the opinions of people that you do value and deem to be of worth, not some rando's off the internet.
+
+Please don't choose a language solely for its syntax. Consider the actual language semantics since they will be the things that affect you the most down the line.
