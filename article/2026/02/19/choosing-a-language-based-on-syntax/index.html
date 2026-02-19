@@ -57,11 +57,11 @@
 </ul>
 <p>When designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a language its “character”. I do not get this train of thought in the slightest <label for="compiler-bias" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="compiler-bias" class="margin-toggle"></input>
-<span class="sidenote">I probably do have a bias in that I know how compilers work, but even when I didn’t understand, I chose languages based on my need, not on whether they “looked good”.</span>.</p>
+<span class="sidenote">I probably do have a bias, in that I know how compilers work, but even when I didn’t understand, I chose languages based on my need, not on whether they “looked good”.</span>.</p>
 <h2 id="heading-2-1">Syntax Doesn’t Matter Until it Does</h2/>
 <p>A programming language is not <em>merely</em> its syntax. <em>Semantics</em> actually exist, be that <a href="https://en.wikipedia.org/wiki/Denotational_semantics">denotation semantics</a> <label for="important" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="important" class="margin-toggle"></input>
-<span class="sidenote">I’ve always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are “obvious” once the denotational semantics are decided upon.</span>, <a href="https://en.wikipedia.org/wiki/Operational_semantics">operational semantics</a>, or <a href="https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)">algebraic semantics</a>. The issue is that many inexperienced programmers don’t have this mental distinction and think all languages are mostly the same but with just differing “syntax”. Just wait until they are exposed to a functional programming language or a database language or even find out that a spreadsheet is a language.</p>
+<span class="sidenote">I’ve always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are “obvious” once the denotational semantics are decided upon.</span>, <a href="https://en.wikipedia.org/wiki/Operational_semantics">operational semantics</a>, or <a href="https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)">algebraic semantics</a>. The issue is that many inexperienced programmers don’t have this mental distinction and think all languages are mostly the same but with just differing “syntax”. Just wait until they are exposed to a functional programming language or a database language, or even find out that a spreadsheet is a language.</p>
 <p>I wrote an article in 2018 <label for="old-article" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="old-article" class="margin-toggle"></input>
 <span class="sidenote"><a href="https://gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">On the Aesthetics of the Syntax of Declarations</a></span> about the different families of declaration syntax, but it is still weird to me how people view things when deciding whether to use a language or not. To use my language Odin as an example, do people think this substantially changes the <em>semantics</em> if its declaration syntax had these different looks?</p>
@@ -95,9 +95,9 @@ proc bar() -&gt; i32 {
 <ul>
 <li>From people having bad error reporting when forgetting a semicolon</li>
 <li>Not liking the naïve aesthetics of semicolons</li>
-<li>From people who don’t even know the very basics of parsing nor the function of what a semicolon is in many languages (statement terminators/separators <label for="separators" class="margin-toggle sidenote-number"></label>
+<li>From people who don’t even know the very basics of parsing, nor the function of what a semicolon is in many languages (statement terminators/separators <label for="separators" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="separators" class="margin-toggle"></input>
-<span class="sidenote">Pascals initially used semicolons as statement separators, similar to using a comma, whilst languages in the C-family used semicolons as statement terminators. Eventually most Pascal compilers allowed the user to have an extra semicolon at the end allowing them to pretend to be terminators or separators.</span>)</li>
+<span class="sidenote">Pascals initially used semicolons as statement separators, similar to using a comma, whilst languages in the C-family used semicolons as statement terminators. Eventually most Pascal compilers allowed the user to have an extra semicolon at the end, allowing them to pretend to be terminators or separators.</span>)</li>
 </ul>
 <p>When I first created Odin, semicolons were mostly required and inferred in many places but I eventually made semicolons fully optional as statement terminators. There were two reasons I made them optional:</p>
 <ul>
