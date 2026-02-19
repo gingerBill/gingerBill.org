@@ -126,6 +126,12 @@ How is it that people literally choose a language purely on the most minute synt
 
 Maybe I don't need to be as cynical and it is a lot simpler than all of that: **first exposure bias**. It's the tendency for an individual to develop a _preference_ simply because they became familiar with it first, rather that it be a rational choice from a plethora of options. People keep to what they are familiar with, which can be rational. But saying they don't like something without even trying it, is a bit irrational.
 
+However I do think there are rational reasons people do not like a syntax of a language and thus do not use it. Sometimes that syntax is just too incoherent or inconsistent with the semantics of the language. Sometimes it is just too dense and full or sigils[^perl], making it very hard to _scan_[^scan-distinction] and find the patterns within the code. Sometimes it is just so foreign, that the time it takes to learn it would be a lot longer than another alternative.
+
+[^perl]: Perl is a language that literally gives me headaches when scanning/reading the code. I am not exaggerating.
+
+[^scan-distinction]: I am making a distinction between _scanning_ and _reading_ here, which I don't think some people do. However that distinction is for another article.
+
 ## Syntax Decisions
 
 I've written about how C's [declarations match usage](https://www.gingerbill.org/article/2020/01/25/a-reply-to-lets-stop-copying-c/#heading-2-9), which I'd argue most people don't realize unless they have made C parser/compiler[^spec]. Most people think C's declaration syntax is either just type-first or something arcane that you just randomly guess at. For Odin, I designed the syntax for types to be more Pascal-style to improve reading, parsing, and comprehension:
@@ -171,7 +177,7 @@ Sometimes tiny syntax decisions do add friction, and they do add up. One of the 
 
 ## Ignoring Such Opinions
 
-If you're a fellow language designer, honestly: ignore these people. Everyone has an opinion but that opinion might not be of value to anyone, even the person who holds it.
+If you're a fellow language designer, honestly: ignore these people. Everyone has an opinion, but that opinion might not be of value to anyone, even the person who holds it.
 
 If a person complains about the general category (not the specifics) of a syntax decision in your language, such as the declaration syntax, the use of semicolons or not, whether the core/standard library uses `snake_case` or `camelCase` for procedure names, or some other asinine position: **just ignore them.**
 
@@ -179,4 +185,4 @@ If a person complains about the general category (not the specifics) of a syntax
 
 I think a lot of the reasons people judge languages based on such "minor" syntactic decisions is probably because they don't have much experience with other programming languages. I've found that as people become more experienced with programming and other programming languages, this sentiment disappears entirely and people just focus on programming. The syntax is just there for reading, not for "appreciating".
 
-Look for the opinions of people that you do value and to be of worth, not some rando off the internet.
+Look for the opinions of people that you do value and deem to be of worth, not some rando's off the internet.
