@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Choosing a Language Based on its Syntax?</title>
+		<link>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</link>
+		<guid>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</guid>
+		<pubDate>Thu, 19 Feb 2026 09:00:00 +0000</pubDate>
+		<description>I am still perplexed by how people judge a language purely by its declaration syntax, and will decided whether to use the language purely based on whether they like that aspect or not.The general categories of declarations cam be classified as the following:---type-focused---name-focused---qualifier-focusedWhen designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a l...</description>
+	</item>
+	<item>
 		<title>The Only Two Markup Languages</title>
 		<link>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</link>
 		<guid>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</guid>

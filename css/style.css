@@ -309,6 +309,12 @@ main ul, main ol {
   margin-bottom: 1em;
 }
 
+main ul ul, main ol ol,
+main ul ol, main ol ul {
+  margin-bottom: 0;
+}
+
+
 a {
   color: #fd8000;
   text-decoration: none;
@@ -526,6 +532,13 @@ img[src$='#center'] {
   margin-bottom: 0.5em;
   vertical-align: baseline;
   position: relative;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.sidenote a,
+.marginnote a {
+  overflow-wrap: anywhere;
 }
 
 .sidenote-number {
@@ -544,7 +557,7 @@ img[src$='#center'] {
   left: 0.1em;
   margin-left: -0.2em;
   margin-right: -0.1em;
-  font-size: 0.8em;
+  font-size: 0.8rem;
 }
 
 .sidenote:before {
@@ -598,5 +611,36 @@ label.margin-toggle:not(.sidenote-number) {
 
   label {
     cursor: pointer;
+  }
+}
+
+.color-joke {
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.color-joke .cj-red {
+  color: #f00;
+}
+.color-joke .cj-orange {
+  color: #f90;
+}
+.color-joke .cj-yellow {
+  color: #ff0;
+}
+.color-joke .cj-green {
+  color: #0f0;
+}
+.color-joke .cj-blue {
+  color: #08f;
+}
+.color-joke .cj-purple {
+  color: #a8f;
+}
+
+@media (prefers-color-scheme: light) {
+  .color-joke {
+    background-color: #151515;
+    border-radius: 2px;
   }
 }
