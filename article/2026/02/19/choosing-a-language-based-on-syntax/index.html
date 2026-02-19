@@ -129,14 +129,14 @@ y: ^[3]int // pointer to array 3 of int
 int (*y)[3]; // pointer to array 3 of int
 </code></pre>
 <p>Instead of following C’s approach of “declarations match usage”, Odin’s approach is “types on the left, usage on the right”:</p>
-<pre><code class="odin">x: [3]int;  // type on the LHS
-x[1] = 123; // usage on the RHS
+<pre><code class="odin">x: [3]int  // type on the LHS
+x[1] = 123 // usage on the RHS
 
-y: ^int = ...;
-y^ = 123;
+y: ^int = ...
+y^ = 123
 
-z: [6]^int = ...;
-z[3]^ = 123;
+z: [6]^int = ...
+z[3]^ = 123
 </code></pre>
 <p>Coupled with Odin’s very strong and orthogonal type system, things <em>just work</em><sup><small>TM</small></sup> as expected and are easy to comprehend for mere mortals like myself.</p>
 <p>I have seen many criticisms of Odin’s usage of a caret <code>^</code> for pointers <label for="pointers-criticism" class="margin-toggle sidenote-number"></label>
