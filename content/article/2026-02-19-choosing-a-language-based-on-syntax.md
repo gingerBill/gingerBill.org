@@ -31,7 +31,7 @@ A programming language is not _merely_ its syntax. _Semantics_ actually exist, b
 
 [^important]: I've always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are "obvious" once the denotational semantics are decided upon.
 
-I wrote an article in 2018[^old-article] about the different families of declaration syntax, but it is still weird to me how people view things when deciding whether to use a language or not. To use my language language Odin as an example, do people think this substantially changes the _semantics_ if its declaration syntax had these different looks? At best the difference here is going to be slightly more typing needed for `var` and `const`, and thus just becomes a question of ergonomics or "optimizing for typing" (which is never the bottleneck).
+I wrote an article in 2018[^old-article] about the different families of declaration syntax, but it is still weird to me how people view things when deciding whether to use a language or not. To use my language Odin as an example, do people think this substantially changes the _semantics_ if its declaration syntax had these different looks? At best the difference here is going to be slightly more typing needed for `var` and `const`, and thus just becomes a question of ergonomics or "optimizing for typing" (which is never the bottleneck).
 
 [^old-article]: [On the Aesthetics of the Syntax of Declarations](https://gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/)
 
