@@ -125,14 +125,14 @@ int (*y)[3]; // pointer to array 3 of int
 Instead of following C's approach of "declarations match usage", Odin's approach is "types on the left, usage on the right":
 
 ```odin
-x: [3]int;  // type on the LHS
-x[1] = 123; // usage on the RHS
+x: [3]int  // type on the LHS
+x[1] = 123 // usage on the RHS
 
-y: ^int = ...;
-y^ = 123;
+y: ^int = ...
+y^ = 123
 
-z: [6]^int = ...;
-z[3]^ = 123;
+z: [6]^int = ...
+z[3]^ = 123
 ```
 
 Coupled with Odin’s very strong and orthogonal type system, things _just work_<sup><small>TM</small></sup> as expected and are easy to comprehend for mere mortals like myself.
