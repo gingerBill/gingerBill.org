@@ -12,7 +12,7 @@
 }
 ---
 
-I am still perplexed by how people judge a language purely by its **_declaration_** syntax, and will decided whether to use the language purely based on whether they like that aspect or not.
+I am still perplexed by how people judge a language purely by its **_declaration_** syntax, and will decide whether to use the language purely based on whether they like that aspect or not.
 
 The general categories of declarations cam be classified as the following:
 
