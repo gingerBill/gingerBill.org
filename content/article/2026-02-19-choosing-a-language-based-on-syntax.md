@@ -22,12 +22,13 @@ The general categories of declarations can be classified as the following:
 
 When designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a language its "character". I do not get this train of thought in the slightest[^compiler-bias].
 
-[^compiler-bias]: I probably do have a bias in that I know how compilers work, but even when I didn't understand, I chose languages based on my need, not on whether they "looked good".
+[^compiler-bias]: I probably do have a bias, in that I know how compilers work, but even when I didn't understand, I chose languages based on my need, not on whether they "looked good".
 
 
 ## Syntax Doesn't Matter Until it Does
 
-A programming language is not _merely_ its syntax. _Semantics_ actually exist, be that [denotation semantics](https://en.wikipedia.org/wiki/Denotational_semantics)[^important], [operational semantics](https://en.wikipedia.org/wiki/Operational_semantics), or [algebraic semantics](https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)). The issue is that many inexperienced programmers don't have this mental distinction and think all languages are mostly the same but with just differing "syntax". Just wait until they are exposed to a functional programming language or a database language or even find out that a spreadsheet is a language.
+A programming language is not _merely_ its syntax. _Semantics_ actually exist, be that [denotation semantics](https://en.wikipedia.org/wiki/Denotational_semantics)[^important], [operational semantics](https://en.wikipedia.org/wiki/Operational_semantics), or [algebraic semantics](https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)). The issue is that many inexperienced programmers don't have this mental distinction and think all languages are mostly the same but with just differing "syntax". Just wait until they are exposed to a functional programming language or a database language, or even find out that a spreadsheet is a language.
+
 
 [^important]: I've always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are "obvious" once the denotational semantics are decided upon.
 
@@ -72,9 +73,9 @@ From what I gather, this sentiment of not understanding why many "modern" langua
 
 * From people having bad error reporting when forgetting a semicolon
 * Not liking the naïve aesthetics of semicolons
-* From people who don't even know the very basics of parsing nor the function of what a semicolon is in many languages (statement terminators/separators[^separators])
+* From people who don't even know the very basics of parsing, nor the function of what a semicolon is in many languages (statement terminators/separators[^separators])
 
-[^separators]: Pascals initially used semicolons as statement separators, similar to using a comma, whilst languages in the C-family used semicolons as statement terminators. Eventually most Pascal compilers allowed the user to have an extra semicolon at the end allowing them to pretend to be terminators or separators.
+[^separators]: Pascals initially used semicolons as statement separators, similar to using a comma, whilst languages in the C-family used semicolons as statement terminators. Eventually most Pascal compilers allowed the user to have an extra semicolon at the end, allowing them to pretend to be terminators or separators.
 
 When I first created Odin, semicolons were mostly required and inferred in many places but I eventually made semicolons fully optional as statement terminators. There were two reasons I made them optional:
 
