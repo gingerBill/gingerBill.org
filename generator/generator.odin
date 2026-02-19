@@ -12,7 +12,7 @@ import "core:unicode/utf8"
 import "core:encoding/json"
 import "core:encoding/entity"
 import "core:mem/virtual"
-import os "core:os/os2"
+import "core:os"
 
 import cm "vendor:commonmark"
 
