@@ -72,7 +72,7 @@ The other similar thing I've seen numerous times before across numerous language
 From what I gather, this sentiment of not understanding why many "modern" languages still use semicolons is either:
 
 * From people having bad error reporting when forgetting a semicolon
-* Not liking the naïve aesthetics of semicolons
+* The naïve position of not liking the "aesthetics" of semicolons
 * From people who don't even know the very basics of parsing, nor the function of what a semicolon is in many languages (statement terminators/separators[^separators])
 
 [^separators]: Pascals initially used semicolons as statement separators, similar to using a comma, whilst languages in the C-family used semicolons as statement terminators. Eventually most Pascal compilers allowed the user to have an extra semicolon at the end, allowing them to pretend to be terminators or separators.
