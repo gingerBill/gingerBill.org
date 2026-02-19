@@ -64,7 +64,7 @@
 <span class="sidenote">I’ve always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are “obvious” once the denotational semantics are decided upon.</span>, <a href="https://en.wikipedia.org/wiki/Operational_semantics">operational semantics</a>, or <a href="https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)">algebraic semantics</a>. The issue is that many inexperienced programmers don’t have this mental distinction and think all languages are mostly the same but with just differing “syntax”. Just wait until they are exposed to a functional programming language or a database language or even find out that a spreadsheet is a language.</p>
 <p>I wrote an article in 2018 <label for="old-article" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="old-article" class="margin-toggle"></input>
-<span class="sidenote"><a href="https://gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">On the Aesthetics of the Syntax of Declarations</a></span> about the different families of declaration syntax, but it is still weird to me how people view things when deciding whether to use a language or not. To use my language Odin as an example, do people think this substantially changes the <em>semantics</em> if its declaration syntax had these different looks? At best the difference here is going to be slightly more typing needed for <code>var</code> and <code>const</code>, and thus just becomes a question of ergonomics or “optimizing for typing” (which is never the bottleneck).</p>
+<span class="sidenote"><a href="https://gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/">On the Aesthetics of the Syntax of Declarations</a></span> about the different families of declaration syntax, but it is still weird to me how people view things when deciding whether to use a language or not. To use my language Odin as an example, do people think this substantially changes the <em>semantics</em> if its declaration syntax had these different looks?</p>
 <pre><code class="odin">// Actual Odin
 x: i32 = 123
 FOO :: &#34;some constant&#34;
@@ -80,7 +80,7 @@ proc bar() -&gt; i32 {
     return 123
 }
 </code></pre>
-<p>I’d argue most of the compiler would effectively be the same for the latter approach, since it already has to disambiguate between the different kinds of declarations <label for="entities" class="margin-toggle sidenote-number"></label>
+<p>At best the difference here is going to be slightly more typing needed for <code>var</code> and <code>const</code>, and thus just becomes a question of ergonomics or “optimizing for typing” (which is never the bottleneck). I’d argue most of the compiler would effectively be the same for the latter approach, since it already has to disambiguate between the different kinds of declarations <label for="entities" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="entities" class="margin-toggle"></input>
 <span class="sidenote">Internally within the compiler, they are called <em>entities</em>. Some other compilers will use the term <em>symbol</em>, and other terms.</span>. However each syntax family does have its own trade-offs which allow or prevent certain possibilities.</p>
 <blockquote>
