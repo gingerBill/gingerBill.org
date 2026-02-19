@@ -63,7 +63,7 @@ At best the difference here is going to be slightly more typing needed for `var`
 
 > Syntax restricts the possibilities of what semantics are possible.
 
-## Semicolons in "The Current Year"
+## Semicolons? What is this, 1990?
 
 The other similar thing I've seen numerous times before across numerous languages:
 
