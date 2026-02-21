@@ -13,7 +13,7 @@
 
 <span style="font-size:2em; font-weight: bold;">Yes.</span>
 
-But not necessary in the ways you might think[^note-length].
+But not necessarily in the ways you might think[^note-length].
 
 [^note-length]: n.b. This article could have been a lot longer than it currently is.
 
@@ -534,7 +534,7 @@ y := try foo() else 123 // default value
 
 This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. The experiment also had a way to give a default value on the case of an "error": `try x else y`.
 
-When this was experimented with, there were three things which were confusing which made it look like a failure of an experiment:
+When this was experimented with, there were three things that were confusing which made it look like a failure of an experiment:
 
 * `try` was a confusing name for what the semantics were.
 * `try` as a prefix was the wrong place
