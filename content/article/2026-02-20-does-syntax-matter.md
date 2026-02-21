@@ -99,7 +99,7 @@ I've tried my best for Odin to be a very _scannable_ language along with being a
 
 Related to the [previous article](https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/), Odin's named-focused declaration syntax is unfamiliar, but the reason I chose it was not a mere aesthetic choice but rather it has massive syntactic and semantic reasons behind it.
 
-A lot of people treat familiarity as a self-sufficient argument, when in reality it is _at best_ a tie-breaker. Many languages in the past usually opted for familiarity instead of trying to improve the design of a feature or construct. Usually as a misguided attempt to keep the language being perceived as being overly complicated.
+A lot of people treat familiarity as a self-sufficient argument, when in reality it is _at best_ a tie-breaker. Many languages in the past usually opted for familiarity instead of trying to improve the design of a feature or construct. Usually as a misguided attempt to keep the from language being perceived as being overly complicated.
 
 A good example of something that should be not emulated is C's operator precedence rules. C's operator precedence rules have caused numerous bugs over the years to the point that people instinctually guard against them by putting loads of parentheses around them. For Odin, I tried to simplify the entire set so that there is only one level for prefix unary operators, and merge many of the levels for binary operators. I took inspiration from languages like Go along with numerous experiments to see what felt better for myself and others.
 
