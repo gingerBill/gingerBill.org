@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Does Syntax Matter?" />
+<meta name="twitter:description" content="Yes.But not necessary in the ways you might think   n.b. This article could have been a lot longer than it currently is..Concrete and Abstract SyntaxesIn the previous article, Choosing a Language Based on its Syntax?, I talked about how many people will not pick up a language purely based on its declaration syntax not being familiar to them or the usage of semicolons or more.There were many lovely comments about the article, but some readers wrongly interpreted the article to mean that I don&#39;t care about concrete syntax and only focus on the abstrac..." />
+ <title>Does Syntax Matter? - gingerBill</title>
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/highlight/style.css" />
+	<script src="/highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-67516878-1');
+	</script>
+</head>
+<body>
+<!-- <div class="wrapper"> -->
+<header>
+	<nav>
+		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+		<ul class="menu">
+			<li><a href="/">Home</a></li>
+			<li><a href="/article/">Articles</a></li>
+			<li><a href="https://odin-lang.org">Odin</a></li>
+			<li><a href="/article/index.xml">Subscribe</a></li>
+		</ul>
+	</nav>
+</header><main><article class="article-meta">
+<header>
+<h1>Does Syntax Matter?</h1>
+
+<div class="info" id="article-info">
+<p><span class="date">2026-02-21</span></p>
+</div>
+</header>
+<p><span style="font-size:2em; font-weight: bold;">Yes.</span></p>
+<p>But not necessary in the ways you might think <label for="note-length" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="note-length" class="margin-toggle"></input>
+<span class="sidenote">n.b. This article could have been a lot longer than it currently is.</span>.</p>
+<h2 id="heading-2-1">Concrete and Abstract Syntaxes</h2/>
+<p>In the previous article, <a href="https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/">Choosing a Language Based on its Syntax?</a>, I talked about how many people will not pick up a language purely based on its declaration syntax not being familiar to them or the usage of semicolons or more.</p>
+<p>There were many lovely comments about the article, but some readers wrongly interpreted the article to mean that I don’t care about concrete syntax and only focus on the abstract syntax. This is far from the truth and I have spent an inordinate amount of time designing Odin’s <em>concrete</em> syntax to be as best as it can be. From the littlest of things to the general idea of the concrete syntax is very important to me since this directly influences how the programmer interacts with the code and influences how they even write it.</p>
+<p>When people talk about concrete syntax, they are referring to the specific structure and rules of a programming language’s grammar as it appears to the programmer, including keywords, punctuation, and general layout. Whilst the abstract syntax represents the underlying structure of the code, focusing on the essential elements without the superficial details. This is what the parser will generate through an abstract syntax tree (AST), and then process over that.</p>
+<p>Part of the point about declaration syntaxes is that for the most part, the abstract syntax will be mostly the same and not influence the semantics too much. However I was trying my best to focus on just one aspect of a language’s syntax, not the entirety of it.</p>
+<p>Odin’s choice of name-focused declaration syntax was not a <em>mere</em> aesthetic choice either. It was about unifying different semantic concepts together. <code>:=</code> is for the declaration of runtime variables and <code>::</code> is for the declaration of compile time constants <label for="inferred-type" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="inferred-type" class="margin-toggle"></input>
+<span class="sidenote">Both with inferred types since <code>:</code> and <code>=</code> are separate operators to begin with so <code>:    =</code> or <code>:    :</code> could be written.</span>. But general compile time constant values, types, and procedure values are at the end of the day just constant expressions. They are unified under the same syntax <code>::</code>.</p>
+<p>This would mean it is the equivalent in qualifier-focused declaration syntax of having <code>var x = EXPR</code> and <code>const y = EXPR</code>, and not having <code>type</code> or <code>proc</code> distinction but for Odin, we wanted to keep the simplicity of this specific name-focused syntax and consistency of grep-ability for <code>:=</code> and <code>::</code>.</p>
+<h2 id="heading-2-2">Coherence and Consistency</h2/>
+<p>People often criticize a language’s syntax for not being “minimal” or “simple” enough. They tend to evaluate individual features in isolation, suggesting tweaks without regard for how those changes align (or conflict) with the rest of the language’s design. Coherence means the syntax expresses ideas with logical clarity and conceptual flow. Consistency means applying the same style, rules, and tone uniformly across the entire language.</p>
+<p>When I design languages (not just Odin), I always strive for both coherence and consistency in syntax and semantics. When the two cannot be fully reconciled, I choose coherence over consistency every time. A language that is conceptually clear and logically sound is far more valuable than one that is merely consistent yet lacks underlying coherence. Consistency helps programmers predict and extrapolate behaviour, but only when it rests on a foundation of genuine coherence.</p>
+<p>A language’s syntax can be very consistent but the entire logic that it represents is incoherent. The two concepts are separable ideas even if many people use the terms interchangeably. To use an example from C:</p>
+<pre><code class="c">int do_foo(Foo *ptr, size_t length);
+// vs
+int do_foo(Foo *ptr);
+</code></pre>
+<p>Both instances of <code>Foo *ptr</code> would translate to <code>ptr: ^Foo</code> in older versions of Odin. That is consistent, but it doesn’t tell us if <code>ptr</code> points to a single <code>Foo</code>, or to an array terminated by some sentinel value. For this reason we added <code>[^]</code> to tell the reader to expect a pointer to multiple elements (<code>0+</code>) of <code>Foo</code>, not a singular value. This is less consistent <label for="no-inconsistent-ish" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="no-inconsistent-ish" class="margin-toggle"></input>
+<span class="sidenote">It isn’t necessarily inconsistent to a new data type, but the semantics that go along with <a href="https://odin-lang.org/docs/overview/#multi-pointers">multi-pointers</a> might <em>seem</em> “inconsistent” depending on how you view them.</span>, and yet more coherent.</p>
+<h2 id="heading-2-3">Syntactic Diabetes</h2/>
+<p>It is common for people to ask for new syntactic sugar to “sweeten” the language so that they express something more concisely. In small amounts, a bit of syntactic sugar can be fine, but those same people have a tendency to over do things, and it very quickly leads to what I have called for many years <em>syntactic diabetes</em>.</p>
+<p>C has a few instances of sugar such as <code>a[3]</code> being a equivalent <label for="c-index-trick" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="c-index-trick" class="margin-toggle"></input>
+<span class="sidenote">Which leads to lovely “trick” of <code>3[a]</code>.</span> to <code>*(a + 3)</code> and <code>x-&gt;y</code> being equivalent to <code>(*x).y</code>, but these are very good cases of “sugar” since they do simplify and make the syntax easier to read in a concise manner. C macros can cause a lot of syntactic diabetes when abused.</p>
+<p>However some other languages have so much sugar that I’d argue is not useful in the slightest. <code>unless</code> is a construct in languages such as Perl which is syntactic sugar for the negation of an <code>if</code> statement:</p>
+<pre><code class="perl">unless (condition) {...}
+</code></pre>
+<p>being equivalent to</p>
+<pre><code class="perl">if (not condition) {...}
+</code></pre>
+<p>Swift has a similar construct with <code>guard condition else { ... }</code>. I completely understand the intent behind why such a construct is desirable but for my taste, it is completely redundant when you can just use an <code>if</code> statement, or even restructure the code such that it is not a negation of the <code>if</code> either.</p>
+<p>These things in isolation do not lead to <em>syntactic diabetes</em>, but rather when a plethora of decisions like this add up.</p>
+<h2 id="heading-2-4">Scannability vs Readability</h2/>
+<p>Many people say they value <em>readability</em> in a programming language, however I’ve found that this term is extremely overloaded and does not mean the same thing across people.</p>
+<p>There are some languages out there that I find very dense and hard to read at a glance, but many people will call such languages “readable” still. I believe this disagreement is not due to familiarity but down two different interpretations of the word <em>readable</em>: scannability and readability.</p>
+<p>Languages with a heavy dense syntax are not easy to <em>scan</em>. By scannability, I mean how easily a reader can quickly locate specific information within the code/text, often by looking for obvious keywords or patterns. Readability, on the other hand, is more of a measure of how easily a reader can understand the content with a detailed inspection.</p>
+<p>I rarely read code token-by-token from the start. Most of the time I first <em>scan</em> a codebase to get the overall shape and locate the parts I care about, then have a deep detailed read, only where necessary. Dense-syntax languages <label for="dense-languages" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="dense-languages" class="margin-toggle"></input>
+<span class="sidenote">There are quite a few languages I find to have very dense syntax, but not necessarily languages I dislike. Here is an incomplete list in alphabetical order: APL, (Modern) C++, Haskell, Perl, Rust macros, Swift, Zig. All of these languages are not easy to <em>scan</em> in real life code, but <em>intensely reading</em> them might not necessary be bad.</span> usually lack many of the strong visual cues and landmarks that other languages possess, especially those that I would typically rely on for that initial <em>scan</em>, I often find it slow and tiring to navigate such code.</p>
+<p>Languages with a soup of sigils and unusual operators actively hurt scannability. When scanning/skimming, my eyes have almost no reliable landmarks to latch onto: function calls, type conversions, error handling, and even regular arithmetic might all look disturbingly similar at a glance. This makes it much harder to quickly answer certain questions because of all of this noise.</p>
+<p>I genuinely don’t understand how people defend this from an aesthetic or practical standpoint unless their mental model of “reading code” is exclusively the slow, line-by-line, token-by-token style. For anyone who relies on fast visual scanning (which is most working programmers, most of the time), languages with very dense syntax feel like a significant step backward for day-to-day programming.</p>
+<p>I’ve tried my best for Odin to be a very <em>scannable</em> language along with being a very <em>readable</em> language too, with the syntax clearly reflecting its semantics.</p>
+<h2 id="heading-2-5">Staying With Familiarity or Breaking Away?</h2/>
+<p>Related to the <a href="https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/">previous article</a>, Odin’s named-focused declaration syntax is unfamiliar, but the reason I chose it was not a mere aesthetic choice but rather it has massive syntactic and semantic reasons behind it.</p>
+<p>A lot of people treat familiarity as a self-sufficient argument, when in reality it is <em>at best</em> a tie-breaker. Many languages in the past usually opted for familiarity instead of trying to improve the design of a feature or construct. Usually as a misguided attempt to keep the language being perceived as being overly complicated.</p>
+<p>A good example of something that should be not emulated is C’s operator precedence rules. C’s operator precedence rules have caused numerous bugs over the years to the point that people instinctually guard against them by putting loads of parentheses around them. For Odin, I tried to simplify the entire set so that there is only one level for prefix unary operators, and merge many of the levels for binary operators. I took inspiration from languages like Go along with numerous experiments to see what felt better for myself and others.</p>
+<h3 id="heading-3-6">Using <code>&lt;&gt;</code> for Generics is Harmful</h3/>
+<p>Another is people coming from a language like C++ wanting to use <code>&lt;&gt;</code> for generics. There are always better alternatives to use than <code>&lt;&gt;</code>, but people request it in languages <label for="not-odin-generics" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="not-odin-generics" class="margin-toggle"></input>
+<span class="sidenote">Not Odin, because it has a different approach to generics with its form of parametric polymorphism being <em>inline</em> rather than a separate description.</span> purely because of familiarity. <code>&lt;&gt;</code> is probably one of the worst options to use because it’s both hard for humans to read and hard for compilers to parse. This is because <code>&lt;</code> and <code>&gt;</code> are used as binary operators for comparisons and bit-shifts (<code>&lt;&lt;</code> and <code>&gt;&gt;</code>). The only reason <code>&lt;&gt;</code> appears to be used is because the meanings behind <code>()</code>, <code>{}</code>, and <code>[]</code> already have meaning, which leads to people thinking <code>&lt;&gt;</code> is the only options.</p>
+<p>However <code>&lt;</code> and <code>&gt;</code> are the worst, because they require at worst a symbol table to disambiguate how they are used, or at best a crazy grammar to workaround the possible problems. Java is an example that tried to approach this by making the syntax less consistent as it is still “mostly” a context-free grammar. C# tried to make the syntax more consistent, but required an infinite look-ahead to parse by looking ahead at <code>&lt;</code> until it can figure out how it was meant to be used.</p>
+<p>But why people want it is mostly coming from C++, and the numerous amount of issues that <code>&lt;&gt;</code> ensues. It took decades before the C++ committee allowed <code>A&lt;B&lt;C&gt;&gt;</code> to be used in a template and not having to require a space between the symbols to remove an ambiguity <code>A&lt;B&lt;C&gt; &gt;</code>.</p>
+<p>Rust’s approach is a little ugly, since it uses <code>::&lt;&gt;</code> to remove the ambiguity, but it still means that you cannot use general expressions between the <code>&lt;&gt;</code> (e.g. no binary expressions that contain <code>&lt;</code> or <code>&gt;</code>).</p>
+<p>Odin decided upon using <code>()</code> for generics because it’s just part of the procedure signature itself:</p>
+<pre><code class="odin">my_new :: proc($T: typeid, allocator: runtime.Allocator) -&gt; ^T {
+    ptr, err := mem.alloc(size_of(T), align_of(T), allocator)
+    assert(err == nil)
+    return (^T)(ptr)
+}
+
+// the &#34;template&#34; parameters are part of the procedure signature directly
+ptr := my_new(int, my_allocator)
+</code></pre>
+<p>Odin does not separate the parametric polymorphic <label for="parapoly" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="parapoly" class="margin-toggle"></input>
+<span class="sidenote">In the Odin community, parametric polymorphism is typically shortened to “parapoly” rather than use the word “generics”, since that is too “generic”.</span> parameters into a template list, unlike in C++. The <code>$</code> signifies what is to be determined at compile time. One of the reasons this was done was to prevent for partially evaluated template-like constructs in the language or overridden templates. I wanted the “generics” system to be simpler than a lot of languages, because I have found people do a lot of crazy things with generics.</p>
+<p>Odin does try to be consistent with its syntax here by applying that input list to other record types (<code>struct</code>s and tagged <code>union</code>s):</p>
+<pre><code class="odin">My_Array :: struct($N: uint, $T: typeid) {
+    internal_array: [N]T,
+}
+
+x: My_Array(1024, u8)
+
+// this literally how `Maybe` is defined in Odin
+Maybe :: union($T: typeid) { T }
+
+y: Maybe(int)
+z: Maybe(^f32) // a `nil` pointer signifies a `nil` Maybe too
+</code></pre>
+<p>Unfortunately as a choice of this syntax choice, it does have the compromise that casting syntax requires parentheses to disambiguate what is needed. <code>int(x)</code> is a trivial form of a type conversion in Odin, but when applying it to something “generic”/parapoly, it requires wrapping to remove the ambiguity in type checking:</p>
+<pre><code class="odin">(Foo(T))(expr)
+(^Foo(T))(expr)
+// vs
+^Foo(T)(expr) // this could be interpreted as a pointer to `Foo(T)(expr)`
+</code></pre>
+<h2 id="heading-2-7">Syntax Restricts the Possibilities of Semantics</h2/>
+<blockquote>
+<p>The choice of the littlest difference between <code>,</code> and <code>;</code> makes all the difference in the world.</p>
+</blockquote>
+<p>One of Odin’s general philosophies is to keep hierarchies flat as possible, and to not encourage people to make needless taxonomies with their code. Most people think they are organizing code, when in reality they are just taxonomizing it—it does not give you any real benefit. The design of Odin’s record types like <code>struct</code>s are an extension of this.</p>
+<p>In Odin, struct fields are separated by a comma rather than a semicolon/newline. This decision might seem <em>very minor</em> but the decision was to prevent something I did not want to allow in the syntax at all: nested declarations. Nested declarations naturally lead to people wanting to create hierarchies of declarations; usually as a way to taxonomize things.</p>
+<p>Normal Odin looks like this:</p>
+<pre><code class="odin">// Actual Odin syntax using commas to separate fields
+Foo :: struct {
+    x:    int,
+    y:    string,
+    z, w: bool, // trailing commas are optional
+}
+</code></pre>
+<p>The commas here are “field” separators, and in fact share identical syntax/parsing to procedure parameters too. However this is what people would intuitively expect if they wanted semicolons/newlines:</p>
+<pre><code class="odin">// Not Odin and with explicit semicolons
+Foo :: struct {
+    x:    int;
+    y:    string;
+    z, w: bool;
+}
+</code></pre>
+<p>When using semicolons (or just newlines), the fields now look <em>exactly</em> like declarations in the rest of the language. It would allow people to copy-and-paste declarations so that they can be wrapped in a struct, but it signifies that a struct is a bundle of “declarations”, rather than just a list of “fields”.</p>
+<p>Because <code>name: T;</code> looks like variable declaration, it leads to allowing other kinds of declarations within a struct, especially constants.</p>
+<pre><code class="odin">// Not Odin
+Foo :: struct {
+    MY_CONSTANT :: 123;
+    Node :: struct {
+        Another_Type :: int;
+
+        next:  ^Foo;
+        value: Another_Type;
+    };
+
+    x:    int;
+    y:    string = &#34;hellope&#34;; // default values
+    z, w: [MY_CONSTANT]bool;
+    root: Node;
+}
+</code></pre>
+<p>This might seem harmless or even useful, but it was fundamentally something I wanted to prevent from my experience in other languages. I wanted to prevent this mess of nested declarations causing numerous problems. I’ve seen really deep taxonomies that don’t even benefit their creators</p>
+<p>This also leads to the question of what happens if you allow a procedure declaration within a <code>struct</code>?</p>
+<pre><code class="odin">// Not Odin
+Foo :: struct {
+    bar :: proc() {
+        ...
+    };
+
+
+    x: int;
+    y: string;
+}
+</code></pre>
+<p>Is this nested procedure now a method of <code>Foo</code> (member function) or is it just nested within the namespace (static member function)? Or could it be both depending on the inferred usage?</p>
+<p>For Odin, I wanted it to be a strictly imperative procedural language with no direct methods. I do not have anything against methods themselves, rather Odin is a C alternative after all and I wanted to keep that procedural nature <label for="why-no-methods" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="why-no-methods" class="margin-toggle"></input>
+<span class="sidenote">If you want to read more about why Odin does not have any methods, I recommend reading the <a href="https://odin-lang.org/docs/faq/#but-really-why-does-odin-not-have-any-methods">FAQ’s section</a>.</span>. If I was to design a language with methods, I would not want <em>mere methods</em> which associate a procedure/function with a data type, but probably a full implicit type class system (similar to how generics now work in Go or traits in Rust).</p>
+<p>You could have fields which are separated by <code>,</code>, and then also allow for nested declarations which are terminated with <code>;</code>/<code>\n</code>, but I’d argue this is incoherent (yet still “consistent”) as a language design because the declaration syntax of Odin itself doesn’t really allow for it, by design. And with Odin, I’ve tried to keep its concrete syntax both consistent and coherent.</p>
+<p>The littlest of things matter because they can lead to massive consequences in the future.</p>
+<blockquote>
+<p>All of this possiblity from just deciding between using a <code>,</code> vs <code>;</code>.</p>
+</blockquote>
+<h2 id="heading-2-8">There are no Solutions, Only Trade-Offs</h2/>
+<p>There are numerous cases of language design decisions I have made which even I - as the creator of the language - do not like. Most of these fit into one of two categories:</p>
+<ul>
+<li>Multiple ways of doing the same thing, which exist for pragmatic reasons</li>
+<li>Overloaded concepts, that exist because of what people expect</li>
+</ul>
+<h3 id="heading-3-9">Multiple Ways to do the Same Thing</h3/>
+<p>One of the first things in Odin that people will encounter is the two different syntaxes to perform type conversions:</p>
+<pre><code class="odin">cast(type)value
+type(value) or (type)(value)
+</code></pre>
+<p>As much I dislike there are two different ways to do this, one of the approaches might <em>feel</em> better than the other case. If you are converting a large expression, it is sometimes a lot easier to use the operator-style approach, <code>cast(type)</code>. The call syntax is commonly used to specify a type of an expression which may be relatively short, such as <code>u32(123)</code> or <code>uintptr(ptr)</code>.</p>
+<p>But another reason is to be consistent with the other operator-like type conversion operators: <a href="https://odin-lang.org/docs/overview/#type-conversion"><code>transmute</code></a> and <a href="https://odin-lang.org/docs/overview/#auto-cast-operation"><code>auto_cast</code></a>. If I wanted to aim for <em>consistency</em> for all of the casts, I would have added a built-in procedure, which would have been:</p>
+<pre><code class="odin">cast(type, value)
+transmute(type, value)
+auto_cast(value)
+</code></pre>
+<p>But because of both what people expect from other languages, and how common casting can be, doing these style of casts everywhere would become both tiresome read to and write.</p>
+<h3 id="heading-3-10">Overloaded Concepts</h3/>
+<p>Odin has many familiar control flow statements that people from C-like languages are familiar with: <code>if</code>, <code>switch</code>, <code>for</code>, and <code>defer</code>. Compared to C and C++, <code>if</code> and <code>switch</code> are heavily improved in terms of both their syntax and semantics, but the most-overloaded statement <code>for</code>. It is effectively two kinds of loops in one: a C-style <code>for</code> loop and a for-each loop.</p>
+<p>Due to what people expect from other languages, I decided to merge the concepts, even if that means the syntax isn’t that easy to parse any more.</p>
+<p>The C-style <code>for</code> loop is like this:</p>
+<pre><code class="odin">for i := 0; i &lt; 10; i += 1 {
+    fmt.println(i)
+}
+</code></pre>
+<p><strong>Note:</strong> Unlike other languages like C, there are no parentheses <code>( )</code> surrounding the three components <label for="parentheses-decision" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="parentheses-decision" class="margin-toggle"></input>
+<span class="sidenote">This decision to remove the need for parentheses has its own compromises too that conflict with compound literals, and thus requires either adding parentheses again, or carefully using compound literals not in control flow statements.</span>. Braces <code>{ }</code> or a do are always required.</p>
+<pre><code class="odin">for i := 0; i &lt; 10; i += 1 { }
+for i := 0; i &lt; 10; i += 1 do single_statement()
+</code></pre>
+<p>The initial and post statements are optional:</p>
+<pre><code class="odin">i := 0
+for ; i &lt; 10; {
+    i += 1
+}
+</code></pre>
+<p>These semicolons can be dropped. This <code>for</code> loop is equivalent to C’s <code>while</code> loop:</p>
+<pre><code class="odin">i := 0
+for i &lt; 10 {
+    i += 1
+}
+</code></pre>
+<p>If the condition is omitted, this produces an infinite loop:</p>
+<pre><code class="odin">for {
+}
+</code></pre>
+<p>All of this is familiar to C programmers, but the overloading aspect is how the same keyword (<code>for</code>) can now be used to refer to range-based loops. For example the basic <code>for</code> loop:</p>
+<pre><code class="odin">for i := 0; i &lt; 10; i += 1 {
+    fmt.println(i)
+}
+</code></pre>
+<p>can now be written as:</p>
+<pre><code class="odin">for i in 0..&lt;10 {
+    fmt.println(i)
+}
+// or
+for i in 0..=9 {
+    fmt.println(i)
+}
+</code></pre>
+<p>Where <code>a..=b</code> denotes <code>a</code> closed interval <code>[a,b]</code>, i.e. the upper limit is inclusive, and <code>a..&lt;b</code> denotes a half-open interval <code>[a,b)</code>, i.e. the upper limit is exclusive. Certain built-in types can be iterated over.</p>
+<pre><code class="odin">some_string := &#34;Hello, 世界&#34;
+for character in some_string {
+    fmt.println(character)
+}
+
+some_array := [3]int{1, 4, 9}
+for value, index in some_array {
+    fmt.println(value, index)
+}
+
+// etc
+</code></pre>
+<p>The problem is that these concepts are fundamentally different and overload <code>for</code> too much. If I wanted to separate them, this ranged based <code>for</code> loop would use something like a <code>for_each</code> keyword <label for="odin-done" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="odin-done" class="margin-toggle"></input>
+<span class="sidenote">Odin is not changing its syntax to add a <code>for_each</code> keyword. Odin as a language is effectively done and been for quite some time.</span>, but because people naturally want the <code>for x in y</code> style, I just decided to break the <em>consistency</em> of separation of concepts, and kept to <em>coherency</em> of expectations and programmer intuition.</p>
+<h2 id="heading-2-11">Odin’s Procedure Signature Syntax</h2/>
+<p>Due to C’s “declaration matches usage” syntax, as I have written about in previous articles, C’s procedure/function syntax is quite a bit difficult to write unless you know exactly how to do things. When designing Odin’s procedure signature syntax, it took me a little bit of work, as I wanted it to be consistent and coherent with the rest of the language, whilst also having the maximal amount of possibilities. I did not want to make the same mistakes as C.</p>
+<p>The following is a general table of possibilities that could be chosen when designing a name-focused signature syntax.</p>
+<p>Three things should be noted as to why some fields are “blank”:</p>
+<ul>
+<li>No significant whitespace</li>
+<li>Keep the property that <code>(T) == T</code> where parentheses are just used for grouping expressions and have no extra semantic meaning</li>
+<li><code>-&gt;</code> is used to disambiguate between the return values and a “call” expression
+<ul>
+<li>e.g. <code>(foo) (x)</code> would be a call expression, not a procedure definition as I do not want significant whitespace, and when <code>proc</code> is not used as prefix</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Prefix/Odin</th>
+<th>Require Return Type</th>
+<th>Return Named Inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empty Procedure</td>
+<td><code>proc()</code></td>
+<td><code>() -&gt; void</code></td>
+<td><code>()</code></td>
+</tr>
+<tr>
+<td>1 input, unnamed</td>
+<td><code>proc(int)</code></td>
+<td><code>(int) -&gt; void</code></td>
+<td></td>
+</tr>
+<tr>
+<td>1 input, named</td>
+<td><code>proc(x: int)</code></td>
+<td><code>(x: int) -&gt; void</code></td>
+<td><code>(x: int)</code></td>
+</tr>
+<tr>
+<td>1 input, 1 output</td>
+<td><code>proc(int) -&gt; int</code></td>
+<td><code>(x: int) -&gt; int</code></td>
+<td><code>(x: int) -&gt; int</code></td>
+</tr>
+<tr>
+<td>2 inputs, 2 unnamed outputs</td>
+<td><code>proc(int, int) -&gt; (int, int)</code></td>
+<td><code>(int, int) -&gt; (int, int)</code></td>
+<td><code>(x: int, y: int) -&gt; (int, int)</code></td>
+</tr>
+<tr>
+<td>0 inputs, 2 named outputs</td>
+<td><code>proc() -&gt; (a: int, b: int)</code></td>
+<td><code>() -&gt; (a: int, b: int)</code></td>
+<td></td>
+</tr>
+<tr>
+<td>2 inputs, 2 outputs, all named</td>
+<td><code>proc(a, b: int) -&gt; (c, d: int)</code></td>
+<td><code>(a, b: int) -&gt; (c, d: int)</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Prefix/Odin Style:</p>
+<ul>
+<li>Advantages: Allows for any approach and any style of a procedure signature</li>
+<li>Disadvantages: Requires an extra keyword or sigil</li>
+</ul>
+<p>Require Return Type Style:</p>
+<ul>
+<li>Advantages: Allows for most approaches of a procedure signature</li>
+<li>Disadvantages: Requires the concept of <code>void</code> (or 0-tuple) in the language</li>
+</ul>
+<p>Return Named Inputs:</p>
+<ul>
+<li>Advantages: Does not require the concept of <code>void</code> in the language, allows for the return value to be omitted</li>
+<li>Disadvantages: It’s worse than the other two styles in every other way</li>
+</ul>
+<p>I made a gist of this a while ago with a list of examples where an ambiguity can arise depending on which approach is used:</p>
+<p><a href="https://gist.github.com/gingerBill/27aec0cd434f2be58d024dccef6e8d13" class="direct">https://gist.github.com/gingerBill/27aec0cd434f2be58d024dccef6e8d13</a></p>
+<p>One of the other reasons to prefer using a <code>proc</code> prefix is to be consistent with the other data types within the language. Things like <code>struct</code>, <code>union</code>, <code>enum</code>, <code>bit_set</code>, and <code>bit_field</code> all start with a keyword to signify, so why should a procedure be treated any differently? Keeping <code>proc</code> maintains the coherency of Odin’s syntax, and allows people to easily “grep” things and understand the general flow.</p>
+<pre><code class="odin">Some_Struct    :: struct      { ... }
+Some_Union     :: union       { ... }
+Some_Enum      :: enum        { ... }
+Some_Bit_Field :: bit_field T { ... }
+Some_Bit_Set   :: bit_set[T]
+Some_Proc      :: proc()
+</code></pre>
+<p>If procedures had no <code>proc</code> prefix, there would be an inconsistency across those kinds of data types <label for="pascal-arrays" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="pascal-arrays" class="margin-toggle"></input>
+<span class="sidenote">I did not want to go full Pascal-like with <code>array N of T</code> and <code>pointer of T</code> prefixes when <code>[N]T</code> and <code>^T</code>, respectively, are just as easy to understand.</span>.</p>
+<p>As I found out when designing Odin, a lot of people struggle to see punctuation and much prefer keywords, and also the other way around. Sadly I cannot please everyone, but I’ve tried to keep a nice middle ground between the two. Not to lean too heavily into keywords like a traditional Pascal-like, or too punctuation-heavy like many ML-like languages.</p>
+<h3 id="heading-3-12">A Subtle Issue with Type-Focused Signature Syntax</h3/>
+<p>This might not seem like a huge issue, but it syntax restricts semantics here. If you want C-style type-focused syntax for procedures, you cannot necessarily define the syntax to return the procedure type itself. This can be quite useful for certain state-machine like problems.</p>
+<p>In Odin’s syntax, this is pretty simple to do:</p>
+<pre><code class="odin">State_Proc :: proc(s: ^State) -&gt; State_Proc
+
+for sp: State_Proc = ...; sp != nil; sp = sp(s) {
+    ...
+}
+</code></pre>
+<p>and the equivalent in C would be this:</p>
+<pre><code class="c">typedef void *State_Proc(State *s);
+
+for (State_Proc *sp = ...; sp != NULL; sp = (State_Proc *)sp(s)) {
+    ...
+}
+</code></pre>
+<h2 id="heading-2-13">Auto Dereferencing for Convenience</h2/>
+<p>When programming in C and C++, the programmer must know whether a field is a value, or accessed through a pointer. <code>x.y</code> implies that <code>x</code> is not a pointer whilst <code>x-&gt;y</code> means <code>x</code> is a pointer <label for="field-shorthand" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="field-shorthand" class="margin-toggle"></input>
+<span class="sidenote">Where <code>x-&gt;y</code> is just shorthand for <code>(*x).y</code> in C/C++.</span>. However when programming, this distinction can get quite annoying when refactoring code between values and pointers. The compiler even knows this and gives error messages depending on which mistake was made.</p>
+<p>For Odin, I decided to just infer the dereference and make it more convenient. <code>x^.y</code> is equivalent of C’s <code>x-&gt;y</code> but because of the auto-dereferencing, the programmer can just type <code>x.y</code> if <code>x</code> is a pointer. For further levels of indirection, e.g. <code>^^^T</code>, explicit dereferencing will still be required.</p>
+<h2 id="heading-2-14">Things Which Appear to be Inconsistent at First</h2/>
+<p>I’ve sometimes had people ask why slice expressions use <code>:</code> instead of the range syntax (<code>..&lt;</code> and <code>..=</code>) that already exists in Odin. It might seem like an “oversight”, but there are specific reasons the syntax was chosen.</p>
+<ul>
+<li>It is the same syntax as Go and Python, making it familiar to others who are used to those languages. Another example of leaning into the familiarity bias.</li>
+<li>It aesthetically allows for partial ranges
+<ul>
+<li><code>x[:]</code>, <code>x[:n]</code>, <code>x[i:]</code></li>
+</ul>
+</li>
+<li>Partial ranges with <em>two</em> range expressions (<code>a..&lt;b</code> and <code>a..=b</code>) are aesthetically unpleasant, as well as inconsistent.
+<ul>
+<li><code>x[..&lt;]</code>, <code>x[..=]</code>, <code>x[..&lt;n]</code>, <code>x[..=n]</code>, <code>x[i..&lt;]</code>, <code>x[i..=]</code>,</li>
+</ul>
+</li>
+<li>Virtually all slicing cases only ever require the Python/Go like semantics because Odin is a 0-index language. <code>..=</code> style ranges are useless, if not error prone.</li>
+<li>Ranges in Odin are only allowed in <a href="https://odin-lang.org/docs/overview/#other-operators">a limited number of specific contexts</a>, namely range-based <code>for</code> loops, <code>switch</code> <code>case</code>s, <code>bit_set</code> definitions, and compound literals.</li>
+</ul>
+<p>Even though some people would allow the concept of a range to work <em>everywhere</em>, they are implicitly adding another rule/axiom to the design to unify this concept, which would not benefit the programmer much in practice (and probably be error prone).</p>
+<p>An inconsistency here would only happen if they were the exact same idea, rather that they <em>could</em> be unified. And since they are separate ideas, there is no inconsistency.</p>
+<h2 id="heading-2-15">Testing Hypotheses</h2/>
+<p>Odin has multiple return values as a core feature of the language. A large use case of multiple return values (not the sole case) is to return an error code/value as one of the values <label for="result-type" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="result-type" class="margin-toggle"></input>
+<span class="sidenote">Please don’t bring up <code>Result</code> types, Odin is not that kind of language and they would not necessarily be as pragmatically useful as you’d think, nor would they work in the way you’d expect given the other semantics of the Odin language.</span>.</p>
+<p>Sometimes it is useful to propagate error values within a library by early returning if that value was <code>false</code> or not <code>nil</code>. This is a similar vein to Rust’s <code>try!</code> which became <code>?</code>, or Zig’s <code>try</code>, etc. What came of this in Odin was the <code>or_return</code> operator and the other related keywords (<code>or_break</code>, <code>or_continue</code>, and <code>or_else</code>).</p>
+<h3 id="heading-3-16">The Problem and Hypothesis</h3/>
+<p>The hypothesis was that this idiom was common:</p>
+<pre><code class="odin">x, err := foo()
+if err != nil {
+    return err
+}
+</code></pre>
+<p>Where <code>err</code> may be an <code>enum</code>, a (discriminated/tagged) <code>union</code>, or any other kind of value that can be <code>nil</code>. I originally experimented with replacing this pattern with the following syntax:</p>
+<pre><code class="odin">// Not Odin any more
+x := try foo()
+y := try foo() else 123 // default value
+</code></pre>
+<p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. The experiment also had a way to give a default value on the case of an “error”: <code>try x else y</code>.</p>
+<p>When this was experimented with, there were three things which were confusing which made it look like a failure of an experiment:</p>
+<ul>
+<li><code>try</code> was a confusing name for what the semantics were.</li>
+<li><code>try</code> as a prefix was the wrong place</li>
+<li>Trying to using <code>try</code> with <code>try else</code> was a bad idea for many reasons.</li>
+</ul>
+<p>The concept of <code>try</code> worked <label for="or_return_semantics" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="or_return_semantics" class="margin-toggle"></input>
+<span class="sidenote"><code>or_return</code> works exactly the same, and that was the final language construct.</span> by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty return could be called. Now <code>try</code> has be replaced with the suffix operator <code>or_return</code>.</p>
+<p>However I found that the problem wasn’t the semantics of the construct, but rather the syntax itself. First I added a new binary operator <code>or_else</code> which replaced the <code>try else</code> syntax. Most people understood what the purpose and semantics <code>or_else</code> pretty intuitively but many were very confused regarding the semantics of <code>try</code>. My conclusion was that the keyword-name and positioning were the main culprits for that. This let me to replace the prefix <code>try</code> with a suffix <code>or_return</code> <label for="or_return_more_detail" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="or_return_more_detail" class="margin-toggle"></input>
+<span class="sidenote">If you would like to read more about this, I wrote about this at the time: <a href="https://www.gingerbill.org/article/2021/09/06/value-propagation-experiment-part-2/">https://www.gingerbill.org/article/2021/09/06/value-propagation-experiment-part-2/</a></span>. This resulted in the following:</p>
+<pre><code class="odin">x := foo() or_return
+y := foo() or_else 123
+</code></pre>
+<p>Another aspect which of this approach was that I thought the construct was probably not as common as I originally thought. And for my codebases (including most of Odin’s core library), this was true. However this hypothesis was false for many codebases, including package <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big"><code>core:math/big</code></a>. In the package <a href="https://github.com/odin-lang/Odin/tree/master/core/math/big"><code>core:math/big</code></a> alone, <code>or_return</code> was able to replace 350+ instances of <code>if err != nil { return }</code> idioms.</p>
+<p>What we found was that the more C-like a library was in terms of its design, the more it required this <code>or_return</code> construct. It appears that when a package needs it, it <em>REALLY</em> needs it. When the correction was made, those 350+ instances of <code>or_return</code> in a (at the time) ~3900 LOC is ~9% of (non-blank) lines of code. That’s a useful construct for definite.</p>
+<h3 id="heading-3-17">Degenerate States</h3/>
+<p>Some people may be a little surprised with my original experimentation with this exception-like shorthand with error values. Especially since I wrote an article (which was originally two GitHub comments) titled: <a href="https://www.gingerbill.org/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/">Exceptions—And Why Odin Will Never Have Them</a>.</p>
+<p>One thing I did not comment on in the that article is the cause of the problem (other than the cultural issues). My hypothesis is that if you have a degenerate type (type erasure or automatic inference), then if a value can convert to it implicitly (easily), people will (ab)use it.</p>
+<p>In languages with exceptions, all exception values can degenerate to the “base type”. In Rust, it can either go to the base <code>trait</code> or be inferred parametrically. In Zig it can either do <code>anyerror</code> or it will infer the error set from usage. Go has the built-in interface type <code>error</code> which acts as the common degenerate value.</p>
+<p>As I discuss in that <a href="https://www.gingerbill.org/article/2018/09/05/exceptions---and-why-odin-will-never-have-them/">article</a>, I am not against error value propagation <em>within a library</em>, but I am pretty much always against it across library boundaries. A degenerate state has high entropy and a lack of specific information. And due to this form of type erasure, “downcasting” (broad use of term) is a way to recover the information, but it assumes implicit information which is not known in the type system itself.</p>
+<p>The other issue when people pass the error up the stack for someone else to handle (something I criticize in the previous article already) is that it’s common to see this in many codebases already that have such a type: Go, Rust, and Zig (public) codebases exhibit this a lot.</p>
+<p>And my hypothesis for this phenomenon is due to the very nature of this “degenerative type”.</p>
+<p>Design judgement had to be made when designing a language: is such a concept worth it for the problems it intrinsically has; for Odin, I did not think it was worth it. In Odin, errors are just values, and not something special. For other languages? That’s another thing. For Odin, I have found that having an error value type defined per package is absolutely fine (and ergonomic too), and minimizes, but cannot remove, the problem value propagation across library boundaries.</p>
+<p>I do believe that my general hypotheses are still correct regarding exception-like error value handling. The main points being:</p>
+<ul>
+<li>Error value propagation <em>ACROSS</em> library boundaries <label for="pokemon-catching" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="pokemon-catching" class="margin-toggle"></input>
+<span class="sidenote">People are lazy and have a tendency to never actually handle errors so having a degenerate state for errors usually causes the errors to “bubble up” so you can “Catch ’em All” in one place—Pokémon error handling.</span></li>
+<li><em>Degenerate states</em> due to type erasure or automatic inference</li>
+<li>Cultural lack of partial success states</li>
+</ul>
+<p>The most important one is the degenerate state issue, where all values can degenerate to a single type. It appears that you and many others pretty much only want to know if there was an error value or not and then pass that up the stack, writing your code as if it was purely the happy path and then handling any error value. Contrasting with Go, Go a built-in concept of an <code>error</code> interface, and all <code>error</code> values degenerate to this interface. In practice from what I have seen of many Go programmers, most people just don’t handle error values and just pass them up the stack to a very high place and then pretty much handle any error state as they are all the same degenerate value: “error or not”. This is now equivalent to a fancy boolean.</p>
+<h3 id="heading-3-18">The Choice of Syntax</h3/>
+<p>The language constructs <code>or_return</code> etc were one of those things where the semantics (denotational and operational) were completely obvious but how to represent that in <em>concrete</em> syntax was the problem. And what I expected to be what people would like (i.e. <code>try</code>) turned out to be confusing in both what the language semantics were for that syntax, and noisy reading the prefix.</p>
+<p>If you are designing a language in isolation without consulting others, you will not know what mental biases you have with regards to that syntax. Since you are the creator, everything is “obvious”, but other people think different to you. Sometimes you can just model most people’s minds yourself but sometimes you actually have to test it in the real world, and the results can be surprising.</p>
+<h2 id="heading-2-19">Conclusion</h2/>
+<p>Designing a language is more than just getting the syntax right, and denotation semantics are a lot more important in most ways, but that does not mean syntax does not matter. When you get syntax right, people won’t even know you’ve done anything at all. But when you’ve got it wrong (and have actually tried using the language), they will complain instantly.</p>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+<!-- </div> -->
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+	(function addHeadingLinks(){
+		let article = document.getElementsByClassName('article-meta')[0];
+		let headings = article.querySelectorAll('h1, h2, h3');
+		headings.forEach(function(heading){
+			if (heading.id) {
+				let a = document.createElement('a');
+				a.innerHTML = heading.innerHTML;
+				a.href = '#'+heading.id;
+				heading.innerHTML = '';
+				heading.appendChild(a);
+			}
+		});
+	})();
+</script>
+</html>

@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Does Syntax Matter?</title>
+		<link>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</link>
+		<guid>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</guid>
+		<pubDate>Sat, 21 Feb 2026 09:00:00 +0000</pubDate>
+		<description>Yes.But not necessary in the ways you might think  n.b. This article could have been a lot longer than it currently is..Concrete and Abstract SyntaxesIn the previous article, Choosing a Language Based on its Syntax?, I talked about how many people will not pick up a language purely based on its declaration syntax not being familiar to them or the usage of semicolons or more.There were many lovely comments about the article, but some readers wrongly interpreted the article to mean that I don;t care about concrete syntax and only focus on the abstrac...</description>
+	</item>
+	<item>
 		<title>Choosing a Language Based on its Syntax?</title>
 		<link>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</guid>
