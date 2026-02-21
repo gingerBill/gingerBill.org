@@ -287,6 +287,10 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 			margin_note_text := text[i+2:]
 
 			i = strings.index(margin_note_text, "]")
+			if i == 0 {
+				text = margin_note_text[i+1:]
+				continue
+			}
 			assert(i > 0, "invalid margin_note syntax")
 			margin_note_label := margin_note_text[:i]
 			if margin_note_text[i+1] == ':' {
@@ -344,6 +348,11 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 			margin_note_text := text[i+2:]
 
 			i = strings.index(margin_note_text, "]")
+			if i == 0 {
+				io.write_string(w, "[^]")
+				text = margin_note_text[i+1:]
+				continue
+			}
 			assert(i > 0, "invalid margin_note syntax")
 			margin_note_label := margin_note_text[:i]
 			if margin_note_text[i+1] == ':' {
