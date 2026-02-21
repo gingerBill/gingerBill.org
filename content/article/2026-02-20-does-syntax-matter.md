@@ -540,7 +540,7 @@ When this was experimented with, there were three things which were confusing wh
 * `try` as a prefix was the wrong place
 * Trying to using `try` with `try else` was a bad idea for many reasons.
 
-The concept of `try` worked[^or_return_semantics] by popping off the end value in a multiple valued expression and checking whether it was `nil` or `false`, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, `try` required that they were all named so that the end value could be assigned to by name and then an empty return could be called. Now `try` has be replaced with the suffix operator `or_return`.
+The concept of `try` worked[^or_return_semantics] by popping off the end value in a multiple valued expression and checking whether it was `nil` or `false`, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, `try` required that they were all named so that the end value could be assigned to by name and then an empty return could be called. Now `try` has been replaced with the suffix operator `or_return`.
 
 [^or_return_semantics]: `or_return` works exactly the same, and that was the final language construct.
 
