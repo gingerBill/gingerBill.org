@@ -8,6 +8,9 @@
         "programming language theory",
         "programming language design",
     ],
+    series: [
+        "Syntax and how it Matters",
+    ],
 }
 ---
 

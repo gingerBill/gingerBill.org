@@ -9,6 +9,9 @@
         "programming language design",
         "people",
     ],
+    series: [
+        "Syntax and how it Matters",
+    ],
 }
 ---
 
