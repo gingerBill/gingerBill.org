@@ -12,7 +12,9 @@
 }
 ---
 
-I am still perplexed by how people judge a language purely by its **_declaration_** syntax, and will decide whether to use the language purely based on whether they like that aspect or not.
+I am still perplexed by how people judge a language purely by its **_declaration_** syntax, and will decide whether to use the language purely based on whether they like that aspect or not[^edit-note].
+
+[^edit-note]: I am specifically talking about **_declaration_** syntax here and not other aspects of concrete syntax. Please do not extrapolate further.
 
 The general categories of declarations can be classified as the following:
 
@@ -25,7 +27,9 @@ When designing a language, if your semantics are pretty clear you can trivially 
 [^compiler-bias]: I probably do have a bias, in that I know how compilers work, but even when I didn't understand, I chose languages based on my need, not on whether they "looked good".
 
 
-## Syntax Doesn't Matter Until it Does
+## Declaration Syntax Doesn't Matter Until it Does
+
+> **Edit**: Concrete syntax does matter a lot which is why I've had to write a follow-up article to explain why: [Does Syntax Matter?](https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/)
 
 A programming language is not _merely_ its syntax. _Semantics_ actually exist, be that [denotation semantics](https://en.wikipedia.org/wiki/Denotational_semantics)[^important], [operational semantics](https://en.wikipedia.org/wiki/Operational_semantics), or [algebraic semantics](https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)). The issue is that many inexperienced programmers don't have this mental distinction and think all languages are mostly the same but with just differing "syntax". Just wait until they are exposed to a functional programming language or a database language, or even find out that a spreadsheet is a language.
 
