@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Choosing a Language Based on its Syntax?" />
-<meta name="twitter:description" content="I am still perplexed by how people judge a language purely by its declaration syntax, and will decide whether to use the language purely based on whether they like that aspect or not.The general categories of declarations can be classified as the following:---type-focused---name-focused---qualifier-focusedWhen designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a la..." />
+<meta name="twitter:description" content="I am still perplexed by how people judge a language purely by its declaration syntax, and will decide whether to use the language purely based on whether they like that aspect or not   I am specifically talking about declaration syntax here and not other aspects of concrete syntax. Please do not extrapolate further..The general categories of declarations can be classified as the following:---type-focused---name-focused---qualifier-focusedWhen designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and th..." />
  <title>Choosing a Language Based on its Syntax? - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -48,7 +48,9 @@
 <p><span class="date">2026-02-19</span></p>
 </div>
 </header>
-<p>I am still perplexed by how people judge a language purely by its <strong><em>declaration</em></strong> syntax, and will decide whether to use the language purely based on whether they like that aspect or not.</p>
+<p>I am still perplexed by how people judge a language purely by its <strong><em>declaration</em></strong> syntax, and will decide whether to use the language purely based on whether they like that aspect or not <label for="edit-note" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="edit-note" class="margin-toggle"></input>
+<span class="sidenote">I am specifically talking about <strong><em>declaration</em></strong> syntax here and not other aspects of concrete syntax. Please do not extrapolate further.</span>.</p>
 <p>The general categories of declarations can be classified as the following:</p>
 <ul>
 <li><code>type name = value</code>—type-focused</li>
@@ -58,7 +60,10 @@
 <p>When designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the semantics of the language will be mostly the same (if not identical). People seriously think the declaration syntax is what gives a language its “character”. I do not get this train of thought in the slightest <label for="compiler-bias" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="compiler-bias" class="margin-toggle"></input>
 <span class="sidenote">I probably do have a bias, in that I know how compilers work, but even when I didn’t understand, I chose languages based on my need, not on whether they “looked good”.</span>.</p>
-<h2 id="heading-2-1">Syntax Doesn’t Matter Until it Does</h2/>
+<h2 id="heading-2-1">Declaration Syntax Doesn’t Matter Until it Does</h2/>
+<blockquote>
+<p><strong>Edit</strong>: Concrete syntax does matter a lot which is why I’ve had to write a follow-up article to explain why: <a href="https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/">Does Syntax Matter?</a></p>
+</blockquote>
 <p>A programming language is not <em>merely</em> its syntax. <em>Semantics</em> actually exist, be that <a href="https://en.wikipedia.org/wiki/Denotational_semantics">denotation semantics</a> <label for="important" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="important" class="margin-toggle"></input>
 <span class="sidenote">I’ve always found that focusing on the denotational semantics of a language is more important than focusing on the operational semantics because (for me at least) the operational semantics are “obvious” once the denotational semantics are decided upon.</span>, <a href="https://en.wikipedia.org/wiki/Operational_semantics">operational semantics</a>, or <a href="https://en.wikipedia.org/wiki/Algebraic_semantics_(computer_science)">algebraic semantics</a>. The issue is that many inexperienced programmers don’t have this mental distinction and think all languages are mostly the same but with just differing “syntax”. Just wait until they are exposed to a functional programming language or a database language, or even find out that a spreadsheet is a language.</p>
