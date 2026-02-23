@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Designing Odin's Casting Syntax</title>
+		<link>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</link>
+		<guid>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</guid>
+		<pubDate>Mon, 23 Feb 2026 09:00:00 +0000</pubDate>
+		<description>Odin;s declaration syntax becomes second nature to everyone who uses the language but I do sometimes get asked ;Why are there two ways to do type conversions?;  Enough that I had to make an FAQ entry..The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, . The call syntax is commonly used to specify a type of an expression which may be relatively short such as  or .There are...</description>
+	</item>
+	<item>
 		<title>Does Syntax Matter?</title>
 		<link>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</guid>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Designing Odin's Casting Syntax" />
+<meta name="twitter:description" content="Odin&#39;s declaration syntax becomes second nature to everyone who uses the language but I do sometimes get asked &#34;Why are there two ways to do type conversions?&#34;   Enough that I had to make an FAQ entry..The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, . The call syntax is commonly used to specify a type of an expression which may be relatively short such as  or .There are..." />
+ <title>Designing Odin's Casting Syntax - gingerBill</title>
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/highlight/style.css" />
+	<script src="/highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-67516878-1');
+	</script>
+</head>
+<body>
+<!-- <div class="wrapper"> -->
+<header>
+	<nav>
+		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+		<ul class="menu">
+			<li><a href="/">Home</a></li>
+			<li><a href="/article/">Articles</a></li>
+			<li><a href="https://odin-lang.org">Odin</a></li>
+			<li><a href="/article/index.xml">Subscribe</a></li>
+		</ul>
+	</nav>
+</header><main><article class="article-meta">
+<header>
+<h1>Designing Odin’s Casting Syntax</h1>
+
+<div class="info" id="article-info">
+<p><span class="series">Series:</span> <a href="/series/syntax-and-how-it-matters">Syntax and how it Matters</a></p>
+<p><span class="date">2026-02-23</span></p>
+</div>
+</header>
+<p>Odin’s declaration syntax becomes second nature to everyone who uses the language but I do sometimes get asked <a href="https://odin-lang.org/docs/faq/#why-are-there-two-ways-to-do-type-conversions">“Why are there two ways to do type conversions?”</a> <label for="faq" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="faq" class="margin-toggle"></input>
+<span class="sidenote">Enough that I had to make an FAQ entry.</span>.</p>
+<pre><code class="odin">cast(type)value
+type(value) or (type)(value)
+</code></pre>
+<p>The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, <code>cast(type)</code>. The call syntax is commonly used to specify a type of an expression which may be relatively short such as <code>u32(123)</code> or <code>uintptr(ptr)</code>.</p>
+<p>There are two other type conversion operators, <a href="https://odin-lang.org/docs/overview/#type-conversion">transmute</a> and <a href="https://odin-lang.org/docs/overview/#auto-cast-operation">auto_cast</a>.</p>
+<p>The general design of this took a lot of trial and error in the early days with people giving me feedback about what felt right and wrong.</p>
+<h2 id="heading-2-1">The Syntax Ideas</h2/>
+<p>Verbosity is actually a problem when you realize how much noise casting produces when you have to do it a lot, especially in a language like Odin with distinct typing (i.e. there is very little implicit type conversions, even between integers, meaning you need to do explicit casts).</p>
+<p>I went through a plethora of different syntax for Odin’s type casting:</p>
+<pre><code>x as T
+x.(T) // now used for type assertions
+cast(x, T)
+cast(T, x)
+cast(T)x // used
+T(x)     // used
+(T)(x)   // used
+// and a few more but they were just too bad to mention
+</code></pre>
+<p>One thing to consider is the need for parentheses and how that can actually cause issues in terms of scannability and ergonomics (not typing but flow). The <code>cast(T, x)</code> like syntaxes actually required <em>more</em> parentheses in practice that you might realize.</p>
+<h2 id="heading-2-2">Reflecting on the Semantics of Declarations</h2/>
+<p>The flow aspect was actually interesting because I wanted the syntax to match the semantics more correctly and I found that the type must be on the left of the expression since that is how declarations work too: <code>name: type = value</code>, so a cast would make sense that way too: <code>name := type(value)</code>. This also turned out to be a similar realization in languages like Newsqueak (where that declaration syntax originates from) and Ada. This actually ruled out a lot of the other syntax options as a result.</p>
+<p>But before that, I experimenting with <code>x as T</code> because it <em>seemed</em> like a good idea but turned out to be a mess because of precedence rules. Either <code>as</code> was “tight” towards the expression meaning you then had to use a lot of parentheses to be clear what was being cast, or you had it very “loose” towards the expression which lead to the same problem. <code>as</code> didn’t reduce the need for parentheses in practice and only led to confusion with precedence.</p>
+<p>I then reused <code>x.(T)</code> syntax for the type assertions. One because it has some familiarity from Go but also because the “type” itself is the tag in the <code>union</code>, making it feel more like a field access using a type. The parentheses around the type in this case are necessary to remove any ambiguity syntactically and semantically.</p>
+<h2 id="heading-2-3">Optimizing for the Common Use Case</h2/>
+<p>This then lead to the possibilities of <code>T(x)</code>, <code>cast(T)x</code> and <code>cast(T, x)</code>. Odin’s type system is a bit different to other languages so sometimes people don’t always realize the consequences. A good example of this is with the constant value system. <code>123</code> is an “untyped” number (existential typing if we are being accurate, but that confuses people so I stuck to the terminology of “untyped”), and you sometimes want this to be a specific type. Many languages “solve” this by having suffixes on literals e.g. <code>123i32</code> <label for="imaginary" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="imaginary" class="margin-toggle"></input>
+<span class="sidenote">Odin also supports imaginary numbers so that could have been tokenized as <code>123i</code> thus being a little ambiguous.</span>, but this is not an option in Odin because of <code>distinct</code> typing allows anyone to create their own <code>distinct</code> form of a type <label for="distinct-types" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="distinct-types" class="margin-toggle"></input>
+<span class="sidenote">For more information on <code>distinct</code> types, check the overview: <a href="https://odin-lang.org/docs/overview/#distinct-types">https://odin-lang.org/docs/overview/#distinct-types</a></span>. So if I wanted to keep that syntax short for the most common use case of casting, <code>T(x)</code> was unironically the best option possible.</p>
+<p>For when a prefix style of casting was desired, doing <code>cast(T, x)</code> wasn’t really aiding in reading any more than <code>cast(T)x</code>. I also didn’t want then to be built-in procedures because that actually means they would not be keywords but identifiers, since even <code>i32</code> in Odin is an identifier and not a keyword. So if I wanted them to be a features of the languages using keywords, making them procedure calls felt very wrong.</p>
+<h2 id="heading-2-4">Scannability is Very Important</h2/>
+<p>As I say in the <a href="https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/">previous article</a>, I will stick to coherency over consistency if necessary, and this was on of those cases. And I didn’t want to fall into the trap that some languages have done which makes the entire thing <em>unscannable</em>. Zig is a “great” example of a language with poor scannability due to its very dense and sigil-heavy syntax. And it having way too many casting operations (17+ IIRC) does not help this matter any better, nor does not actually give any real benefit in the long run to anyone (even the compiler). A real world example of this syntactic mess <label for="syntactic-diabetes" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="syntactic-diabetes" class="margin-toggle"></input>
+<span class="sidenote">I am not sure what to call this but it’s the exact opposute of syntactic diabetes.</span>:</p>
+<pre><code class="zig">const gap: f32 = @divTrunc(@as(f32, @floatFromInt(rl.getScreenWidth() - (4 * objectWidth))), 5.0);
+const offsetX: f32 = @as(f32, @floatFromInt(index + 1)) * gap + @as(f32, @floatFromInt(index)) * @as(f32, @floatFromInt(objectWidth));
+</code></pre>
+<p>The equivalent in Odin would be written as this:</p>
+<pre><code class="odin">gap := math.trunc(f32(rl.GetScreenWidth() - 4 * objectWidth) / 5)
+offsetX := f32(index+1) * gap + f32(index)*f32(objectWidth)
+</code></pre>
+<p>Note that were many of the parentheses exist in Odin, most would already exist any way, and thus all you are doing is annotating the grouped expressions with a specific type.</p>
+<h2 id="heading-2-5">Design as a Human Endeavour</h2/>
+<p>All I can say is, humans are odd creatures and you’ll be surprised how they think in practice. Design is about understanding humans. How they function, mentally and physically. Their perception, psychology, sociology, physiology, ergonomics, needs, desires, etc. It’s all about being able to put yourself in other people’s shoes, more than making <em>the thing</em>.</p>
+<p>Designing a programming language is no exception to this. Syntax is how we express the semantics we want in a program. It’s the interface to the code itself. The littlest of things matter and they do add up when you have so many little things.</p>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+<!-- </div> -->
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+	(function addHeadingLinks(){
+		let article = document.getElementsByClassName('article-meta')[0];
+		let headings = article.querySelectorAll('h1, h2, h3');
+		headings.forEach(function(heading){
+			if (heading.id) {
+				let a = document.createElement('a');
+				a.innerHTML = heading.innerHTML;
+				a.href = '#'+heading.id;
+				heading.innerHTML = '';
+				heading.appendChild(a);
+			}
+		});
+	})();
+</script>
+</html>
