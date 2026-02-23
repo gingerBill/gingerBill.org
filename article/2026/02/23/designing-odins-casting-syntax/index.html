@@ -58,7 +58,19 @@ type(value) or (type)(value)
 <p>The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, <code>cast(type)</code>. The call syntax is commonly used to specify a type of an expression which may be relatively short such as <code>u32(123)</code> or <code>uintptr(ptr)</code>.</p>
 <p>There are two other type conversion operators, <a href="https://odin-lang.org/docs/overview/#type-conversion">transmute</a> and <a href="https://odin-lang.org/docs/overview/#auto-cast-operation">auto_cast</a>.</p>
 <p>The general design of this took a lot of trial and error in the early days with people giving me feedback about what felt right and wrong.</p>
-<h2 id="heading-2-1">The Syntax Ideas</h2/>
+<h2 id="heading-2-1">Departing From C’s Syntax</h2/>
+<p>In C, type conversions use the following syntax <code>(type)value</code>. The problem with this syntax is that it requires a context-sensitive grammar to determine whether the expression of <code>type</code> is actually a type whilst parsing. Since Odin is designed to be a context-free grammar, this syntax is not possible. There are a few reasons this is not possible:</p>
+<ul>
+<li>Odin’s idea that <code>(x) == x</code>, and the parentheses are just for grouping expressions, and has no semantic meaning.</li>
+<li>Ambiguity in contexts like <code>(a)+b</code>
+<ul>
+<li>Is that a type cast or a binary expression?</li>
+</ul>
+</li>
+<li>Not necessarily that obvious when <em>scanning</em> code.</li>
+</ul>
+<p>As I discuss in the <a href="https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/">previous article</a>, sometimes it is good to keep to familiar syntax but if the parsing is awful or the underlying semantics wants the syntax to be something else, then departing from the familiar is usually the way to go. Be coherent with the language you are designing, not with some other language that is not this one.</p>
+<h2 id="heading-2-2">The Syntax Ideas</h2/>
 <p>Verbosity is actually a problem when you realize how much noise casting produces when you have to do it a lot, especially in a language like Odin with distinct typing (i.e. there is very little implicit type conversions, even between integers, meaning you need to do explicit casts).</p>
 <p>I went through a plethora of different syntax for Odin’s type casting:</p>
 <pre><code>x as T
@@ -71,11 +83,11 @@ T(x)     // used
 // and a few more but they were just too bad to mention
 </code></pre>
 <p>One thing to consider is the need for parentheses and how that can actually cause issues in terms of scannability and ergonomics (not typing but flow). The <code>cast(T, x)</code> like syntaxes actually required <em>more</em> parentheses in practice that you might realize.</p>
-<h2 id="heading-2-2">Reflecting on the Semantics of Declarations</h2/>
+<h2 id="heading-2-3">Reflecting on the Semantics of Declarations</h2/>
 <p>The flow aspect was actually interesting because I wanted the syntax to match the semantics more correctly and I found that the type must be on the left of the expression since that is how declarations work too: <code>name: type = value</code>, so a cast would make sense that way too: <code>name := type(value)</code>. This also turned out to be a similar realization in languages like Newsqueak (where that declaration syntax originates from) and Ada. This actually ruled out a lot of the other syntax options as a result.</p>
 <p>But before that, I experimenting with <code>x as T</code> because it <em>seemed</em> like a good idea but turned out to be a mess because of precedence rules. Either <code>as</code> was “tight” towards the expression meaning you then had to use a lot of parentheses to be clear what was being cast, or you had it very “loose” towards the expression which lead to the same problem. <code>as</code> didn’t reduce the need for parentheses in practice and only led to confusion with precedence.</p>
 <p>I then reused <code>x.(T)</code> syntax for the type assertions. One because it has some familiarity from Go but also because the “type” itself is the tag in the <code>union</code>, making it feel more like a field access using a type. The parentheses around the type in this case are necessary to remove any ambiguity syntactically and semantically.</p>
-<h2 id="heading-2-3">Optimizing for the Common Use Case</h2/>
+<h2 id="heading-2-4">Optimizing for the Common Use Case</h2/>
 <p>This then lead to the possibilities of <code>T(x)</code>, <code>cast(T)x</code> and <code>cast(T, x)</code>. Odin’s type system is a bit different to other languages so sometimes people don’t always realize the consequences. A good example of this is with the constant value system. <code>123</code> is an “untyped” number (existential typing if we are being accurate, but that confuses people so I stuck to the terminology of “untyped”), and you sometimes want this to be a specific type. Many languages “solve” this by having suffixes on literals e.g. <code>123i32</code> <label for="imaginary" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="imaginary" class="margin-toggle"></input>
 <span class="sidenote">Odin also supports imaginary numbers so that could have been tokenized as <code>123i</code> thus being a little ambiguous.</span>, but this is not an option in Odin because of <code>distinct</code> typing allows anyone to create their own <code>distinct</code> form of a type <label for="distinct-types" class="margin-toggle sidenote-number"></label>
@@ -84,7 +96,7 @@ T(x)     // used
 <p>For when a prefix style of casting was desired, doing <code>cast(T, x)</code> wasn’t really aiding in reading any more than <code>cast(T)x</code>. I also didn’t want then to be built-in procedures because that actually means they would not be keywords but identifiers, since even <code>i32</code> in Odin is an identifier <label for="builtins" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="builtins" class="margin-toggle"></input>
 <span class="sidenote">I did not want to have something as common and as important as casting operations be mere <code>builtin</code> procedures like <code>len</code> or <code>size_of</code>.</span> and not a keyword. So if I wanted them to be a features of the languages using keywords, making them procedure calls felt very wrong. It might not be the most “robust” of justifications but that is because it is fundamentally about designing for humans and what they like, not some preconceived notion of “consistency”.</p>
-<h2 id="heading-2-4">Scannability is Very Important</h2/>
+<h2 id="heading-2-5">Scannability is Very Important</h2/>
 <p>As I say in the <a href="https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/">previous article</a>, I will stick to coherency over consistency if necessary, and this was on of those cases. And I didn’t want to fall into the trap that some languages have done which makes the entire thing <em>unscannable</em>. Zig is a “great” example of a language with poor scannability due to its very dense and sigil-heavy syntax. And it having way too many casting operations (17+ IIRC) does not help this matter any better, nor does not actually give any real benefit in the long run to anyone (even the compiler). A real world example of this syntactic mess <label for="syntactic-diabetes" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="syntactic-diabetes" class="margin-toggle"></input>
 <span class="sidenote">I am not sure what to call this but it’s the exact opposute of syntactic diabetes.</span>:</p>
@@ -96,7 +108,7 @@ const offsetX: f32 = @as(f32, @floatFromInt(index + 1)) * gap + @as(f32, @floatF
 offsetX := f32(index+1) * gap + f32(index)*f32(objectWidth)
 </code></pre>
 <p>Note that where many of the parentheses exist in that Odin snippet, most would already exist any way without the explicit casting, and thus all you are doing is annotating the grouped expressions with a specific type.</p>
-<h2 id="heading-2-5">Design as a Human Endeavour</h2/>
+<h2 id="heading-2-6">Design as a Human Endeavour</h2/>
 <p>All I can say is, humans are odd creatures and you’ll be surprised how they think in practice. Design is about understanding humans. How they function, mentally and physically. Their perception, psychology, sociology, physiology, ergonomics, needs, desires, etc. It’s all about being able to put yourself in other people’s shoes, more than making <em>the thing</em>.</p>
 <p>Designing a programming language is no exception to this. Syntax is how we express the semantics we want in a program. It’s the interface to the code itself. The littlest of things matter and they do add up when you have so many little things.</p>
 </article></main>
