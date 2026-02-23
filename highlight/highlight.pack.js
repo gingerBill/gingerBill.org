@@ -1060,7 +1060,27 @@ hljs.registerLanguage("odin", function(e) {
     var t = {
         keyword: "align_of asm auto_cast bit_field bit_set break case cast const context continue defer distinct do dynamic else enum fallthrough for foreign if import in inline macro map matrix no_inline not_in notin offset_of offset_of_by_string opaque or_break or_continue or_else or_return try package proc return size_of struct switch transmute type_info_of type_of typeid typeid_of union using when where",
         literal: "true false nil",
-        built_in: "abs cap clamp complex compress_values conj expand_values imag jmag kmag len max min quaternion raw_data real soa_unzip soa_zip swizzle unreachable"
+        built_in: "abs cap clamp complex compress_values conj expand_values imag jmag kmag len max min quaternion raw_data real soa_unzip soa_zip swizzle unreachable" +
+        " uint int uintptr rawptr" +
+        " string cstring" +
+        " string16 cstring16" +
+        " rune" +
+        " any" +
+        " typeid" +
+        " byte" +
+        " u8 u16 u32 u64 u128" +
+        " i8 i16 i32 i64 i128" +
+        " u16le u32le u64le u128le" +
+        " i16le i32le i64le i128le" +
+        " u16be u32be u64be u128be" +
+        " i16be i32be i64be i128be" +
+        " f16 f32 f64" +
+        " f16le f32le f64le" +
+        " f16be f32be f64be" +
+        " bool b8 b16 b32 b64" +
+        " complex32 complex64 complex128" +
+        " quaternion64 quaternion128 quaternion256" +
+        " "
     };
     return {
         aliases: ["odin", "odinlang", "odin-lang"],
