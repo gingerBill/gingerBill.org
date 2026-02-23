@@ -30,6 +30,17 @@ There are two other type conversion operators, [transmute](https://odin-lang.org
 
 The general design of this took a lot of trial and error in the early days with people giving me feedback about what felt right and wrong.
 
+## Departing From C's Syntax
+
+In C, type conversions use the following syntax `(type)value`. The problem with this syntax is that it requires a context-sensitive grammar to determine whether the expression of `type` is actually a type whilst parsing. Since Odin is designed to be a context-free grammar, this syntax is not possible. There are a few reasons this is not possible:
+
+* Odin's idea that `(x) == x`, and the parentheses are just for grouping expressions, and has no semantic meaning.
+* Ambiguity in contexts like `(a)+b`
+  * Is that a type cast or a binary expression?
+* Not necessarily that obvious when _scanning_ code.
+
+As I discuss in the [previous article](https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/), sometimes it is good to keep to familiar syntax but if the parsing is awful or the underlying semantics wants the syntax to be something else, then departing from the familiar is usually the way to go. Be coherent with the language you are designing, not with some other language that is not this one.
+
 ## The Syntax Ideas
 
 Verbosity is actually a problem when you realize how much noise casting produces when you have to do it a lot, especially in a language like Odin with distinct typing (i.e. there is very little implicit type conversions, even between integers, meaning you need to do explicit casts).
