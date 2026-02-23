@@ -93,7 +93,7 @@ const offsetX: f32 = @as(f32, @floatFromInt(index + 1)) * gap + @as(f32, @floatF
 <pre><code class="odin">gap := math.trunc(f32(rl.GetScreenWidth() - 4 * objectWidth) / 5)
 offsetX := f32(index+1) * gap + f32(index)*f32(objectWidth)
 </code></pre>
-<p>Note that were many of the parentheses exist in Odin, most would already exist any way, and thus all you are doing is annotating the grouped expressions with a specific type.</p>
+<p>Note that where many of the parentheses exist in that Odin snippet, most would already exist any way without the explicit casting, and thus all you are doing is annotating the grouped expressions with a specific type.</p>
 <h2 id="heading-2-5">Design as a Human Endeavour</h2/>
 <p>All I can say is, humans are odd creatures and you’ll be surprised how they think in practice. Design is about understanding humans. How they function, mentally and physically. Their perception, psychology, sociology, physiology, ergonomics, needs, desires, etc. It’s all about being able to put yourself in other people’s shoes, more than making <em>the thing</em>.</p>
 <p>Designing a programming language is no exception to this. Syntax is how we express the semantics we want in a program. It’s the interface to the code itself. The littlest of things matter and they do add up when you have so many little things.</p>
