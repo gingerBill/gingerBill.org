@@ -108,9 +108,10 @@ A good example of something that should be not emulated is C's operator preceden
 
 ### Using `<>` for Generics is Harmful
 
-Another is people coming from a language like C++ wanting to use `<>` for generics. There are always better alternatives to use than `<>`, but people request it in languages[^not-odin-generics] purely because of familiarity. `<>` is probably one of the worst options to use because it's both hard for humans to read and hard for compilers to parse. This is because `<` and `>` are used as binary operators for comparisons and bit-shifts (`<<` and `>>`). The only reason `<>` appears to be used is because the meanings behind `()`, `{}`, and `[]` already have meaning, which leads to people thinking `<>` is the only options.
+Another is people coming from a language like C++ wanting to use `<>` for generics. There are always better alternatives to use than `<>`, but people request it in languages[^not-odin-generics] purely because of familiarity. `<>` is probably one of the worst options to use because it's both hard for humans to read and hard for compilers to parse. This is because `<` and `>` are used as binary operators for comparisons and bit-shifts (`<<` and `>>`). The only reason `<>` appears to be used is because the meanings behind `()`, `{}`, and `[]` already have meaning, which leads to people thinking `<>` is the only options[^other-options].
 
 [^not-odin-generics]: Not Odin, because it has a different approach to generics with its form of parametric polymorphism being _inline_ rather than a separate description.
+[^other-options]: A good article on this same topic [Language Design: Stop Using `<>` for Generics](https://soc.me/languages/stop-using-angle-brackets-for-generics)
 
 However `<` and `>` are the worst, because they require at worst a symbol table to disambiguate how they are used, or at best a crazy grammar to workaround the possible problems. Java is an example that tried to approach this by making the syntax less consistent as it is still "mostly" a context-free grammar. C# tried to make the syntax more consistent, but required an infinite look-ahead to parse by looking ahead at `<` until it can figure out how it was meant to be used.
 
