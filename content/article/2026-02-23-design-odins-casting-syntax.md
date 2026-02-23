@@ -84,7 +84,7 @@ The equivalent in Odin would be written as this:
 gap := math.trunc(f32(rl.GetScreenWidth() - 4 * objectWidth) / 5)
 offsetX := f32(index+1) * gap + f32(index)*f32(objectWidth)
 ```
-Note that were many of the parentheses exist in Odin, most would already exist any way, and thus all you are doing is annotating the grouped expressions with a specific type.
+Note that where many of the parentheses exist in that Odin snippet, most would already exist any way without the explicit casting, and thus all you are doing is annotating the grouped expressions with a specific type.
 
 ## Design as a Human Endeavour
 
