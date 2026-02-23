@@ -65,7 +65,9 @@ This then lead to the possibilities of `T(x)`, `cast(T)x` and `cast(T, x)`. Odin
 [^distinct-types]: For more information on `distinct` types, check the overview: <https://odin-lang.org/docs/overview/#distinct-types>
 
 
-For when a prefix style of casting was desired, doing `cast(T, x)` wasn't really aiding in reading any more than `cast(T)x`. I also didn't want then to be built-in procedures because that actually means they would not be keywords but identifiers, since even `i32` in Odin is an identifier and not a keyword. So if I wanted them to be a features of the languages using keywords, making them procedure calls felt very wrong.
+For when a prefix style of casting was desired, doing `cast(T, x)` wasn't really aiding in reading any more than `cast(T)x`. I also didn't want then to be built-in procedures because that actually means they would not be keywords but identifiers, since even `i32` in Odin is an identifier[^builtins] and not a keyword. So if I wanted them to be a features of the languages using keywords, making them procedure calls felt very wrong. It might not be the most "robust" of justifications but that is because it is fundamentally about designing for humans and what they like, not some preconceived notion of "consistency".
+
+[^builtins]: I did not want to have something as common and as important as casting operations be mere `builtin` procedures like `len` or `size_of`.
 
 ## Scannability is Very Important
 
