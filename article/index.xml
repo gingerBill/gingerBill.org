@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Odin's Fiasco with Wikipedia</title>
+		<link>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</link>
+		<guid>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</guid>
+		<pubDate>Mon, 20 Apr 2026 09:00:00 +0000</pubDate>
+		<description>Recently, Brodie Robertson produced a video on the Bizarre World of Wikipedia Deleting Programming Pages. I highly recommend watching the video.I thank Brodie for covering the Wikipedia fiasco for Odin. We don;t particularly care if Odin is on Wikipedia or not; especially when Wikipedia itself is rarely reliable, but we;ve been dealing with Wikipedia mods for years. Our best hypothesis is quite simple: some of the mods just don;t like Odin as a language and don;t want it on Wikipedia as any form of ;advertisement;.Wikipedia in gen...</description>
+	</item>
+	<item>
 		<title>Designing Odin's Casting Syntax</title>
 		<link>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</guid>
