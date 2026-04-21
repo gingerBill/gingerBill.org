@@ -33,13 +33,24 @@ The Wikipedia comments regarding deletion saying that anyone can make a language
 
 [^wait-to-see]: If they honestly believe making a production-grade programming language is that easy, I cannot wait for them to make one. And see how long it takes them.
 
-The problem is that the "Programming Community" really lacks any real and well respected journal or discussion of things in general. It really is the Wild Wild West. Sources such as "peer reviewed papers" of programming topics specifically are not necessarily reputable nor reliable[^peer-review]. Most of the old "reputable sources" are just that: old. No one really reads them, and many of them become places to just advertise specific products and topics. Or focus on whatever is in the hype-cycle that week. Why are certain websites more reputable than others? Who determines that?—especially if no one regularly reads them any more.
+I'm not concerned about the deletion itself, even as the creator of the programming language, but rather I am concerned about the criteria used, and how they are a poor fit for the programming domain.
+
+"Reliable sources" in programming are scarce. The examples cited in the comments of that deletion discussion are either sparsely read or not even general-programming-related. The field simply lacks well-respected journals or forums for serious discussion: it's the Wild Wild West. Peer-reviewed papers on programming topics specifically are not necessarily reputable or reliable[^peer-review]. Most of the old "reputable sources" are exactly that: _old_. Few people read them anymore, and many have devolved into product advertising or chasing the latest hype-cycle. Who decides which websites are more authoritative than others, especially when no one is regularly reading them?
+
+A lot that exists today just has tenured inertia of being there, uncontested for so long that that the uncontestation is the only thing notable about them to begin with. Applied consistently, these criteria would warrant removing over 90% of programming-related articles from Wikipedia. I don't want that, but it would be the logical outcome.
+
+This isn't a plea to reinstate the article. It's a request to reconsider how these rules apply to the programming domain.
 
 And to use the "whataboutism", other programming languages have sources which I would never class as reputable in the slightest, but they probably belong to a list of sites/sources made years ago when those sites/sources might have been viewed as "reputable". My hypothesis that some mods just do not like Odin (or myself) is kind of shown in one of the comments even referring to me as "cult leader". I'd love to be shown some reputable article documenting this accusation[^evidence].
 
 [^peer-review]: I am not talking about peer reviewed papers in general in other fields which do not act the same as programming. But "Peer Review", something that didn't exist until the 1960s, isn't the be all and end all of reputability or fountain of wisdom. However, I'll leave that discussion for another day.
 
 [^evidence]: Or any evidence for that matter.
+
+
+
+
+
 
 Many people think Odin is ["just for games"](https://odin-lang.org/docs/faq/#is-odin-just-a-language-for-game-development) at the moment, but that tells you more about the people who say that than Odin itself. This is especially true when gamedev is pretty much the most wide domain possible where you will do virtually every area of programming possible. Odin is a general purpose language; is capable of being used in numerous different areas from application development, servers, graphics, games, kernels, CLI/TUIs, etc.
 
