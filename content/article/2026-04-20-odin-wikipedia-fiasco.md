@@ -63,7 +63,7 @@ That leaves us in a difficult position. If we apply the rules strictly, we exclu
 
 To use the "whataboutism"[^wax], other programming languages have sources which I would never class as reputable in the slightest, but they probably belong to a list of sites/sources made years ago when those sites/sources might have been viewed as "reputable". My hypothesis that some mods just do not like Odin (or myself) is kind of shown in one of the comments even referring to me as "cult leader". I'd love to be shown some reputable article documenting this accusation—or any evidence for that matter.
 
-[^wax]: [WAX (What About X?)](https://en.wikipedia.org/wiki/Wikipedia:Arguments_to_avoid_in_deletion_discussions#What_about_article_X?) is a common way Wikipedia moderators dismiss valid complaints when their rules are not being consistently, as I talk about previously.
+[^wax]: [WAX (What About X?)](https://en.wikipedia.org/wiki/Wikipedia:Arguments_to_avoid_in_deletion_discussions#What_about_article_X?) is a common way Wikipedia moderators dismiss valid complaints when their rules are not consistently applied, as I talk about previously.
 
 [^peer-review]: I am not talking about peer reviewed papers in general in other fields which do not act the same as programming. But "Peer Review", something that didn't exist until the 1960s, isn't the be all and end all of reputability or fountain of wisdom. However, I'll leave that discussion for another day.
 
