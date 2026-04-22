@@ -33,11 +33,15 @@ I started Odin nearly 10 years ago now[^i-feel-old], and it was never meant to b
 
 [^i-feel-old]: I started Odin in July 2016... I feel old now.
 
-## The Ill-Fitted Criteria for Programming
-
 The Wikipedia comments regarding deletion saying that anyone can make a language is true, but those are usually mere toys, and cannot be used for anything useful[^wait-to-see]. I am grateful that these Wikipedia mods state everything in public, so that we can actually see what their opinions are for everyone to see.
 
 [^wait-to-see]: If they honestly believe making a production-grade programming language is that easy, I cannot wait for them to make one. And see how long it takes them.
+
+## The Ill-Fitted Criteria for Programming
+
+> This section was originally part of a Twitter/X conversation with [Jimmy Wales](https://en.wikipedia.org/wiki/Jimmy_Wales) (the co-founder of Wikipedia):
+> * <https://x.com/TheGingerBill/status/2046645621944365148>
+> * <https://x.com/TheGingerBill/status/2046679545361973370>
 
 I'm not concerned about the deletion itself, even as the creator of the programming language, but rather I am concerned about the criteria used, and how they are a poor fit for the programming domain.
 
