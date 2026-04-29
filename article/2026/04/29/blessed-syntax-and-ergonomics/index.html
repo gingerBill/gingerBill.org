@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Blessed Syntax and Ergonomics" />
+<meta name="twitter:description" content="I have seen a common remark from people who are not the biggest fans of Odin and it is usually the remark that Odin is &#34;full of sugar&#34; which only works for the &#34;blessed types&#34; and it cannot be replaced or implemented for user-level types. Firstly, I don&#39;t think this is necessarily an example of &#34;sugar&#34; since that term implies it is shortening a construct / feature / idea into something smaller, whilst a lot of the ideas in Odin that would be classed as &#34;blessed syntax&#34; by such people would not be classed &#34;sugar&#34..." />
+ <title>Blessed Syntax and Ergonomics - gingerBill</title>
+	<link rel="stylesheet" href="/css/normalize.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/highlight/style.css" />
+	<script src="/highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-67516878-1');
+	</script>
+</head>
+<body>
+<!-- <div class="wrapper"> -->
+<header>
+	<nav>
+		<h1 id="logo"><a href="/"><span class="ginger">ginger</span>Bill</a></h1>
+		<ul class="menu">
+			<li><a href="/">Home</a></li>
+			<li><a href="/article/">Articles</a></li>
+			<li><a href="https://odin-lang.org">Odin</a></li>
+			<li><a href="/article/index.xml">Subscribe</a></li>
+		</ul>
+	</nav>
+</header><main><article class="article-meta">
+<header>
+<h1>Blessed Syntax and Ergonomics</h1>
+
+<div class="info" id="article-info">
+<p><span class="date">2026-04-29</span></p>
+</div>
+</header>
+<p>I have seen a common remark from people who are not the biggest fans of Odin and it is usually the remark that Odin is “full of sugar” which only works for the “blessed types” and it cannot be replaced or implemented for user-level types. Firstly, I don’t think this is necessarily an example of “sugar” since that term implies it is shortening a construct / feature / idea into something smaller, whilst a lot of the ideas in Odin that would be classed as “blessed syntax” by such people would not be classed “sugar” by virtually anyone else.</p>
+<p>This decision to “bless” built-in types with the “blessed syntax” was not a mistake.</p>
+<p>I wanted that explicitly because I know what the alternative is and the problems that arise from having it. Odin isn’t trying to be the next C++ or Rust by allowing for arbitrary syntax for all custom data types. It’s just trying to solve the average common case <em>very well</em>, rather than allowing the ability to solve “everything” <em>poorly</em> which leads to the problems of dialects and poor defaults.</p>
+<h2 id="heading-2-1">Case Study: String Types</h2/>
+<p>I’ll start with a  specific example of a need to swap out the default string type. One such case would be the need for a string type that has inlined-data for small strings but still has the same <em>interaction</em> syntax as another/default string type. I’d easily argue that this is an “optimization” of a problem that should not have happened in the first place.</p>
+<p>It is an indirect consequence of both automatic-memory-management (which means defaulting to “the heap”) <em>AND</em> treating strings as an overloaded construct of the string value, string builder, and the backing buffer for a string <label for="string-article" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="string-article" class="margin-toggle"></input>
+<span class="sidenote">I’ve written an article on this too: <a href="https://www.gingerbill.org/article/2024/04/05/string-type-distinctions/">String Type Distinctions</a>.</span>. I remember when Facebook did a similar “optimization” for their string <label for="facebook-yt" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="facebook-yt" class="margin-toggle"></input>
+<span class="sidenote"><a href="https://www.youtube.com/watch?v=kPR8h4-qZdk%3E">CppCon 2016: Nicholas Ormrod “The strange details of std::string at Facebook”</a></span> and found a ~1% reduction in memory usage, which is not small at their scale, however it did show how strings were being used. Now that’s because their string type was an amalgamation of a builder and value and backing (<code>ptr+len+cap</code>). But it did allow their inlining amount allowed for more embedding because they had so many extra fields to “overlap” with.</p>
+<p>A popular user-library in Rust is <a href="https://docs.rs/cold-string/latest/cold_string/"><code>cold_string::ColdString</code></a>, and its approach to this “optimization” is a little more interesting because it’s opting for using only a tagged pointer which is either inline an ASCII (not WTF-8) string or points to a Pascal String. As long as the string is &lt;= 7 bytes and ASCII (on 64-bit machines), then the <code>ColdString</code> does minimize heap memory usage (assuming a lot of common strings are small).</p>
+<p>Odin’s <code>string</code> type was chosen as the default because at most it “wastes” an extra 8-9 bytes and allows for trivial substring creation. But because Odin is a manual memory managed language, you are free to choose how that memory is allocated. Whilst in Rust, things are much more assumed to be “automatic” most of the time, and thus heap will be the general default <label for="rust-allocations" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="rust-allocations" class="margin-toggle"></input>
+<span class="sidenote">Rust does allow for a global custom allocator, or general manual memory management, but it’s not what is encourage by the design of the language itself.</span>.</p>
+<p>Odin also has ways to allow for struct fields to be interpreted at runtime as if they are a string if they want to be used by serializers/formatted-printing, which also helps with the usage. Rust has this too but in a much more specific macro approach (and thus preferred to be compile time). Thus separating the serialization aspects of the type from the type itself.</p>
+<h2 id="heading-2-2">Arrays—What Always Happens</h2/>
+<p>What is interesting is that the common examples of user-level data structures that people want with what you call “blessed syntax” are virtually always some sort of custom array type. It is rare that people want this for anything BUT an array-like data structure, and when they do want something different, I’d argue it is <em>always</em> a bad idea to give it any form of “blessed syntax” <label for="lisp-fans" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="lisp-fans" class="margin-toggle"></input>
+<span class="sidenote">LISP Enjoyers will clearly disagree with me here, but we do have different philosophical approaches to programming in general, and thus this disagreement.</span>.</p>
+<p>But this raises the question of what should be allowed to be user-defined and what should not be. The first is operator overloading for indexing. In Odin, this would mean at a minimal allowing for overloading <code>[]</code> as three different forms:</p>
+<ol>
+<li><code>[]</code>  for rvalue access (e.g. <code>x[i]</code>)</li>
+<li><code>&amp;[]</code> for lvalue access (e.g. <code>&amp;x[i]</code>)</li>
+<li><code>[]=</code> for assignments (e.g. <code>x[i] = y</code>)</li>
+</ol>
+<p>C++ sadly does not make a distinction between (2) and (3), and has heavily suffered from this poor decision. But since Odin has other array indexing operations such as slicing (<code>x[:]</code>, <code>x[lo:hi]</code>, etc) and matrix indexing (<code>m[row, col]</code>), it means you’d have to add to the list of things you could overload, leading to about 7 different overloading operations (but only 4 in practice would be used).</p>
+<p>There is also the question of compound literals to initialize array-like data structures too, which means the overloading behaviour now has to become a lot more complicated, and might be “easier” to do this in a macro system rather than normal syntax.</p>
+<h2 id="heading-2-3">Odin’s Alternative to Operator Overloading</h2/>
+<p>When I designed Odin, I thought what do the vast majority of people use operator overloading from in practice, and just implement that directly into the language—solving the common case rather than the general case. And from my research, the general use cases fell into two categories:</p>
+<ul>
+<li>Overloading for mathematical types</li>
+<li>Overloading for array-like data structures (including strings and hash maps)</li>
+</ul>
+<p>For mathematical types, Odin supports array programming natively, complex numbers, matrices <label for="matrix-layout" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="matrix-layout" class="margin-toggle"></input>
+<span class="sidenote">Matrices are “dense” in Odin and allocated inline “on the stack”. This decision was made because generalized matrices which are larger than a certain size are better optimized with a different memory layout and access patterns.</span>, and <code>#simd</code> operations. In general, this solved the vast vast majority of needs for mathematical types in the language, and even gets better optimizations for those cases by default because the language has native semantics for them.</p>
+<p>For array-like data structures, Odin has a lot of built-in data structures which cover the common cases:</p>
+<ul>
+<li>fixed-length arrays <code>[N]T</code></li>
+<li>slices <code>[]T</code></li>
+<li>dynamic arrays <code>[dynamic]T</code></li>
+<li>fixed-capacity dynamic arrays <code>[dynamic; N]T</code></li>
+<li><code>#soa</code> variants of the above</li>
+<li>multi-pointers <code>[^]T</code></li>
+<li>simd-vectors <code>#simd[N]T</code></li>
+<li>hash maps <code>map[K]V</code></li>
+<li>enumerated arrays <code>[Enum]T</code></li>
+<li>matrices <code>matrix[R, C]T</code> <label for="overlap" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="overlap" class="margin-toggle"></input>
+<span class="sidenote">Note there is some overlap with fixed-length arrays, simd-vectors, and matrices which apply to mathematical types too.</span></li>
+</ul>
+<p>Beyond <code>[N]T</code>, everything else could hypothetically <label for="multi-pointers" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="multi-pointers" class="margin-toggle"></input>
+<span class="sidenote"></span> be implemeted in a language with “more control” over user-defined syntax, however it would suffer in many aspects.</p>
+<p><strong>n.b.</strong> A huge reason why the Odin compiler is written in C++ rather than C is because I wanted proper array types with runtime bounds checking. Other than that and other very minor things, my style of C++ is very C-like.</p>
+<h3 id="heading-3-4">Slices</h3/>
+<p>The first example would be slices <code>[]T</code>. A lot of the slicing operations would not be able to be trivially optimized by a compiler if it was a user-level defined type, and especially not be optimized in development builds. A good example of this is the idiom <code>x[off:][:len]</code>, which replaces a lot of the need that (bounded) pointer arithmetic would in a C-like language. This operation in the Odin compiler is optimized into a single <code>x[off:off+len]</code> which would not be trivially done so in a generalized approach. Having it be language-level does reduces the amount of runtime bounds checking that has to be done since the compiler can trivially optimize such tests from two tests into one (or even more if it is chained).</p>
+<h3 id="heading-3-5">Hash Maps</h3/>
+<p>Hash maps <code>map[K]V</code> are another in which the semantics could not be easily dealt with when it comes how keys are defined. In Odin, a hash map accepts any type that is <em>comparable</em> as its key. This is because anything that is <em>comparable</em> can be <em>hashable</em>. If this was user-definable, the user would either have to:</p>
+<ul>
+<li>explicitly pass the comparison function and hashing function manually</li>
+<li>overload operators and/or traits for or comparisons and hashing</li>
+<li>just rely on a default hashing approach.</li>
+</ul>
+<p>Odin’s approach is to deal with the common case but not making too many assumptions due to it being a manual-memory-managed language <label for="string-map" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="string-map" class="margin-toggle"></input>
+<span class="sidenote">A good example of this is <code>map[string]V</code>. <code>map</code> does not “manage” the memory of the <code>string</code> based keys. The user is responsible for managing that memory. If it did managed it, it would be an exception of the general case which would not be consistent for other things (e.g. strings within a comparable struct).</span>. The way Odin works is that the comparable types will have a default hash function generated for them any time they are used as a <code>map</code> key (this hash function <em>cannot</em> be overrided, by design). It does mean that the hashing function might not be the optimal one for every use case, but it will be more than good enough for the vast majority of cases. If a user actually needs something more specialized for the hash map, then it is recommend you do not use the default one and use a custom variant, and have that syntax be obvious it is something custom.</p>
+<h3 id="heading-3-6">Enumerated Arrays</h3/>
+<p>And lastly <a href="https://odin-lang.org/docs/overview/#enumerated-array">enumerated arrays</a> are a great example of something which is not <em>trivially</em> implemented at the user-level. Enumerated arrays allow the user of an <code>enum</code> to be used as indices to a fixed-length array. This is a very common idiom in C but is not strongly typed checked by the compiler.</p>
+<pre><code class="odin">Direction :: enum{North, East, South, West}
+
+Direction_Vectors :: [Direction][2]int {
+    .North = {  0, -1 },
+    .East  = { +1,  0 },
+    .South = {  0, +1 },
+    .West  = { -1,  0 },
+}
+
+assert(Direction_Vectors[.North] == { 0, -1 })
+assert(Direction_Vectors[.East] == { 1, 0 })
+assert(Direction_Vectors[cast(Direction) 2] == { 0, 1 })
+</code></pre>
+<p>The indexing syntax could be trivially allowed with operator overloading however the compound literal syntax would not be. By default, a compound literal for an enumerated array must be <em>complete</em>, meaning all of the cases must be initialized, and only use <code>key=value</code> pairs. Other arrays in Odin allow for both positional values (which must be complete) and <code>key=value</code> paris (which can be “partial”), but enumerated arrays are very different.</p>
+<pre><code class="odin">arr: [enum {A, B, C}]int
+arr = #partial { // without partial the compiler would complain
+    .A = 42,
+}
+fmt.println(arr) // [.A = 42, .B = 0, .C = 0]
+</code></pre>
+<p>As I stated, of course all of this is possible in a hypothetical language, but none of it would be “trivial” nor necessarily a good idea.</p>
+<h3 id="heading-3-7">Bit Sets</h3/>
+<p>Odin supports other data types which could be “hypothetically implemented” at the user level and a great example of this is the <a href="https://odin-lang.org/docs/overview/#bit-sets"><code>bit_set</code></a>. They don’t really fall into the array-like category since they do not support indexing but they can be iterated across. And they have a “blessed syntax” because of how useful they are. Unironically <code>bit_set</code> usually becomes a lot of people’s favourite thing about Odin because it solves a very common problem of using enums for flags without overloading the usage of the enum with the flag of an enum.</p>
+<p>Bit sets are a very old idea which can be seen in the original Pascal. It’s very sad that C never had such a type, but that’s probably because C didn’t really have a concept of an enum type either, just a grouping of constants which implicitly incremented by <code>1</code>.</p>
+<h2 id="heading-2-8">For Loops as “Blessed Syntax”</h2/>
+<p>Regarding <code>for</code> loops, I have written on this before where there is a possible case for macros in Odin to allow for the custom iteration through push-based iterators: <a href="https://www.gingerbill.org/article/2025/07/31/if-odin-had-macros/">If Odin Had Macros</a>. Odin’s current approach to custom iterators is to just call a procedure with multiple return values (pull-based iterator). Construction, iteration, and destruction is made explicit for these custom operations. Yes it does mean “refactoring” from the default type to the new custom type is now “more work”, but it’s also probably a better indicator of something else going on. Especially when the iteration for the custom data type is not “obvious”.</p>
+<h2 id="heading-2-9">Ergonomic Mindsets</h2/>
+<p>I think there is this general distinction between a C-like programmer and a C++/Rust-like programmer <label for="example-not-exhaustive" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="example-not-exhaustive" class="margin-toggle"></input>
+<span class="sidenote">I’m using these languages as examples, not an exhaustive list. This could easily include other languages like LISPs or anything macro or operator overload heavy.</span>, which I will call the “Pragmatic Camp” and the “Generalizable Camp”, respectively:</p>
+<ul>
+<li>The <a href="https://www.gingerbill.org/article/2020/05/31/programming-pragmatist-proverbs/">Pragmatic Programmer</a> has defaults which use the “blessed syntax” and then anything else beyond that is clear that it is custom/user-level, and it encourages the usage of the built-in data structures over custom ones, which is better most of the time for most people <label for="not-c" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="not-c" class="margin-toggle"></input>
+<span class="sidenote">Assuming the language isn’t actually C since that it doesn’t even have a proper non-demoting array type.</span>.</li>
+<li>Whilst the Generalizable Programmer wants to have the same syntax for the built-in features/constructs for their user-level types, in order to be able to <em>hide</em> the abstractions—optimizing for things like “refactoring”. This means now the user now has to think which “defaults” to use a little more, even if those defaults may be a bad choice.</li>
+</ul>
+<p>Both of these camps have different takes on what “ergonomics” means, and I’d argue it’s not merely <em>just</em> a syntax thing. Ergonomics is designing for humans and that does not mean just designing for “syntax” or “typing” or any of that. It can even mean designing to slow people down or nudge them to do something different. The act of making something difficult to do in a language, the latter camp would probably class that as “terrible ergonomics”, but interestingly it could be viewed by the former-camp as “brilliant ergonomics”. It’s all about what you are trying to <em>optimize</em> for in the domain of <em>ergonomics</em>.</p>
+<p style="text-align: center;">Ergonomics <em>is</em> <a href="https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/#heading-2-6">Design as a Human Endevaour</a>.</p>
+<p>I am clearly in the <em>Pragmatic Camp</em>, especially with the design of Odin. And a lot of people who dislike Odin (but not all) are in the Generalizable Camp. It’s absolutely fine for someone to dislike Odin, and I am so glad there are now other choices in languages to choose from in this domain other than C, C++, Ada, and other older Pascals. However, what is interesting is that many people in the Generalizable Camp don’t see to want to understand the other camp’s way of thinking; trivially dismissing the position as if it is a dumb way of thinking. And usually when people take that position, it means that they don’t really understand the trade-offs and compromises of their <em>OWN</em> position, let alone other people’s positions.</p>
+<h2 id="heading-2-10">Pandora’s Box</h2/>
+<p>Some of the main design goals of Odin have been to minimize the possibility of dialects but also bring the <em>Joy of Programming</em> back to a lot of people. Both of these are a problem of ergonomics; a direct consequence of trying to minimize the “Generalizability” aspect. When everything can be generalized and default “idioms” are <em>not</em> common place, this does lead to what many call <a href="https://www.winestockwebdesign.com/Essays/Lisp_Curse.html">The Curse of Common Lisp</a> <label for="hackernews" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="hackernews" class="margin-toggle"></input>
+<span class="sidenote">Please don’t keep submitting the article to Hacker News!</span>. This “power” you get from the <em>Generalizable camp’s</em> approach to language design is its downfall. When idiomatic data structures are not encourage/enforced by default, then people tend to try to implement their own or even defaulting to creating even more to the madness. Generalizable approaches tend to lead to worse error messages from the compiler, and for it to struggle optimizing them too.</p>
+<p>Dialects are a consequence of having too many options to do things in a language or a heavily generalized feature, resulting in different sets of people preferring one approach over another. And in the worse case, everyone has their own dialect making them not possible to use any else’s code. Some LISP derivatives, such as Clojure, have mitigated a lot of the curse of lisp by having a lot of built-in idioms (data structures and functions), but it doesn’t fully fix the problem because it cannot. The C programming language the community has some people who keep to certain dialects which aim to be the most compatible, but even then that does not necessarily aid everyone.</p>
+<p>This is why Odin has so many different built-in language-level data types rather than rely on a more generalized approach to implement them. It’s to encourage their general usage; to have a common idiomatic foundation that everyone understand and build upon. This is what I view to be a sign of good language design, where the foundations of the language optimize for not just the lone-programmer but also how a project scales as it gets larger and more people working on it. The balance between the lone-programming and the team is a hard thing to design for, and it can lead to very annoying decisions in both cases.</p>
+<p>Go is a great example of a language that was explicitly designed for large teams of programmers with varying skill levels. Many of its decisions are brilliant for what it was trying to achieve, but this is also why individuals hate. Things like not allowing unused variables, or enforcing 1TBS braces. Enforcing coding styles at the language-level rather than having it be a secondary vet pass. For a large company like Google, this ergonomics decision makes sense, but for smaller teams (or lone-programmers), this is an extremely unergonomic design choice.</p>
+<p>You cannot please everyone with your design choices, nor should you try to. It’s a gentle balance of trade-offs between different groups of people, and trying to maximally please everyone <em>will</em> please no one. Fundamentally, everything is a trade-off in design, and that’s your entire point of a language designer: choosing the trade-offs and compromises for your imperfect language.</p>
+<p>Be careful with what you choose because you might not like the consequences.</p>
+</article></main>
+<footer>© 2007–2026 Ginger Bill</footer>
+<!-- </div> -->
+</body>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+	(function addHeadingLinks(){
+		let article = document.getElementsByClassName('article-meta')[0];
+		let headings = article.querySelectorAll('h1, h2, h3');
+		headings.forEach(function(heading){
+			if (heading.id) {
+				let a = document.createElement('a');
+				a.innerHTML = heading.innerHTML;
+				a.href = '#'+heading.id;
+				heading.innerHTML = '';
+				heading.appendChild(a);
+			}
+		});
+	})();
+</script>
+</html>

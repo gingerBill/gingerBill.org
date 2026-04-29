@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Blessed Syntax and Ergonomics</title>
+		<link>https://www.gingerbill.org/article/2026/04/29/blessed-syntax-and-ergonomics/</link>
+		<guid>https://www.gingerbill.org/article/2026/04/29/blessed-syntax-and-ergonomics/</guid>
+		<pubDate>Wed, 29 Apr 2026 09:00:00 +0000</pubDate>
+		<description>I have seen a common remark from people who are not the biggest fans of Odin and it is usually the remark that Odin is ;full of sugar; which only works for the ;blessed types; and it cannot be replaced or implemented for user-level types. Firstly, I don;t think this is necessarily an example of ;sugar; since that term implies it is shortening a construct / feature / idea into something smaller, whilst a lot of the ideas in Odin that would be classed as ;blessed syntax; by such people would not be classed ;sugar4...</description>
+	</item>
+	<item>
 		<title>Odin's Fiasco with Wikipedia</title>
 		<link>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</link>
 		<guid>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</guid>
