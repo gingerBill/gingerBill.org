@@ -71,7 +71,7 @@
 <p>What is interesting is that the common examples of user-level data structures that people want with what you call “blessed syntax” are virtually always some sort of custom array type. It is rare that people want this for anything BUT an array-like data structure, and when they do want something different, I’d argue it is <em>always</em> a bad idea to give it any form of “blessed syntax” <label for="lisp-fans" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="lisp-fans" class="margin-toggle"></input>
 <span class="sidenote">LISP Enjoyers will clearly disagree with me here, but we do have different philosophical approaches to programming in general, and thus this disagreement.</span>.</p>
-<p>But this raises the question of what should be allowed to be user-defined and what should not be. The first is operator overloading for indexing. In Odin, this would mean at a minimal allowing for overloading <code>[]</code> as three different forms:</p>
+<p>But this raises the question of what should be allowed to be user-defined and what should not be. The first is operator overloading for indexing. In Odin, this would mean at a minimum allowing for overloading <code>[]</code> as three different forms:</p>
 <ol>
 <li><code>[]</code>  for rvalue access (e.g. <code>x[i]</code>)</li>
 <li><code>&amp;[]</code> for lvalue access (e.g. <code>&amp;x[i]</code>)</li>
