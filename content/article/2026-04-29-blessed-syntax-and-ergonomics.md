@@ -45,7 +45,7 @@ What is interesting is that the common examples of user-level data structures th
 
 [^lisp-fans]: LISP Enjoyers will clearly disagree with me here, but we do have different philosophical approaches to programming in general, and thus this disagreement.
 
-But this raises the question of what should be allowed to be user-defined and what should not be. The first is operator overloading for indexing. In Odin, this would mean at a minimal allowing for overloading `[]` as three different forms:
+But this raises the question of what should be allowed to be user-defined and what should not be. The first is operator overloading for indexing. In Odin, this would mean at a minimum allowing for overloading `[]` as three different forms:
 
 1. `[]`  for rvalue access (e.g. `x[i]`)
 2. `&[]` for lvalue access (e.g. `&x[i]`)
