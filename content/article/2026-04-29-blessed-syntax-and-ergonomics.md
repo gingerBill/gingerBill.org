@@ -27,7 +27,9 @@ It is an indirect consequence of both automatic-memory-management (which means d
 [^string-article]: I've written an article on this too: [String Type Distinctions](https://www.gingerbill.org/article/2024/04/05/string-type-distinctions/).
 [^facebook-yt]: [CppCon 2016: Nicholas Ormrod “The strange details of std::string at Facebook"](https://www.youtube.com/watch?v=kPR8h4-qZdk>)
 
-A popular user-library in Rust is [`cold_string::ColdString`](https://docs.rs/cold-string/latest/cold_string/), and its approach to this "optimization" is a little more interesting because it's opting for using only a tagged pointer which is either inline an ASCII (not WTF-8) string or points to a Pascal String. As long as the string is <= 7 bytes and ASCII (on 64-bit machines), then the `ColdString` does minimize heap memory usage (assuming a lot of common strings are small).
+A popular user-library in Rust is [`cold_string::ColdString`](https://docs.rs/cold-string/latest/cold_string/), and its approach to this "optimization" is a little more interesting because it's opting for using only a tagged pointer which is either inline an ASCII or UTF-8 string or points to a Pascal String. As long as the string is <= 7 bytes UTF-8 and <= 8 ASCII (on 64-bit machines)[^32-bit-machines], then the `ColdString` does minimize heap memory usage (assuming a lot of common strings are small).
+
+[^32-bit-machines]: It says it works for 32-bit machines, but the tagging mechanism cannot work generally on 32-bit machines.
 
 Odin's `string` type was chosen as the default because at most it "wastes" an extra 8-9 bytes and allows for trivial substring creation. But because Odin is a manual memory managed language, you are free to choose how that memory is allocated. Whilst in Rust, things are much more assumed to be "automatic" most of the time, and thus heap will be the general default[^rust-allocations].
 
