@@ -103,9 +103,7 @@
 <input type="checkbox" id="overlap" class="margin-toggle"></input>
 <span class="sidenote">Note there is some overlap with fixed-length arrays, simd-vectors, and matrices which apply to mathematical types too.</span></li>
 </ul>
-<p>Beyond <code>[N]T</code>, everything else could hypothetically <label for="multi-pointers" class="margin-toggle sidenote-number"></label>
-<input type="checkbox" id="multi-pointers" class="margin-toggle"></input>
-<span class="sidenote"></span> be implemeted in a language with “more control” over user-defined syntax, however it would suffer in many aspects.</p>
+<p>Beyond <code>[N]T</code>, everything else could hypothetically be implemeted in a language with “more control” over user-defined syntax, however it would suffer in many aspects.</p>
 <p><strong>n.b.</strong> A huge reason why the Odin compiler is written in C++ rather than C is because I wanted proper array types with runtime bounds checking. Other than that and other very minor things, my style of C++ is very C-like.</p>
 <h3 id="heading-3-4">Slices</h3/>
 <p>The first example would be slices <code>[]T</code>. A lot of the slicing operations would not be able to be trivially optimized by a compiler if it was a user-level defined type, and especially not be optimized in development builds. A good example of this is the idiom <code>x[off:][:len]</code>, which replaces a lot of the need that (bounded) pointer arithmetic would in a C-like language. This operation in the Odin compiler is optimized into a single <code>x[off:off+len]</code> which would not be trivially done so in a generalized approach. Having it be language-level does reduces the amount of runtime bounds checking that has to be done since the compiler can trivially optimize such tests from two tests into one (or even more if it is chained).</p>
