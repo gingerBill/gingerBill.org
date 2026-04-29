@@ -81,7 +81,7 @@ For array-like data structures, Odin has a lot of built-in data structures which
 
 [^overlap]: Note there is some overlap with fixed-length arrays, simd-vectors, and matrices which apply to mathematical types too.
 
-Beyond `[N]T`, everything else could hypothetically[^multi-pointers] be implemeted in a language with "more control" over user-defined syntax, however it would suffer in many aspects.
+Beyond `[N]T`, everything else could hypothetically be implemeted in a language with "more control" over user-defined syntax, however it would suffer in many aspects.
 
 **n.b.** A huge reason why the Odin compiler is written in C++ rather than C is because I wanted proper array types with runtime bounds checking. Other than that and other very minor things, my style of C++ is very C-like.
 
