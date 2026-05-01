@@ -17,16 +17,9 @@ Recently, [Brodie Robertson](https://www.youtube.com/@BrodieRobertson) produced 
 @@youtube:83heISygLyA
 
 
-I thank Brodie for covering the [Wikipedia fiasco for Odin](https://en.wikipedia.org/wiki/Wikipedia:Articles_for_deletion/Odin_(programming_language)). We don't particularly care if Odin is on Wikipedia or not; especially when Wikipedia itself is rarely reliable, but we've been dealing with Wikipedia mods for years. Our best hypothesis is quite simple: some of the mods just don't like Odin as a language and don't want it on Wikipedia as any form of "advertisement".
+I thank Brodie for covering the [Wikipedia fiasco for Odin](https://en.wikipedia.org/wiki/Wikipedia:Articles_for_deletion/Odin_(programming_language)). We don't particularly care if Odin is on Wikipedia or not; especially when Wikipedia itself is rarely reliable, but we've been dealing with Wikipedia mods for years. Our best hypothesis[^hypothesis] is quite simple: some of the mods just don't like Odin as a language and don't want it on Wikipedia as any form of "advertisement".
 
-## Ideological Playground
-
-Wikipedia in general is an ideological[^ideological] playground, and the inclusion of articles are gatekept by activists. _Some_ Wikipedia Mods[^reddit-digg] view themselves as "journalists" and trying to do the "morally ideological" thing by only allowing certain posts on there; programming languages are just one example of that. For many people programming languages are a religion to them[^religion], rather than just a mere tool. They will try and defend their favourite language at any cost, even if that means not allowing other languages to "advertise". The entire "whataboutism" defence that is brought up is fundamentally just a legal loophole that they can use to prevent any article they deem not adhering to their position.
-
-[^ideological]: By ideological, I do not necessarily "political", rather they follow an ideology, a set of doctrines/beliefs, for better or for worse.
-[^reddit-digg]: Just like Reddit mods, or even Digg mods back in the day
-[^religion]: I do not know, nor do I care what their preferred language of choice is.
-
+[^hypothesis]: Which could very well be wrong too, and I'd love to be proven wrong.
 
 ## How Time Flies
 
@@ -37,6 +30,14 @@ I started Odin nearly 10 years ago now[^i-feel-old], and it was never meant to b
 The Wikipedia comments regarding deletion saying that anyone can make a language is true, but those are usually mere toys, and cannot be used for anything useful[^wait-to-see]. I am grateful that these Wikipedia mods state everything in public, so that we can actually see what their opinions are for everyone to see.
 
 [^wait-to-see]: If they honestly believe making a production-grade programming language is that easy, I cannot wait for them to make one. And see how long it takes them.
+
+## Ideological Playground
+
+Wikipedia _in general_ is an ideological[^ideological] playground, and the inclusion of articles are gatekept by activists. _Some_ Wikipedia Mods[^reddit-digg] view themselves as "journalists" and trying to do the "morally ideological" thing by only allowing certain posts on there; programming languages are just one example of that. For many people programming languages are a religion to them[^religion], rather than just a mere tool. They will try and defend their favourite language at any cost, even if that means not allowing other languages to "advertise". The entire "whataboutism" defence that is brought up is fundamentally just a legal loophole that they can use to prevent any article they deem not adhering to their position.
+
+[^ideological]: By ideological, I do not necessarily "political", rather they follow an ideology, a set of doctrines/beliefs, for better or for worse.
+[^reddit-digg]: Just like Reddit mods, or even Digg mods back in the day
+[^religion]: I do not know, nor do I care what their preferred language of choice is.
 
 ## The Ill-Fitted Criteria for Programming
 
