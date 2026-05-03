@@ -31,7 +31,7 @@ A popular user-library in Rust is [`cold_string::ColdString`](https://docs.rs/co
 
 Odin's `string` type was chosen as the default because at most it "wastes" an extra 8-9 bytes and allows for trivial substring creation. But because Odin is a manual memory managed language, you are free to choose how that memory is allocated. Whilst in Rust, things are much more assumed to be "automatic" most of the time, and thus heap will be the general default[^rust-allocations].
 
-[^rust-allocations]: Rust does allow for a global custom allocator, or general manual memory management, but it's not what is encourage by the design of the language itself.
+[^rust-allocations]: Rust does allow for a global custom allocator, or general manual memory management, but it's not what is encouraged by the design of the language itself.
 
 Odin also has ways to allow for struct fields to be interpreted at runtime as if they are a string if they want to be used by serializers/formatted-printing, which also helps with the usage. Rust has this too but in a much more specific macro approach (and thus preferred to be compile time). Thus separating the serialization aspects of the type from the type itself.
 
