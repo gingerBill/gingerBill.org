@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Signed By Default Camp</title>
+		<link>https://www.gingerbill.org/article/2026/05/03/signed-by-default/</link>
+		<guid>https://www.gingerbill.org/article/2026/05/03/signed-by-default/</guid>
+		<pubDate>Sun, 03 May 2026 09:00:00 +0000</pubDate>
+		<description>As with many discussions in the programming space, there are ;wars; between different ways of doing things. These are typically about minor aesthetic preferences, such as:Tabs vs Spaces for indentation vs  vs  for naming conventions vs  for strings (if the language allows both)1TBS vs K;R vs Allman for  brace stylesThese wars are largely pointless; what actually matters is coherency and consistency in your coding style. However, when it comes to designing a language, some binary choices have a massive impact. This article focuses on one such ...</description>
+	</item>
+	<item>
 		<title>Blessed Syntax and Ergonomics</title>
 		<link>https://www.gingerbill.org/article/2026/04/29/blessed-syntax-and-ergonomics/</link>
 		<guid>https://www.gingerbill.org/article/2026/04/29/blessed-syntax-and-ergonomics/</guid>
