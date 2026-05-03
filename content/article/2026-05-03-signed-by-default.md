@@ -22,8 +22,6 @@ As with many discussions in the programming space, there are "wars" between diff
 These wars are largely pointless; what actually matters is coherency and consistency in your coding style. However, when it comes to designing a language, some binary choices have a massive impact. This article focuses on one such choice: whether to default to signed or unsigned integers.
 
 
-##
-
 A fellow language designer, Christoffer Lernö, of the [C3 language](https://c3-lang.org/) has written an article regarding his decision to change from unsigned integers to signed integers as the default integer kind for C3: [Unsigned sizes: a five year mistake](https://c3-lang.org/blog/unsigned-sizes-a-five-year-mistake/). I highly recommend the article as it does cover the discovery process and trade-offs that have to be made when designing a programming language.
 
 ## The Different Camps
