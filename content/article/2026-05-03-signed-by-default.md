@@ -15,7 +15,7 @@
 As with many discussions in the programming space, there are "wars" between different ways of doing things. These are typically about minor aesthetic preferences, such as:
 
 * Tabs vs Spaces for indentation
-* `snakeCase` vs `camelCase` vs `Ada_Case` for naming conventions
+* `snake_case` vs `camelCase` vs `Ada_Case` for naming conventions
 * `'single quote'` vs `"double quote"` for strings (if the language allows both)
 * 1TBS vs K&R vs Allman for `{}` brace styles
 
