@@ -56,9 +56,8 @@
 <li>1TBS vs K&amp;R vs Allman for <code>{}</code> brace styles</li>
 </ul>
 <p>These wars are largely pointless; what actually matters is coherency and consistency in your coding style. However, when it comes to designing a language, some binary choices have a massive impact. This article focuses on one such choice: whether to default to signed or unsigned integers.</p>
-<h2 id="heading-2-1"></h2/>
 <p>A fellow language designer, Christoffer Lernö, of the <a href="https://c3-lang.org/">C3 language</a> has written an article regarding his decision to change from unsigned integers to signed integers as the default integer kind for C3: <a href="https://c3-lang.org/blog/unsigned-sizes-a-five-year-mistake/">Unsigned sizes: a five year mistake</a>. I highly recommend the article as it does cover the discovery process and trade-offs that have to be made when designing a programming language.</p>
-<h2 id="heading-2-2">The Different Camps</h2/>
+<h2 id="heading-2-1">The Different Camps</h2/>
 <p>When designing <a href="https://odin-lang.org/">Odin</a>, I explicitly chose signed-by-default. I used to be in the unsigned-by-default camp many years before I even started Odin, but I’ve seen too many people make mistakes with unsigned arithmetic <label for="theory-practice" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="theory-practice" class="margin-toggle"></input>
 <span class="sidenote">It could be argued that unsigned is better “in theory”, but signed works better “in practice”. Personally, if something doesn’t work “in theory” in practice, then the “theory” was wrong to begin with and merely a false hypothesis.</span>.</p>
@@ -70,7 +69,7 @@
 <input type="checkbox" id="division-by-zero" class="margin-toggle"></input>
 <span class="sidenote">The user can define division-by-zero behavior compiler-wide or file-wide (trap, zero, self, or all-bits). The default is trapping, but there are good cases for defined division by zero, especially in proofing algorithms.</span> and <code>INT_MAX - INT_MIN</code> so that they are not “undefined/illegal behaviour”.</p>
 <p>Lastly, it matters whether the language supports implicit numeric conversions. Many languages still perform implicit integer conversions, especially when no <strong>value</strong> information is lost. In Odin I disallowed even this, for many reasons, but a big one is that <strong>type</strong> information is lost even if the <strong>value</strong> is preserved. Making all conversions explicit makes intent clearer and gives the programmer the choice. As the article notes, many unsigned bugs in C arise from implicit conversions between signed and unsigned. Language design should account for the mistakes of past languages and understand the context they were made in, rather than reject entire ideas wholesale.</p>
-<h2 id="heading-2-3">Possible Implicit Conversion Rules</h2/>
+<h2 id="heading-2-2">Possible Implicit Conversion Rules</h2/>
 <p>Implicit integer conversion rules can be complex or very simplistic, and different rulesets lead to different outcomes. Take this example:</p>
 <pre><code class="odin">a: u8  = 53
 b: u8  = 34
@@ -87,7 +86,7 @@ c: u16 = a * b
 <p>Option 0 makes this a type error and forces the user to specify the intended behavior. Option 1 <label for="worst-option" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="worst-option" class="margin-toggle"></input>
 <span class="sidenote">Of these approaches, I believe option 1 to be the objectively worse approach to choose from when designing a language. It leads to the most bugs in practice if value information is wanted to preserved, and does not allow for any performance optimizations allowing for widening.</span> either wraps to 8 bits (even though <code>53 * 34</code> fits in 16 bits) or treats the overflow as illegal or traps. Option 2 is what C does: the operation becomes <code>u16(u32(a) * u32(b))</code>, preserving the most value information and likely performing better with a natural integer size. Option 3 is the same idea but uses a larger intermediate type such as <code>u64</code> or <code>u128</code>. Option 4 is my preferred approach if I wanted implicit conversions: propagate the type hint from the left-hand side top-down so that it serves as the widest type down the syntax tree, resulting in <code>u16(a) * u16(b)</code> directly.</p>
-<h2 id="heading-2-4">Overflow/Underflow, Wombling Free</h2/>
+<h2 id="heading-2-3">Overflow/Underflow, Wombling Free</h2/>
 <p>Some languages, such as Rust, treat overflowing arithmetic as a trap in debug builds (with a significant runtime cost) but as wrapping in release builds. I don’t like behavior that changes based on optimization level; I want things to behave the same unless I explicitly ask otherwise.</p>
 <p>A separate question is which is worse when it happens: overflow or underflow, with signed or unsigned. I’d argue that overflow is far less common than going below zero for both signed and unsigned integers. And because of this, underflow on unsigned integers is the more common bug, and more likely to cause serious problems than simply having a negative value.</p>
 </article></main>
