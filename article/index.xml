@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>The Aesthetic Problem of Namespacing</title>
+		<link>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</link>
+		<guid>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</guid>
+		<pubDate>Wed, 13 May 2026 09:00:00 +0000</pubDate>
+		<description>Karl Zylinski;s Tom;s Namespaces: An Odin Fanfic is an excellent exploration of the namespacing problem in imperative programming languages such as Odin  I highly recommend reading that article before reading this one!. After sharing it on many comment forum sites, I;ve concluded there;s no real ;solution.; AssociationThe article uses a simple example:The aesthetic argument against this form of namespacing is that this looks fine with short 1/2 word length type names, but becomes unwieldy with longer ones like :The proposed fix ...</description>
+	</item>
+	<item>
 		<title>Signed By Default Camp</title>
 		<link>https://www.gingerbill.org/article/2026/05/03/signed-by-default/</link>
 		<guid>https://www.gingerbill.org/article/2026/05/03/signed-by-default/</guid>
