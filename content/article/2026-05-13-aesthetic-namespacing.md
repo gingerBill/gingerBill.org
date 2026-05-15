@@ -60,7 +60,18 @@ Most complaints boil down to wanting to separate a _public_ API from _private_ i
 
 I've repeatedly needed access to something a third-party API made private, whether a struct field or a procedure. For struct fields, I've resorted to unsafe pointer arithmetic to get around the `private`ness. And for procedures, I've had to reimplement them entirely from scratch.
 
-Please, if you are designing an API, please don't assume you know better than the people using it. You cannot predict the future nor what they will actually need. Add warnings if necessary, but never outright prevent people from bypassing them. Let people disable the safety and shoot the gun if they need to.
+Please, if you are designing an API, please don't assume you know better than the people using it. You cannot predict the future nor what they will actually need. Add warnings if necessary, but never outright prevent people from bypassing them. Let people disable the safety and shoot the gun if they need to.1
+
+The fundamental issue, as far as I am aware, is that no language offers a _direct_[^java-indirect] way to override the `private` visibility of a declaration/field. Every language treats the declaration visibility as rigid and absolutely, something that cannot be worked around. This is _sometimes_ a good idea with package-level procedures, but never a good idea on a struct field. One of Odin's core design philosophies is to provide escape-hatches wherever possible, [`context`](/article/2025/12/15/odins-most-misunderstood-feature-context/) being one of the most well-lnown examples of this kind of mechanism in the language.
+
+[^java-indirect]: Java is an example that does provide an indirect way to bypass this by using reflection, but that is going to have performance issues in practice, especially if are relying on a specific field or call.
+
+"What frustrates me is this unquestioned devotion to encapsulation as dogma, though I do understand where it comes from. From conversations I've had, people who default to private tend to fall into two camps:
+
+The first camp sees hiding implementation details (i.e. encapsulation) as an inherently good practice, rooted in principles like [SOLID](https://en.wikipedia.org/wiki/SOLID). The second camp is more pragmatic: they don't want users of their API depending on internal parts of it that could change at any time.
+
+I'm sympathetic to the second camp. It's a legitimate concern that you don't want people building on top of something with no guarantees of stability. But the unintended consequence is that the second camp ends up behaving exactly like the first, just without realizing it. By locking things down, they block people who genuinely need access to something that wasn't surfaced through the public API, which in effect is just hiding implementation details all over again. So when designing an API, please consider providing an escape hatch. Make it as ugly as you need to in order to discourage casual use, and signpost it clearly: "don't rely on this as there are no guarantees".
+
 
 ## Nudging as an Aspect of Design Philosophy
 
