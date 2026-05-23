@@ -23,7 +23,7 @@
 
 I have revisited [The Value Propagation Experiment](/article/2021/07/05/value-propagation-experiment/) and have come to a different conclusion as to why it failed and how I recovered it. 
 
-The recovery work has been merged into master now with this PR: <https://github.com/odin-lang/Odin/pull/>1082
+The recovery work has been merged into master now with this PR: <https://github.com/odin-lang/Odin/pull/1082>
 
 
 I think there were three things which were confusing which make it look like a failure of an experiment:
