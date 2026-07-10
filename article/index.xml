@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Good Tools Are Invisible</title>
+		<link>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</link>
+		<guid>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</guid>
+		<pubDate>Fri, 10 Jul 2026 09:00:00 +0000</pubDate>
+		<description>TL;DR: A good tool is and ought to be invisiblestriving to make such tools is the goal of a toolmaker.One habit I see a lot, and have to push back on, is taking a tool;s shortcomings and reselling them as a ;puzzle game; which is ;fun; to solve.I don;t want my tools to be ;fun;. I want my tools to be invisible.Text Editor WarsLet;s take vim as an example  This is just an example, and applies to other editors too.. I constantly see some people praise it not for what actually makes it good, but by taking the things ...</description>
+	</item>
+	<item>
 		<title>The Aesthetic Problem of Namespacing</title>
 		<link>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</link>
 		<guid>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</guid>
