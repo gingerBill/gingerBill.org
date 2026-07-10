@@ -63,7 +63,7 @@ And this is the common mistake: people look at the current state of a category o
 
 ## Linux's (Lack of) Popularity as a Desktop
 
-The year of the Linux[^linux-is-a-kernel] desktop still isn't upon us (in 2026), and part of the reason why has taken so long to get to that point is fundamental: a lot of the people who use Linux love fiddling with configuration files to reshape their system—it's their idea of "fun", their puzzle game.
+The year of the Linux[^linux-is-a-kernel] desktop still isn't upon us (in 2026), and part of the reason why it has taken so long to get to that point is fundamental: a lot of the people who use Linux love fiddling with configuration files to reshape their system—it's their idea of "fun", their puzzle game.
 
 [^linux-is-a-kernel]: I know I am going to get people saying "Linux is the Kernel, the OS is the [insert distro name]". I'm sorry but that's not how most people talk about Linux, and I don't really care too much for your pendantry which aids nothing. Especially since to critique it, you clearly had to understand what was being said about it.
 
