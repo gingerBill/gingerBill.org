@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Everyone Says Assembly Is Untyped—Everyone Is Wrong" />
-<meta name="twitter:description" content="TL;DR: Odin&#39;s inline assembler is the best in the world of any language now.Not string-based like GCC/Clang/Rust. Templates are real, typed, compiler-checked code.Assembly isn&#39;t untyped: each instruction is a polyadic typed algebra.One syntax across all ISAs, Intel order, using Odin&#39;s own tokens (coherency over consistency).Named : ties, pins, scratch, clobbers explicit — no / soup.Multiple return values for free (assembly is polyadic: e.g. , , ).Real semantic diagnostics via  encoding tables, not just typo fixes.Restricted hygienic macros ..." />
+<meta name="twitter:description" content="TL;DR: I believe Odin&#39;s inline assembles is currently the best out of any language.The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:Inline assembly is organized into  &#34;templates&#34;, similar to and callable as procedures. templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.Assembly syntax is unified across ISAs and consistent with Odin syntax.Assembly is fully type checke..." />
  <title>Everyone Says Assembly Is Untyped—Everyone Is Wrong - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -49,15 +49,16 @@
 <p><span class="date">2026-08-20</span></p>
 </div>
 </header>
-<p><strong>TL;DR:</strong> Odin’s inline assembler is the best in the world of any language now.</p>
+<p><strong>TL;DR:</strong> I believe Odin’s inline assembles is currently the best out of any language.</p>
+<p>The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go…) that would combine all of these aspects:</p>
 <ul>
-<li>Not string-based like GCC/Clang/Rust. Templates are real, typed, compiler-checked code.</li>
-<li>Assembly isn’t untyped: each instruction is a polyadic typed algebra.</li>
-<li>One syntax across all ISAs, Intel order, using Odin’s own tokens (coherency over consistency).</li>
-<li>Named <code>asm(params) -&gt; (results) [bindings]</code>: ties, pins, scratch, clobbers explicit — no <code>%0</code>/<code>=r</code> soup.</li>
-<li>Multiple return values for free (assembly is polyadic: e.g. <code>rdtsc</code>, <code>cpuid</code>, <code>div</code>).</li>
-<li>Real semantic diagnostics via <a href="https://github.com/odin-lang/Odin/tree/master/core/rexcode"><code>core:rexcode</code></a> encoding tables, not just typo fixes.</li>
-<li>Restricted hygienic macros that replace many intrinsics; built in ~7 days.</li>
+<li>Inline assembly is organized into <code>asm</code> “templates”, similar to and callable as procedures.</li>
+<li><code>asm</code> templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.</li>
+<li>Assembly syntax is unified across ISAs and consistent with Odin syntax.</li>
+<li>Assembly is fully type checked, just like rest of Odin code.</li>
+<li>Understanding that assembly is actually typed.</li>
+<li>Real semantic diagnostics via <a href="https://github.com/odin-lang/Odin/tree/master/core/rexcode"><code>core:rexcode</code></a> encoding tables.</li>
+<li>It was built in ~7 days.</li>
 </ul>
 <hr />
 <p>I have been asked why <a href="https://odin-lang.org/">Odin</a> even bothers having its own <a href="https://odin-lang.org/docs/inline-asm/">custom inline assembler</a> at all. Isn’t inline assembly a solved problem? You take a string, you hand it to the assembler, and you let it sort out the rest. Everyone from GCC to Clang to Rust <label for="rust-asm" class="margin-toggle sidenote-number"></label>
