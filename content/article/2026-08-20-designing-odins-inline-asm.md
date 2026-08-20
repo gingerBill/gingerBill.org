@@ -22,16 +22,17 @@
 ---
 
 
-**TL;DR:** Odin's inline assembler is the best in the world of any language now.
+**TL;DR:** I believe Odin's inline assembles is currently the best out of any language.
 
-- Not string-based like GCC/Clang/Rust. Templates are real, typed, compiler-checked code.
-- Assembly isn't untyped: each instruction is a polyadic typed algebra.
-- One syntax across all ISAs, Intel order, using Odin's own tokens (coherency over consistency).
-- Named `asm(params) -> (results) [bindings]`: ties, pins, scratch, clobbers explicit — no `%0`/`=r` soup.
-- Multiple return values for free (assembly is polyadic: e.g. `rdtsc`, `cpuid`, `div`).
-- Real semantic diagnostics via [`core:rexcode`](https://github.com/odin-lang/Odin/tree/master/core/rexcode) encoding tables, not just typo fixes.
-- Restricted hygienic macros that replace many intrinsics; built in ~7 days.
+The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:
 
+* Inline assembly is organized into `asm` "templates", similar to and callable as procedures.
+* `asm` templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.
+* Assembly syntax is unified across ISAs and consistent with Odin syntax.
+* Assembly is fully type checked, just like rest of Odin code.
+* Understanding that assembly is actually typed.
+* Real semantic diagnostics via [`core:rexcode`](https://github.com/odin-lang/Odin/tree/master/core/rexcode) encoding tables.
+* It was built in ~7 days.
 
 --------
 
