@@ -49,11 +49,12 @@ Let's start with the thing I was reacting against. Here is what a trivial "add o
 
 ```c
 int dst;
-asm ("movl %1, %0\n\t"
-     "addl $1, %0"
-     : "=r" (dst) // outputs
-     : "r"  (src) // inputs
-     : /* clobbers */);
+asm("movl %1, %0\n\t"
+    "addl $1, %0"
+    : "=r" (dst) // outputs
+    : "r"  (src) // inputs
+    : // clobbers
+);
 ```
 
 Look at this and ask yourself: what does the *compiler* (as opposed to the *assembler*) understand here? The answer is "almost nothing". The body is a string. `"=r"` and `"r"` are *explicit* constraint strings, another little stringly-typed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) glued to the side of the real DSL. The `%0` and `%1` are positional references into a list you have to count by hand. And if you get any of it wrong, the error you get back is not from the compiler that knows your types and semantics; it is from the assembler, much later on, pointing at generated text that was not written by you.
@@ -75,11 +76,12 @@ int add_one(int x) {
     __asm {
         mov eax, x // 'x' is the C parameter, resolved by the compiler
         inc eax
-    }              // value left in eax is the return value, by convention
+    }
+    // For the calling convention, the value in eax is the return value
 }
 ```
 
-No constraint strings. No `%0`. No counting operands. Compared to the GCC contraption this is honestly pleasant to read, and for a long time it was how an enormous amount of Windows systems code got written. So why did it disappear?
+No constraint strings, no `%0`, and no counting operands to refer to them. Compared to the GCC contraption this is honestly pleasant to read, and for a long time it was how an enormous amount of Windows systems code got written. So why did it disappear?
 
 Firstly, it was **x86-only**. When Microsoft moved to x64 (and later ARM64) they did not port it. The official guidance became "use compiler intrinsics, or write a separate `.asm` file and run it through MASM". One of the stated constraints for the x64 compiler was to have *no* inline assembler at all. A whole approach was thrown away at the ISA boundary rather than generalized across it.
 
