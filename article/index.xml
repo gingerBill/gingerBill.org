@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Everyone Says Assembly Is Untyped—Everyone Is Wrong</title>
+		<link>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</link>
+		<guid>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</guid>
+		<pubDate>Thu, 20 Aug 2026 09:00:00 +0000</pubDate>
+		<description>TL;DR: Odin;s inline assembler is the best in the world of any language now.Not string-based like GCC/Clang/Rust. Templates are real, typed, compiler-checked code.Assembly isn;t untyped: each instruction is a polyadic typed algebra.One syntax across all ISAs, Intel order, using Odin;s own tokens (coherency over consistency).Named : ties, pins, scratch, clobbers explicit  no / soup.Multiple return values for free (assembly is polyadic: e.g. , , ).Real semantic diagnostics via  encoding tables, not just typo fixes.Restricted hygienic macros ...</description>
+	</item>
+	<item>
 		<title>Good Tools Are Invisible</title>
 		<link>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</link>
 		<guid>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</guid>
