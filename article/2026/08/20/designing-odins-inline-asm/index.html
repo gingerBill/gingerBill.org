@@ -68,11 +68,12 @@
 <h2 id="heading-2-1">The String-Based Nonsense</h2/>
 <p>Let’s start with the thing I was reacting against. Here is what a trivial “add one” looks like in GCC-style extended <code>asm</code> using x86 AT&amp;T/GAS syntax:</p>
 <pre><code class="c">int dst;
-asm (&#34;movl %1, %0\n\t&#34;
-     &#34;addl $1, %0&#34;
-     : &#34;=r&#34; (dst) // outputs
-     : &#34;r&#34;  (src) // inputs
-     : /* clobbers */);
+asm(&#34;movl %1, %0\n\t&#34;
+    &#34;addl $1, %0&#34;
+    : &#34;=r&#34; (dst) // outputs
+    : &#34;r&#34;  (src) // inputs
+    : // clobbers
+);
 </code></pre>
 <p>Look at this and ask yourself: what does the <em>compiler</em> (as opposed to the <em>assembler</em>) understand here? The answer is “almost nothing”. The body is a string. <code>&#34;=r&#34;</code> and <code>&#34;r&#34;</code> are <em>explicit</em> constraint strings, another little stringly-typed <a href="https://en.wikipedia.org/wiki/Domain-specific_language">DSL</a> glued to the side of the real DSL. The <code>%0</code> and <code>%1</code> are positional references into a list you have to count by hand. And if you get any of it wrong, the error you get back is not from the compiler that knows your types and semantics; it is from the assembler, much later on, pointing at generated text that was not written by you.</p>
 <p>This is the sort of thing that happens when a <em>feature</em> is designed as an <em>escape-hatch</em> first rather than as a <em>part of the language</em>. Nobody seems to have sat down and asked “what would inline assembly look like if it respected the type system, the calling conventions, the constant system, and other things (like multiple-return-value semantics) of the host language?”. Rather, they asked “how do I bodge some assembly into this function with the least amount of compiler work?”, and a string was the answer.</p>
@@ -85,10 +86,11 @@ asm (&#34;movl %1, %0\n\t&#34;
     __asm {
         mov eax, x // &#39;x&#39; is the C parameter, resolved by the compiler
         inc eax
-    }              // value left in eax is the return value, by convention
+    }
+    // For the calling convention, the value in eax is the return value
 }
 </code></pre>
-<p>No constraint strings. No <code>%0</code>. No counting operands. Compared to the GCC contraption this is honestly pleasant to read, and for a long time it was how an enormous amount of Windows systems code got written. So why did it disappear?</p>
+<p>No constraint strings, no <code>%0</code>, and no counting operands to refer to them. Compared to the GCC contraption this is honestly pleasant to read, and for a long time it was how an enormous amount of Windows systems code got written. So why did it disappear?</p>
 <p>Firstly, it was <strong>x86-only</strong>. When Microsoft moved to x64 (and later ARM64) they did not port it. The official guidance became “use compiler intrinsics, or write a separate <code>.asm</code> file and run it through MASM”. One of the stated constraints for the x64 compiler was to have <em>no</em> inline assembler at all. A whole approach was thrown away at the ISA boundary rather than generalized across it.</p>
 <p>Secondly, even where it existed, the compiler did not really <em>understand</em> the block. It resolved your symbol names, but it carried no explicit clobber information; the optimizer largely treated the region as an opaque fence to be conservative around. It knew what <code>x</code> was. It did not give any feedback to the user as to what the instructions <em>did</em>.</p>
 <h3 id="heading-3-4">Turbo Pascal</h3/>
