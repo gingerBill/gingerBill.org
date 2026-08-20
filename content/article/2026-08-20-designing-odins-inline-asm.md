@@ -22,7 +22,7 @@
 ---
 
 
-**TL;DR:** I believe Odin's inline assembles is currently the best out of any language.
+**TL;DR:** I believe Odin's inline assembly is currently the best out of any language.
 
 The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:
 
@@ -126,7 +126,7 @@ There is a very common belief that assembly is "untyped", and that inline assemb
 
 I've [written before](https://www.gingerbill.org/article/2021/03/07/untyped-types/) about "untyped types" in the context of Odin, but those are actually [existential types](https://wiki.haskell.org/Existential_type). Conventionally, "untyped" effectively means everything is "opaque" and very weak (e.g. everything is just an int and you just assume it everywhere). Assembly is usually considered the perfect example of such an "untyped" language.
 
-However, every instruction has a set of valid forms. Each form dictates the *kind* of each operand (register, memory, immediate, label), the *class* of each register (general-purpose, vector, mask), the *width* of each operand, the range each immediate may take, and what the instruction *clobbers* (flags, memory, particular registers). In x86, a `mulps` wants a 128-bit vector register; a `crc32` in one of its forms wants a 32-bit destination and an 8-bit memory source; `div` reads and writes `rdx:rax` whether you like it or not.
+However, every instruction has a set of valid forms. Each form dictates the *kind* of each operand (register, memory, immediate, label), the *class* of each register (general-purpose, vector, mask), the *width* of each operand, the range each immediate may take, and what the instruction *clobbers* (flags, memory, particular registers). In x86, a `mulps` wants a 128-bit vector register; a `crc32` in one of its forms wants a 32-bit destination and an 8-bit memory source; `div` reads and writes `rdx` and `rax` whether ask to it do or not.
 
 That is not the absence of a type system: that *is* a type system; a rather rich, dependent, per-instruction one. Assembly is effectively a polyadic typed algebra that everyone has agreed to pretend is a soup of bytes. Once you understand this, the design question stops being "how do I smuggle a string past the compiler?" and becomes "how do I express this algebra in the language's own terms?". And it turns out Odin already had most of the pieces lying around.
 
@@ -144,11 +144,11 @@ instruction [operand{, operand}]
 
 The same grammar everywhere. The instruction has to be a valid Odin identifier or keyword. Explicit physical registers always take a `%` sigil (`%rax`, `%xmm0`, `%al`), which keeps them from colliding with your own parameter names and with any global constants from the parent scope. Parameter and scratch names are always bare (because the compiler understands the semantics). Memory operands are always Intel-style effective addresses (`[base + index*scale + disp]`). Labels are always `.name`. You learn this shape once and it carries to every ISA we ever add, even though the instructions underneath are completely different. It uses the same set of tokens as Odin: number-literals, comments, even the semicolon insertion rules.
 
-This is the same principle I keep coming back to: **coherency over consistency**. Odin is coherent with *itself*, not GAS, NASM, or any platform's traditional assembler. This is Odin's inline assembler, nothing else.
+This is the same principle I keep coming back to: **coherency over consistency**. Odin is coherent with *itself*, not GAS, NASM, or any platform's traditional assembler. This is Odin's inline assembler.
 
 ## Intel Order, Not AT&T
 
-There is a decision buried in that last section that deserves to be dragged into the light, because it is the one people argue about most: the body uses **Intel operand order**—destination first, `dst, src`—together with Intel-style (but slightly different) memory addressing, rather than the AT&T/GAS conventions.
+There is one syntactical decision that people argue about most when it comes to assembly, whether to use Intel or AT&T/GAs. For Odin's inline `asm` bodies, they use  **Intel operand order**—destination first, `dst, src`—together with Intel-style (but slightly different) memory addressing, rather than the AT&T/GAS conventions.
 
 It is a place where I *departed* from Plan 9 and Go, even while stealing their best idea. Plan 9's and Go's assembler writes operands source-first, left-to-right in dataflow order[^go-not-consistent], so `MOVQ $0, AX` clears `AX` with the destination on the *right*. That is the same operand order as AT&T, and the opposite of Intel. I took the one-grammar-for-every-ISA philosophy from them wholesale, but I did not want to take their operand order. It might sound like an arbitrary choice, but it isn't.
 
@@ -175,9 +175,9 @@ AT&T bakes the width into the mnemonic (`movb`, `movw`, `movl`, `movq`). Odin do
 
 ### Sigils
 
-AT&T decorates *every* register with `%` and *every* immediate with `$`, unconditionally. Odin's `%` looks superficially similar but is doing a completely different job: it appears only on explicit *physical* registers, and only to keep them from colliding with the namespace of the user-provided parameters and scratch names. In an idiomatic template you write bare names (e.g. `foo`, `acc`, `i`) and reach for `%rax` only when you genuinely need to pin one or refer to the register directly. The sigil marks the exception; it is not blanket decoration smeared over the common case.
+AT&T decorates *every* register with `%` and *every* immediate with `$`, unconditionally. Odin's `%` looks superficially similar but is doing a completely different job: it appears only on explicit *physical* registers, and only to keep them from colliding with the namespace of the user-provided parameters and scratch names. In an idiomatic template you write bare names (e.g. `foo`, `acc`, `i`) and reach for `%rax` only when you genuinely need to pin one or refer to the register directly. The sigil marks the exception due to rule rather it being a blanket decoration smeared everywhere.
 
-Put the two styles beside each other and the difference in *readability* is not subtle. First the AT&T/GAS form:
+First let's look at AT&T/GAS form:
 
 ```
 movl %eax, %ebx             # ebx = eax   (source is on the LEFT)
@@ -185,7 +185,7 @@ addl $1, %ebx               # ebx += 1
 movl 8(%rdi,%rsi,4), %ecx   # ecx = *(rdi + rsi*4 + 8)
 ```
 
-and the same three instructions in Odin's Intel order:
+and then the same three instructions in Odin's Intel order:
 
 ```odin
 mov  %ebx, %eax              // ebx = eax   (destination is on the LEFT)
@@ -193,7 +193,7 @@ add  %ebx, 1                 // ebx += 1
 mov  %ecx, [%rdi + %rsi*4 + 8]
 ```
 
-And remember that this is the *worst* case for Odin, written entirely in physical registers to make the syntactic contrast fair. In a real template you would be using names, not `%`-prefixed registers, and the right-hand column sheds almost all of its remaining sigils. That is the saner read I was after: one grammar, destination-first like most of the world, no suffix-mangled mnemonics, memory operands that look like arithmetic, and punctuation only where it is earning its keep. A more likely example would be using named parameters:
+Note that this is the *worst* case for Odin, written entirely in physical registers to make the syntactic contrast fair. In a real template you would be using names, not `%`-prefixed registers, and the right-hand column sheds almost all of its remaining sigils. That is the saner read I was after: one grammar, destination-first like most of the world, no suffix-mangled mnemonics, memory operands that look like arithmetic, and punctuation only where absolutely needed. A more likely example would be using named parameters:
 ```odin
 mov  x, y
 add  x, 1
@@ -304,12 +304,12 @@ If necessary, you can also specify the "effects" that need to happen, such as `#
 
 #### A Width-View
 
-`view: T = src`, is a second name for `src`'s register seen at a narrower width. One register, two widths—the classic `setcc`-then-arithmetic idiom where you want the low 8 bits by one name and the full 64 by another. This is effectively a form of pinning anyway.
+`view: T = src`, is a second name for `src`'s register seen at a narrower width. One register but with differing widths. A classic example in x86 being `setcc`, the idiom where you want the low 8 bits by one name and the full 64-bit by another. This is effectively a form of pinning anyway.
 
 
 ### The Usage of Binding Specification Syntax
 
-The right-hand side of `=` is what disambiguates the last two: `= %reg` is a register, so it's a pin; `= src` is a name, so it's a width-view. The grammar itself tells you which you meant.
+The right-hand side of `=` is what disambiguates the last two: `= %reg` is a register, so it's a pin; `= src` is a name, so it's a width-view.
 
 As an example, below is a vector kernel that uses scratch registers of a vector type, and here is exactly why typed parameters matter—the checker knows `acc` and `tmp` are xmm registers because you told it `#simd[4]f32`:
 
@@ -340,11 +340,11 @@ dot_f32x4 :: asm(a, b: [^]f32, n: i64) -> (result: f32) [
 }
 ```
 
-One thing to note about labels such as `.loop`: they are local to the template and mangled per instantiation, so you can inline the same template a hundred times and never get a symbol collision. There are no global labels, on purpose. This is what a hygienic macro system effectively offers.
+One thing to note about labels such as `.loop`: they are local to the template and mangled per instantiation, so you can inline the same template as many times as you want and never get a symbol collision. There are no global labels, by design. This is what a hygienic macro system effectively offers.
 
 ## Prefixes and Other Syntactic Quirks
 
-There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS. None of them are arbitrary. Almost every one is the same rule wearing a different hat: the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of a special case.
+There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS. None of them are arbitrary. Almost every one is the same rule wearing a [different hat](https://en.wikipedia.org/wiki/Mr_Benn): the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of a special case.
 
 The clearest example is prefixes.
 
@@ -392,7 +392,7 @@ The `#` is not decoration for its own sake, rather it is Odin's directive sigil,
 
 ### Labels Start With a Dot
 
-A label is `.name:` to define and `.name` to reference. The leading dot marks it as being template-local, and it is mangled per instantiation, so you can inline the same template a hundred times and never collide. There are no global labels inside a template, on purpose, there is nowhere for a stray `jmp` to escape to. The compiler hypothetically parses labels without the need for a prefixed dot, but that prefixed dot also allows for the ability to keep labels in their own namespace and make it clear from a glance that they are also labels, making it familiar to other people from other assembly syntax and that they may behave slightly differently.
+A label is `.name:` to define and `.name` to reference. The leading dot marks it as being template-local, and it is mangled per instantiation, so you can inline the same template a hundred times and never collide. There are no global labels inside a template, by design, there is nowhere for a stray `jmp` to escape to. The compiler hypothetically parses labels without the need for a prefixed dot, but that prefixed dot also allows for the ability to keep labels in their own namespace and make it clear from a glance that they are also labels, making it familiar to other people from other assembly syntax and that they may behave slightly differently.
 
 ----
 
