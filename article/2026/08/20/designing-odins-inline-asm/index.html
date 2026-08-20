@@ -12,7 +12,7 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Everyone Says Assembly Is Untyped—Everyone Is Wrong" />
-<meta name="twitter:description" content="TL;DR: I believe Odin&#39;s inline assembles is currently the best out of any language.The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:Inline assembly is organized into  &#34;templates&#34;, similar to and callable as procedures. templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.Assembly syntax is unified across ISAs and consistent with Odin syntax.Assembly is fully type checke..." />
+<meta name="twitter:description" content="TL;DR: I believe Odin&#39;s inline assembly is currently the best out of any language.The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:Inline assembly is organized into  &#34;templates&#34;, similar to and callable as procedures. templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.Assembly syntax is unified across ISAs and consistent with Odin syntax.Assembly is fully type checked..." />
  <title>Everyone Says Assembly Is Untyped—Everyone Is Wrong - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
@@ -49,7 +49,7 @@
 <p><span class="date">2026-08-20</span></p>
 </div>
 </header>
-<p><strong>TL;DR:</strong> I believe Odin’s inline assembles is currently the best out of any language.</p>
+<p><strong>TL;DR:</strong> I believe Odin’s inline assembly is currently the best out of any language.</p>
 <p>The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go…) that would combine all of these aspects:</p>
 <ul>
 <li>Inline assembly is organized into <code>asm</code> “templates”, similar to and callable as procedures.</li>
@@ -116,7 +116,7 @@ end;
 <h2 id="heading-2-5">Assembly Is Not Untyped</h2/>
 <p>There is a very common belief that assembly is “untyped”, and that inline assembly is therefore inherently an anything-goes affair. This isn’t true, and getting past it is the single most important idea in the whole design of a universalized inline assembler.</p>
 <p>I’ve <a href="https://www.gingerbill.org/article/2021/03/07/untyped-types/">written before</a> about “untyped types” in the context of Odin, but those are actually <a href="https://wiki.haskell.org/Existential_type">existential types</a>. Conventionally, “untyped” effectively means everything is “opaque” and very weak (e.g. everything is just an int and you just assume it everywhere). Assembly is usually considered the perfect example of such an “untyped” language.</p>
-<p>However, every instruction has a set of valid forms. Each form dictates the <em>kind</em> of each operand (register, memory, immediate, label), the <em>class</em> of each register (general-purpose, vector, mask), the <em>width</em> of each operand, the range each immediate may take, and what the instruction <em>clobbers</em> (flags, memory, particular registers). In x86, a <code>mulps</code> wants a 128-bit vector register; a <code>crc32</code> in one of its forms wants a 32-bit destination and an 8-bit memory source; <code>div</code> reads and writes <code>rdx:rax</code> whether you like it or not.</p>
+<p>However, every instruction has a set of valid forms. Each form dictates the <em>kind</em> of each operand (register, memory, immediate, label), the <em>class</em> of each register (general-purpose, vector, mask), the <em>width</em> of each operand, the range each immediate may take, and what the instruction <em>clobbers</em> (flags, memory, particular registers). In x86, a <code>mulps</code> wants a 128-bit vector register; a <code>crc32</code> in one of its forms wants a 32-bit destination and an 8-bit memory source; <code>div</code> reads and writes <code>rdx</code> and <code>rax</code> whether ask to it do or not.</p>
 <p>That is not the absence of a type system: that <em>is</em> a type system; a rather rich, dependent, per-instruction one. Assembly is effectively a polyadic typed algebra that everyone has agreed to pretend is a soup of bytes. Once you understand this, the design question stops being “how do I smuggle a string past the compiler?” and becomes “how do I express this algebra in the language’s own terms?”. And it turns out Odin already had most of the pieces lying around.</p>
 <h2 id="heading-2-6">One Syntax, Many ISAs</h2/>
 <p>The first decision was the surrounding syntax. Not the mnemonics—obviously <code>mov</code> on AMD64 has nothing to say to <code>ldr</code> on arm64—but everything <em>around</em> the mnemonics: how you declare operands, how you reference registers, how you write a memory address, how you spell a label, etc.</p>
@@ -125,9 +125,9 @@ end;
 <pre><code>instruction [operand{, operand}]
 </code></pre>
 <p>The same grammar everywhere. The instruction has to be a valid Odin identifier or keyword. Explicit physical registers always take a <code>%</code> sigil (<code>%rax</code>, <code>%xmm0</code>, <code>%al</code>), which keeps them from colliding with your own parameter names and with any global constants from the parent scope. Parameter and scratch names are always bare (because the compiler understands the semantics). Memory operands are always Intel-style effective addresses (<code>[base + index*scale + disp]</code>). Labels are always <code>.name</code>. You learn this shape once and it carries to every ISA we ever add, even though the instructions underneath are completely different. It uses the same set of tokens as Odin: number-literals, comments, even the semicolon insertion rules.</p>
-<p>This is the same principle I keep coming back to: <strong>coherency over consistency</strong>. Odin is coherent with <em>itself</em>, not GAS, NASM, or any platform’s traditional assembler. This is Odin’s inline assembler, nothing else.</p>
+<p>This is the same principle I keep coming back to: <strong>coherency over consistency</strong>. Odin is coherent with <em>itself</em>, not GAS, NASM, or any platform’s traditional assembler. This is Odin’s inline assembler.</p>
 <h2 id="heading-2-7">Intel Order, Not AT&amp;T</h2/>
-<p>There is a decision buried in that last section that deserves to be dragged into the light, because it is the one people argue about most: the body uses <strong>Intel operand order</strong>—destination first, <code>dst, src</code>—together with Intel-style (but slightly different) memory addressing, rather than the AT&amp;T/GAS conventions.</p>
+<p>There is one syntactical decision that people argue about most when it comes to assembly, whether to use Intel or AT&amp;T/GAs. For Odin’s inline <code>asm</code> bodies, they use  <strong>Intel operand order</strong>—destination first, <code>dst, src</code>—together with Intel-style (but slightly different) memory addressing, rather than the AT&amp;T/GAS conventions.</p>
 <p>It is a place where I <em>departed</em> from Plan 9 and Go, even while stealing their best idea. Plan 9’s and Go’s assembler writes operands source-first, left-to-right in dataflow order <label for="go-not-consistent" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="go-not-consistent" class="margin-toggle"></input>
 <span class="sidenote">Go isn’t completely consistent with other conventions. Some of the ordering of the operands is just not consistent with other AT&amp;T assemblers. Lovely, right? /s</span>, so <code>MOVQ $0, AX</code> clears <code>AX</code> with the destination on the <em>right</em>. That is the same operand order as AT&amp;T, and the opposite of Intel. I took the one-grammar-for-every-ISA philosophy from them wholesale, but I did not want to take their operand order. It might sound like an arbitrary choice, but it isn’t.</p>
@@ -144,18 +144,18 @@ end;
 <input type="checkbox" id="intel-type-memory" class="margin-toggle"></input>
 <span class="sidenote">Intel’s syntax is to prefix the memory operand with <code>byte</code>, <code>word</code>, <code>dword</code>, or <code>qword</code>, but Odin’s just uses the Odin type system directly.</span>. The type system already carries the information AT&amp;T smears across the numerous different spellings of <code>mov</code>.</p>
 <h3 id="heading-3-10">Sigils</h3/>
-<p>AT&amp;T decorates <em>every</em> register with <code>%</code> and <em>every</em> immediate with <code>$</code>, unconditionally. Odin’s <code>%</code> looks superficially similar but is doing a completely different job: it appears only on explicit <em>physical</em> registers, and only to keep them from colliding with the namespace of the user-provided parameters and scratch names. In an idiomatic template you write bare names (e.g. <code>foo</code>, <code>acc</code>, <code>i</code>) and reach for <code>%rax</code> only when you genuinely need to pin one or refer to the register directly. The sigil marks the exception; it is not blanket decoration smeared over the common case.</p>
-<p>Put the two styles beside each other and the difference in <em>readability</em> is not subtle. First the AT&amp;T/GAS form:</p>
+<p>AT&amp;T decorates <em>every</em> register with <code>%</code> and <em>every</em> immediate with <code>$</code>, unconditionally. Odin’s <code>%</code> looks superficially similar but is doing a completely different job: it appears only on explicit <em>physical</em> registers, and only to keep them from colliding with the namespace of the user-provided parameters and scratch names. In an idiomatic template you write bare names (e.g. <code>foo</code>, <code>acc</code>, <code>i</code>) and reach for <code>%rax</code> only when you genuinely need to pin one or refer to the register directly. The sigil marks the exception due to rule rather it being a blanket decoration smeared everywhere.</p>
+<p>First let’s look at AT&amp;T/GAS form:</p>
 <pre><code>movl %eax, %ebx             # ebx = eax   (source is on the LEFT)
 addl $1, %ebx               # ebx += 1
 movl 8(%rdi,%rsi,4), %ecx   # ecx = *(rdi + rsi*4 + 8)
 </code></pre>
-<p>and the same three instructions in Odin’s Intel order:</p>
+<p>and then the same three instructions in Odin’s Intel order:</p>
 <pre><code class="odin">mov  %ebx, %eax              // ebx = eax   (destination is on the LEFT)
 add  %ebx, 1                 // ebx += 1
 mov  %ecx, [%rdi + %rsi*4 + 8]
 </code></pre>
-<p>And remember that this is the <em>worst</em> case for Odin, written entirely in physical registers to make the syntactic contrast fair. In a real template you would be using names, not <code>%</code>-prefixed registers, and the right-hand column sheds almost all of its remaining sigils. That is the saner read I was after: one grammar, destination-first like most of the world, no suffix-mangled mnemonics, memory operands that look like arithmetic, and punctuation only where it is earning its keep. A more likely example would be using named parameters:</p>
+<p>Note that this is the <em>worst</em> case for Odin, written entirely in physical registers to make the syntactic contrast fair. In a real template you would be using names, not <code>%</code>-prefixed registers, and the right-hand column sheds almost all of its remaining sigils. That is the saner read I was after: one grammar, destination-first like most of the world, no suffix-mangled mnemonics, memory operands that look like arithmetic, and punctuation only where absolutely needed. A more likely example would be using named parameters:</p>
 <pre><code class="odin">mov  x, y
 add  x, 1
 mov  z, [base + index*4 + disp]
@@ -229,9 +229,9 @@ But this aspect is also where a lot of the explicit register-pinning lives, stuf
 <h4>A Scratch Register/Parameter</h4/>
 <p><code>name: T</code>, is a working register whose class comes from its type—<code>i64</code> gives you a general-purpose register, <code>#simd[4]f32</code> gives you a vector one. Unpinned scratch is early-clobbered, so it can never accidentally alias an input.</p>
 <h4>A Width-View</h4/>
-<p><code>view: T = src</code>, is a second name for <code>src</code>’s register seen at a narrower width. One register, two widths—the classic <code>setcc</code>-then-arithmetic idiom where you want the low 8 bits by one name and the full 64 by another. This is effectively a form of pinning anyway.</p>
+<p><code>view: T = src</code>, is a second name for <code>src</code>’s register seen at a narrower width. One register but with differing widths. A classic example in x86 being <code>setcc</code>, the idiom where you want the low 8 bits by one name and the full 64-bit by another. This is effectively a form of pinning anyway.</p>
 <h3 id="heading-3-14">The Usage of Binding Specification Syntax</h3/>
-<p>The right-hand side of <code>=</code> is what disambiguates the last two: <code>= %reg</code> is a register, so it’s a pin; <code>= src</code> is a name, so it’s a width-view. The grammar itself tells you which you meant.</p>
+<p>The right-hand side of <code>=</code> is what disambiguates the last two: <code>= %reg</code> is a register, so it’s a pin; <code>= src</code> is a name, so it’s a width-view.</p>
 <p>As an example, below is a vector kernel that uses scratch registers of a vector type, and here is exactly why typed parameters matter—the checker knows <code>acc</code> and <code>tmp</code> are xmm registers because you told it <code>#simd[4]f32</code>:</p>
 <pre><code class="odin">dot_f32x4 :: asm(a, b: [^]f32, n: i64) -&gt; (result: f32) [
     acc: #simd[4]f32,
@@ -258,9 +258,9 @@ But this aspect is also where a lot of the explicit register-pinning lives, stuf
     movss  result, acc
 }
 </code></pre>
-<p>One thing to note about labels such as <code>.loop</code>: they are local to the template and mangled per instantiation, so you can inline the same template a hundred times and never get a symbol collision. There are no global labels, on purpose. This is what a hygienic macro system effectively offers.</p>
+<p>One thing to note about labels such as <code>.loop</code>: they are local to the template and mangled per instantiation, so you can inline the same template as many times as you want and never get a symbol collision. There are no global labels, by design. This is what a hygienic macro system effectively offers.</p>
 <h2 id="heading-2-15">Prefixes and Other Syntactic Quirks</h2/>
-<p>There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS. None of them are arbitrary. Almost every one is the same rule wearing a different hat: the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of a special case.</p>
+<p>There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS. None of them are arbitrary. Almost every one is the same rule wearing a <a href="https://en.wikipedia.org/wiki/Mr_Benn">different hat</a>: the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of a special case.</p>
 <p>The clearest example is prefixes.</p>
 <h3 id="heading-3-16">A Prefix Gets Its Own Line</h3/>
 <p>Instruction prefixes like <code>lock</code>, <code>rep</code>, and <code>repne</code> in x86 do not sit in front of the mnemonic the way they do everywhere else. They go on their own line:</p>
@@ -291,7 +291,7 @@ memcpy_rep :: asm(dst, src: rawptr, len: uint) -&gt; (end_dst, end_src: rawptr, 
 <p>The data and layout directives are <code>#byte</code>, <code>#skip</code>, <code>#nop</code>, and <code>#align</code>, not <code>.byte</code>, <code>.skip</code>, <code>.nops</code>, and <code>.p2align</code>. <code>#byte 0x90, 0x90</code> emits raw bytes; <code>#align 16</code> aligns the next instruction to a 16-byte boundary.</p>
 <p>The <code>#</code> is not decoration for its own sake, rather it is Odin’s directive sigil, the same one on <code>#simd</code>, <code>#clobber</code>, <code>#volatile</code>, and every other directive in the language. A reader who knows what <code>#</code> means everywhere else already knows what it means here. It is coherent with the rest of Odin’s syntactical design choices.</p>
 <h3 id="heading-3-20">Labels Start With a Dot</h3/>
-<p>A label is <code>.name:</code> to define and <code>.name</code> to reference. The leading dot marks it as being template-local, and it is mangled per instantiation, so you can inline the same template a hundred times and never collide. There are no global labels inside a template, on purpose, there is nowhere for a stray <code>jmp</code> to escape to. The compiler hypothetically parses labels without the need for a prefixed dot, but that prefixed dot also allows for the ability to keep labels in their own namespace and make it clear from a glance that they are also labels, making it familiar to other people from other assembly syntax and that they may behave slightly differently.</p>
+<p>A label is <code>.name:</code> to define and <code>.name</code> to reference. The leading dot marks it as being template-local, and it is mangled per instantiation, so you can inline the same template a hundred times and never collide. There are no global labels inside a template, by design, there is nowhere for a stray <code>jmp</code> to escape to. The compiler hypothetically parses labels without the need for a prefixed dot, but that prefixed dot also allows for the ability to keep labels in their own namespace and make it clear from a glance that they are also labels, making it familiar to other people from other assembly syntax and that they may behave slightly differently.</p>
 <hr />
 <p>None of these are clever, and that is precisely the point. Each one is just Odin’s existing lexical rule applied inside the assembly, rather than being overridden by some assembler tradition inherited from a different tool. The point is that an <code>asm</code> body reads similarly to the language it is embedded in, and the only genuinely new thing you have to learn is the instructions themselves.</p>
 <h2 id="heading-2-21">The Compiler Actually Understands It</h2/>

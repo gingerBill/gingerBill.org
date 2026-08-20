@@ -10,7 +10,7 @@
 		<link>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</link>
 		<guid>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</guid>
 		<pubDate>Thu, 20 Aug 2026 09:00:00 +0000</pubDate>
-		<description>TL;DR: I believe Odin;s inline assembles is currently the best out of any language.The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:Inline assembly is organized into  ;templates;, similar to and callable as procedures. templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.Assembly syntax is unified across ISAs and consistent with Odin syntax.Assembly is fully type checke...</description>
+		<description>TL;DR: I believe Odin;s inline assembly is currently the best out of any language.The most important aspects are of this article listed below. I am not aware of any other assembly (GCC/Clang/Rust/Go...) that would combine all of these aspects:Inline assembly is organized into  ;templates;, similar to and callable as procedures. templates integrate with rest of the code, through bindings specifying clobbers, pinned, tied, and scratch registers.Assembly syntax is unified across ISAs and consistent with Odin syntax.Assembly is fully type checked...</description>
 	</item>
 	<item>
 		<title>Good Tools Are Invisible</title>
