@@ -69,10 +69,10 @@
 <p>Let’s start with the thing I was reacting against. Here is what a trivial “add one” looks like in GCC-style extended <code>asm</code> using x86 AT&amp;T/GAS syntax:</p>
 <pre><code class="c">int dst;
 asm(&#34;movl %1, %0\n\t&#34;
-    &#34;addl $1, %0&#34;
-    : &#34;=r&#34; (dst) // outputs
-    : &#34;r&#34;  (src) // inputs
-    : // clobbers
+	&#34;addl $1, %0&#34;
+	: &#34;=r&#34; (dst) // outputs
+	: &#34;r&#34;  (src) // inputs
+	: // clobbers
 );
 </code></pre>
 <p>Look at the above example and ask yourself: what does the <em>compiler</em> (as opposed to the <em>assembler</em>) understand here? And that answer is “almost nothing”. The body of this assembly is a <em>string</em>. <code>&#34;=r&#34;</code> and <code>&#34;r&#34;</code> are <em>explicit</em> constraint strings, which is effectively another little stringly-typed <a href="https://en.wikipedia.org/wiki/Domain-specific_language">DSL</a> glued to the side of this real DSL. The <code>%0</code> and <code>%1</code> are positional references into a list you have to count by hand. And if you get any of it wrong, the error you get back is not from the <em>compiler</em> that knows your types and semantics; it is from the <em>assembler</em>, which is much later on in the compilation steps, pointing at generated text that was not written by you.</p>
@@ -83,11 +83,11 @@ asm(&#34;movl %1, %0\n\t&#34;
 <h3 id="heading-3-3">MSVC</h3/>
 <p>Microsoft’s C compilers had a genuinely different approach than passing strings. MSVC’s <a href="https://learn.microsoft.com/en-us/cpp/assembler/inline/asm?view=msvc-170"><code>__asm</code> was <em>statement-based</em></a> and are not string-based. You wrote a block of real instructions as identifiers, and (this is the good part) you referenced your C variables and labels directly by name, and the compiler resolved them for you:</p>
 <pre><code class="c">int add_one(int x) {
-    __asm {
-        mov eax, x // &#39;x&#39; is the C parameter, resolved by the compiler
-        inc eax
-    }
-    // For the calling convention, the value in eax is the return value
+	__asm {
+		mov eax, x // &#39;x&#39; is the C parameter, resolved by the compiler
+		inc eax
+	}
+	// For the calling convention, the value in eax is the return value
 }
 </code></pre>
 <p>No constraint strings, no <code>%0</code>, and no counting operands to refer to them. Compared to the GCC contraption, this is honestly pleasant to read and write. For a long time, it was how a huge amount of Windows systems code got written. So why did this approach disappear?</p>
@@ -105,8 +105,8 @@ procedure Nops; inline($90/$90); { two NOP bytes }
 <p>The second mechanism, which was added in <a href="https://www.scribd.com/document/550270834/Turbo-Pascal-Version-6-0-Users-Guide-1990">Turbo Pascal 6.0</a>, was the built-in assembler: the <code>asm ... end</code> block and the <code>assembler</code> procedure directive. This approach is much better as it has real mnemonics, and (like MSVC after it) you could name your Pascal variables and parameters directly:</p>
 <pre><code class="pascal">function AddOne(X: Word): Word; assembler;
 asm
-    mov ax, X { &#39;X&#39; is the Pascal parameter }
-    inc ax    { result returned in AX }
+	mov ax, X { &#39;X&#39; is the Pascal parameter }
+	inc ax    { result returned in AX }
 end;
 </code></pre>
 <p>For 1990, this seems really lovely <label for="before-my-time" class="margin-toggle sidenote-number"></label>
@@ -171,7 +171,7 @@ mov  z, [base + index*4 + disp]
 <h2 id="heading-2-11">The Template Syntax</h2/>
 <p>This is the general shape of an <code>asm</code> template:</p>
 <pre><code class="odin">name :: asm(params) -&gt; (results) [bindings] {
-    body
+	body
 }
 </code></pre>
 <p>The <code>params</code> are your inputs, as plain names with Odin types. The <code>results</code> are your outputs, again plain names with types, sharing the same signature syntax as an Odin procedure. The <code>[bindings]</code> block holds everything that is <em>not</em> a plain input or output: the ties, the pins, the scratch registers, the width-views, the clobbers, and the effects. The <code>body</code> is the instruction stream. The params and results are optional, like with a normal procedure type, and the bindings are completely optional if they are not necessary.</p>
@@ -179,9 +179,9 @@ mov  z, [base + index*4 + disp]
 <p>Just like normal Odin procedures, you can declare parametric polymorphic constant parameters. A <code>$name</code> parameter is a compile-time immediate (<code>$ctrl: u8</code>), range-checked at the point of instantiation, exactly like any other Odin constant.</p>
 <p>Here is one of the simplest examples of the <code>asm</code> syntax:</p>
 <pre><code class="odin">add_one :: asm(x: u64) -&gt; (r: u64) [
-    x -&gt; r,
+	x -&gt; r,
 ] {
-    inc r
+	inc r
 }
 </code></pre>
 <p>In the bindings block, <code>x -&gt; r</code> means that it <em>ties</em> the input <code>x</code> and the output <code>r</code> to the same register, which lowers to a read-write operand. No stupid <code>%0</code>, no inline <code>&#34;+r&#34;</code>, no manually counting anything. You wrote the names; the names mean what they say.</p>
@@ -191,29 +191,29 @@ mov  z, [base + index*4 + disp]
 <span class="sidenote">It is the foundation of Odin’s type system after all.</span>, and inline assembly is a place where this approach pays a dividend which I did not necessarily anticipate when I started Odin.</p>
 <p>Assembly instructions are <em>naturally</em> polyadic. <code>rdtsc</code> produces two results in <code>edx</code> and <code>eax</code>. <code>cpuid</code> produces four. <code>div</code> produces a quotient and a remainder simultaneously. In a language with a single return value you have to model all of this with out-parameters, or by stuffing things into a struct/tuple, or by some other contortion. In Odin you just… return them.</p>
 <pre><code class="odin">rdtsc :: asm() -&gt; (lo, hi: u32) [
-    lo = %eax,
-    hi = %edx,
+	lo = %eax,
+	hi = %edx,
 ] {
-    rdtsc
+	rdtsc
 }
 
 cpuid :: asm(leaf: u32) -&gt; (a, b, c, d: u32) [
-    leaf -&gt; a = %eax,
-    b = %ebx,
-    c = %ecx,
-    d = %edx,
+	leaf -&gt; a = %eax,
+	b = %ebx,
+	c = %ecx,
+	d = %edx,
 ] {
-    cpuid
+	cpuid
 }
 
 divmod_u64 :: asm(n: u64, d: u64) -&gt; (quo, rem: u64) [
-    n -&gt; quo = %rax,
-    rem      = %rdx,
-    #clobber flags, // this is inferred and thus not necessary,
-                    // but it&#39;s to show you can make it explicit
+	n -&gt; quo = %rax,
+	rem      = %rdx,
+	#clobber flags, // this is inferred and thus not necessary,
+					// but it&#39;s to show you can make it explicit
 ] {
-    xor %rdx, %rdx   // clear the high half of the dividend
-    div d            // rax = rdx:rax / d ; rdx = remainder
+	xor %rdx, %rdx   // clear the high half of the dividend
+	div d            // rax = rdx:rax / d ; rdx = remainder
 }
 </code></pre>
 <p>And at the call site they destructure exactly like any other Odin procedure that returns multiple values:</p>
@@ -242,28 +242,28 @@ But this aspect is also where a lot of the explicit register-pinning lives, stuf
 <p>The right-hand side of <code>=</code> is what disambiguates the last two: <code>= %reg</code> is a register, so it’s a pin; <code>= src</code> is a name, so it’s a width-view.</p>
 <p>As an example, below is a vector kernel that uses scratch registers of a vector type, and here is exactly why typed parameters matter—the checker knows <code>acc</code> and <code>tmp</code> are xmm registers because you told it <code>#simd[4]f32</code>:</p>
 <pre><code class="odin">dot_f32x4 :: asm(a, b: [^]f32, n: i64) -&gt; (result: f32) [
-    acc: #simd[4]f32,
-    tmp: #simd[4]f32,
-    i:   i64,
-    #clobber flags,  // the cmp/jl sets flags
-    #clobber memory, // we read memory the compiler can&#39;t see
-                     //
-                     // NOTE: neither of these `#clobber` things are
-                     // necessary as the compiler infers them from
-                     // the usage of the instructions
+	acc: #simd[4]f32,
+	tmp: #simd[4]f32,
+	i:   i64,
+	#clobber flags,  // the cmp/jl sets flags
+	#clobber memory, // we read memory the compiler can&#39;t see
+					 //
+					 // NOTE: neither of these `#clobber` things are
+					 // necessary as the compiler infers them from
+					 // the usage of the instructions
 ] {
-    xorps  acc, acc
-    xor    i, i
+	xorps  acc, acc
+	xor    i, i
 .loop:
-    movups tmp, [a + i*4]   // scale 4 = sizeof(f32)
-    mulps  tmp, [b + i*4]
-    addps  acc, tmp
-    add    i, 4
-    cmp    i, n
-    jl     .loop
-    haddps acc, acc
-    haddps acc, acc
-    movss  result, acc
+	movups tmp, [a + i*4]   // scale 4 = sizeof(f32)
+	mulps  tmp, [b + i*4]
+	addps  acc, tmp
+	add    i, 4
+	cmp    i, n
+	jl     .loop
+	haddps acc, acc
+	haddps acc, acc
+	movss  result, acc
 }
 </code></pre>
 <p>One thing to note about labels such as <code>.loop</code>: they are local to the template and mangled per instantiation, so you can inline the same template as many times as you want and never get a symbol collision. There are no global labels, by design. This is what a hygienic macro system effectively offers.</p>
@@ -273,19 +273,19 @@ But this aspect is also where a lot of the explicit register-pinning lives, stuf
 <h3 id="heading-3-16">A Prefix Gets Its Own Line</h3/>
 <p>Instruction prefixes like <code>lock</code>, <code>rep</code>, and <code>repne</code> in x86 do not sit in front of the mnemonic the way they do everywhere else. They go on their own line:</p>
 <pre><code class="odin">atomic_fetch_add :: asm(p: ^i64, delta: i64) -&gt; (old: i64) [
-    delta -&gt; old,
+	delta -&gt; old,
 ] {
-    lock
-    xadd [p], old
+	lock
+	xadd [p], old
 }
 
 memcpy_rep :: asm(dst, src: rawptr, len: uint) -&gt; (end_dst, end_src: rawptr, rem: uint) [
-    dst -&gt; end_dst = %rdi,
-    src -&gt; end_src = %rsi,
-    len -&gt; rem     = %rcx,
+	dst -&gt; end_dst = %rdi,
+	src -&gt; end_src = %rsi,
+	len -&gt; rem     = %rcx,
 ] {
-    rep
-    movsb
+	rep
+	movsb
 }
 </code></pre>
 <p>To an assembly veteran this looks wrong: surely <code>lock xadd</code> is one thing? But think about what the grammar actually says. Every line in a template is <code>instruction [operand{, operand}]</code>, and Odin (like Go or Python) has automatic semicolon insertion, so a newline terminates a statement. If a prefix shared a line with its mnemonic, I would need a special tokenizer exception: “these particular identifiers are not really instructions, they are modifiers, so don’t terminate the statement after them.” I did not want that exception. A prefix is simply an instruction that happens to take no operands and stand on its own line. The grammar stays uniform, and there is one fewer rule.</p>
@@ -347,16 +347,16 @@ memcpy_rep :: asm(dst, src: rawptr, len: uint) -&gt; (end_dst, end_src: rawptr, 
 <pre><code class="odin">mfence :: asm() [ #volatile ] { mfence }
 
 atomic_fetch_add :: asm(p: ^i64, delta: i64) -&gt; (old: i64) [
-    delta -&gt; old,
+	delta -&gt; old,
 ] {
-    lock
-    xadd [p], old   // [p] += old; old = previous [p]
+	lock
+	xadd [p], old   // [p] += old; old = previous [p]
 }
 
 tzcnt :: asm(x: u64) -&gt; (count: u64, was_zero: bool) [
-    was_zero = %flags.z,
+	was_zero = %flags.z,
 ] {
-    tzcnt count, x
+	tzcnt count, x
 }
 </code></pre>
 <p><em>Minor tangent:</em> <code>was_zero = %flags.z</code> is accessing a flag from the pseudo register <code>%flags</code>. The zero flag becomes a <em>typed boolean result</em> of the template, a condition-code placed into an ordinary Odin value that you destructure like any other. This is coherency and consistency, all the way down to the flags register.</p>
