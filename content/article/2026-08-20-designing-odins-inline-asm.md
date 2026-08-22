@@ -453,9 +453,9 @@ All behind the same API contract; change the import and your code keeps its shap
 
 *n.b.* For inline assembly we only care about the architectures we target, so not all of these are needed for it to work.
 
-### Why Did This Not Exist Decades Ago?
+### Why Didn't This Exist Decades Ago?
 
-The encoding of `x86` is a fixed, knowable, finite thing, updated only periodically. So is `arm64`, so is `RISC-V`. And yet every assembler, disassembler, JIT, debugger, emulator, and fuzzer re-derives the same knowledge from scratch; usually badly, usually welded to one tool in one language. LLVM has `TableGen`, but it is LLVM, in C++, and was never meant to be imported as a library. `binutils` has opcode tables, but they are per-tool C internals. There has never been a clean, verified, importable "here is every instruction form for a dozen architectures" that a compiler could just pick up.
+The encoding of `x86` is a fixed, knowable, finite thing, updated only periodically. So is `arm64`, so is `RISC-V`. And for some reason every assembler, disassembler, JIT, debugger, emulator, and fuzzer re-derives the same knowledge from scratch. It is pretty much always poorly bound to one tool in one language. LLVM has `TableGen`, but it is LLVM (in C++) and was never meant to be imported as a library. `binutils` has opcode tables, but they are per-tool C internals. That I know of, there has never been a clean, verified, importable library where you can just go "here is every instruction form for a dozen architectures" that a compiler could just pick up.
 
 I'd argue the absence of such a library is the real reason inline assemblers are so bad, as well as general compiler code-generation tooling. Semantic checking assembly isn't a hard idea; it's that without a machine-readable model of the instruction set right there, you *can't* check against it; so you give up and hand a string to the downstream assembler, and let it do the "complaining". The string-based design is downstream of the missing-table problem, and why people just bodge everything.
 
