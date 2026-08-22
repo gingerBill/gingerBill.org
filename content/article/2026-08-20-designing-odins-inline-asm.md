@@ -36,11 +36,11 @@ The most important aspects are of this article listed below. I am not aware of a
 
 --------
 
-I have been asked why [Odin](https://odin-lang.org/) even bothers having its own [custom inline assembler](https://odin-lang.org/docs/inline-asm/) at all. Isn't inline assembly a solved problem? You take a string, you hand it to the assembler, and you let it sort out the rest. Everyone from GCC to Clang to Rust[^rust-asm] does more or less this. The wheel has been invented, right?
+I have been asked why [Odin](https://odin-lang.org/) even bothers having its own [custom inline assembler](https://odin-lang.org/docs/inline-asm/) at all. Isn't inline assembly a solved problem? You take a string, you hand it to the assembler, and you let that external assembler sort out the rest. Everyone from GCC to Clang to Rust[^rust-asm] does more or less this. The wheel has been invented, right?
 
 [^rust-asm]: Rust's [inline assembly](https://doc.rust-lang.org/reference/inline-assembly.html) is a little more sophisticated because of the macro system, but not that much more.
 
-This is precisely the design I did *not* want, and precisely the design that most languages have settled for. My goal from the beginning was an inline assembler that actually *integrates* with the rest of the language rather than feeling bolted on the side. And I honestly believe that what Odin has ended up with is the best inline assembly system in any language right now. I don't say that lightly, and by the end of this article I hope you'll at least understand why I believe that to be true.
+This is precisely the design I did *not* want, and the design that most languages have settled for. My goal from the beginning was to have an inline assembler that is actually *integrated* into the rest of the language rather than feeling bolted on the side. And I honestly believe that what Odin has ended up with is the best inline assembly system in any language right now. I don't say that lightly, and by the end of this article I hope you'll at least understand why I believe that to be true.
 
 
 ## The String-Based Nonsense
@@ -57,19 +57,19 @@ asm("movl %1, %0\n\t"
 );
 ```
 
-Look at this and ask yourself: what does the *compiler* (as opposed to the *assembler*) understand here? The answer is "almost nothing". The body is a string. `"=r"` and `"r"` are *explicit* constraint strings, another little stringly-typed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) glued to the side of the real DSL. The `%0` and `%1` are positional references into a list you have to count by hand. And if you get any of it wrong, the error you get back is not from the compiler that knows your types and semantics; it is from the assembler, much later on, pointing at generated text that was not written by you.
+Look at the above example and ask yourself: what does the *compiler* (as opposed to the *assembler*) understand here? And that answer is "almost nothing". The body of this assembly is a _string_. `"=r"` and `"r"` are *explicit* constraint strings, which is effectively another little stringly-typed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) glued to the side of this real DSL. The `%0` and `%1` are positional references into a list you have to count by hand. And if you get any of it wrong, the error you get back is not from the _compiler_ that knows your types and semantics; it is from the _assembler_, which is much later on in the compilation steps, pointing at generated text that was not written by you.
 
-This is the sort of thing that happens when a *feature* is designed as an *escape-hatch* first rather than as a *part of the language*. Nobody seems to have sat down and asked "what would inline assembly look like if it respected the type system, the calling conventions, the constant system, and other things (like multiple-return-value semantics) of the host language?". Rather, they asked "how do I bodge some assembly into this function with the least amount of compiler work?", and a string was the answer.
+This sort of thing happens when a *feature* is designed as an *escape-hatch* first rather than as a *part of the language*. Nobody seems to have sat down and asked "what would inline assembly look like if it respected the type system, the calling conventions, the constant system, and other things (like multiple-return-value semantics) of the host language?". Rather they asked "how do I bodge some assembly into this function with the least amount of compiler work?", and a string was the answer.
 
-These kinds of inline assemblers ignore all of the aspects of the host language, and just bodge it in. I didn't; I designed one from scratch.
+Pretty much all kinds of inline assemblers ignore all of the aspects of the host language, and just bodge it in. I didn't; I designed one from scratch.
 
 ## A Brief History of Bolting It On
 
-Strings are not the only way this has been done, and it is worth looking at what previous languages/compilers have done, because some of these approaches are a heck of a lot better than what GCC/Clang did, and unfortunately this development has stopped in compiler space.
+Strings are not the only way to implement inline assemblers, and it is worth seeing what previous languages/compilers have done, because some of these approaches are a heck of a lot better than what GCC/Clang did, and unfortunately this development has stopped in compiler space.
 
 ### MSVC
 
-Microsoft's C compilers had a genuinely different approach. MSVC's [`__asm` was *statement-based*](https://learn.microsoft.com/en-us/cpp/assembler/inline/asm?view=msvc-170), not string-based. You wrote a block of real instructions, and (this is the good part) you referenced your C variables and labels directly by name, and the compiler resolved them for you:
+Microsoft's C compilers had a genuinely different approach than passing strings. MSVC's [`__asm` was *statement-based*](https://learn.microsoft.com/en-us/cpp/assembler/inline/asm?view=msvc-170) and are not string-based. You wrote a block of real instructions as identifiers, and (this is the good part) you referenced your C variables and labels directly by name, and the compiler resolved them for you:
 
 ```c
 int add_one(int x) {
@@ -81,89 +81,95 @@ int add_one(int x) {
 }
 ```
 
-No constraint strings, no `%0`, and no counting operands to refer to them. Compared to the GCC contraption this is honestly pleasant to read, and for a long time it was how an enormous amount of Windows systems code got written. So why did it disappear?
+No constraint strings, no `%0`, and no counting operands to refer to them. Compared to the GCC contraption, this is honestly pleasant to read and write. For a long time, it was how a huge amount of Windows systems code got written. So why did this approach disappear?
 
-Firstly, it was **x86-only**. When Microsoft moved to x64 (and later ARM64) they did not port it. The official guidance became "use compiler intrinsics, or write a separate `.asm` file and run it through MASM". One of the stated constraints for the x64 compiler was to have *no* inline assembler at all. A whole approach was thrown away at the ISA boundary rather than generalized across it.
+Firstly, it was **x86-only**. When Microsoft moved to x64/amd64 (and later arm64) they did not port it across. The official guidance became "use compiler intrinsics, or write a separate `.asm` file and run it through MASM". One of the stated points for the x64/amd64 compiler was to have *no* inline assembler at all. They threw away a whole approach at the ISA boundary rather than trying to generalize across it.
 
-Secondly, even where it existed, the compiler did not really *understand* the block. It resolved your symbol names, but it carried no explicit clobber information; the optimizer largely treated the region as an opaque fence to be conservative around. It knew what `x` was. It did not give any feedback to the user as to what the instructions *did*.
+Secondly, even where it existed, the compiler did not really *understand* the block. It resolved your symbol names, but it did not allow you to state any explicit clobber information. The optimizer largely treated these regions as opaque fences to be conservative around. It knew what `x` was (since it was a C/C++ compiler) but it did not give any feedback to the user as to what the instructions *did*.
 
 ### Turbo Pascal
 
-If you go back further, you'll find Turbo Pascal, which I have an obvious fondness for, as I do for Pascals in general. For its inline assembly, it had *two* mechanisms, and together they bracket the entire design space quite nicely.
+Going back a bit further, you can find Turbo Pascal, which I have an obvious fondness for, as I do for Pascals in general. For its inline assembly, it had *two* mechanisms.
 
-The first mechanism was the `inline` directive, and it is the purest possible statement of "the compiler understands nothing". You gave it machine code as a sequence of numeric constants—actual opcodes, as bytes:
+The first mechanism was the `inline` directive, and it is the purest example of "the compiler understands nothing". You gave it machine code as a sequence of numeric constants (actual opcodes as bytes):
 
 ```pascal
-procedure Cli;  inline($FA);       { $FA = the CLI instruction }
-procedure Nops; inline($90/$90);   { two NOP bytes }
+procedure Cli;  inline($FA);     { $FA = the CLI instruction }
+procedure Nops; inline($90/$90); { two NOP bytes }
 ```
 
-That is not an assembler. This is *you* being the assembler, by hand, with the compiler faithfully copying your bytes into the stream. It is the ur-escape-hatch[^odin-byte-directive].
+As you can see, that is not an assembler, rather it is *you* being the assembler, writing the bytes by hand, with the compiler faithfully copying your bytes into the stream. It is the ur-escape-hatch[^odin-byte-directive].
 
-[^odin-byte-directive]: Odin keeps this exact capability as the `#byte` directive, but as *one directive among many* inside a checked template, not as the entire interface.
+[^odin-byte-directive]: Odin keeps this exact capability with the `#byte` directive, but it is *one directive among many* inside a checked template, not as the entire interface.
 
-The second mechanism, which was added in [Turbo Pascal 6.0](https://www.scribd.com/document/550270834/Turbo-Pascal-Version-6-0-Users-Guide-1990), was the built-in assembler: the `asm ... end` block and the `assembler` procedure directive. This approach is much better as it has real mnemonics, and, like MSVC after it, you could name your Pascal variables and parameters directly:
+The second mechanism, which was added in [Turbo Pascal 6.0](https://www.scribd.com/document/550270834/Turbo-Pascal-Version-6-0-Users-Guide-1990), was the built-in assembler: the `asm ... end` block and the `assembler` procedure directive. This approach is much better as it has real mnemonics, and (like MSVC after it) you could name your Pascal variables and parameters directly:
 
 ```pascal
 function AddOne(X: Word): Word; assembler;
 asm
-    mov ax, X    { 'X' is the Pascal parameter }
-    inc ax       { result returned in AX }
+    mov ax, X { 'X' is the Pascal parameter }
+    inc ax    { result returned in AX }
 end;
 ```
 
-For 1990, this seems really lovely[^before-my-time], and arguably ahead of where current C compilers eventually landed. But because of its time period, the built-in assembler only ever understood up to 80286 instructions, so the day you wanted a 386 and its 32-bit registers you were sent off to an external assembler anyway.
+For 1990, this seems really lovely[^before-my-time], and arguably ahead of where the current C compilers have landed. But because of its time period, the built-in assembler only ever understood up to 80286 instructions, so the when you wanted a 386 and its 32-bit registers, you had to resort to using an external assembler anyway.
 
 [^before-my-time]: This is before my time as I was not even born yet.
 
 Bolted on, and then bolted shut.
 
-MSVC and Turbo Pascal were both better in their instinctual design compared to that of GCC, especially with the dumb constraint strings. However, both of them stopped at exactly the same place: they resolved your identifiers but never modelled the instructions—not the operand types, only limited checking on immediate ranges, no control over what got clobbered or what needed to be pinned. GCC threw away their design and forgot the aspect of letting the assembly speak for itself in its own language.
+MSVC and Turbo Pascal were both better in their instinctual design compared to that of GCC, especially with the dumb constraint strings. However, both of them stopped at exactly the same place: they resolved your identifiers but never modelled the instructions (not the operand types), only limited checking on immediate ranges, no control over what got clobbered or what needed to be pinned. GCC threw away their design and forgot the aspect of letting the assembly speak for itself in its own language.
 
-There was no conception that there is actually a type system underneath which could be generalized for the assembly. Which is the whole point of the Odin design, and it is what the rest of this article is about.
+There was no conception that there was/is actually a type system underneath all of this which could be generalized for any assembly. But this is the entire point of Odin's design, and it is what the rest of this article is about.
 
 ## Assembly Is Not Untyped
 
 There is a very common belief that assembly is "untyped", and that inline assembly is therefore inherently an anything-goes affair. This isn't true, and getting past it is the single most important idea in the whole design of a universalized inline assembler.
 
-I've [written before](https://www.gingerbill.org/article/2021/03/07/untyped-types/) about "untyped types" in the context of Odin, but those are actually [existential types](https://wiki.haskell.org/Existential_type). Conventionally, "untyped" effectively means everything is "opaque" and very weak (e.g. everything is just an int and you just assume it everywhere). Assembly is usually considered the perfect example of such an "untyped" language.
+I've [written before](https://www.gingerbill.org/article/2021/03/07/untyped-types/) about "untyped types" in the context of Odin, but those are actually [existential types](https://wiki.haskell.org/Existential_type).  Many people have a poor understanding of what "untyped" means, but to put it simply, it just means it is singularly typed, e.g. everything is an integer, or everything is a string. It does not mean no "types", or "no types in the conventional manner". Most people have a really poor conception and understanding of what a type actually is in the first place, and maybe even just view things as meaning everything is "opaque" and very weak. Assembly is usually considered the perfect example of such an "untyped" language, which I am arguing it is not at all untyped.
 
-However, every instruction has a set of valid forms. Each form dictates the *kind* of each operand (register, memory, immediate, label), the *class* of each register (general-purpose, vector, mask), the *width* of each operand, the range each immediate may take, and what the instruction *clobbers* (flags, memory, particular registers). In x86, a `mulps` wants a 128-bit vector register; a `crc32` in one of its forms wants a 32-bit destination and an 8-bit memory source; `div` reads and writes `rdx` and `rax` whether you ask it to do it or not.
+However every instruction has a set of valid forms. Each form dictates the *kind* of each operand (register, memory, immediate, label), the *class* of each register (general-purpose, vector, mask), the *width* of each operand, the range each immediate may take, and what the instruction *clobbers* (flags, memory, particular registers). In x86, a `mulps` wants a 128-bit vector register; a `crc32` in one of its forms wants a 32-bit destination and an 8-bit memory source; `div` reads and writes `rdx` and `rax` whether you ask it to do it or not.
 
-That is not the absence of a type system: that *is* a type system; a rather rich, dependent, per-instruction one. Assembly is effectively a polyadic typed algebra that everyone has agreed to pretend is a soup of bytes. Once you understand this, the design question stops being "how do I smuggle a string past the compiler?" and becomes "how do I express this algebra in the language's own terms?". And it turns out Odin already had most of the pieces lying around.
+That is not the absence of a type system: that *is* a type system; a rather rich, dependent, per-instruction one. Assembly is effectively a [polyadic typed algebra](https://www.gingerbill.org/article/2021/12/15/multiple-return-values-research/) that everyone has agreed to pretend is a soup of bytes[^not-yummy]. Once you understand this, the design question stops being "how do I smuggle a string past the compiler?" and becomes "how do I express this algebra of the language itself?". Luckily, it turns out Odin already had most of the pieces lying around.
+
+[^not-yummy]: Not as yummy as you'd think it is.
 
 ## One Syntax, Many ISAs
 
-The first decision was the surrounding syntax. Not the mnemonics—obviously `mov` on AMD64 has nothing to say to `ldr` on arm64—but everything *around* the mnemonics: how you declare operands, how you reference registers, how you write a memory address, how you spell a label, etc.
+The first decision I had to make was regarding the syntax. Not the mnemonics—obviously `mov` on AMD64 has nothing to say to `ldr` on ARM64—but everything *around* the mnemonics: how you declare operands, how you reference registers, how you write a memory address, how you spell a label, etc.
 
-Here I took the same lesson that [Plan 9](https://9p.io/sys/doc/asm.html) (and later [Go](https://go.dev/doc/asm)) took: pick *one* syntax and keep it consistent across every target. [Ken Thompson](https://en.wikipedia.org/wiki/Ken_Thompson)'s toolchain did this, which Go inherited, and it is genuinely nice to only have to learn the shape of the thing once. Go's assembly does have its issues (and inconsistencies), but the general idea is brilliant.
+Here I took the same approach that [Plan 9](https://9p.io/sys/doc/asm.html) (and later [Go](https://go.dev/doc/asm)) took: pick *one* syntax and keep it consistent across every target. [Ken Thompson](https://en.wikipedia.org/wiki/Ken_Thompson)'s toolchain did this, which Go inherited, and it is genuinely nice to only have to learn the shape of the thing once. Go's assembly does have its issues (and inconsistencies), but the general idea is brilliant.
 
-Odin itself has a context-free grammar, so for Odin's inline assembly, I wanted it to have a context-free grammar too, with the general form:
+Odin itself has a context-free grammar, so Odin's inline assembly needs to be a context-free grammar too. I wanted it to have this general form:
 
 ```
 instruction [operand{, operand}]
 ```
 
-The same grammar everywhere. The instruction has to be a valid Odin identifier or keyword. Explicit physical registers always take a `%` sigil (`%rax`, `%xmm0`, `%al`), which keeps them from colliding with your own parameter names and with any global constants from the parent scope. Parameter and scratch names are always bare (because the compiler understands the semantics). Memory operands are always Intel-style effective addresses (`[base + index*scale + disp]`). Labels are always `.name`. You learn this shape once and it carries to every ISA we ever add, even though the instructions underneath are completely different. It uses the same set of tokens as Odin: number-literals, comments, even the semicolon insertion rules.
+The instruction has to be a valid Odin identifier or keyword[^amd64-in]. Explicit physical registers always take a `%` sigil (`%rax`, `%xmm0`, `%al`), which keeps them from colliding with your own parameter names and with any global constants from the parent scope. Parameter and scratch names are always bare (because the compiler understands the semantics). Memory operands are always Intel-style effective addresses (`[base + index*scale + disp]`). Labels are always `.name`. You learn this shape once and it carries to every ISA we ever add, even though the instructions underneath are completely different. It uses the same set of tokens as Odin: number-literals, comments, even the semicolon insertion rules.
 
-This is the same principle I keep coming back to: **coherency over consistency**. Odin is coherent with *itself*, not GAS, NASM, or any platform's traditional assembler. This is Odin's inline assembler.
+[^amd64-in]: On x86/AMD64, `in` is a valid instruction but also a keyword in Odin. Unfortunately, because of Odin's automatic semicolon insertion rules, when you use the `in` mnemonic with no operands, you have to append a `;` to prevent it thinking the next line is part of the operands for the instruction. A compromise with using this syntax, but one I believe is completely worth it.
+
+But this is the same principle I keep coming back to when designing anything: **coherency over consistency**. Odin is coherent with *itself*, not GAS, NASM, or any platform's traditional assembler as this is Odin's inline assembler and not anyone else's.
 
 ## Intel Order, Not AT&T
 
-There is one syntactical decision that people argue about most when it comes to assembly, whether to use Intel or AT&T/GAs. For Odin's inline `asm` bodies, they use  **Intel operand order**—destination first, `dst, src`—together with Intel-style (but slightly different) memory addressing, rather than the AT&T/GAS conventions.
+There is one syntactical decision that people argue about most when it comes to assembly, whether to use Intel or AT&T/GAs (at least with x86/AMD64). For Odin's inline `asm` bodies, they use **Intel operand order** (destination first, `dst, src`) together with Intel-style (but slightly different) memory addressing, rather than the AT&T/GAS conventions.
 
-It is a place where I *departed* from Plan 9 and Go, even while stealing their best idea. Plan 9's and Go's assembler writes operands source-first, left-to-right in dataflow order[^go-not-consistent], so `MOVQ $0, AX` clears `AX` with the destination on the *right*. That is the same operand order as AT&T, and the opposite of Intel. I took the one-grammar-for-every-ISA philosophy from them wholesale, but I did not want to take their operand order. It might sound like an arbitrary choice, but it isn't.
+This is an in which I *departed* from Plan 9 and Go, even while stealing their best general concept. Plan 9's and Go's assembler writes operands source-first, left-to-right in dataflow order[^go-not-consistent], so `MOVQ $0, AX` clears `AX` with the destination on the *right*. That is the same operand order as AT&T (the opposite of Intel). I may have taken the one-grammar-for-every-ISA philosophy from them wholesale, but I did not want to take their operand order. This might sound like an arbitrary choice, but it really isn't.
 
 [^go-not-consistent]: Go isn't completely consistent with other conventions. Some of the ordering of the operands is just not consistent with other AT&T assemblers. Lovely, right? /s
 
-The first reason is pure coherence with the rest of Odin. `mov dst, src` reads as `dst = src`. The destination sits on the left, exactly where the assignment target lives in every other line of Odin you will ever write: `x = y`, `x := y`, `name: type = value`[^casting-syntax]. AT&T's `movl %src, %dst` runs the dataflow backwards relative to every assignment in the language surrounding it. When you are reading a template embedded in ordinary Odin code, you should not have to flip your mental model of which way the arrow points halfway down a procedure.
+The first reason is to keep coherence with the rest of Odin. `mov dst, src` reads as `dst = src`. The destination sits on the left, exactly where the assignment target lives in every other line of Odin you will ever write: `x = y`, `x := y`, `name: type = value`[^casting-syntax]. AT&T's `movl %src, %dst` runs the dataflow backwards relative to every assignment in the language surrounding it. When you are reading a template embedded in ordinary Odin code, you should not have to flip your mental model of which way the arrow points halfway down a procedure.
 [^casting-syntax]: I made [the same argument about casting](https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/) where the type belongs on the left because that is how declarations read.
 
-The second reason is the one that matters for a *universal* syntax specifically: destination-first is not an Intel quirk, it is the **majority convention across ISAs**. ARM writes `add r0, r1, r2` (destination first). RISC-V writes `add rd, rs1, rs2` (destination first). MIPS documentation does the same. Source-first ordering is really the parochial one. The x86/GAS tradition was inherited from the DEC and PDP-11 lineage.
+The second reason is the one which matters the most for a *universal* syntax specifically: destination-first is not an Intel quirk, it is the **majority convention across ISAs**. ARM writes `add r0, r1, r2` (destination first). RISC-V writes `add rd, rs1, rs2` (destination first). MIPS[^riscv-is-mips] documentation does the same. Source-first ordering really is the parochial one. The x86/GAS tradition was inherited from the DEC and PDP-11 lineage, and not many other ISA conventions followed suit.
 
-If your entire goal is a syntax that reads the same on every target, you should pick the convention most of those targets *already* use in their own assemblers, not the one peculiar to a single toolchain's history. Plan 9, somewhat ironically, picked the parochial ordering because of its lineage.
+[^riscv-is-mips]: RISC-V is effectively just a variant of MIPS. Fight me.
 
-The rest of the AT&T baggage falls away for related reasons:
+But if your entire goal is a syntax that reads the same on every target, you should pick the convention most of those targets *already* use in their own assemblers, not the one peculiar to a single toolchain's history. Plan 9, somewhat ironically, picked the peculiar parochial ordering because of its lineage.
+
+Luckily, the rest of the AT&T baggage falls away for related reasons:
 
 ### Memory Operands
 
