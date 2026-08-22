@@ -284,11 +284,10 @@ If you don't bind a result, the compiler simply ignores the unused one because y
 
 ## Ties, Pins, Scratch, and Width-Views
 
-The binding block is an aspect which took a lot of design to think through, and for many people, it does not seem like it should even exist, as if it is an artificial prologue of sorts.
-But this aspect is also where a lot of the explicit register-pinning lives, stuff that GCC places in its cryptic constraint string thingymabobs (technical term). I want virtually all of the clobbering to be inferred where possible, but where you need to be specific, make it explicit, readable, and named.
+The binding block is an aspect of the design which took a lot to think through, and for many people I discussed with, seemed like it should even exist as it seemed to be an artificial prologue of sorts.
+But this aspect is also where a lot of the explicit register-pinning lives, stuff that GCC places in its cryptic constraint string thingymabobs (technical term). However, do I want virtually all of the clobbering to be inferred where possible, but where you need to be specific, make it explicit, readable, and named.
 
 There are only a few things that live in the binding block, and they compose cleanly:
-
 
 #### Clobbering
 
@@ -352,9 +351,9 @@ One thing to note about labels such as `.loop`: they are local to the template a
 
 ## Prefixes and Other Syntactic Quirks
 
-There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS. None of them are arbitrary. Almost every one is the same rule wearing a [different hat](https://en.wikipedia.org/wiki/Mr_Benn): the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of a special case.
+There are a handful of small syntactic decisions that I had to make when designing this universal syntax for inline assembly templates. And these could easily trip up anyone who has spent years in NASM or GAS and became too familiar with them. Luckily, none of them are arbitrary and almost every one is the same rule wearing a [different hat](https://en.wikipedia.org/wiki/Mr_Benn): the assembly body is tokenized and parsed by the same machinery as the rest of Odin, so anything that looks like a quirk is usually just the absence of me trying to special case something.
 
-The clearest example is prefixes.
+The first and clearest example are prefixes.
 
 ### A Prefix Gets Its Own Line
 
@@ -380,17 +379,17 @@ memcpy_rep :: asm(dst, src: rawptr, len: uint) -> (end_dst, end_src: rawptr, rem
 
 To an assembly veteran this looks wrong: surely `lock xadd` is one thing? But think about what the grammar actually says. Every line in a template is `instruction [operand{, operand}]`, and Odin (like Go or Python) has automatic semicolon insertion, so a newline terminates a statement. If a prefix shared a line with its mnemonic, I would need a special tokenizer exception: "these particular identifiers are not really instructions, they are modifiers, so don't terminate the statement after them." I did not want that exception. A prefix is simply an instruction that happens to take no operands and stand on its own line. The grammar stays uniform, and there is one fewer rule.
 
-The obvious worry is that detaching a prefix from its instruction lets them drift apart. It does not, because the checker keeps them married even while the syntax pulls them apart. A prefix must be immediately followed by a real instruction (not a label, not another prefix) and its legality is checked against that following instruction's form: `lock` requires a memory destination; `rep`/`repne` require a string instruction. Write `lock` in front of something with no memory destination and the compiler rejects it, by name, at that token. This is the whole philosophy of the design: keep the syntax dumb and uniform, and make the semantic checker smart.
+The obvious worry is that detaching a prefix from its instruction lets them drift apart. It does not in practice because the checker keeps them married together. A prefix must be immediately followed by a real instruction (not a label, not another prefix) and its legality is checked against that following instruction's form: `lock` requires a memory destination; `rep`/`repne` require a string instruction. Write `lock` in front of something with no memory destination and the compiler rejects it, by name, at that token. This is the whole philosophy of the design: keep the syntax dumb and uniform, and instead make the semantic checker smart.
 
-The prefix rule is really just the most visible instance of a broader principle. The body is tokenized with Odin's own tokenizer, which produces a few more things that look like quirks and are really just consistency.
+The prefix rule is really just the most visible instance of the broader principle I am striving to follow. The body is tokenized with Odin's own tokenizer, which produces a few more things that look like quirks (such as automatic semicolon insertion) and are really just there for consistency.
 
 ### Comments are `//` and `/**/`, not `;` or `#`
 
-In practically every traditional assembler, `;` (or `#` in GAS) begins a comment. Not here. ; is the statement separator, because that is what it is in Odin, and comments are `//` and `/**/`, because that is what they are in Odin. This is the single quirk most likely to bite someone in the arse when they write their first `asm` template—muscle memory typing `;` to start a comment and gets a syntax error instead of a remark. Odin has a comment syntax already, why should the assembly syntax get its own? Make it coherent with the parent surrounding language.
+In practically every traditional assembler, `;` (or `#` in GAS) begins a comment. Not here. `;` is the statement separator (which you can use with instructions e.g. `lock; xadd`, because that is what it is in Odin, and comments are `//` and `/**/`, because that is what they are in Odin. This is the single quirk is most likely to bite someone in the arse when they write their first `asm` template due to muscle memory of typing `;` to start a comment and gets a syntax error instead of a remark. Odin has a comment syntax already, why should the assembly syntax get its own? Make it coherent with the parent surrounding language.
 
 ### Number Literals Are Odin's
 
-No `0FAh`, no `$FA`, no trailing-letter radix soup. A hex literal is `0xFA`, binary is `0b1010`, and digit separators work, so you can write `rol_imm(0x0000_00FF, 8)` and have it read cleanly. The immediates in your assembly are tokenized by the same code as the integers everywhere else in your program, which means they behave identically: same bases, same separators, same overflow rules.
+No `0FAh`, no `$FA`, and no trailing-letter radix rubbish. A hex literal is `0xFA`, binary is `0b1010`, a decimal is `123`. Digit separators also work too meaning you can write `0x0000_00FF` and have it read cleanly and consistently with the rest of Odin. The immediates in your assembly are tokenized by the same code as the integers everywhere else in your program, which means they behave identically: same base prefixes and same separators.
 
 ### Directives use `#`
 
@@ -404,13 +403,13 @@ A label is `.name:` to define and `.name` to reference. The leading dot marks it
 
 ----
 
-None of these are clever, and that is precisely the point. Each one is just Odin's existing lexical rule applied inside the assembly, rather than being overridden by some assembler tradition inherited from a different tool. The point is that an `asm` body reads similarly to the language it is embedded in, and the only genuinely new thing you have to learn is the instructions themselves.
+None of these are trying to be clever, and that is precisely the point. Each one of these rules is just an existing Odin lexical rule applied to the inline assembly, rather than requiring that section to be overridden so it can adhere to some assembler tradition inherited from a different tool. The point is that an `asm` body reads similarly to the language it is embedded in, and the only genuinely new thing you have to learn is the instructions themselves.
 
 ## The Compiler Actually Understands It
 
-This is the part I care about most, and the part I think virtually every other [inline] assembler has completely ignored for decades: semantic checking.
+Now we come to the part I care most about, and the part I think virtually every other [inline] assembler has completely ignored for decades: semantic checking.
 
-Templates are not passed through to the assembler verbatim. The frontend semantically checks every single instruction against the target's own encoding tables[^rexcode] (the same data the backend encodes from) so the overwhelming majority of mistakes are caught at compile time, at the offending token, in your source, rather than surfacing as an opaque assembler error much later against text you didn't write.
+Templates are not passed through to the assembler verbatim. The frontend semantically checks every single instruction against the target's own encoding tables[^rexcode] (the same data the backend encodes from) so the overwhelming majority of preventable mistakes are caught at compile time, at the offending token, in your source, rather than surfacing as an opaque assembler error much later against generated text you didn't write.
 
 [^rexcode]: In partial preparation for this inline assembler, we have our own high-performance multi-architecture instruction encoder/decoder/printer library written in Odin: [rexcode](https://github.com/odin-lang/Odin/tree/master/core/rexcode). It has all of the encoding tables for numerous ISAs and IRs.
 
@@ -422,9 +421,9 @@ movsss ...   // did you mean `movss`, `movsd`?
 ...          // 36893488147419103232 does not fit a 32-bit immediate
 ```
 
-Plenty of assemblers have been able to do a "did you mean?" typo fix; that is the bare minimum. However, my genuine complaint with the rest of the [inline] assemblers is this: given that the compiler understands *all* of the valid forms, all of the required operand kinds, and all of the clobbering information, why do so few inline assemblers offer error messages and suggestions beyond simple typo correction? The information is right there. Why don't they use it?!
+Plenty of assemblers have been able to do a "did you mean?" typo fix; that is the bare minimum. However, my genuine complaint with the rest of the [inline] assemblers is this: given that the compiler understands *all* of the valid forms, all of the required operand kinds, and all of the clobbering information, why do so few inline assemblers offer error messages and suggestions beyond simple typo correction? The information is right there! Why don't they use it?!
 
-And this is what I wanted for Odin's inline assembly. It can flag redundant uses of `#align_stack` when nothing in the body needs an aligned stack, because it understands the instructions. It flags a *missing* `#volatile` where the template plainly needs to be treated as volatile, because it understands the instructions. If you mark a template as diverging with `-> !` and it demonstrably never diverges in practice, it tells you, because it understands the instructions.
+And this is exactly what I wanted for Odin's inline assembly. It can flag redundant uses of `#align_stack` when nothing in the body needs an aligned stack, because it understands the instructions. It flags a *missing* `#volatile` where the template plainly needs to be treated as volatile, because it understands the instructions. If you mark a template as diverging with `-> !` and it demonstrably never diverges in practice, it tells you, because it understands the instructions.
 
 Most clobbers don't even need to be written—they're inferred from the instructions you used. In fact, the main reason the explicit `#clobber` and `#volatile` forms exist is for the effects the tables genuinely cannot infer, like runtime-dependent AVX-512 masking. The compiler is not a passive conduit to the assembler. It understands the algebra and gives you good error messages when you do something wrong.
 
@@ -432,9 +431,9 @@ This is only possible *because* the assembly is actually typed and structured ra
 
 ## How the Compiler Understands It: `rexcode`
 
-When I say the compiler *understands* an instruction, that is not a figure of speech, and it is not magic. It leans on a library.
+When I say the compiler *understands* an instruction, that isn't a figure of speech nor is it magic. It leans on a library natively written in Odin.
 
-The front-end checker and the backend—when it lowers to the internal assembler—both reference to the same thing: [`core:rexcode`](https://github.com/odin-lang/Odin/tree/master/core/rexcode), a high-performance, multi-architecture instruction encoder/decoder/printer that ships in Odin's `core` collection in part as preparation for tooling like this[^dotbmp]. Ask it whether `crc32 crc, [p + i]:u8` is a legal form—what operand kinds and widths it needs, what it clobbers—and it answers from its encoding tables, not from hand-rolled `if` statements buried in the compiler.
+The semantic checker references [`core:rexcode`](https://github.com/odin-lang/Odin/tree/master/core/rexcode), a high-performance, multi-architecture instruction encoder/decoder/printer that ships in Odin's `core` collection in part as preparation for tooling like this[^dotbmp]. You can ask it whether `crc32 crc, [p + i]:u8` is a legal form (what operand kinds and widths it needs, what it clobbers) and it answers from its encoding tables, not from hand-rolled `if` statements buried in a hypothetical compiler.
 
 [^dotbmp]: `core:rexcode` is written designed and originally by [Brendan Punsky (dotbmp)](https://github.com/dotbmp/).
 
