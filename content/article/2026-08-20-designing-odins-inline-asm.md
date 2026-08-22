@@ -1,23 +1,23 @@
 ---
 {
-    "title": "Everyone Says Assembly Is Untyped—Everyone Is Wrong",
-    "slug": "designing-odins-inline-asm",
-    "author": "Ginger Bill",
-    "date": "2026-08-20",
-    "categories": [
-        "tools",
-        "tooling",
-        "assembly",
-        "assembler",
-        "syntax",
-        "aesthetics",
-        "ergonomics",
-        "programming language theory",
-        "programming languages"
-    ],
-     series: [
-        "Syntax and how it Matters",
-    ],
+	"title": "Everyone Says Assembly Is Untyped—Everyone Is Wrong",
+	"slug": "designing-odins-inline-asm",
+	"author": "Ginger Bill",
+	"date": "2026-08-20",
+	"categories": [
+		"tools",
+		"tooling",
+		"assembly",
+		"assembler",
+		"syntax",
+		"aesthetics",
+		"ergonomics",
+		"programming language theory",
+		"programming languages"
+	],
+	 series: [
+		"Syntax and how it Matters",
+	],
 }
 ---
 
@@ -50,10 +50,10 @@ Let's start with the thing I was reacting against. Here is what a trivial "add o
 ```c
 int dst;
 asm("movl %1, %0\n\t"
-    "addl $1, %0"
-    : "=r" (dst) // outputs
-    : "r"  (src) // inputs
-    : // clobbers
+	"addl $1, %0"
+	: "=r" (dst) // outputs
+	: "r"  (src) // inputs
+	: // clobbers
 );
 ```
 
@@ -73,11 +73,11 @@ Microsoft's C compilers had a genuinely different approach than passing strings.
 
 ```c
 int add_one(int x) {
-    __asm {
-        mov eax, x // 'x' is the C parameter, resolved by the compiler
-        inc eax
-    }
-    // For the calling convention, the value in eax is the return value
+	__asm {
+		mov eax, x // 'x' is the C parameter, resolved by the compiler
+		inc eax
+	}
+	// For the calling convention, the value in eax is the return value
 }
 ```
 
@@ -107,8 +107,8 @@ The second mechanism, which was added in [Turbo Pascal 6.0](https://www.scribd.c
 ```pascal
 function AddOne(X: Word): Word; assembler;
 asm
-    mov ax, X { 'X' is the Pascal parameter }
-    inc ax    { result returned in AX }
+	mov ax, X { 'X' is the Pascal parameter }
+	inc ax    { result returned in AX }
 end;
 ```
 
@@ -214,7 +214,7 @@ This is the general shape of an `asm` template:
 
 ```odin
 name :: asm(params) -> (results) [bindings] {
-    body
+	body
 }
 ```
 
@@ -228,9 +228,9 @@ Here is one of the simplest examples of the `asm` syntax:
 
 ```odin
 add_one :: asm(x: u64) -> (r: u64) [
-    x -> r,
+	x -> r,
 ] {
-    inc r
+	inc r
 }
 ```
 
@@ -246,29 +246,29 @@ Assembly instructions are *naturally* polyadic. `rdtsc` produces two results in 
 
 ```odin
 rdtsc :: asm() -> (lo, hi: u32) [
-    lo = %eax,
-    hi = %edx,
+	lo = %eax,
+	hi = %edx,
 ] {
-    rdtsc
+	rdtsc
 }
 
 cpuid :: asm(leaf: u32) -> (a, b, c, d: u32) [
-    leaf -> a = %eax,
-    b = %ebx,
-    c = %ecx,
-    d = %edx,
+	leaf -> a = %eax,
+	b = %ebx,
+	c = %ecx,
+	d = %edx,
 ] {
-    cpuid
+	cpuid
 }
 
 divmod_u64 :: asm(n: u64, d: u64) -> (quo, rem: u64) [
-    n -> quo = %rax,
-    rem      = %rdx,
-    #clobber flags, // this is inferred and thus not necessary,
-                    // but it's to show you can make it explicit
+	n -> quo = %rax,
+	rem      = %rdx,
+	#clobber flags, // this is inferred and thus not necessary,
+					// but it's to show you can make it explicit
 ] {
-    xor %rdx, %rdx   // clear the high half of the dividend
-    div d            // rax = rdx:rax / d ; rdx = remainder
+	xor %rdx, %rdx   // clear the high half of the dividend
+	div d            // rax = rdx:rax / d ; rdx = remainder
 }
 ```
 
@@ -322,28 +322,28 @@ As an example, below is a vector kernel that uses scratch registers of a vector 
 
 ```odin
 dot_f32x4 :: asm(a, b: [^]f32, n: i64) -> (result: f32) [
-    acc: #simd[4]f32,
-    tmp: #simd[4]f32,
-    i:   i64,
-    #clobber flags,  // the cmp/jl sets flags
-    #clobber memory, // we read memory the compiler can't see
-                     //
-                     // NOTE: neither of these `#clobber` things are
-                     // necessary as the compiler infers them from
-                     // the usage of the instructions
+	acc: #simd[4]f32,
+	tmp: #simd[4]f32,
+	i:   i64,
+	#clobber flags,  // the cmp/jl sets flags
+	#clobber memory, // we read memory the compiler can't see
+					 //
+					 // NOTE: neither of these `#clobber` things are
+					 // necessary as the compiler infers them from
+					 // the usage of the instructions
 ] {
-    xorps  acc, acc
-    xor    i, i
+	xorps  acc, acc
+	xor    i, i
 .loop:
-    movups tmp, [a + i*4]   // scale 4 = sizeof(f32)
-    mulps  tmp, [b + i*4]
-    addps  acc, tmp
-    add    i, 4
-    cmp    i, n
-    jl     .loop
-    haddps acc, acc
-    haddps acc, acc
-    movss  result, acc
+	movups tmp, [a + i*4]   // scale 4 = sizeof(f32)
+	mulps  tmp, [b + i*4]
+	addps  acc, tmp
+	add    i, 4
+	cmp    i, n
+	jl     .loop
+	haddps acc, acc
+	haddps acc, acc
+	movss  result, acc
 }
 ```
 
@@ -361,19 +361,19 @@ Instruction prefixes like `lock`, `rep`, and `repne` in x86 do not sit in front 
 
 ```odin
 atomic_fetch_add :: asm(p: ^i64, delta: i64) -> (old: i64) [
-    delta -> old,
+	delta -> old,
 ] {
-    lock
-    xadd [p], old
+	lock
+	xadd [p], old
 }
 
 memcpy_rep :: asm(dst, src: rawptr, len: uint) -> (end_dst, end_src: rawptr, rem: uint) [
-    dst -> end_dst = %rdi,
-    src -> end_src = %rsi,
-    len -> rem     = %rcx,
+	dst -> end_dst = %rdi,
+	src -> end_src = %rsi,
+	len -> rem     = %rcx,
 ] {
-    rep
-    movsb
+	rep
+	movsb
 }
 ```
 
@@ -475,16 +475,16 @@ And you know what? It's absolutely lovely. And because they are templates, they 
 mfence :: asm() [ #volatile ] { mfence }
 
 atomic_fetch_add :: asm(p: ^i64, delta: i64) -> (old: i64) [
-    delta -> old,
+	delta -> old,
 ] {
-    lock
-    xadd [p], old   // [p] += old; old = previous [p]
+	lock
+	xadd [p], old   // [p] += old; old = previous [p]
 }
 
 tzcnt :: asm(x: u64) -> (count: u64, was_zero: bool) [
-    was_zero = %flags.z,
+	was_zero = %flags.z,
 ] {
-    tzcnt count, x
+	tzcnt count, x
 }
 ```
 
