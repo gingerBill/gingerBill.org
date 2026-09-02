@@ -22,7 +22,7 @@ Runtime Type Information (RTTI) has a cost, but it is a *tame* cost compared to 
 * The use of RTTI is a ***fixed constant*** cost, one procedure iterating over one table, no matter how many types exist.
 * RTTI is effectively ***zero*** additional cost during semantic-checking, because there is nothing to specialize.
 * CTTI does not necessarily need any extra tables, but usually does create them in some cases.
-* CTTI is an ***exponential*** cost everywhere in the worst-case: semantic checking, code generation, *and* binary sizes. Instantiations go multiplicative in the general-case.
+* CTTI is an ***exponential*** cost everywhere in the worst-case: semantic checking, code generation, *and* binary size. Instantiations go multiplicative in the general-case.
 
 There is a trade-off between a linear memory cost (that can be measured) for an exponential compile-time cost (that cannot be measured), and people argue for the latter, advertising it as "zero-cost".
 
@@ -44,7 +44,7 @@ RTTI is commonly stored in a table, and that is not different for Odin. Each typ
 
 The price of RTTI is spread across a few places: the procedures that handle the RTTI, tables, and the semantic checking.
 
-When you print a value with `fmt.println`, or (de)serialize anything in general, you are calling *one* procedure (or set of procedures) that iterates over types referenced in a type-table. That procedure's code doesn't grow because your program has more types in it, nor does it need to be duplicated per type by the linker, nor does it produce more *code* for each new combination of types passed to it. It is the same code reading, just a type-information in a type-table.
+When you print a value with `fmt.println`, or (de)serialize anything in general, you are calling *one* procedure (or set of procedures) that iterates over types referenced in a type-table. That procedure's code doesn't grow because your program has more types in it, nor does it need to be duplicated per type by the linker, nor does it produce more *code* for each new combination of types passed to it. It is the same code reading, just type-information in a type-table.
 
 The *code* handling this runtime type information will always be the same size and shape, as the only thing that grows is the type-table itself which it reads from (and as I said, that grows linearly).
 
@@ -127,7 +127,7 @@ This design argument is effectively coherency vs [per-type] cleverness. It's a s
 And what does CTTI give you in exchange?
 
 * Parametric-Polymorphism/Templates that become [metastatic](https://en.wikipedia.org/wiki/Metastasis) over time
-* Error messages measured in kilobytes and require a degree in Egyptology to decipher
+* Error messages measured in kilobytes, requiring a degree in Egyptology to decipher
 * Build times that scale exponentially allowing you to cook a full Sunday Roast in that time
 * Binaries full of near-identical procedures that the linker now has to deduplicate (but cannot in practice)
 
@@ -151,7 +151,7 @@ And RTTI, of course, does have its own set of costs:
 * The table lookup is a runtime cost, even if it is "constant".
 * All information has to be retained, or the whole thing doesn't work.
 * You might need to obfuscate some of the type information over privacy/security concerns.
-* If you are in an environment where you cannot spare the bytes or the indirection (as in that is a real constraint), then RTTI can be wasteful.
+* If you are in an environment where you cannot spare the bytes or the indirection (which is a real constraint), then RTTI can be wasteful.
 
 My point here is not that "CTTI bad, RTTI good", rather that I don't think many people realize that the cost of CTTI is exponential in the worst-case and multiplicative in the general-case, considering checking, code-gen, and binary size. The benefit of CTTI is pretty much always _local_, but has _global_ effects. And when designing a language, I'd argue for using RTTI by default pretty much always, and only using CTTI when you absolutely require it.
 
