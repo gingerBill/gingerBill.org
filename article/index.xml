@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>CTTI is Exponential, RTTI is Linear</title>
+		<link>https://www.gingerbill.org/article/2026/09/02/ctti-is-exponential-rtti-is-linear/</link>
+		<guid>https://www.gingerbill.org/article/2026/09/02/ctti-is-exponential-rtti-is-linear/</guid>
+		<pubDate>Wed, 02 Sep 2026 09:00:00 +0000</pubDate>
+		<description>AbstractRuntime Type Information (RTTI) has a cost, but it is a tame cost compared to Compile-Time Type Information (CTTI), which is sold as ;zero-cost;, and it is anything but.RTTI;s tables are a linear cost in the number of types (N types -; N entries), single cost.The use of RTTI is a fixed constant cost, one procedure iterating over one table, no matter how many types exist.RTTI is effectively zero additional cost during semantic-checking, because there is nothing to specialize.CTTI does not necessarily need any extra tables, but usual...</description>
+	</item>
+	<item>
 		<title>Everyone Says Assembly Is Untyped—Everyone Is Wrong</title>
 		<link>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</link>
 		<guid>https://www.gingerbill.org/article/2026/08/20/designing-odins-inline-asm/</guid>
