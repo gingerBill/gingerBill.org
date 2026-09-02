@@ -22,9 +22,9 @@ Runtime Type Information (RTTI) has a cost, but it is a *tame* cost compared to 
 * The use of RTTI is a ***fixed constant*** cost, one procedure iterating over one table, no matter how many types exist.
 * RTTI is effectively ***zero*** additional cost during semantic-checking, because there is nothing to specialize.
 * CTTI does not necessarily need any extra tables, but usually does create them in some cases.
-* CTTI is an ***exponential*** cost everywhere in the worse-case: semantic checking, code generation, *and* binary sizes. Instantiations go multiplicative in the general-case.
+* CTTI is an ***exponential*** cost everywhere in the worst-case: semantic checking, code generation, *and* binary sizes. Instantiations go multiplicative in the general-case.
 
-There is a trade-off between a linear memory cost (that can be measured) for an exponential compile-time cost (that cannot be measured), and people argue for latter, advertizing it as "zero cost".
+There is a trade-off between a linear memory cost (that can be measured) for an exponential compile-time cost (that cannot be measured), and people argue for the latter, advertising it as "zero-cost".
 
 ------
 
@@ -44,11 +44,11 @@ RTTI is commonly stored in a table, and that is not different for Odin. Each typ
 
 The price of RTTI is spread across a few places: the procedures that handle the RTTI, tables, and the semantic checking.
 
-When you print a value with `fmt.println`, or (de)serialize anything in general, you are calling *one* procedure (or set of procedures) that iterates over types referenced in a type-table. That procedure's code doesn't grow because your program has more types in it, nor does it need to be duplicated per type by the linker, nor does it produce more *code* for each new combinations of types passed to it. It is the same code reading, just a type-information in a type-table.
+When you print a value with `fmt.println`, or (de)serialize anything in general, you are calling *one* procedure (or set of procedures) that iterates over types referenced in a type-table. That procedure's code doesn't grow because your program has more types in it, nor does it need to be duplicated per type by the linker, nor does it produce more *code* for each new combination of types passed to it. It is the same code reading, just a type-information in a type-table.
 
 The *code* handling this runtime type information will always be the same size and shape, as the only thing that grows is the type-table itself which it reads from (and as I said, that grows linearly).
 
-The complexity of a type-table is linear: `N` types gives you `N` entries. Typically (and hopefully) this type-table then resides in a read-only data section (e.g. `@(rodata)` in Odin), then the cost of this table is paid once at compile time, in the binary, and the memory of the executing program. You can then go and look at the binary directly and see how of bytes that table occupies in the binary. All of that is trivially measurable, which is precisely why many people who state they dislike RTTI can quote you a number since the cost is trivial enough to be quotable[^same-said-ctti].
+The complexity of a type-table is linear: `N` types gives you `N` entries. Typically (and hopefully) this type-table then resides in a read-only data section (e.g. `@(rodata)` in Odin), then the cost of this table is paid once at compile time, in the binary, and the memory of the executing program. You can then go and look at the binary directly and see how many bytes that table occupies in the binary. All of that is trivially measurable, which is precisely why many people who state they dislike RTTI can quote you a number since the cost is trivial enough to be quotable[^same-said-ctti].
 
 [^same-said-ctti]: The same cannot be trivially said for CTTI, but I will get to that later.
 
@@ -89,15 +89,15 @@ $$
 K = \text{combination of the types passed to a procedure}
 $$
 
-In the case of `K=0`, the number of instances of the procedure is `1`. In the case of `K=1`, the maximum number of instances of a procedure is `N`. In the case of `K=2`, the maximum number of instances of a procedure is `N^2`. Et cetera, this can be generalized for any amount of combination of `N` types:
+In the case of `K=0`, the number of instances of the procedure is `1`. In the case of `K=1`, the maximum number of instances of a procedure is `N`. In the case of `K=2`, the maximum number of instances of a procedure is `N²`. Et cetera, this can be generalized for any amount of combination of `N` types:
 
 $$
 \sum_{i=0}^{K} N^i = \frac{N^{K+1} - 1}{N-1} \implies \mathcal{O}(N^K)
 $$
 
-So even in the most common case of a printing procedure, this scales exponentially with the instantiations. Some languages just do this naïve approach to printing and don't think it'll be a problem. They even say "well it's only one instantiation per input", but then forget that the internals are now combinatoric instead. So in the best case scenario, this approach is `N×K`, but the worse-case it is `Nᵏ`[^power-law-caveat]. Some languages that do use CTTI for printing (e.g. Rust) try to mitigate this disaster with an explicit edge case in the compiler that tries to minimize this explosion in compiler complexity, but it does not necessarily solve the binary problem in medium–large projects.
+So even in the most common case of a printing procedure, this scales exponentially with the instantiations. Some languages just do this naïve approach to printing and don't think it'll be a problem. They even say "well it's only one instantiation per input", but then forget that the internals are now combinatoric instead. So in the best case scenario, this approach is `N×K`, but the worst-case it is `Nᵏ`[^power-law-caveat]. Some languages that do use CTTI for printing (e.g. Rust) try to mitigate this disaster with an explicit edge case in the compiler that tries to minimize this explosion in compiler complexity, but it does not necessarily solve the binary problem in medium–large projects.
 
-[^power-law-caveat]: Depending on how conceive of it, this is either a power-law (constant-`K`) or exponential (constant-`N`), but practically since `N` is not really "fixed", I conceive of it being exponential. Either way, it is heck of a lot worse than linear.
+[^power-law-caveat]: Depending on how you conceive of it, this is either a power-law (constant-`K`) or exponential (constant-`N`), but practically since `N` is not really "fixed", I conceive of it being exponential. Either way, it is heck of a lot worse than linear.
 
 Some languages also try to mitigate the combinatorial explosion with explicit tagging to produce the CTTI-related code generation, forcing a multiplicative complexity instead. For example, [`serde` in Rust](https://serde.rs/) can be used for CLI parameters, GUI forms, pretty printing, etc. All of this I implement in Odin with RTTI and [struct field tags](https://odin-lang.org/docs/overview/#struct-field-tags), which I find a lot easier to deal with.
 
@@ -110,13 +110,13 @@ In my opinion, I don't think this is at all a close call to make in terms of cos
 
 ## The Individual-Element Mindset, Again
 
-I have written about about the [*individual-element mindset*]((https://www.gingerbill.org/article/2026/01/02/was-it-really-a-billion-dollar-mistake/)): the habit of reasoning about one thing, in isolation, and never about the group. CTTI-by-reflex in language design is that exact mindset wearing a type-theory [hat](https://en.wikipedia.org/wiki/Mr_Benn).
+I have written about the [*individual-element mindset*](https://www.gingerbill.org/article/2026/01/02/was-it-really-a-billion-dollar-mistake/): the habit of reasoning about one thing, in isolation, and never about the group. CTTI-by-reflex in language design is that exact mindset wearing a type-theory [hat](https://en.wikipedia.org/wiki/Mr_Benn).
 
 I chose RTTI in Odin because it is a data-driven approach (one procedure over a table). The CTTI approach is a very code-driven approach, which might produce better _code_ for each instantiation of the procedure, at the cost of pretending you don't want the data to exist.
 
 ## Coherency vs Cleverness
 
-There is an architectural design argument on top of the cost argument, and this a big reason behind why I chose RTTI in Odin.
+There is an architectural design argument on top of the cost argument, and this is a big reason behind why I chose RTTI in Odin.
 
 In Odin, `fmt.println` works on everything through RTTI. Any form of (de)serialization/(un)marshalling uses RTTI.
 
@@ -126,7 +126,7 @@ This design argument is effectively coherency vs [per-type] cleverness. It's a s
 
 And what does CTTI give you in exchange?
 
-* Parametric-Polymorphism/Templates that become [metastatic](https://en.wikipedia.org/wiki/Metastasis) over times
+* Parametric-Polymorphism/Templates that become [metastatic](https://en.wikipedia.org/wiki/Metastasis) over time
 * Error messages measured in kilobytes and require a degree in Egyptology to decipher
 * Build times that scale exponentially allowing you to cook a full Sunday Roast in that time
 * Binaries full of near-identical procedures that the linker now has to deduplicate (but cannot in practice)
@@ -137,11 +137,11 @@ And what makes me laugh is that relying on the linker to deduplicate this conced
 
 To be clear, there are cases when CTTI is a better trade-off. Odin does have a form of CTTI through its `base:intrinsics`, albeit clunky to use[^clunky].
 
-[^clunky]: This is partially on purpose to nudge people to minimize their usage, but also because it does not have the same data-driven design and is purely code-derive through compile-time evaluated procedures/intrinsics.
+[^clunky]: This is partially on purpose to nudge people to minimize their usage, but also because it does not have the same data-driven design and is purely code-derived through compile-time evaluated procedures/intrinsics.
 
 * When you have a hot code path where you cannot afford an indirection or iterating through the type-table.
 * When you want the optimizer to actually optimize the code itself for a specific type and not have it be generic.
-* When you actually have have a small known set of types, and the combinatorics never caused anything to blow up.
+* When you actually have a small known set of types, and the combinatorics never caused anything to blow up.
 
 In these above cases, the specialization that CTTI provides is great, but I'd argue these are rarer than you think.
 
@@ -150,11 +150,11 @@ And RTTI, of course, does have its own set of costs:
 * The tables take space in the binary and executing memory.
 * The table lookup is a runtime cost, even if it is "constant".
 * All information has to be retained, or the whole thing doesn't work.
-* You might need to obfuscate some of type information over privacy/security concerns.
-* If you are in an environment where you cannot spare the bytes or the indirection (an in that is a real constraint), then RTTI can be wasteful.
+* You might need to obfuscate some of the type information over privacy/security concerns.
+* If you are in an environment where you cannot spare the bytes or the indirection (as in that is a real constraint), then RTTI can be wasteful.
 
-My point here is not that "CTTI bad, RTTI good", rather that I don't think many people realize that the cost of CTTI is exponential in the worse-case and multiplicative in the general-case, considering checking, code-gen, and binary size. The benefit of CTTI is pretty much always _local_, but has _global_ effects. And when designing a language, I'd argue for using RTTI by default pretty much always, and only using CTTI when you absolutely require it.
+My point here is not that "CTTI bad, RTTI good", rather that I don't think many people realize that the cost of CTTI is exponential in the worst-case and multiplicative in the general-case, considering checking, code-gen, and binary size. The benefit of CTTI is pretty much always _local_, but has _global_ effects. And when designing a language, I'd argue for using RTTI by default pretty much always, and only using CTTI when you absolutely require it.
 
 ## Conclusion
 
-RTTI has a ***linear*** cost in the number of types, which is then paid at runtime (table lookup/indirection), binary size, and memory usage. CTTI has a ***exponential*** cost in the number of types in the worse-case, and multiplicative in the general-case, which is then paid at compile-time (checking and code gen), and binary size.
+RTTI has a ***linear*** cost in the number of types, which is then paid at runtime (table lookup/indirection), binary size, and memory usage. CTTI has a ***exponential*** cost in the number of types in the worst-case, and multiplicative in the general-case, which is then paid at compile-time (checking and code gen), and binary size.
