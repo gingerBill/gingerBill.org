@@ -101,6 +101,10 @@ So even in the most common case of a printing procedure, this scales exponential
 
 Some languages also try to mitigate the combinatorial explosion with explicit tagging to produce the CTTI-related code generation, forcing a multiplicative complexity instead. For example, [`serde` in Rust](https://serde.rs/) can be used for CLI parameters, GUI forms, pretty printing, etc. All of this I implement in Odin with RTTI and [struct field tags](https://odin-lang.org/docs/overview/#struct-field-tags), which I find a lot easier to deal with.
 
+_n.b._ I'll give a simple example of the problem with a naïve approach to parametric polymorphic printing. Consider a language with only 4 types (e.g. `int`, `float`, `string`, `bool`) and a variadic, parametrically polymorphic printing procedure. Each distinct sequence of argument types needs its own instantiation, so for `K` arguments there are on the order of `Nᵏ = 4ᵏ` combinations; adding a fifth type makes that `~5ᵏ`. To see the (usually hidden) combinatorial explosion, suppose you never print more than 5 arguments, that allows up to 1365 instantiations. Add another type and it becomes 3906. Raise the maximum to 6 arguments and it becomes 19531. You might say that this is at least bounded, and it "is"[^bill-clinton], for a single printing procedure. However, printing procedure easily interact with every other use of parametric polymorphism in the program, and the total quickly stops being something you can trivially predict by just reading the code.
+
+[^bill-clinton]: "It depends on what the meaning of the word 'is' is." - Bill Clinton
+
 ## Asymmetric Approaches
 
 * RTTI's worst case is **linear, in one place**, and it is the place (memory) you can actually measure.
