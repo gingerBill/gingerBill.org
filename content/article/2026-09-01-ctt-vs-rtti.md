@@ -120,7 +120,7 @@ There is an architectural design argument on top of the cost argument, and this 
 
 In Odin, `fmt.println` works on everything through RTTI. Any form of (de)serialization/(un)marshalling uses RTTI.
 
-One of the beautiful things about RTTI in Odin is that `typeid`s are deterministic—they will be the same per type regardless of the program (assuming the types are the same). When a typeid crosses a LIB/DLL boundary (without re-instantiating anything), it "can" work across that boundary as it is just *data* with a stable canonical layout; there are no Nᵏ generated procedures that both sides have to agree to have generated identically monomorphized code does not cross a dynamic library boundary for free. With CTTI, both sides have to have produced the same instantiations, or *you* reproduce them. Data moves absolutely fine across such a boundary.
+One of the beautiful things about RTTI in Odin is that `typeid`s are deterministic—they will be the same per type regardless of the program (assuming the types are the same). When a `typeid` crosses a LIB/DLL boundary (without re-instantiating anything), it "can" work across that boundary as it is just *data* with a stable canonical layout. There are no Nᵏ generated procedures that both sides have to agree to have generated identically monomorphized code, as it does not cross a dynamic library boundary for free. With CTTI, both sides have to have produced the same instantiations, or *you* reproduce them. Data moves absolutely fine across such a boundary.
 
 This design argument is effectively coherency vs [per-type] cleverness. It's a single idea which can be applied uniformly, which everyone can understand and build upon. Rather than N different generated things and the compiler groaning under the weight of checking all of them.
 
@@ -151,7 +151,7 @@ And RTTI, of course, does have its own set of costs:
 * The table lookup is a runtime cost, even if it is "constant".
 * All information has to be retained, or the whole thing doesn't work.
 * You might need to obfuscate some of type information over privacy/security concerns.
-* If you are in an environment where you cannot spare the bytes or the indirection (an in that is a real constraint), then RTTI.
+* If you are in an environment where you cannot spare the bytes or the indirection (an in that is a real constraint), then RTTI can be wasteful.
 
 My point here is not that "CTTI bad, RTTI good", rather that I don't think many people realize that the cost of CTTI is exponential in the worse-case and multiplicative in the general-case, considering checking, code-gen, and binary size. The benefit of CTTI is pretty much always _local_, but has _global_ effects. And when designing a language, I'd argue for using RTTI by default pretty much always, and only using CTTI when you absolutely require it.
 
