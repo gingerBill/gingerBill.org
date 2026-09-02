@@ -414,7 +414,9 @@ handle_article :: proc(website: ^Website, fi: os.File_Info) -> bool {
 	fmt.println("[building]", fi.name)
 
 	if !strings.has_prefix(text, "---") {
-		fmt.eprintln("Missing Archetype for %q", fi.fullpath)
+		fmt.eprintfln("Missing Archetype for %q", fi.fullpath)
+		n := min(20, len(text))
+		fmt.eprintfln("Text starts with ", text[:n])
 		return false
 	}
 
