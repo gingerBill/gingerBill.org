@@ -75,7 +75,7 @@ The first issue can be easily solved by coupling that global data into a structu
 Modern computer architectures will always read memory at its "word size" (4 bytes on a 32 bit machine, 8 bytes on a 64 bit machine). If you have an unaligned memory access (on a processor that allows for that), the processor will have to read multiple "words". This means that an unaligned memory access _may_ be much slower than an aligned memory access.
 I will not write too much about memory alignment in this series. If you would like to learn more, I recommend the following articles:
 
-* [IBM - Data alignment: Straighten up and fly right](https://developer.ibm.com/technologies/systems/articles/pa-dalign/)
+* [IBM - Data alignment: Straighten up and fly right](https://developer.ibm.com/articles/pa-dalign/)
 * [Gallery of Processor Cache Effects](http://igoro.com/archive/gallery-of-processor-cache-effects/)
 * [x86 Protected Mode Basics](http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html)
 
