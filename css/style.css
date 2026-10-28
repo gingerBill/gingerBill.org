@@ -579,6 +579,12 @@ label.sidenote-number {
   color: #fd8000;
 }
 
+/* a number directly after another one, e.g. "3, 4": push it past the previous number,
+   which overflows its label, otherwise the separating comma is hidden under it */
+label.sidenote-number.sidenote-number-adjacent {
+  margin-left: 0.2rem;
+}
+
 label.margin-toggle:not(.sidenote-number) {
   display: none;
 }
