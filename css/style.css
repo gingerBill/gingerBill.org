@@ -82,8 +82,6 @@ body {
   width:        87.5%;
   padding-left: 12.5%;
   max-width:    1200px;
-
-  counter-reset: sidenote-counter;
 }
 
 main {
@@ -536,33 +534,45 @@ img[src$='#center'] {
   line-height: 1.2;
 }
 
+/* A sidenote is taken out of the flow rather than floated, since justif.js can
+   only lay out a paragraph whose notes take up no room in its lines. Each one
+   holds all of a paragraph's notes, so they never overlap. */
+.sidenote {
+  float: none;
+  clear: none;
+  position: absolute;
+  left: 105%;
+  margin: 0;
+
+  /* undo what it inherits from the justif.js line it sits in */
+  white-space: normal;
+  word-spacing: normal;
+  letter-spacing: normal;
+  text-align: justify;
+}
+
+main p,
+main li,
+main blockquote {
+  position: relative;
+}
+
+.sidenote-entry {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
 .sidenote a,
 .marginnote a {
   overflow-wrap: anywhere;
 }
 
-.sidenote-number {
-  counter-increment: sidenote-counter;
-}
-
-.sidenote-number:after,
-.sidenote:before {
+.sidenote-mark {
   position: relative;
-  vertical-align: baseline;
-}
-
-.sidenote-number:after {
-  content: counter(sidenote-counter);
-  top: -0.5em;
-  font-size: 0.8rem;
-}
-
-.sidenote:before {
-  content: counter(sidenote-counter) " ";
   top: -0.5em;
   color: #fd8000;
   font-size: 0.8em;
-  margin-left: -0.75em!important;
+  margin-left: -0.75em;
 }
 
 input.margin-toggle {
@@ -572,6 +582,14 @@ input.margin-toggle {
 label.sidenote-number {
   display: inline; /* not inline-block, so the number never wraps onto a line by itself */
   color: #fd8000;
+}
+
+label.sidenote-number:focus {
+  outline: none;
+}
+
+label.sidenote-number:focus-visible {
+  outline: 1px dotted currentColor;
 }
 
 label.margin-toggle:not(.sidenote-number) {
@@ -592,7 +610,10 @@ label.margin-toggle:not(.sidenote-number) {
     display: none;
   }
 
-  .margin-toggle:checked + .sidenote,
+  /* a hidden sidenote stays out of the flow, so justif.js can still lay out its
+     paragraph; focusing any of the paragraph's numbers shows its notes inline */
+  :is(p, li, blockquote):has(label.sidenote-number:focus) .sidenote,
+  .sidenote:focus-within,
   .margin-toggle:checked + .marginnote {
     display: block;
     float: left;

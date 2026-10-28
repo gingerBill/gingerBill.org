@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/highlight/style.css" />
+	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
@@ -95,7 +96,7 @@ case BazError, PlopError:
 }
 </code></pre>
 <p>The semantics are very similar in this case however the control flow is completely different. In the exceptions case (shown with Python), you enclose a block of code and catch any exceptions that have been raised. In the return value case (shown with Odin), you test the return value explicitly from the call.
-Exceptions require unwinding the stack; this can be slower⁠<label for="slower" class="margin-toggle sidenote-number"></label><input type="checkbox" id="slower" class="margin-toggle"></input><span class="sidenote">Theoretically exceptions can be just as fast a return statement because that’s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</span> when an exception happens compared to the fixed small cost of a return value.</p>
+Exceptions require unwinding the stack; this can be slower⁠<label class="sidenote-number" tabindex="0"><sup>1</sup></label><span class="sidenote" tabindex="-1"><span class="sidenote-entry"><span class="sidenote-mark">1</span> Theoretically exceptions can be just as fast a return statement because that’s effectively what it is. However, most modern languages do a lot more than that to implement exceptions and they can be a lot slower in pratice.</span></span> when an exception happens compared to the fixed small cost of a return value.</p>
 <p>In both cases, a “catch all” is possible:</p>
 <p>Python:</p>
 <pre><code class="python">try:

@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/highlight/style.css" />
+	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
@@ -54,7 +55,7 @@
 <h1 id="heading-1-1">Linear Allocation</h1/>
 <p>The first memory allocation strategy that I will cover is also one of the simplest ones: linear allocation. As the name suggests,  memory is allocated linearly. Throughout this series, I will be using the concept of an <em>allocator</em> as a means to allocate this memory. A linear allocator, is also known by other names such as an Arena or Region-based allocator. In this article, I will refer to this allocator an a <em>Arena</em>.</p>
 <h2 id="heading-2-2">Basic Logic</h2/>
-<p>The arena’s logic only requires an offset (or pointer) to state the end of the last allocation.⁠<label for="other-data" class="margin-toggle sidenote-number"></label><input type="checkbox" id="other-data" class="margin-toggle"></input><span class="sidenote">Other data may stored such as the offset of the beginning of the previous allocation or allocation count.</span></p>
+<p>The arena’s logic only requires an offset (or pointer) to state the end of the last allocation.⁠<label class="sidenote-number" tabindex="0"><sup>1</sup></label><span class="sidenote" tabindex="-1"><span class="sidenote-entry"><span class="sidenote-mark">1</span> Other data may stored such as the offset of the beginning of the previous allocation or allocation count.</span></span></p>
 <p><img src="/images/memory-allocation-strategies/linear_allocator.svg#center" alt="Linear Allocator Layout" /></p>
 <p>To allocate some memory from the arena, it is as simple as moving the offset (or pointer) forward. In <a href="https://wikipedia.org/wiki/Big_O_notation">Big-O notation</a>, the allocation has complexity of <em><strong>O(1)</strong></em> (constant).</p>
 <p><img src="/images/memory-allocation-strategies/linear_allocator_alloc.svg#center" alt="Linear Allocator Alloc" /></p>

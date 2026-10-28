@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/highlight/style.css" />
+	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
@@ -114,7 +115,7 @@ case:      ...
 <li><a href="https://swtch.com/~rsc/thread/alef.pdf">Alef</a>, <a href="http://www.vitanuova.com/inferno/papers/limbo.html">Limbo</a>, <a href="https://go.dev/">Go</a> (Rob Pike related, the first two being non-destructing tuples)</li>
 <li><a href="https://odin-lang.org/">Odin</a> (<a href="https://www.gingerbill.org/">me</a>, who has been influenced by many of Pike’s languages)</li>
 </ul>
-<p>Alef and Limbo had multiple return values through tuples, but tuples were still not really first-class data types in those languages. In many ways, Alef and Limbo were the main precursors to Go (not just <a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)">Oberon</a> and <a href="https://en.wikipedia.org/wiki/Modula">Modula</a>). Limbo’s declaration syntax comes from <a href="https://swtch.com/~rsc/thread/newsqueak.pdf">Newsqueak</a> which is also the precursor to Odin’s very own declaration syntax.⁠<label for="on-declaration-syntax" class="margin-toggle sidenote-number"></label><input type="checkbox" id="on-declaration-syntax" class="margin-toggle"></input><span class="sidenote">https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</span></p>
+<p>Alef and Limbo had multiple return values through tuples, but tuples were still not really first-class data types in those languages. In many ways, Alef and Limbo were the main precursors to Go (not just <a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)">Oberon</a> and <a href="https://en.wikipedia.org/wiki/Modula">Modula</a>). Limbo’s declaration syntax comes from <a href="https://swtch.com/~rsc/thread/newsqueak.pdf">Newsqueak</a> which is also the precursor to Odin’s very own declaration syntax.⁠<label class="sidenote-number" tabindex="0"><sup>1</sup></label><span class="sidenote" tabindex="-1"><span class="sidenote-entry"><span class="sidenote-mark">1</span> https://www.gingerbill.org/article/2018/03/12/on-the-aesthetics-of-the-syntax-of-declarations/</span></span></p>
 <p>So maybe the reason there is little literature (that I can fine) into this topic is purely because it is limited to languages related-to/influenced-by Rob Pike.</p>
 <h2 id="heading-2-5">Conclusion</h2/>
 <p>It might be the approach taken by Odin may be extremely unique to Odin, however it is also one of the my favourite things about Odin too. And I am really glad I added it so early on, since it has shown its utility really quickly. Coupled with <a href="https://odin-lang.org/docs/overview/#named-results">named return values</a>, bare <code>return</code> statements, and <a href="https://odin-lang.org/docs/overview/#or_return-statement"><code>or_return</code></a>, it is an absolute pleasure to work with.</p>

@@ -12,11 +12,12 @@
 	<meta name="msapplication-TileColor" content="#da532c" />
 	<meta name="theme-color" content="#ffffff" /><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="The Value Propagation Experiment" />
-<meta name="twitter:description" content="[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust&#39;s  which became , or Zig&#39;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with⁠The concept of try worked by popping off the end value in a m..." />
+<meta name="twitter:description" content="[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust&#39;s  which became , or Zig&#39;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with⁠11 The concept of try worked by popping off the end value in ..." />
  <title>The Value Propagation Experiment - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/highlight/style.css" />
+	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
@@ -61,7 +62,7 @@ if err != nil {
 }
 </code></pre>
 <p>where <code>err</code> may be an enum, a (discriminated) union, or any other kind of value that has <code>nil</code>.</p>
-<p>And replace it with⁠<label for="implementation" class="margin-toggle sidenote-number"></label><input type="checkbox" id="implementation" class="margin-toggle"></input><span class="sidenote">The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called.</span></p>
+<p>And replace it with⁠<label class="sidenote-number" tabindex="0"><sup>1</sup></label><span class="sidenote" tabindex="-1"><span class="sidenote-entry"><span class="sidenote-mark">1</span> The concept of <code>try</code> worked by popping off the end value in a multiple valued expression and checking whether it was <code>nil</code> or <code>false</code>, and if so, setting the end return value to value if possible. If the procedure only had one return value, it did a simple return. If the procedure had multiple return values, <code>try</code> required that they were all named so that the end value could be assigned to by name and then an empty <code>return</code> could be called.</span></span></p>
 <pre><code class="c">x := try foo();
 </code></pre>
 <p>This construct solves a very specific kind of error handling, of which optimizes for typing code rather than reading code. It also fails because Odin (and Go) are languages with multiple return values rather than single-type returns.</p>
