@@ -179,4 +179,4 @@ What remains as _per se_ are Freedoms 2 and 3 (the permission to share copies an
 
 Open source was never a business model in the first place. If decompilation makes binaries a weaker protection, the answer isn't to give everything away, but to make the closed thing worth paying for, or keep it on a server where it never leaves your hands.
 
-The "essential" arguments for OSS/FOSS/FSF might be a lot smaller than even their advocates realized.
+The "essential" arguments for OSS/FOSS/Free-Software might be a lot smaller than even their advocates realized.
