@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="[Originally from a Twitter Thread]Original Twitter PostOne thing many languages &amp; API designers get wrong is the concept of a string. I try to make a firm distinction between:string value ( or )string builder ( or )Backing buffer for a string ( or )They are not equivalent even if you can theoretically use them as such, and so many garbage collected language use them as such.They have different use cases which don&#39;t actually overlap in practice. Most of the issues with strings come from trying to merge concepts into one.In Odin, the distinction be..." />
  <title>String Type Distinctions - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -88,6 +88,43 @@
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>

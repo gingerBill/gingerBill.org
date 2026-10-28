@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="Absolute PointersPointers are a value type in programming languages that store a memory address. A pointer references a location in memory, and obtaining the value stored at this location in memory is known as dereferencing a pointer. Pointers are part and parcel of using languages like C, and are an extremely powerful tool. Pointers can be treated as a form of reference type, a value that refers to another typed value in memory.When most people think of a pointer, they usually treat them as if the pointer refers a physical memory address. I will call th..." />
  <title>Relative Pointers - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -220,6 +220,43 @@ struct Relative_Pointer {
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>

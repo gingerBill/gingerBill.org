@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="The original Twitter thread: https://x.com/TheGingerBill/status/1508833104567414785I have a huge gripe when I read articles/tutorials on OpenGL: most people have no idea what they are talking about when it comes to coordinate systems and matrices.Specifically: OpenGL is NOT right-handed; the confusion over column-major &#34;matrices&#34;.Let&#39;s clear up the first point. Many people will say OpenGL uses a right-handed coordinate system. Loads of articles/tutorials will keep repeating the view that OpenGL uses a right-handed coordinate system. So the qu..." />
  <title>OpenGL is not Right-Handed - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -99,6 +99,43 @@ The Z-axis flip is to convert from the <em>conventional</em> world/entity space 
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>

@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="[Originally from a Twitter Thread]Original Twitter Post&#34;Killer Feature&#34;Odin is a weird programming language to advertise/market for.Odin is very pragmatic in terms of its design and overall philosophy. Unlike all popular languages out there, it has no &#34;killer feature&#34;. I&#39;ve tried to design it to solve actual problems with actual solutions.Those languages with a &#34;killer feature&#34; to them do make them &#34;standout&#34; and consequentially more &#34;hypeable&#34;. The problem is that those &#34;killer features&#34; are usually ab..." />
  <title>Marketing the Odin Programming Language is Weird - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -102,6 +102,43 @@
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>

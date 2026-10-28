@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="Article was originally posted here: https://odin.handmade.network/blogs/p/1723-the_metaprogramming_dilemmaDesigning this language has been difficult but fun. Two of the original goals of this language were simplicity and metaprogramming however, these together could be an oxymoron. But before I explain why, I first need to explain what I mean by &#34;metaprogramming&#34;.Metaprogramming is an &#34;art&#34; of writing programs to treats other programs as their data. This means that a program could generate, read, analyse, and transform code or even itself..." />
  <title>The Metaprogramming Dilemma - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -83,6 +83,43 @@
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>

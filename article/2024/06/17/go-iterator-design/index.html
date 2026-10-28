@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="NOTE: This is based on, but completely rewritten, from a Twitter post:https://x.com/TheGingerBill/status/1802645945642799423TL;DR: It makes Go feel too &#34;functional&#34; rather than being an unabashed imperative language.I recently saw a post on Twitter showing the upcoming Go iterator design for Go 1.23 (August 2024). From what I can gather, many people seem to dislike the design. I wanted to give my thoughts on it as a language designer.The merged PR for the proposal can be found here:https://github.com/golang/go/issues/61897It has a in-depth explan..." />
  <title>Why People are Angry over Go 1.23 Iterators - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/style.css?v=2" />
 	<link rel="stylesheet" href="/highlight/style.css" />
 	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
 	<script src="/highlight/highlight.pack.js"></script>
@@ -265,6 +265,43 @@ for record, idx, err in csv.iterator_next(&amp;reader) {
 				heading.appendChild(a);
 			}
 		});
+	})();
+</script>
+<script>
+	(function stackSidenotes(){
+		let main = document.getElementsByTagName('main')[0];
+		if (!main) {
+			return;
+		}
+		let queued = false;
+		function stack() {
+			queued = false;
+			let bottom = -Infinity;
+			main.querySelectorAll('.sidenote').forEach(function(box){
+				box.style.marginTop = '';
+				let rect = box.getBoundingClientRect();
+				if (rect.height === 0) {
+					return; // hidden on narrow screens
+				}
+				let shift = Math.max(0, bottom - rect.top);
+				if (shift > 0) {
+					box.style.marginTop = shift + 'px';
+				}
+				bottom = rect.bottom + shift + parseFloat(getComputedStyle(box).fontSize)/2;
+			});
+		}
+		function queue() {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(stack);
+			}
+		}
+
+		// justif.js re-renders paragraphs on resize and font loads, and MathJax changes them too
+		new MutationObserver(queue).observe(main, {childList: true, subtree: true});
+		window.addEventListener('resize', queue);
+		document.fonts.ready.then(queue);
+		queue();
 	})();
 </script>
 </html>
