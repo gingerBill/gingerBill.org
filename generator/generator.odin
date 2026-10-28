@@ -270,10 +270,48 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 	Margin_Note :: struct {
 		label: string,
 		desc:  string,
+		block: int,
+	}
+
+	@(require_results)
+	starts_block :: proc(line: string) -> bool {
+		switch line[0] {
+		case '>', '|', '#':
+			return true
+		case '-', '*', '+':
+			return len(line) > 1 && line[1] == ' '
+		case '[':
+			return strings.has_prefix(line, "[^")
+		case '0'..='9':
+			i := strings.index_proc(line, proc(r: rune) -> bool { return r < '0' || r > '9' })
+			return i > 0 && strings.has_prefix(line[i:], ". ")
+		}
+		return false
+	}
+
+	@(require_results)
+	block_of :: proc(text: string, offset: int) -> (block: int) {
+		after_blank := true
+		for line_start := 0; line_start <= offset; /**/ {
+			line_end := strings.index_byte(text[line_start:], '\n')
+			line_end = len(text) if line_end < 0 else line_start+line_end
+			line := strings.trim_space(text[line_start:line_end])
+			if line == "" {
+				after_blank = true
+			} else {
+				if after_blank || starts_block(line) {
+					block += 1
+				}
+				after_blank = false
+			}
+			line_start = line_end+1
+		}
+		return
 	}
 
 	@(require_results)
 	find_margin_notes :: proc(website: ^Website, text: string) -> (margin_notes: [dynamic]Margin_Note) {
+		original := text
 		text := text
 
 		margin_notes = make([dynamic]Margin_Note, website.scratch_allocator)
@@ -283,6 +321,7 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 			if i < 0 {
 				break
 			}
+			offset := len(original) - len(text) + i
 
 			margin_note_text := text[i+2:]
 
@@ -310,7 +349,7 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 				}
 			} else {
 				text = margin_note_text[i+1:]
-				append(&margin_notes, Margin_Note{margin_note_label, ""})
+				append(&margin_notes, Margin_Note{margin_note_label, "", block_of(original, offset)})
 			}
 		}
 
@@ -418,22 +457,26 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 				text = margin_note_text[i+1:]
 				precedes := strings.has_prefix(text, "[^")
 
-				for &f in margin_notes {
-					if f.label == margin_note_label {
-						margin_notes_used += 1
-						if follows {
-							// the comma lives inside the label so it takes the number's colour,
-							// and the space must not break, otherwise the label wraps onto two lines
-							fmt.wprintf(w, `<label for="%s" class="margin-toggle sidenote-number"><sup>,</sup>&nbsp;</label>`, f.label)
-						} else {
-							// a word joiner keeps the number on the same line as the text before it without adding a space
-							fmt.wprintf(w, `&#8288;<label for="%s" class="margin-toggle sidenote-number"></label>`, f.label)
+				index := margin_notes_used
+				margin_notes_used += 1
+				f := margin_notes[index]
+				assert(f.label == margin_note_label)
+
+				if follows {
+					fmt.wprintf(w, `<label class="sidenote-number" tabindex="0"><sup>,&nbsp;%d</sup></label>`, index+1)
+				} else {
+					fmt.wprintf(w, `&#8288;<label class="sidenote-number" tabindex="0"><sup>%d</sup></label>`, index+1)
+				}
+
+				if index == 0 || margin_notes[index-1].block != f.block {
+					io.write_string(w, `<span class="sidenote" tabindex="-1">`)
+					for g, j in margin_notes[index:] {
+						if g.block != f.block {
+							break
 						}
-						// no whitespace, so the number is directly followed by whatever follows it in the text
-						fmt.wprintf(w, `<input type="checkbox" id="%s" class="margin-toggle"></input>`, f.label)
-						fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, website.scratch_allocator))
-						break
+						fmt.wprintf(w, `<span class="sidenote-entry"><span class="sidenote-mark">%d</span> %s</span>`, index+j+1, sidenote_md_to_html(g.desc, website.scratch_allocator))
 					}
+					io.write_string(w, `</span>`)
 				}
 				follows_margin_note = precedes
 			}
