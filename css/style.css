@@ -554,9 +554,6 @@ img[src$='#center'] {
 .sidenote-number:after {
   content: counter(sidenote-counter);
   top: -0.5em;
-  left: 0.1em;
-  margin-left: -0.2em;
-  margin-right: -0.1em;
   font-size: 0.8rem;
 }
 
@@ -573,16 +570,8 @@ input.margin-toggle {
 }
 
 label.sidenote-number {
-  margin-left: -0.2em;
-  display: inline-block;
-  max-height: 2em; /* should be less than or equal to paragraph line-height */
+  display: inline; /* not inline-block, so the number never wraps onto a line by itself */
   color: #fd8000;
-}
-
-/* a number directly after another one, e.g. "3, 4": push it past the previous number,
-   which overflows its label, otherwise the separating comma is hidden under it */
-label.sidenote-number.sidenote-number-adjacent {
-  margin-left: 0.2rem;
 }
 
 label.margin-toggle:not(.sidenote-number) {
