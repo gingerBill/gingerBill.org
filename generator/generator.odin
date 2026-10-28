@@ -317,7 +317,53 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 		return
 	}
 
-	text := text
+	// as in books, punctuation goes before the margin note numbers rather than after them:
+	// `word[^a][^b].` becomes `word.[^a][^b]`
+	@(require_results)
+	hoist_punctuation :: proc(website: ^Website, text: string) -> string {
+		text := text
+
+		b := strings.builder_make(website.scratch_allocator)
+
+		for len(text) > 0 {
+			i := strings.index(text, "[^")
+			if i < 0 {
+				break
+			}
+
+			// the end of the run of adjacent margin note references
+			end := i
+			for strings.has_prefix(text[end:], "[^") {
+				j := strings.index_byte(text[end:], ']')
+				if j < 0 {
+					break
+				}
+				end += j+1
+			}
+			if end == i {
+				break
+			}
+
+			// ':' is never moved since `[^a]:` is a margin note definition,
+			// and a reference after a space has no word to move the punctuation onto
+			p := end
+			if i > 0 && !unicode.is_space(rune(text[i-1])) {
+				for p < len(text) && strings.index_byte(".,;!?", text[p]) >= 0 {
+					p += 1
+				}
+			}
+
+			strings.write_string(&b, text[:i])
+			strings.write_string(&b, text[end:p])
+			strings.write_string(&b, text[i:end])
+			text = text[p:]
+		}
+		strings.write_string(&b, text)
+
+		return strings.to_string(b)
+	}
+
+	text := hoist_punctuation(website, text)
 
 	b := strings.builder_make(website.scratch_allocator)
 	w := strings.to_writer(&b)
@@ -378,17 +424,13 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 						if follows {
 							// the comma lives inside the label so it takes the number's colour,
 							// and the space must not break, otherwise the label wraps onto two lines
-							// (see `.sidenote-number-adjacent` in style.css for the spacing)
-							fmt.wprintf(w, `<label for="%s" class="margin-toggle sidenote-number sidenote-number-adjacent"><sup>,</sup>&nbsp;</label>`, f.label)
+							fmt.wprintf(w, `<label for="%s" class="margin-toggle sidenote-number"><sup>,</sup>&nbsp;</label>`, f.label)
 						} else {
-							fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label>`, f.label)
+							// a word joiner keeps the number on the same line as the text before it without adding a space
+							fmt.wprintf(w, `&#8288;<label for="%s" class="margin-toggle sidenote-number"></label>`, f.label)
 						}
-						if precedes {
-							// no whitespace, so the next margin note's comma sits right after this number
-							fmt.wprintf(w, `<input type="checkbox" id="%s" class="margin-toggle"></input>`, f.label)
-						} else {
-							fmt.wprintf(w, " \n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
-						}
+						// no whitespace, so the number is directly followed by whatever follows it in the text
+						fmt.wprintf(w, `<input type="checkbox" id="%s" class="margin-toggle"></input>`, f.label)
 						fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, website.scratch_allocator))
 						break
 					}
