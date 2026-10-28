@@ -549,6 +549,13 @@ img[src$='#center'] {
   word-spacing: normal;
   letter-spacing: normal;
   text-align: justify;
+
+  /* and pin what justif.js toggles on the paragraph while it rescans, otherwise
+     an open note re-wraps each time (it flickered in Firefox on Android) */
+  -webkit-hyphens: auto;
+     -moz-hyphens: auto;
+          hyphens: auto;
+  text-indent: 0;
 }
 
 main p,
