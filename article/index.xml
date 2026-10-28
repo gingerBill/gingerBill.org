@@ -6,6 +6,13 @@
 	<link>https://www.gingerbill.org/article/</link>
 	<description>Articles by gingerBill</description>
 	<item>
+		<title>Free Software, Per Accidens</title>
+		<link>https://www.gingerbill.org/article/2026/10/28/free-software-per-accidens/</link>
+		<guid>https://www.gingerbill.org/article/2026/10/28/free-software-per-accidens/</guid>
+		<pubDate>Wed, 28 Oct 2026 09:00:00 +0000</pubDate>
+		<description>Recently I have been thinking now that LLMs/AI have made it relatively ;simple; to decompile just about anything, doesn;t that suggest many of the core ;principled/idealistic; arguments for OSS/FOSS were never fundamental to begin with?I know you don;t get back what was actually written, especially with optimized binaries, but that gap keeps shrinking in terms of usefulness. From a philosophical standpoint, doesn;t it show that many (not all) of the foundations of movements like FOSS (especially GNU) were per accidensPer ac...</description>
+	</item>
+	<item>
 		<title>CTTI is Exponential, RTTI is Linear</title>
 		<link>https://www.gingerbill.org/article/2026/09/02/ctti-is-exponential-rtti-is-linear/</link>
 		<guid>https://www.gingerbill.org/article/2026/09/02/ctti-is-exponential-rtti-is-linear/</guid>
@@ -24,14 +31,14 @@
 		<link>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</link>
 		<guid>https://www.gingerbill.org/article/2026/07/10/good-tools-are-invisible/</guid>
 		<pubDate>Fri, 10 Jul 2026 09:00:00 +0000</pubDate>
-		<description>TL;DR: A good tool is and ought to be invisiblestriving to make such tools is the goal of a toolmaker.One habit I see a lot, and have to push back on, is taking a tool;s shortcomings and reselling them as a ;puzzle game; which is ;fun; to solve.I don;t want my tools to be ;fun;. I want my tools to be invisible.Text Editor WarsLet;s take vim as an example  This is just an example, and applies to other editors too.. I constantly see some people praise it not for what actually makes it good, but by taking the things ...</description>
+		<description>TL;DR: A good tool is and ought to be invisiblestriving to make such tools is the goal of a toolmaker.One habit I see a lot, and have to push back on, is taking a tool;s shortcomings and reselling them as a ;puzzle game; which is ;fun; to solve.I don;t want my tools to be ;fun;. I want my tools to be invisible.Text Editor WarsLet;s take vim as an example.This is just an example, and applies to other editors too. I constantly see some people praise it not for what actually makes it good, but by taking the things i...</description>
 	</item>
 	<item>
 		<title>The Aesthetic Problem of Namespacing</title>
 		<link>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</link>
 		<guid>https://www.gingerbill.org/article/2026/05/13/aesthetic-namespacing/</guid>
 		<pubDate>Wed, 13 May 2026 09:00:00 +0000</pubDate>
-		<description>Karl Zylinski;s Tom;s Namespaces: An Odin Fanfic is an excellent exploration of the namespacing problem in imperative programming languages such as Odin  I highly recommend reading that article before reading this one!. After sharing it on many comment forum sites, I;ve concluded there;s no real ;solution.; AssociationThe article uses a simple example:The aesthetic argument against this form of namespacing is that this looks fine with short 1/2 word length type names, but becomes unwieldy with longer ones like :The proposed fix ...</description>
+		<description>Karl Zylinski;s Tom;s Namespaces: An Odin Fanfic is an excellent exploration of the namespacing problem in imperative programming languages such as Odin.I highly recommend reading that article before reading this one! After sharing it on many comment forum sites, I;ve concluded there;s no real ;solution.; AssociationThe article uses a simple example:The aesthetic argument against this form of namespacing is that this looks fine with short 1/2 word length type names, but becomes unwieldy with longer ones like :The proposed fix b...</description>
 	</item>
 	<item>
 		<title>Signed By Default Camp</title>
@@ -52,35 +59,35 @@
 		<link>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</link>
 		<guid>https://www.gingerbill.org/article/2026/04/20/odin-wikipedia-fiasco/</guid>
 		<pubDate>Mon, 20 Apr 2026 09:00:00 +0000</pubDate>
-		<description>Recently, Brodie Robertson produced a video on the Bizarre World of Wikipedia Deleting Programming Pages. I highly recommend watching the video.I thank Brodie for covering the Wikipedia fiasco for Odin. We don;t particularly care if Odin is on Wikipedia or not; especially when Wikipedia itself is rarely reliable, but we;ve been dealing with Wikipedia mods for years. Our best hypothesis  Which could very well be wrong too, and I'd love to be proven wrong. is quite simple: some of the mods just don;t like Odin as a language and don;t wa...</description>
+		<description>Recently, Brodie Robertson produced a video on the Bizarre World of Wikipedia Deleting Programming Pages. I highly recommend watching the video.I thank Brodie for covering the Wikipedia fiasco for Odin. We don;t particularly care if Odin is on Wikipedia or not; especially when Wikipedia itself is rarely reliable, but we;ve been dealing with Wikipedia mods for years. Our best hypothesisWhich could very well be wrong too, and I'd love to be proven wrong. is quite simple: some of the mods just don;t like Odin as a language and don;t wan...</description>
 	</item>
 	<item>
 		<title>Designing Odin's Casting Syntax</title>
 		<link>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/23/designing-odins-casting-syntax/</guid>
 		<pubDate>Mon, 23 Feb 2026 09:00:00 +0000</pubDate>
-		<description>Odin;s declaration syntax becomes second nature to everyone who uses the language but I do sometimes get asked ;Why are there two ways to do type conversions?;  Enough that I had to make an FAQ entry..The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, . The call syntax is commonly used to specify a type of an expression which may be relatively short such as  or .There are...</description>
+		<description>Odin;s declaration syntax becomes second nature to everyone who uses the language but I do sometimes get asked ;Why are there two ways to do type conversions?;.Enough that I had to make an FAQ entry.The reason that there are two ways to do type conversions is because one approach may feel better than the other case. If you are converting a large expression, it sometimes a lot easier to use the operator-style approach, . The call syntax is commonly used to specify a type of an expression which may be relatively short such as  or .There are ...</description>
 	</item>
 	<item>
 		<title>Does Syntax Matter?</title>
 		<link>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/21/does-syntax-matter/</guid>
 		<pubDate>Sat, 21 Feb 2026 09:00:00 +0000</pubDate>
-		<description>Yes.But not necessarily in the ways you might think  n.b. This article could have been a lot longer than it currently is..Concrete and Abstract SyntaxesIn the previous article, Choosing a Language Based on its Syntax?, I talked about how many people will not pick up a language purely based on its declaration syntax not being familiar to them or the usage of semicolons or more.There were many lovely comments about the article, but some readers wrongly interpreted the article to mean that I don;t care about concrete syntax and only focus on the abstr...</description>
+		<description>Yes.But not necessarily in the ways you might think.n.b. This article could have been a lot longer than it currently is.Concrete and Abstract SyntaxesIn the previous article, Choosing a Language Based on its Syntax?, I talked about how many people will not pick up a language purely based on its declaration syntax not being familiar to them or the usage of semicolons or more.There were many lovely comments about the article, but some readers wrongly interpreted the article to mean that I don;t care about concrete syntax and only focus on the abstra...</description>
 	</item>
 	<item>
 		<title>Choosing a Language Based on its Syntax?</title>
 		<link>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</link>
 		<guid>https://www.gingerbill.org/article/2026/02/19/choosing-a-language-based-on-syntax/</guid>
 		<pubDate>Thu, 19 Feb 2026 09:00:00 +0000</pubDate>
-		<description>I am still perplexed by how people judge a language purely by its declaration syntax, and will decide whether to use the language purely based on whether they like that aspect or not  I am specifically talking about declaration syntax here and not other aspects of concrete syntax. Please do not extrapolate further..The general categories of declarations can be classified as the following:---type-focused---name-focused---qualifier-focusedWhen designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and th...</description>
+		<description>I am still perplexed by how people judge a language purely by its declaration syntax, and will decide whether to use the language purely based on whether they like that aspect or not.I am specifically talking about declaration syntax here and not other aspects of concrete syntax. Please do not extrapolate further.The general categories of declarations can be classified as the following:---type-focused---name-focused---qualifier-focusedWhen designing a language, if your semantics are pretty clear you can trivially change this declaration syntax and the...</description>
 	</item>
 	<item>
 		<title>The Only Two Markup Languages</title>
 		<link>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</link>
 		<guid>https://www.gingerbill.org/article/2026/01/19/two-families-of-markup-languages/</guid>
 		<pubDate>Mon, 19 Jan 2026 09:00:00 +0000</pubDate>
-		<description>There are only two families of proper arbitrary markup languages: TeX and SGML  I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986.. By arbitrary, I mean the grammar specifically, and how it can be used to mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic makeover of ...</description>
+		<description>There are only two families of proper arbitrary markup languages: TeX and SGML.I would normally link to official thing as reference but it's behind the "wonderful" ISO paywall: ISO 8879:1986. By arbitrary, I mean the grammar specifically, and how it can be used to mark arbitrary plain text with information. And by proper, I mean the ability to have standalone nodes, user-definable nodes, nodes with attributes, and the wrapping of plain text. Everything else either lacks one of the these capabilities, or is a derivative or syntactic makeover of T...</description>
 	</item>
 	<item>
 		<title>Mitigating the Billion Dollar Mistake</title>
@@ -108,7 +115,7 @@
 		<link>https://www.gingerbill.org/article/2025/09/08/package-managers-are-evil/</link>
 		<guid>https://www.gingerbill.org/article/2025/09/08/package-managers-are-evil/</guid>
 		<pubDate>Mon, 08 Sep 2025 09:00:00 +0000</pubDate>
-		<description>n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil  The term "evil" is being used partially hyperbolic to make a point..To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong ...</description>
+		<description>n.b. This is a written version of a dialogue from a YouTube video: 2 Language Creators vs 2 Idiots | The StandupPackage managers (for programming languages) are evil.The term "evil" is being used partially hyperbolic to make a point.To start, I need to make a few distinctions between concepts a lot of programmers mix up:A packagePackage RepositoriesBuild SystemsPackage ManagersThese are all separate and can have no relation to one another. I have nothing wrong with packages, in fact Odin has packages built into the language. I have nothing wrong w...</description>
 	</item>
 	<item>
 		<title>If Odin Had Macros</title>
@@ -122,7 +129,7 @@
 		<link>https://www.gingerbill.org/article/2025/04/22/unstructured-thoughts-on-oss/</link>
 		<guid>https://www.gingerbill.org/article/2025/04/22/unstructured-thoughts-on-oss/</guid>
 		<pubDate>Tue, 22 Apr 2025 09:00:00 +0000</pubDate>
-		<description>Originally from replies to a Twitter thread: https://x.com/TheGingerBill/status/1914389352416993395This is not a structured argument against FOSS/OSS but my uncommon thoughts on the topic.I am not sure if I agree [that FOSS/OSS derives from the same thinking process as the ideology of communism], but I understand the sentiment. The fundamental issue is that software is trivially copyable. I have loads of issues with FOSS and OSS  I am making a distinction between OSS (Open Source Software) and FOSS (Free [and] Open Source Software) in this article but ...</description>
+		<description>Originally from replies to a Twitter thread: https://x.com/TheGingerBill/status/1914389352416993395This is not a structured argument against FOSS/OSS but my uncommon thoughts on the topic.I am not sure if I agree [that FOSS/OSS derives from the same thinking process as the ideology of communism], but I understand the sentiment. The fundamental issue is that software is trivially copyable. I have loads of issues with FOSS and OSS.I am making a distinction between OSS (Open Source Software) and FOSS (Free [and] Open Source Software) in this article but ...</description>
 	</item>
 	<item>
 		<title>OpenGL is not Right-Handed</title>
@@ -206,14 +213,14 @@
 		<link>https://www.gingerbill.org/article/2021/07/05/value-propagation-experiment/</link>
 		<guid>https://www.gingerbill.org/article/2021/07/05/value-propagation-experiment/</guid>
 		<pubDate>Mon, 05 Jul 2021 09:00:00 +0000</pubDate>
-		<description>[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust;s  which became , or Zig;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it with  The concept of try worked by popping off the end value in a ...</description>
+		<description>[Originally from a Twitter Thread]Part 2 of this ExperimentThe IdeaI recently experimented with adding a feature into Odin which allowed for a way to propagate a value by early returning if that value was  or not . It was in a similar vein to Rust;s  which became , or Zig;s , etc.I have now removed it from Odin. But why?The ProblemThe hypothesis was that that this idiom was common:where  may be an enum, a (discriminated) union, or any other kind of value that has .And replace it withThe concept of try worked by popping off the end value in a m...</description>
 	</item>
 	<item>
 		<title>Untyped Types</title>
 		<link>https://www.gingerbill.org/article/2021/03/07/untyped-types/</link>
 		<guid>https://www.gingerbill.org/article/2021/03/07/untyped-types/</guid>
 		<pubDate>Sun, 07 Mar 2021 09:00:00 +0000</pubDate>
-		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both Ada  Ada Style Guide For Naming Conventions and Go  I highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: Expressions have a type, not all expressi...</description>
+		<description>When I was designing the constant value system in Odin, I wanted literals (especially numbers) to ;just work;. I was inspired by how both AdaAda Style Guide For Naming Conventions and GoI highly recommend reading the article regarding how Go implements its constant value system https://blog.golang.org/constants both handled their constant value systems. But this lead me to a realization that there are two general different models of thought when it comes to values in programming languages.Model-1: Expressions have a type, not all expression...</description>
 	</item>
 	<item>
 		<title>Structured Control Flow (Brain Dump)</title>
@@ -269,7 +276,7 @@
 		<link>https://www.gingerbill.org/article/2019/05/13/a-reply-to-the-road-to-zig/</link>
 		<guid>https://www.gingerbill.org/article/2019/05/13/a-reply-to-the-road-to-zig/</guid>
 		<pubDate>Mon, 13 May 2019 09:00:00 +0000</pubDate>
-		<description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:Odin  For those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!Whi...</description>
+		<description>It is lovely to see many new programming languages being produced to solve different issues that the designers are trying to address. Many of the new big ones include Rust, Go, and Swift, all of which are trying to solve different problems. There are some not-as-big programming languages that I recommend everyone to checkout:OdinFor those who do not know, I am the creator of the Odin programming language.ScopesZigThey are all very good languages but with entirely different philosophies behind them. See if one suits your personal philosophy better!Whic...</description>
 	</item>
 	<item>
 		<title>A Quine in Odin</title>
