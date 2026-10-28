@@ -326,6 +326,9 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 
 	margin_notes_used := 0
 
+	// adjacent margin notes (e.g. `[^a][^b]`) are separated with ", " rather than a space
+	follows_margin_note := false
+
 	for len(text) > 0 {
 		YOUTUBE_PREFIX :: "@@youtube:"
 
@@ -342,6 +345,9 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 
 		switch {
 		case footnote_index >= 0:
+			follows := follows_margin_note
+			follows_margin_note = false
+
 			i := footnote_index
 			io.write_string(w, text[:i])
 
@@ -364,16 +370,30 @@ preprocessor_pass_over_article :: proc(website: ^Website, text: string) -> strin
 
 			} else {
 				text = margin_note_text[i+1:]
+				precedes := strings.has_prefix(text, "[^")
 
 				for &f in margin_notes {
 					if f.label == margin_note_label {
 						margin_notes_used += 1
-						fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label> `, f.label)
-						fmt.wprintf(w, "\n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
+						if follows {
+							// the comma lives inside the label so it takes the number's colour,
+							// and the space must not break, otherwise the label wraps onto two lines
+							// (see `.sidenote-number-adjacent` in style.css for the spacing)
+							fmt.wprintf(w, `<label for="%s" class="margin-toggle sidenote-number sidenote-number-adjacent"><sup>,</sup>&nbsp;</label>`, f.label)
+						} else {
+							fmt.wprintf(w, `&nbsp;<label for="%s" class="margin-toggle sidenote-number"></label>`, f.label)
+						}
+						if precedes {
+							// no whitespace, so the next margin note's comma sits right after this number
+							fmt.wprintf(w, `<input type="checkbox" id="%s" class="margin-toggle"></input>`, f.label)
+						} else {
+							fmt.wprintf(w, " \n"+`<input type="checkbox" id="%s" class="margin-toggle"></input>`+"\n", f.label)
+						}
 						fmt.wprintf(w, `<span class="sidenote">%s</span>`, sidenote_md_to_html(f.desc, website.scratch_allocator))
 						break
 					}
 				}
+				follows_margin_note = precedes
 			}
 			continue
 		case youtube_index >= 0:
@@ -730,17 +750,18 @@ build_alias :: proc(website: ^Website, from, to: string) -> bool {
 	b := strings.builder_make(website.scratch_allocator)
 	w := strings.to_writer(&b)
 
-fmt.wprintf(w,
-`<!DOCTYPE html>
-<html lang="en-gb">
-	<head>
-		<title>{0:s}</title>
-		<link rel="canonical" href="{0:s}">
-		<meta name="robots" content="noindex">
-		<meta charset="utf-8">
-		<meta http-equiv="refresh" content="0; url={0:s}">
-	</head>
-</html>`, to)
+	fmt.wprintf(w, ```
+	<!DOCTYPE html>
+	<html lang="en-gb">
+		<head>
+			<title>{0:s}</title>
+			<link rel="canonical" href="{0:s}">
+			<meta name="robots" content="noindex">
+			<meta charset="utf-8">
+			<meta http-equiv="refresh" content="0; url={0:s}">
+		</head>
+	</html>
+	```, to)
 
 	path := fmt.aprintf("%s%s", PUBLIC_PREFIX, from, allocator=website.scratch_allocator)
 	dir, _ := os.split_path(path)

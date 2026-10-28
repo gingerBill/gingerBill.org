@@ -149,55 +149,55 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 		end_heading:   [4]byte = "</h0"
 
 		if entering {
-		 	cr(state)
-		 	level := int(node.as.heading.level)
-		 	start_heading[2] = byte('0' + level)
-		 	strings.write_bytes(state.w, start_heading[:])
+			cr(state)
+			level := int(node.as.heading.level)
+			start_heading[2] = byte('0' + level)
+			strings.write_bytes(state.w, start_heading[:])
 
-		 	switch level {
-		 	case 1..=3:
-			 	state.heading_count += 1
-			 	strings.write_string(state.w, " id=\"heading-")
-			 	strings.write_int(state.w, level)
-			 	strings.write_string(state.w, "-")
-			 	strings.write_int(state.w, state.heading_count)
-			 	strings.write_string(state.w, "\"")
-			 }
+			switch level {
+			case 1..=3:
+				state.heading_count += 1
+				strings.write_string(state.w, " id=\"heading-")
+				strings.write_int(state.w, level)
+				strings.write_string(state.w, "-")
+				strings.write_int(state.w, state.heading_count)
+				strings.write_string(state.w, "\"")
+			}
 
-		 	strings.write_byte(state.w, '>')
-		 } else {
-		 	end_heading[3] = byte(int('0' + node.as.heading.level))
-		 	strings.write_bytes(state.w, end_heading[:])
-		 	strings.write_string(state.w, "/>\n")
-		 }
+			strings.write_byte(state.w, '>')
+		} else {
+			end_heading[3] = byte(int('0' + node.as.heading.level))
+			strings.write_bytes(state.w, end_heading[:])
+			strings.write_string(state.w, "/>\n")
+		}
 
 	case .Code_Block:
-	 	cr(state)
+		cr(state)
 
-	 	if node.as.code.info == nil || node.as.code.info == "" {
+		if node.as.code.info == nil || node.as.code.info == "" {
 			strings.write_string(state.w, "<pre><code>")
-	 	} else {
-	 		first_tag := 0
-	 		info := string(node.as.code.info)
-	 		for first_tag < len(info) && !unicode.is_space(rune(info[first_tag])) {
-	 			first_tag += 1
-	 		}
+		} else {
+			first_tag := 0
+			info := string(node.as.code.info)
+			for first_tag < len(info) && !unicode.is_space(rune(info[first_tag])) {
+				first_tag += 1
+			}
 
-	 		strings.write_string(state.w, "<pre><code class=\"")
-	 		if strings.has_prefix(info, "language-") {
-		 		strings.write_string(state.w, "language-")
-	 		}
-	 		escape_html(state, info[:first_tag])
-	 		strings.write_string(state.w, "\">")
-	 	}
+			strings.write_string(state.w, "<pre><code class=\"")
+			if strings.has_prefix(info, "language-") {
+				strings.write_string(state.w, "language-")
+			}
+			escape_html(state, info[:first_tag])
+			strings.write_string(state.w, "\">")
+		}
 
-	 	escape_html(state, node.data[:node.len])
- 		strings.write_string(state.w, "</code></pre>\n")
+		escape_html(state, node.data[:node.len])
+		strings.write_string(state.w, "</code></pre>\n")
 
 	case .HTML_Block:
-	 	cr(state)
-	 	strings.write_bytes(state.w, node.data[:node.len])
-	 	cr(state)
+		cr(state)
+		strings.write_bytes(state.w, node.data[:node.len])
+		cr(state)
 
 
 	case .Custom_Block:
@@ -205,13 +205,13 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 
 		cr(state)
 		if block != nil {
-		 	strings.write_string(state.w, string(block))
+			strings.write_string(state.w, string(block))
 		}
 		cr(state)
 
 	case .Thematic_Break: // .Last_Block
 		cr(state)
- 		strings.write_string(state.w, "<hr />\n")
+		strings.write_string(state.w, "<hr />\n")
 
 	case .Paragraph:
 		parent := cm.node_parent(node)
@@ -225,9 +225,9 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 		if !tight {
 			if entering {
 				cr(state)
-		 		strings.write_string(state.w, "<p>")
+				strings.write_string(state.w, "<p>")
 			} else {
-		 		strings.write_string(state.w, "</p>\n")
+				strings.write_string(state.w, "</p>\n")
 			}
 		}
 
@@ -246,7 +246,7 @@ render_html_node :: proc(state: ^Render_State, node: ^cm.Node, ev_type: cm.Event
 		strings.write_string(state.w, "</code>")
 
 	case .HTML_Inline:
-	 	strings.write_bytes(state.w, node.data[:node.len])
+		strings.write_bytes(state.w, node.data[:node.len])
 
 	case .Custom_Inline:
 		block := entering ? node.as.custom.on_enter : node.as.custom.on_exit
