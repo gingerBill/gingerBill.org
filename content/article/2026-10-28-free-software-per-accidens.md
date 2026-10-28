@@ -59,7 +59,7 @@ The FSF knows both of these: the AGPL exists for the server case[^agpl] (though 
 
 [^agpl]: [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html), which requires offering the source to users who interact with the software over a network.
 
-[^google-agpl]: Google's [AGPL Policy](https://opensource.google/documentation/reference/using/agpl-policy): code licensed under the AGPL "MUST NOT be used at Google".
+[^google-agpl]: Google's [AGPL Policy](https://opensource.google/documentation/reference/using/agpl-policy): code licensed under the AGPL "MUST NOT be used at Google". Its reading of the AGPL is disputed as the AGPL treats network use as distribution but it doesn't make the rest of a service a derivative work. Either way, the ban is the point as companies avoid it regardless.
 
 [^ddc]: David A. Wheeler, ["Fully Countering Trusting Trust through Diverse Double-Compiling"](https://dwheeler.com/trusting-trust/), PhD dissertation, George Mason University, 2009. See also [Reproducible Builds](https://reproducible-builds.org/).
 
