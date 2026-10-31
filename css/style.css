@@ -106,7 +106,10 @@ main {
 }
 
 p, dl, ol, ul {
-    font-size: 1.1rem;
+    /* 17.5px rather than 1.1rem (17.6px): justif.js measures text on a canvas, and
+       Firefox rounds canvas font sizes to a quarter pixel, so anything in between
+       makes every justified line overshoot */
+    font-size: 1.09375rem;
     line-height: 1.5rem;
 }
 
@@ -420,7 +423,7 @@ p code, li code {
   padding: 1px 3px;
   color: #333;
   background-color: #f7f7f7;
-  font-size: 0.85em!important;
+  font-size: 0.857143em!important; /* 15px in 17.5px text, a whole quarter pixel (see p) */
 }
 
 @media (prefers-color-scheme: dark) {
