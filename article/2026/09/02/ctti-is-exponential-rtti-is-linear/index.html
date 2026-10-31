@@ -15,9 +15,9 @@
 <meta name="twitter:description" content="AbstractRuntime Type Information (RTTI) has a cost, but it is a tame cost compared to Compile-Time Type Information (CTTI), which is sold as &#34;zero-cost&#34;, and it is anything but.RTTI&#39;s tables are a linear cost in the number of types (N types -&gt; N entries), single cost.The use of RTTI is a fixed constant cost, one procedure iterating over one table, no matter how many types exist.RTTI is effectively zero additional cost during semantic-checking, because there is nothing to specialize.CTTI does not necessarily need any extra tables, but usual..." />
  <title>CTTI is Exponential, RTTI is Linear - gingerBill</title>
 	<link rel="stylesheet" href="/css/normalize.css" />
-	<link rel="stylesheet" href="/css/style.css?v=2" />
+	<link rel="stylesheet" href="/css/style.css?v=3" />
 	<link rel="stylesheet" href="/highlight/style.css" />
-	<script type="module" blocking="render" src="/js/justif/auto.js"></script>
+	<script type="module" blocking="render" src="/js/justif/auto.js" data-justif-selector=":is(p, li, dd, blockquote, figcaption):not(td *)"></script>
 	<script src="/highlight/highlight.pack.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67516878-1"></script>
