@@ -317,7 +317,7 @@ header = (Stack_Allocation_Header *)(curr_addr - sizeof(Stack_Allocation_Header)
 // Calculate previous offset from the header and its address
 prev_offset = (size_t)(curr_addr - (uintptr_t)header->padding - start);
 
-if (prev_offset != header->prev_offset) {
+if (prev_offset != s->prev_offset) {
 	assert(0 && "Out of order stack allocator free");
 	return;
 }

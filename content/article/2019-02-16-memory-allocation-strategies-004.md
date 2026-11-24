@@ -122,7 +122,7 @@ void pool_init(Pool *p, void *backing_buffer, size_t backing_buffer_length,
 	       "Backing buffer length is smaller than the chunk size");
 
 	// Store the adjusted parameters
-	p->buf = (unsigned char *)backing_buffer;
+	p->buf = (unsigned char *)start;
 	p->buf_len = backing_buffer_length;
 	p->chunk_size = chunk_size;
 	p->head = NULL; // Free List Head
