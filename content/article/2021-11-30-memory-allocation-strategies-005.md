@@ -149,6 +149,7 @@ Free_List_Node *free_list_find_best(Free_List *fl, size_t size, size_t alignment
         size_t required_space = size + padding;
         if (node->block_size >= required_space && (it.block_size - required_space < smallest_diff)) {
             best_node = node;
+            smallest_diff = it.block_size - required_space;
         }
         prev_node = node;
         node = node->next;
@@ -191,7 +192,7 @@ void *free_list_alloc(Free_List *fl, size_t size, size_t alignment) {
     
     if (remaining > 0) {
         Free_List_Node *new_node = (Free_List_Node *)((char *)node + required_space);
-        new_node->block_size = rest;
+        new_node->block_size = remaining;
         free_list_node_insert(&fl->head, node, new_node);
     }
     
